@@ -14,21 +14,22 @@
 
 ## 🌟 About Me
 
-Hello! I'm Jihun, a passionate developer focused on building meaningful projects that bridge technology and innovation.
+Hello! I'm Jihun, a passionate IT engineer with a strong focus on Python-based data engineering and IT infrastructure.
 
-- 🔭 **Current Work:** Exploring full-stack web development.
-- 🌱 **Learning:** Enhancing skills in TypeScript, React, and Cloud Computing.
-- 🤝 **Collaboration:** Open to collaborating on open-source projects.
-- 💬 **Ask Me About:** Anything tech, productivity, or career-related.
+- 🏢 **Current Work:** IT Engineer at Shinhan Fund Partners.
+- 🏢 **Previous Experience:** Data Engineer at Douzone Bizon.
+- 🌱 **Learning:** Advancing in data pipelines, ETL processes, and cloud-based solutions.
+- 💬 **Ask Me About:** Python, data engineering, and system optimization.
 
 ---
 
 ## 🚀 Technologies & Tools
 
 ```text
-Frontend: HTML, CSS, JavaScript, React, TypeScript
-Backend: Node.js, Express, MongoDB
-Tools: Git, VS Code, Docker
+Programming: Python, SQL, Bash
+Data Engineering: Pandas, PySpark, Airflow
+Cloud Platforms: AWS, GCP
+Tools: Docker, Git, Jenkins
 ```
 
 ---
@@ -47,4 +48,30 @@ Tools: Git, VS Code, Docker
 
 ## ✨ Highlights
 
-### 🖥️ Featured Project: [My Cool App](https://github.com/Jihun
+### 🖥️ Featured Project: [Data Pipeline Automation](https://github.com/Jihun/data-pipeline-automation)
+
+> A robust pipeline for automating ETL processes and data validation.
+
+#### Key Features:
+- Built with Python and Airflow
+- Scalable architecture for large datasets
+- Integration with cloud storage and databases
+
+---
+
+## 🌐 Let's Connect
+
+<p align="center">
+  <a href="https://linkedin.com/in/jihun-profile" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin">
+  </a>
+  <a href="https://jjinueng.tistory.com" target="_blank">
+    <img src="https://img.shields.io/badge/Blog-Visit-orange?style=for-the-badge&logo=blogger">
+  </a>
+</p>
+
+---
+
+<p align="center">
+  <em>"Data is the new oil, and Python is the drill."</em>
+</p>
