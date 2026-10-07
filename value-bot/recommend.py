@@ -326,13 +326,19 @@ def send_telegram(messages):
         messages = [messages]
     tok = os.environ.get("TELEGRAM_TOKEN") or os.environ.get("TG_TOKEN")
     chat = os.environ.get("TELEGRAM_CHAT_ID") or os.environ.get("TG_CHAT_ID")
+    # 시크릿에 공백·줄바꿈·'bot' 접두어가 섞여 들어오는 경우를 정리
+    import re as _re
+    m = _re.search(r"\d{6,}:[A-Za-z0-9_-]{30,}", tok or "")
+    tok = m.group(0) if m else (tok or "").strip()
+    chat = (chat or "").strip()
     if not (tok and chat):
         sys.exit("::error::TG_TOKEN / TG_CHAT_ID (또는 TELEGRAM_TOKEN / TELEGRAM_CHAT_ID) 가 없습니다.")
     for i, text in enumerate(messages, 1):
         r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
                           json={"chat_id": chat, "text": text, "disable_web_page_preview": True}, timeout=20)
         if r.status_code != 200:
-            sys.exit(f"::error::텔레그램 전송 실패({i}/{len(messages)}): {r.status_code} {r.text.replace(tok, '***')[:200]}")
+            hint = " — 토큰이 잘못됐습니다. BotFather의 토큰(숫자:영문 형태)만 VALUE_TG_TOKEN에 다시 넣어 주세요." if r.status_code in (401, 404) else ""
+            sys.exit(f"::error::텔레그램 전송 실패({i}/{len(messages)}): {r.status_code} {r.text.replace(tok, '***')[:200]}{hint}")
         time.sleep(1)
     print(f"텔레그램 전송 완료: {len(messages)}통")
 
