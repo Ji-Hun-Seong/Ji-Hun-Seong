@@ -100,4 +100,15 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys, traceback
+    missing = [k for k in ("TG_TOKEN", "TG_CHAT_ID", "SEC_UA") if not os.environ.get(k)]
+    if missing:
+        print(f"::error::GitHub Secrets 누락: {', '.join(missing)}")
+        sys.exit(1)
+    try:
+        main()
+    except Exception as e:
+        traceback.print_exc()
+        msg = str(e).replace(os.environ.get("TG_TOKEN", "x"), "***")
+        print(f"::error::{type(e).__name__}: {msg[:300]}")
+        sys.exit(1)
