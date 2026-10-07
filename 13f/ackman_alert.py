@@ -4,7 +4,7 @@
 - 마지막으로 알린 공시번호는 state.json에 저장(워크플로가 커밋)
 필요한 환경변수(GitHub Secrets): TG_TOKEN, TG_CHAT_ID, SEC_UA
 """
-import json, os, time
+import html, json, os, time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 import requests
@@ -56,8 +56,7 @@ def diff_message(label, cik, new, old):
     acc, rep, filed = new
     cur, prev = holdings(cik, acc), holdings(cik, old[0])
     total = sum(h["value"] for h in cur.values()) or 1
-    lines = [f"📊 <b>{label}</b> 13F 신규 공시",
-             f"기준일 {rep} · 제출 {filed} · 총 ${total/1e9:.1f}B", ""]
+    rows, exits = [], []
     for k, h in sorted(cur.items(), key=lambda x: -x[1]["value"]):
         w = h["value"] / total * 100
         p = prev.get(k)
@@ -66,12 +65,24 @@ def diff_message(label, cik, new, old):
         else:
             chg = (h["shares"] / p["shares"] - 1) * 100 if p["shares"] else 0
             tag = "유지" if abs(chg) < 0.5 else f"{'▲' if chg > 0 else '▼'}{chg:+.0f}%"
-        lines.append(f"{h['name'][:22]} {w:.1f}% {tag}")
+        rows.append((w, tag, html.escape(h["name"][:22])))
     for k, p in prev.items():
         if k not in cur:
-            lines.append(f"{p['name'][:22]} ❌ 전량매도")
-    lines += ["", f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik}&type=13F"]
-    return "\n".join(lines)
+            exits.append(html.escape(p["name"][:22]))
+    top = rows[:15]                                   # 상위 15종목
+    others_new = [r for r in rows[15:] if r[1] == "🆕 신규"][:10]
+    lines = [f"📊 <b>{html.escape(label)}</b> 13F 신규 공시",
+             f"기준일 {rep} · 제출 {filed} · {len(cur)}종목 · ${total/1e9:.1f}B", ""]
+    lines += [f"{n} {w:.1f}% {t}" for w, t, n in top]
+    if len(rows) > 15:
+        lines.append(f"…외 {len(rows) - 15}종목")
+    if others_new:
+        lines += ["", "<b>기타 신규</b>"] + [f"{n} {w:.1f}%" for w, t, n in others_new]
+    if exits:
+        lines += ["", f"<b>❌ 전량매도 {len(exits)}종목</b>", ", ".join(exits[:20])]
+    lines += ["", f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK={cik}&amp;type=13F"]
+    text = "\n".join(lines)
+    return text[:4000]
 
 
 def send(text):
