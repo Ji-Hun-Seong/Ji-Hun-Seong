@@ -10,8 +10,6 @@ on:
         type: choice
         options: [picks, find_chat]
         default: picks
-  push:                        # 임시: 그룹 chat ID 찾기용(확인 후 제거)
-    paths: ["value-bot/.find_chat"]
 
 permissions:
   contents: write
@@ -28,7 +26,7 @@ jobs:
 
       # DART_API_KEY 시크릿이 있으면 배당·현금흐름·시세를 최신값으로 갱신(실패해도 기존 값으로 진행)
       - name: Refresh data
-        if: ${{ env.DART_API_KEY != '' && github.event_name != 'push' && github.event.inputs.mode != 'find_chat' }}
+        if: ${{ env.DART_API_KEY != '' && github.event.inputs.mode != 'find_chat' }}
         continue-on-error: true
         working-directory: value-bot
         env:
@@ -36,14 +34,14 @@ jobs:
         run: python live_update.py --write
 
       - name: Find group chat ID
-        if: ${{ github.event_name == 'push' || github.event.inputs.mode == 'find_chat' }}
+        if: ${{ github.event.inputs.mode == 'find_chat' }}
         working-directory: value-bot
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
         run: python recommend.py --find-chats
 
       - name: Send picks to Telegram
-        if: ${{ github.event_name != 'push' && github.event.inputs.mode != 'find_chat' }}
+        if: ${{ github.event.inputs.mode != 'find_chat' }}
         working-directory: value-bot
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
