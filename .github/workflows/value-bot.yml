@@ -3,7 +3,13 @@ name: Value DNA picks
 on:
   schedule:
     - cron: "13 0 1 * *"      # 매월 1일 UTC 00:13 = 한국 오전 9시 13분
-  workflow_dispatch:           # Actions 탭에서 수동 실행(시험 전송)
+  workflow_dispatch:           # Actions 탭에서 수동 실행
+    inputs:
+      mode:
+        description: "picks = 20선 보내기 / find_chat = 봇이 들어간 그룹에 chat ID 안내"
+        type: choice
+        options: [picks, find_chat]
+        default: picks
 
 permissions:
   contents: write
@@ -20,18 +26,27 @@ jobs:
 
       # DART_API_KEY 시크릿이 있으면 배당·현금흐름·시세를 최신값으로 갱신(실패해도 기존 값으로 진행)
       - name: Refresh data
-        if: ${{ env.DART_API_KEY != '' }}
+        if: ${{ env.DART_API_KEY != '' && github.event.inputs.mode != 'find_chat' }}
         continue-on-error: true
         working-directory: value-bot
         env:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
         run: python live_update.py --write
 
-      - name: Send picks to Telegram
+      - name: Find group chat ID
+        if: ${{ github.event.inputs.mode == 'find_chat' }}
         working-directory: value-bot
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: python recommend.py --find-chats
+
+      - name: Send picks to Telegram
+        if: ${{ github.event.inputs.mode != 'find_chat' }}
+        working-directory: value-bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          # 그룹 ID(VALUE_TG_CHAT_ID)가 있으면 그룹으로, 없으면 본인에게
+          TELEGRAM_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID || secrets.TG_CHAT_ID }}
         run: python recommend.py --profile profile.json --top 20 --telegram
 
       - name: Save refreshed data

@@ -319,28 +319,67 @@ def telegram_text(picked, top, dna, asof=""):
     return "\n\n".join(telegram_messages(picked, top, dna, asof))
 
 
+def _tg_token():
+    import re
+    tok = os.environ.get("TELEGRAM_TOKEN") or os.environ.get("TG_TOKEN") or ""
+    m = re.search(r"\d{6,}:[A-Za-z0-9_-]{30,}", tok)       # 공백·줄바꿈·'bot' 접두어 정리
+    return m.group(0) if m else tok.strip()
+
+
 def send_telegram(messages):
     import time
     import requests
     if isinstance(messages, str):
         messages = [messages]
-    tok = os.environ.get("TELEGRAM_TOKEN") or os.environ.get("TG_TOKEN")
-    chat = os.environ.get("TELEGRAM_CHAT_ID") or os.environ.get("TG_CHAT_ID")
-    # 시크릿에 공백·줄바꿈·'bot' 접두어가 섞여 들어오는 경우를 정리
-    import re as _re
-    m = _re.search(r"\d{6,}:[A-Za-z0-9_-]{30,}", tok or "")
-    tok = m.group(0) if m else (tok or "").strip()
-    chat = (chat or "").strip()
+    tok = _tg_token()
+    chat = (os.environ.get("TELEGRAM_CHAT_ID") or os.environ.get("TG_CHAT_ID") or "").strip()
     if not (tok and chat):
         sys.exit("::error::TG_TOKEN / TG_CHAT_ID (또는 TELEGRAM_TOKEN / TELEGRAM_CHAT_ID) 가 없습니다.")
     for i, text in enumerate(messages, 1):
-        r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
-                          json={"chat_id": chat, "text": text, "disable_web_page_preview": True}, timeout=20)
+        for _ in range(2):
+            r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
+                              json={"chat_id": chat, "text": text, "disable_web_page_preview": True}, timeout=20)
+            new_id = (r.json().get("parameters") or {}).get("migrate_to_chat_id") if r.status_code == 400 else None
+            if not new_id:
+                break
+            # 일반 그룹이 슈퍼그룹으로 바뀌면 chat ID가 바뀐다 → 새 ID로 재시도하고 그룹에 알림
+            chat = str(new_id)
+            print("::warning::그룹 chat ID가 바뀌었습니다. VALUE_TG_CHAT_ID를 그룹 안내 메시지의 새 값으로 바꿔 주세요.")
+            requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
+                          json={"chat_id": chat, "text": f"ℹ️ 이 그룹의 chat ID가 {chat} 로 바뀌었습니다. GitHub 시크릿 VALUE_TG_CHAT_ID를 이 값으로 바꿔 주세요."},
+                          timeout=20)
         if r.status_code != 200:
             hint = " — 토큰이 잘못됐습니다. BotFather의 토큰(숫자:영문 형태)만 VALUE_TG_TOKEN에 다시 넣어 주세요." if r.status_code in (401, 404) else ""
+            if r.status_code in (400, 403) and "chat" in r.text:
+                hint = " — 봇이 그 대화방에 없거나 chat ID가 틀렸습니다. 봇을 그룹에 초대했는지, VALUE_TG_CHAT_ID 값을 확인해 주세요."
             sys.exit(f"::error::텔레그램 전송 실패({i}/{len(messages)}): {r.status_code} {r.text.replace(tok, '***')[:200]}{hint}")
         time.sleep(1)
     print(f"텔레그램 전송 완료: {len(messages)}통")
+
+
+def find_chats():
+    """봇이 들어가 있는 그룹을 찾아, 각 그룹 안에 그 그룹의 chat ID를 알려 준다(로그에는 ID를 남기지 않음)."""
+    import requests
+    tok = _tg_token()
+    if not tok:
+        sys.exit("::error::VALUE_TG_TOKEN 이 없습니다.")
+    ups = requests.get(f"https://api.telegram.org/bot{tok}/getUpdates", timeout=20).json().get("result", [])
+    chats = {}
+    for u in ups:
+        for key in ("message", "my_chat_member", "chat_member", "edited_message", "channel_post"):
+            ch = (u.get(key) or {}).get("chat")
+            if ch and ch.get("type") in ("group", "supergroup"):
+                chats[ch["id"]] = ch.get("title", "")
+    if not chats:
+        sys.exit("::error::봇이 들어간 그룹을 찾지 못했습니다. 그룹에 봇을 초대한 뒤 그룹에서 /start@KoreaValueStock_Bot 을 보내고 24시간 안에 다시 실행해 주세요.")
+    for cid, title in chats.items():
+        requests.post(f"https://api.telegram.org/bot{tok}/sendMessage", json={
+            "chat_id": cid,
+            "text": (f"👋 가치주 DNA 봇이 이 그룹({title})에 연결됐습니다.\n\n"
+                     f"이 그룹의 chat ID: {cid}\n\n"
+                     "GitHub 저장소 Settings → Secrets → Actions 에서 VALUE_TG_CHAT_ID 이름으로 위 숫자(마이너스 포함)를 등록하면 "
+                     "매월 1일 20선이 이 그룹으로 옵니다.")}, timeout=20)
+    print(f"그룹 {len(chats)}곳에 chat ID 안내를 보냈습니다.")
 
 
 def main(argv=None):
@@ -356,7 +395,10 @@ def main(argv=None):
     ap.add_argument("--profile", help="매매일지 대신 금액 없는 성향 프로필(profile.json) 사용")
     ap.add_argument("--export-profile", help="성향 프로필을 이 경로로 저장")
     ap.add_argument("--no-html", action="store_true")
+    ap.add_argument("--find-chats", action="store_true", help="봇이 들어간 그룹에 chat ID 안내 보내기")
     a = ap.parse_args(argv)
+    if a.find_chats:
+        return find_chats()
 
     if a.profile:
         from value_dna import load_profile
