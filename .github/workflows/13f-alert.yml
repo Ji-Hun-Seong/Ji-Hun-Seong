@@ -1,0 +1,36 @@
+name: 13F alert
+
+on:
+  schedule:
+    - cron: "0 23 * * *"      # 매일 UTC 23:00 = 한국 오전 8시 (미국 장 마감 후 공시 반영)
+  workflow_dispatch:           # Actions 탭에서 수동 실행 가능
+    inputs:
+      test:
+        description: "1이면 최신 공시를 바로 텔레그램으로 보냄"
+        default: "0"
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python 13f/ackman_alert.py
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          SEC_UA: ${{ secrets.SEC_UA }}
+          TEST: ${{ github.event.inputs.test }}
+      - name: Save state
+        run: |
+          git config user.name "13f-bot"
+          git config user.email "13f-bot@users.noreply.github.com"
+          git add 13f/state.json
+          git diff --cached --quiet || git commit -m "update 13F state"
+          git push
