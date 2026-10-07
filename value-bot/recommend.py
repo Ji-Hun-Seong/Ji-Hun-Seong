@@ -327,12 +327,12 @@ def send_telegram(messages):
     tok = os.environ.get("TELEGRAM_TOKEN") or os.environ.get("TG_TOKEN")
     chat = os.environ.get("TELEGRAM_CHAT_ID") or os.environ.get("TG_CHAT_ID")
     if not (tok and chat):
-        sys.exit("TG_TOKEN / TG_CHAT_ID (또는 TELEGRAM_TOKEN / TELEGRAM_CHAT_ID) 가 없습니다.")
+        sys.exit("::error::TG_TOKEN / TG_CHAT_ID (또는 TELEGRAM_TOKEN / TELEGRAM_CHAT_ID) 가 없습니다.")
     for i, text in enumerate(messages, 1):
         r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
                           json={"chat_id": chat, "text": text, "disable_web_page_preview": True}, timeout=20)
         if r.status_code != 200:
-            sys.exit(f"텔레그램 전송 실패({i}/{len(messages)}): {r.status_code} {r.text.replace(tok, '***')[:200]}")
+            sys.exit(f"::error::텔레그램 전송 실패({i}/{len(messages)}): {r.status_code} {r.text.replace(tok, '***')[:200]}")
         time.sleep(1)
     print(f"텔레그램 전송 완료: {len(messages)}통")
 
