@@ -238,33 +238,103 @@ def console(picked, top):
               f"{s['cash']:4.0f} {s['fit']:4.0f}  -{c.penalty:.0f}")
 
 
-def telegram_text(picked, top, dna, asof=""):
-    lines = [f"📈 가치주 DNA {top}선 — {date.today():%Y-%m-%d}",
-             "매매일지 성향 × 밸류·환원·현금흐름 점수 (코스피, 보유 종목 제외)", ""]
+def _eok(v):
+    """억원 숫자를 '2.33조' / '1,421억' 형태로."""
+    if v is None:
+        return "-"
+    return f"{v / 10000:+.2f}조".replace("+", "") if abs(v) >= 10000 else f"{v:,.0f}억"
+
+
+def fin_block(c):
+    """종목 하나의 재무 요약(텔레그램용 여러 줄)."""
+    r = c.row
+    pbr, per, y, mcap = num(r["pbr"]), num(r["per"]), num(r["yield_pct"]), num(r["mcap"])
+    head = []
+    if mcap:
+        head.append(f"시총 {_eok(mcap)}")
+    if per is not None:
+        head.append(f"PER {per:.1f}" if per > 0 else "PER 적자")
+    if pbr is not None:
+        head.append(f"PBR {pbr:.2f}")
+    if y is not None:
+        head.append(f"배당 {y:.1f}%")
+    out = ["   " + " · ".join(head)] if head else []
+    dps = [num(r[k]) for k in ("dps23", "dps24", "dps25")]
+    if any(dps):
+        out.append("   DPS(23→25) " + " → ".join("-" if d is None else f"{d:,.0f}" for d in dps) + "원")
+    flags = c.flags
+    if "insurer" in flags or "fin_segment" in flags:
+        out.append("   현금흐름: " + ("보험사라 생략" if "insurer" in flags else "금융부문 포함 연결이라 생략"))
+        return out
+    ocf = [num(r[k]) for k in ("ocf23", "ocf24", "ocf25")]
+    if any(x is not None for x in ocf):
+        out.append("   영업CF(23·24·25) " + " / ".join(_eok(x) for x in ocf))
+    capex = num(r["capex25"])
+    if ocf[2] is not None and capex is not None:
+        fcf = ocf[2] - capex
+        fy = f" (시총 대비 {fcf / mcap:.1%})" if mcap else ""
+        out.append(f"   CAPEX {_eok(capex)} · FCF {_eok(fcf)}{fy}")
+    nc = num(r["net_cash"])
+    if nc is not None:
+        lab = "순현금" if nc >= 0 else "순차입"
+        ratio = f" (시총의 {abs(nc) / mcap:.0%})" if mcap else ""
+        out.append(f"   {lab} {_eok(abs(nc))}{ratio}")
+    return out
+
+
+def telegram_messages(picked, top, dna, asof=""):
+    """1통: 20선 요약 / 이후: 종목별 근거·리스크·재무 (4,000자 단위로 분할)."""
+    summary = [f"📈 가치주 DNA {top}선 — {date.today():%Y-%m-%d}",
+               "매매일지 성향 × 밸류·환원·현금흐름 점수 (코스피, 보유 종목 제외)", ""]
+    for i, c in enumerate(picked[:top], 1):
+        summary.append(f"{i:>2}. {c.name} {c.total:.0f}점")
+    summary += ["", "종목별 근거·재무는 다음 메시지에 이어집니다.",
+                f"데이터 기준 {asof or '-'} · 단위 억원 · 매수 전 DART 원문 확인"]
+    blocks = []
     for i, c in enumerate(picked[:top], 1):
         s = c.scores
-        lines.append(f"{i}. {c.name} ({c.row['ticker']}) {c.total:.0f}점")
-        lines.append(f"   밸류 {s['value']:.0f} · 환원 {s['payout']:.0f} · 현금 {s['cash']:.0f} · 적합 {s['fit']:.0f}")
+        b = [f"{i}. {c.name} ({c.row['ticker']}) {c.total:.0f}점",
+             f"   밸류 {s['value']:.0f} · 환원 {s['payout']:.0f} · 현금 {s['cash']:.0f} · 적합 {s['fit']:.0f}"]
         why = [w for w in c.reasons if "재진입" not in w][:3] or [c.row.get("note", "")]
-        lines.append(f"   ✓ {', '.join(why)}")
+        b.append(f"   ✓ {', '.join(why)}")
         risk = [x for x in c.risks if "중립" not in x and "반영" not in x and "촉매" not in x]
         if risk:
-            lines.append(f"   ⚠ {risk[0]}")
-    lines += ["", f"데이터 기준: {asof or 'universe.csv'} · 매수 전 DART 원문 확인"]
-    return "\n".join(lines)
+            b.append(f"   ⚠ {risk[0]}")
+        b += fin_block(c)
+        if c.row.get("note"):
+            b.append(f"   ※ {c.row['note']}")
+        blocks.append("\n".join(b))
+    msgs, cur = ["\n".join(summary)], ""
+    for b in blocks:
+        if len(cur) + len(b) + 2 > 4000:
+            msgs.append(cur)
+            cur = ""
+        cur = f"{cur}\n\n{b}" if cur else b
+    if cur:
+        msgs.append(cur)
+    return msgs
 
 
-def send_telegram(text):
+def telegram_text(picked, top, dna, asof=""):
+    return "\n\n".join(telegram_messages(picked, top, dna, asof))
+
+
+def send_telegram(messages):
+    import time
     import requests
+    if isinstance(messages, str):
+        messages = [messages]
     tok = os.environ.get("TELEGRAM_TOKEN") or os.environ.get("TG_TOKEN")
     chat = os.environ.get("TELEGRAM_CHAT_ID") or os.environ.get("TG_CHAT_ID")
     if not (tok and chat):
         sys.exit("TG_TOKEN / TG_CHAT_ID (또는 TELEGRAM_TOKEN / TELEGRAM_CHAT_ID) 가 없습니다.")
-    r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
-                      json={"chat_id": chat, "text": text, "disable_web_page_preview": True}, timeout=20)
-    if r.status_code != 200:
-        sys.exit(f"텔레그램 전송 실패: {r.status_code} {r.text.replace(tok, '***')[:200]}")
-    print("텔레그램 전송 완료")
+    for i, text in enumerate(messages, 1):
+        r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
+                          json={"chat_id": chat, "text": text, "disable_web_page_preview": True}, timeout=20)
+        if r.status_code != 200:
+            sys.exit(f"텔레그램 전송 실패({i}/{len(messages)}): {r.status_code} {r.text.replace(tok, '***')[:200]}")
+        time.sleep(1)
+    print(f"텔레그램 전송 완료: {len(messages)}통")
 
 
 def main(argv=None):
@@ -308,7 +378,7 @@ def main(argv=None):
     if a.telegram:
         f = os.path.join(os.path.dirname(os.path.abspath(a.universe)), "DATA_ASOF")
         asof = open(f).read().strip() if os.path.exists(f) else ""
-        send_telegram(telegram_text(picked, a.top, dna, asof))
+        send_telegram(telegram_messages(picked, a.top, dna, asof))
 
 
 if __name__ == "__main__":

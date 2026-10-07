@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: "13 0 1 * *"      # 매월 1일 UTC 00:13 = 한국 오전 9시 13분
   workflow_dispatch:           # Actions 탭에서 수동 실행(시험 전송)
+  push:                        # 시험 전송용(확인 후 제거)
+    paths: ["value-bot/recommend.py"]
 
 permissions:
   contents: write
