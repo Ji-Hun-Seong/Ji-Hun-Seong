@@ -201,6 +201,9 @@ def explain(c: Candidate, dna: DNA):
             why.append(f"FCF 수익률 {fcf_y:.0%}")
     c.reasons = why
     c.risks = [PENALTIES[f][1] for f in c.flags if f in PENALTIES]
+    same = [h for h in dna.holdings if TAXONOMY.get(h, {}).get("group") == g and h != c.name]
+    if same:
+        c.risks.insert(0, f"보유 중인 {', '.join(same)}와 같은 그룹이라 노출이 겹침")
 
 
 def rank(dna: DNA, universe: list[Candidate], include_kosdaq=False, include_holdings=False):
@@ -410,6 +413,12 @@ def main(argv=None):
         from value_dna import export_profile
         export_profile(dna, a.export_profile)
         print("프로필 저장:", a.export_profile)
+    hf = os.path.join(os.path.dirname(os.path.abspath(a.universe)), "holdings.txt")
+    if os.path.exists(hf):
+        real = [l.strip() for l in open(hf, encoding="utf-8") if l.strip() and not l.startswith("#")]
+        if real:
+            dna.holdings = real
+            print("실제 보유 종목 반영:", ", ".join(real))
     if dna.unknown:
         print("⚠ value_dna.TAXONOMY 에 없는 종목(분류 후 다시 실행):", dna.unknown)
     picked, excluded = rank(dna, load_universe(a.universe), a.include_kosdaq, a.include_holdings)
