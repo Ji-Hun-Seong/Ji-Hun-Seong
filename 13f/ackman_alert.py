@@ -85,7 +85,9 @@ def send(text):
 
 def main():
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
+    errors = []
     for label, cik in MANAGERS.items():
+      try:
         fl = filings(cik)
         if len(fl) < 2:
             continue
@@ -96,6 +98,10 @@ def main():
         if cik in state or test:                       # 첫 실행은 기록만, 알림 X
             send(diff_message(label, cik, latest, fl[1]))
         state[cik] = latest[0]
+      except Exception as e:
+        errors.append(f"{label}: {type(e).__name__}: {str(e).replace(os.environ.get('TG_TOKEN','x'),'***')[:250]}")
+    for m in errors:
+        print(f"::error::{m}")
     STATE.write_text(json.dumps(state, indent=2))
 
 
