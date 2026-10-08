@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir -p backtest/results
           set -o pipefail
-          python -u backtest/probe.py; python -u backtest/backtest.py ${{ github.event.inputs.telegram == '1' && '--telegram' || '' }} 2>&1 | tee backtest/results/run_log.txt
+          { python -u backtest/probe.py; python -u backtest/backtest.py ${{ github.event.inputs.telegram == '1' && '--telegram' || '' }}; } 2>&1 | tee backtest/results/run_log.txt
 
       - name: Save results
         if: always()
