@@ -1,0 +1,23 @@
+name: Manager portfolios (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      send:
+        description: "1이면 텔레그램 전송, 0이면 미리보기만"
+        default: "0"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python 13f/portfolios.py ${{ github.event.inputs.send == '1' && '--send' || '' }}
+        env:
+          SEC_UA: ${{ secrets.SEC_UA }}
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
