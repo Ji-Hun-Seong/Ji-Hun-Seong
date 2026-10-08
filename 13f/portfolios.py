@@ -19,6 +19,9 @@ MANAGERS = [
     ("스탠리 드러켄밀러 · Duquesne", "성장", "0001536411", None),
 ]
 
+# 제출 법인이 바뀐 경우 직전 분기 비교용 옛 CIK
+PREV_CIK = {"빌 애크먼 · Pershing Square": "0001336528"}
+
 NOTES = {
     "프렘 왓사 · Fairfax": "※ 13F는 페어팩스의 미국 상장주식 일부만 보여줌. 진짜 '따라하기'는 페어팩스(FFH) 주식 자체 보유.",
     "데이비드 테퍼 · Appaloosa": "※ 역발상 가치 스타일이지만 현재 보유는 기술주 위주.",
@@ -107,9 +110,11 @@ def holdings(cik, acc):
 
 def message(label, style, cik):
     fl = filings(cik)
-    (acc, rep, filed), prev_acc = fl[0], (fl[1][0] if len(fl) > 1 else None)
+    (acc, rep, filed) = fl[0]
+    pcik = PREV_CIK.get(label, cik)
+    older = [f for f in (filings(pcik) if pcik != cik else fl) if f[1] < rep]
     cur = holdings(cik, acc)
-    prev = holdings(cik, prev_acc) if prev_acc else {}
+    prev = holdings(pcik, older[0][0]) if older else {}
     total = sum(h["value"] for h in cur.values()) or 1
     rows = []
     for k, h in sorted(cur.items(), key=lambda x: -x[1]["value"]):

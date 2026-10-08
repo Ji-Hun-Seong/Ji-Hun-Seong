@@ -11,7 +11,7 @@ import requests
 
 # 추적할 매니저 (CIK는 EDGAR에서 확인 후 추가/수정)
 MANAGERS = {
-    "Pershing Square (Ackman)": "0001336528",
+    "Pershing Square (Ackman)": "0002026053",   # 2026년 상장 후 Pershing Square Inc.로 제출 (옛 CIK 0001336528),
     "Baron Capital (Ron Baron)": "0001017918",
 }
 HEADERS = {"User-Agent": os.environ.get("SEC_UA", "Your Name your@email.com")}
