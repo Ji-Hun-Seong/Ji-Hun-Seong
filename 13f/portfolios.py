@@ -158,6 +158,9 @@ def find_chats():
                 chats[c["id"]] = (c.get("type"), c.get("title") or c.get("username") or "")
     for cid, (typ, title) in chats.items():
         print(f"::notice::chat {cid} | {typ} | {title}")
+    g = requests.get(f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/getChat",
+                     params={"chat_id": os.environ.get("TG_CHAT_ID")}, timeout=30).json()
+    print(f"::notice::getChat {os.environ.get('TG_CHAT_ID')}: {str(g)[:400]}")
     if not chats:
         print("::warning::업데이트 없음 — 그룹에서 /start@BilAckman_bot 을 보낸 뒤 다시 실행")
 
@@ -180,9 +183,14 @@ def main():
              "⚠️ 애크먼은 조건 미달(13F 5년 +17%)이지만 포함\n"
              "※ 13F = SEC 분기 공시(분기말 기준, 최대 45일 지연). 비중은 신고 금액 대비. 투자 자문 아님.")
     msgs[0] = intro + "\n\n" + msgs[0]
-    for m in msgs:
+    for i, m in enumerate(msgs, 1):
         if do_send:
-            send(m)
+            try:
+                send(m)
+                print(f"::notice::전송 {i}/{len(msgs)} 완료")
+            except Exception as e:
+                print(f"::error::전송 {i}/{len(msgs)} 실패: {str(e).replace(os.environ['TG_TOKEN'], '***')[:300]}")
+                sys.exit(1)
             time.sleep(1)
         else:
             print("::notice::" + m.replace("%", "%25").replace("\n", "%0A"))
