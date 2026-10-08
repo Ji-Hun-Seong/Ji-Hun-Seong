@@ -44,7 +44,19 @@ STOP = 0.08
 # 데이터
 # ---------------------------------------------------------------------------
 def kospi200_codes() -> dict[str, str]:
-    """네이버 증권 코스피200 편입종목(코드→이름)."""
+    """코스피200 편입종목(코드→이름). 네이버 → pykrx 순으로 시도."""
+    try:
+        return _k200_naver()
+    except Exception as e:
+        print("네이버 코스피200 실패:", repr(e))
+    from pykrx import stock
+    codes = stock.get_index_portfolio_deposit_file("1028")
+    if len(codes) < 150:
+        raise RuntimeError(f"pykrx 코스피200 {len(codes)}개")
+    return {c: stock.get_market_ticker_name(c) for c in codes}
+
+
+def _k200_naver() -> dict[str, str]:
     out = {}
     for page in range(1, 25):
         r = requests.get("https://finance.naver.com/sise/entryJongmok.naver",
@@ -62,7 +74,21 @@ def kospi200_codes() -> dict[str, str]:
 
 
 def prices(code: str, start=START) -> pd.DataFrame:
-    """네이버 일봉(수정주가). 컬럼: Open High Low Close Volume, 인덱스 날짜."""
+    """일봉(수정주가). 네이버 실패 시 FinanceDataReader."""
+    try:
+        return _prices_naver(code, start)
+    except Exception as e:
+        import FinanceDataReader as fdr
+        df = fdr.DataReader("KS200" if code == "KPI200" else code, start)
+        if df.empty:
+            raise RuntimeError(f"{code} 시세 없음 (네이버: {e!r})")
+        df = df[["Open", "High", "Low", "Close", "Volume"]].astype(float)
+        df = df[df["Close"] > 0]
+        df.loc[df["Open"] <= 0, "Open"] = df["Close"]
+        return df
+
+
+def _prices_naver(code: str, start=START) -> pd.DataFrame:
     r = requests.get("https://api.finance.naver.com/siseJson.naver",
                      params={"symbol": code, "requestType": 1, "timeframe": "day",
                              "startTime": start.replace("-", ""),

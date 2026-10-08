@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install requests pandas numpy
+      - run: pip install requests pandas numpy pykrx finance-datareader
 
       - name: Current value picks (top 20)
         working-directory: value-bot
@@ -32,9 +32,13 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-        run: python backtest/backtest.py ${{ github.event.inputs.telegram == '1' && '--telegram' || '' }}
+        run: |
+          mkdir -p backtest/results
+          set -o pipefail
+          python -u backtest/backtest.py ${{ github.event.inputs.telegram == '1' && '--telegram' || '' }} 2>&1 | tee backtest/results/run_log.txt
 
       - name: Save results
+        if: always()
         run: |
           git config user.name "backtest-bot"
           git config user.email "backtest-bot@users.noreply.github.com"
