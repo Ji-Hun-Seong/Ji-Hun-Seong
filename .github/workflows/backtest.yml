@@ -1,0 +1,43 @@
+name: BB+RSI backtest (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      telegram:
+        description: "1 = 결과 요약을 텔레그램(본인)으로 보내기"
+        default: "0"
+  push:
+    paths:
+      - "backtest/backtest.py"
+      - ".github/workflows/backtest.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy
+
+      - name: Current value picks (top 20)
+        working-directory: value-bot
+        run: python recommend.py --profile profile.json --top 20 --no-html
+
+      - name: Backtest
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: python backtest/backtest.py ${{ github.event.inputs.telegram == '1' && '--telegram' || '' }}
+
+      - name: Save results
+        run: |
+          git config user.name "backtest-bot"
+          git config user.email "backtest-bot@users.noreply.github.com"
+          git add backtest/results
+          git diff --cached --quiet || git commit -m "backtest results"
+          git pull --rebase && git push
