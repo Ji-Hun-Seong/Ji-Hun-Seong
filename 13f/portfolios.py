@@ -15,7 +15,7 @@ TOP_N = 25
 MANAGERS = [
     ("프렘 왓사 · Fairfax", "가치", None, "fairfax financial"),
     ("데이비드 테퍼 · Appaloosa", "가치", "0001656456", None),
-    ("빌 애크먼 · Pershing Square", "가치", "0001336528", None),
+    ("빌 애크먼 · Pershing Square", "가치", None, "pershing square"),
     ("스탠리 드러켄밀러 · Duquesne", "성장", "0001536411", None),
 ]
 
