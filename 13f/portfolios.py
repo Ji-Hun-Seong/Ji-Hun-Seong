@@ -13,9 +13,9 @@ TOP_N = 25
 
 # (표시 이름, 스타일, CIK 또는 None, CIK가 없을 때 EDGAR 이름 검색어)
 MANAGERS = [
+    ("빌 애크먼 · Pershing Square", "가치", None, "pershing square"),
     ("프렘 왓사 · Fairfax", "가치", None, "fairfax financial"),
     ("데이비드 테퍼 · Appaloosa", "가치", "0001656456", None),
-    ("빌 애크먼 · Pershing Square", "가치", None, "pershing square"),
     ("스탠리 드러켄밀러 · Duquesne", "성장", "0001536411", None),
 ]
 
@@ -173,10 +173,12 @@ def main():
         except Exception as e:
             print(f"::error::{label}: {type(e).__name__}: {str(e)[:300]}")
     msgs.append(WYMER)
-    intro = ("📂 <b>5인 포트폴리오 전체</b> (SEC 13F 최신 공시, 비중은 13F 신고 금액 대비)\n\n"
-             "⚠️ <b>정정</b>: 가이 스파이어는 2022년 6월 이후 13F 제출이 없어 제외합니다. "
-             "앞서 보낸 '5년 +121%'는 2022년 보유종목을 고정해 계산한 값이라 실제 성과가 아닙니다. "
-             "그 자리는 빌 애크먼(조건 미달)으로 대체.")
+    intro = ("📂 <b>빌 애크먼 + 나스닥100을 5년간 이긴 매니저 4인 · 포트폴리오</b>\n"
+             "기준: 최근 5년 수익률이 나스닥100(연 16.6%)보다 높을 것\n"
+             "✅ 프렘 왓사(페어팩스 주가 +310%) · 데이비드 테퍼(13F +183%) · "
+             "스탠리 드러켄밀러(13F +146%) · 스티브 와이머(연 17.7%)\n"
+             "⚠️ 애크먼은 조건 미달(13F 5년 +17%)이지만 포함\n"
+             "※ 13F = SEC 분기 공시(분기말 기준, 최대 45일 지연). 비중은 신고 금액 대비. 투자 자문 아님.")
     msgs[0] = intro + "\n\n" + msgs[0]
     for m in msgs:
         if do_send:
