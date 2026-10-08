@@ -15,7 +15,7 @@ TOP_N = 25
 MANAGERS = [
     ("프렘 왓사 · Fairfax", "가치", None, "fairfax financial"),
     ("데이비드 테퍼 · Appaloosa", "가치", "0001656456", None),
-    ("가이 스파이어 · Aquamarine", "가치", None, "aquamarine"),
+    ("가이 스파이어 · Aquamarine", "가치", None, "aquamarine capital"),
     ("스탠리 드러켄밀러 · Duquesne", "성장", "0001536411", None),
 ]
 
@@ -62,6 +62,7 @@ def find_cik(query):
         d = get(f"https://data.sec.gov/submissions/CIK{cik}.json").json()
         rec = d["filings"]["recent"]
         dates = [fd for f, fd in zip(rec["form"], rec["filingDate"]) if f.startswith("13F-HR")]
+        print(f"::notice::후보 {query}: {d['name']} CIK {cik} 13F {len(dates)}건, 최근 {max(dates) if dates else '-'}")
         if dates and (best is None or max(dates) > best[1]):
             best = (cik, max(dates), d["name"])
     if not best:
@@ -90,10 +91,17 @@ def holdings(cik, acc):
     for it in root.findall("n:infoTable", ns):
         pc = it.findtext("n:putCall", default="", namespaces=ns).strip()
         key = (it.findtext("n:cusip", namespaces=ns), pc)
-        o = out.setdefault(key, {"name": it.findtext("n:nameOfIssuer", namespaces=ns).strip(),
-                                 "pc": pc, "value": 0, "shares": 0})
+        name = it.findtext("n:nameOfIssuer", namespaces=ns).strip()
+        cls = (it.findtext("n:titleOfClass", default="", namespaces=ns) or "").strip()
+        if re.search(r"ETF|MSCI|INDEX|S&P|TRUST|FUND", cls.upper()):
+            name = cls
+        o = out.setdefault(key, {"name": name, "pc": pc, "value": 0, "shares": 0})
         o["value"] += int(float(it.findtext("n:value", namespaces=ns)))
         o["shares"] += int(float(it.findtext("n:shrsOrPrnAmt/n:sshPrnamt", namespaces=ns)))
+    px = sorted(o["value"] / o["shares"] for o in out.values() if o["shares"] and not o["pc"])
+    if px and px[len(px) // 2] < 2:          # 천 달러 단위로 신고한 경우 보정
+        for o in out.values():
+            o["value"] *= 1000
     return out
 
 
@@ -112,8 +120,8 @@ def message(label, style, cik):
             chg = (h["shares"] / p["shares"] - 1) * 100 if p["shares"] else 0
             tag = "" if abs(chg) < 0.5 else f"{'▲' if chg > 0 else '▼'}{abs(chg):.0f}%"
         name = h["name"].title()[:24] + (f" ({h['pc']})" if h["pc"] else "")
-        rows.append(f"{html.escape(name)} {h['value'] / total * 100:.1f}% {tag}".rstrip())
-    exits = [html.escape(p["name"].title()[:24]) for k, p in prev.items() if k not in cur]
+        rows.append(f"{html.escape(name, quote=False)} {h['value'] / total * 100:.1f}% {tag}".rstrip())
+    exits = [html.escape(p["name"].title()[:24], quote=False) for k, p in prev.items() if k not in cur]
     icon = "🟦" if style == "가치" else "🟩"
     lines = [f"{icon} <b>{html.escape(label)}</b> [{style}]",
              f"13F 기준일 {rep} (제출 {filed}) · {len(cur)}종목 · ${total / 1e9:.2f}B", ""]
@@ -123,7 +131,7 @@ def message(label, style, cik):
         lines.append(f"…외 {len(rows) - TOP_N}종목 (합계 {rest / total * 100:.1f}%)")
     if exits:
         lines += ["", f"❌ 전량매도 {len(exits)}: " + ", ".join(exits[:15]) + (" …" if len(exits) > 15 else "")]
-    lines += ["", "🆕 신규 · ▲▼ 직전 분기 대비 주식수 변화", NOTES.get(label, "")]
+    lines += ["", "🆕 신규 · ▲▼ 직전 분기 대비 주식수 변화 · (Call/Put) 옵션", NOTES.get(label, "")]
     return "\n".join(lines)[:4000]
 
 
