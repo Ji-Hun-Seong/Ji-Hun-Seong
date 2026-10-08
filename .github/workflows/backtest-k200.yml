@@ -1,0 +1,41 @@
+name: KOSPI200 BB+RSI backtest (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      telegram:
+        description: "1 = 결과 요약을 텔레그램(본인)으로 보내기"
+        default: "0"
+  push:
+    paths:
+      - "backtest/k200.py"
+      - ".github/workflows/backtest-k200.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy finance-datareader
+      - name: Backtest
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          mkdir -p backtest/results
+          set -o pipefail
+          python -u backtest/k200.py ${{ github.event.inputs.telegram == '1' && '--telegram' || '' }} 2>&1 | tee backtest/results/k200_run_log.txt
+      - name: Save results
+        if: always()
+        run: |
+          git config user.name "backtest-bot"
+          git config user.email "backtest-bot@users.noreply.github.com"
+          git add backtest/results
+          git diff --cached --quiet || git commit -m "k200 backtest results"
+          git pull --rebase && git push

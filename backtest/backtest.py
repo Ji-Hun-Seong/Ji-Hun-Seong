@@ -155,13 +155,17 @@ def indicators(df: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # 포트폴리오 시뮬레이션
 # ---------------------------------------------------------------------------
-def simulate(data: dict[str, pd.DataFrame], trend_filter: bool):
+def simulate(data: dict[str, pd.DataFrame], trend_filter: bool, max_pos=MAX_POS, hold_days=HOLD_DAYS,
+             exit_rsi=55, mid_exit=True, idx_ret: pd.Series | None = None):
+    """idx_ret가 있으면 쉬는 현금을 지수(코스피200 ETF 가정, 비용 무시)에 넣어 둔다."""
     dates = sorted(set().union(*[d.index for d in data.values()]))
-    dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
+    dates = [d for d in dates if d >= pd.Timestamp(START) + pd.DateOffset(days=300)]   # 200일선 워밍업
     cash, pos, trades, curve = 1.0, {}, [], []
     pending_buy, pending_sell = [], []
 
     for t in dates:
+        if idx_ret is not None:
+            cash *= 1 + idx_ret.get(t, 0.0)
         # 1) 어제 신호를 오늘 시가에 체결
         for code in pending_sell:
             df = data[code]
@@ -177,12 +181,12 @@ def simulate(data: dict[str, pd.DataFrame], trend_filter: bool):
 
         equity_open = cash + sum(p["shares"] * data[c]["Close"].asof(t) for c, p in pos.items())
         for code in pending_buy:
-            if len(pos) >= MAX_POS or code in pos:
+            if len(pos) >= max_pos or code in pos:
                 continue
             df = data[code]
             if t not in df.index:
                 continue
-            budget = min(cash, equity_open / MAX_POS)
+            budget = min(cash, equity_open / max_pos)
             if budget <= 0:
                 break
             px = df.at[t, "Open"] * (1 + BUY_COST)
@@ -198,9 +202,9 @@ def simulate(data: dict[str, pd.DataFrame], trend_filter: bool):
             p["days"] += 1
             r = df.loc[t]
             why = ("stop" if r.Close <= p["entry_px"] * (1 - STOP) else
-                   "mid" if r.Close >= r.mid else
-                   "rsi" if r.rsi >= 55 else
-                   "time" if p["days"] >= HOLD_DAYS else "")
+                   "mid" if mid_exit and r.Close >= r.mid else
+                   "rsi" if r.rsi >= exit_rsi else
+                   "time" if p["days"] >= hold_days else "")
             if why:
                 p["why"] = why
                 pending_sell.append(code)
@@ -220,7 +224,7 @@ def simulate(data: dict[str, pd.DataFrame], trend_filter: bool):
         pending_buy = [c for _, c in sorted(cands)]
 
         equity = cash + sum(p["shares"] * data[c]["Close"].asof(t) for c, p in pos.items())
-        curve.append((t, equity, len(pos)))
+        curve.append((t, equity, len(pos) / max_pos))
 
     eq = pd.DataFrame(curve, columns=["date", "equity", "npos"]).set_index("date")
     return eq, pd.DataFrame(trades)
@@ -250,7 +254,7 @@ def stats(equity: pd.Series, trades: pd.DataFrame | None = None, npos: pd.Series
                     "평균거래수익": trades["ret"].mean() if n else np.nan,
                     "평균보유일": trades["days"].mean() if n else np.nan})
     if npos is not None:
-        out["투자비중"] = (npos / MAX_POS).mean()
+        out["투자비중"] = npos.mean()
     return out
 
 
