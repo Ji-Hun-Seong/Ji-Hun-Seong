@@ -5,7 +5,7 @@ recommend.py — 내 매매일지 DNA로 '내가 관심 가질 가치주 20선'�
     python recommend.py                      # journals/ + universe.csv 로 추천, report.html 생성
     python recommend.py --top 20 --telegram  # 텔레그램으로도 전송(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
     python recommend.py --include-kosdaq     # 코스닥 후보도 허용(기본: 코스피만)
-    python recommend.py --include-holdings   # 이미 보유 중인 종목도 순위에 포함
+    python recommend.py --exclude-holdings   # 보유 종목을 순위에서 빼기(기본: 포함하고 📌 표시)
 
 점수 = 밸류에이션 25 + 주주환원 25 + 현금흐름·재무 25 + 내 성향 적합도 25 − 리스크 감점
 """
@@ -206,7 +206,7 @@ def explain(c: Candidate, dna: DNA):
         c.risks.insert(0, f"보유 중인 {', '.join(same)}와 같은 그룹이라 노출이 겹침")
 
 
-def rank(dna: DNA, universe: list[Candidate], include_kosdaq=False, include_holdings=False):
+def rank(dna: DNA, universe: list[Candidate], include_kosdaq=False, include_holdings=True):
     held = set(dna.holdings)
     for c in universe:
         r = c.row
@@ -288,15 +288,17 @@ def fin_block(c):
 def telegram_messages(picked, top, dna, asof=""):
     """1통: 20선 요약 / 이후: 종목별 근거·리스크·재무 (4,000자 단위로 분할)."""
     summary = [f"📈 가치주 DNA {top}선 — {date.today():%Y-%m-%d}",
-               "매매일지 성향 × 밸류·환원·현금흐름 점수 (코스피, 보유 종목 제외)", ""]
+               "매매일지 성향 × 밸류·환원·현금흐름 점수 (코스피, 📌 = 보유 중)", ""]
     for i, c in enumerate(picked[:top], 1):
-        summary.append(f"{i:>2}. {c.name} {c.total:.0f}점")
+        pin = " 📌" if c.name in dna.holdings else ""
+        summary.append(f"{i:>2}. {c.name}{pin} {c.total:.0f}점")
     summary += ["", "종목별 근거·재무는 다음 메시지에 이어집니다.",
                 f"데이터 기준 {asof or '-'} · 단위 억원 · 매수 전 DART 원문 확인"]
     blocks = []
     for i, c in enumerate(picked[:top], 1):
         s = c.scores
-        b = [f"{i}. {c.name} ({c.row['ticker']}) {c.total:.0f}점",
+        pin = " 📌 보유 중" if c.name in dna.holdings else ""
+        b = [f"{i}. {c.name} ({c.row['ticker']}) {c.total:.0f}점{pin}",
              f"   밸류 {s['value']:.0f} · 환원 {s['payout']:.0f} · 현금 {s['cash']:.0f} · 적합 {s['fit']:.0f}"]
         why = [w for w in c.reasons if "재진입" not in w][:3] or [c.row.get("note", "")]
         b.append(f"   ✓ {', '.join(why)}")
@@ -391,7 +393,7 @@ def main(argv=None):
     ap.add_argument("--universe", default=os.path.join(HERE, "universe.csv"))
     ap.add_argument("--top", type=int, default=20)
     ap.add_argument("--include-kosdaq", action="store_true")
-    ap.add_argument("--include-holdings", action="store_true")
+    ap.add_argument("--exclude-holdings", action="store_true")
     ap.add_argument("--html", default=os.path.join(HERE, "report.html"))
     ap.add_argument("--json", default=os.path.join(HERE, "picks.json"))
     ap.add_argument("--telegram", action="store_true")
@@ -421,7 +423,7 @@ def main(argv=None):
             print("실제 보유 종목 반영:", ", ".join(real))
     if dna.unknown:
         print("⚠ value_dna.TAXONOMY 에 없는 종목(분류 후 다시 실행):", dna.unknown)
-    picked, excluded = rank(dna, load_universe(a.universe), a.include_kosdaq, a.include_holdings)
+    picked, excluded = rank(dna, load_universe(a.universe), a.include_kosdaq, not a.exclude_holdings)
     console(picked, a.top)
 
     if not a.no_html:

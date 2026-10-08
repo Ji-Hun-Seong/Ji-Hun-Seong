@@ -10,6 +10,8 @@ on:
         type: choice
         options: [picks, find_chat]
         default: picks
+  push:                        # 임시: 그룹 시험 전송(확인 후 제거)
+    paths: ["value-bot/.test_send"]
 
 permissions:
   contents: write
