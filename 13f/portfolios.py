@@ -148,7 +148,23 @@ def send(text):
         raise RuntimeError(f"텔레그램 {r.status_code}: {r.text[:200]}")
 
 
+def find_chats():
+    r = requests.get(f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/getUpdates", timeout=30).json()
+    chats = {}
+    for u in r.get("result", []):
+        for k in ("message", "my_chat_member", "chat_member", "channel_post"):
+            c = (u.get(k) or {}).get("chat")
+            if c:
+                chats[c["id"]] = (c.get("type"), c.get("title") or c.get("username") or "")
+    for cid, (typ, title) in chats.items():
+        print(f"::notice::chat {cid} | {typ} | {title}")
+    if not chats:
+        print("::warning::업데이트 없음 — 그룹에서 /start@BilAckman_bot 을 보낸 뒤 다시 실행")
+
+
 def main():
+    if "--find-chat" in sys.argv:
+        return find_chats()
     do_send = "--send" in sys.argv
     msgs = []
     for label, style, cik, query in MANAGERS:
