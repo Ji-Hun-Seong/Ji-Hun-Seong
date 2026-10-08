@@ -1,0 +1,20 @@
+name: One-off Telegram message
+on:
+  push:
+    branches: [main]
+    paths: ["13f/outbox.txt"]
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Send
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          curl -sS --fail-with-body -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TG_CHAT_ID}" \
+            --data-urlencode "text@13f/outbox.txt" \
+            -d parse_mode=HTML -d disable_web_page_preview=true -o resp.json
+          python3 -c "import json;r=json.load(open('resp.json'));print('ok' if r.get('ok') else r)"
