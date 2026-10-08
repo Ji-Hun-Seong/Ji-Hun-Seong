@@ -49,6 +49,24 @@ def kospi200_codes() -> dict[str, str]:
         return _k200_naver()
     except Exception as e:
         print("네이버 코스피200 실패:", repr(e))
+    try:
+        out = {}
+        for page in range(1, 6):
+            r = requests.get("https://m.stock.naver.com/api/index/KPI200/enrollStocks",
+                             params={"page": page, "pageSize": 100}, headers=UA, timeout=20)
+            j = r.json()
+            items = j.get("stocks", j) if isinstance(j, dict) else j
+            if page == 1:
+                print("모바일 응답", r.status_code, str(j)[:300])
+            new = {it["itemCode"]: it.get("stockName", "") for it in items if it.get("itemCode") not in out}
+            if not new:
+                break
+            out.update(new)
+        if len(out) >= 150:
+            return out
+        print("모바일 코스피200", len(out))
+    except Exception as e:
+        print("모바일 코스피200 실패:", repr(e))
     from pykrx import stock
     codes = stock.get_index_portfolio_deposit_file("1028")
     if len(codes) < 150:
@@ -62,7 +80,10 @@ def _k200_naver() -> dict[str, str]:
         r = requests.get("https://finance.naver.com/sise/entryJongmok.naver",
                          params={"type": "KPI200", "page": page}, headers=UA, timeout=20)
         r.encoding = "euc-kr"
-        found = re.findall(r'code=(\d{6})"[^>]*>([^<]+)</a>', r.text)
+        found = re.findall(r'code=(\d{6})[^>]*>\s*([^<]+?)\s*</a>', r.text)
+        if page == 1 and not found:
+            i = r.text.find("code=")
+            print("네이버 응답", r.status_code, len(r.text), repr(r.text[max(0, i - 200):i + 300] if i >= 0 else r.text[:600]))
         new = {c: n.strip() for c, n in found if c not in out}
         if not new:
             break
