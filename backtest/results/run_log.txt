@@ -1,48 +1,28 @@
-== https://m.stock.naver.com/api/index/KPI200/enrollStocks?page=1&pageSize=20 
- 200 30143 '[{"stockType":"domestic","stockEndType":"stock","itemCode":"005930","reutersCode":"005930","stockName":"삼성전자","sosok":"0","closePrice":"263,000","compareToPreviousClosePrice":"-5,500","compareToPreviousPrice":{"code":"5","text":"하락","name":"FALLING"},"fluctuationsRatio":"-2.05","accumulatedTradingVolume":"29,249,886","accumulatedTradingValue":"7,775,504","localTradedAt":"2026-10-08T20:34:39+09:00","marketValue":"15,375,713","nav":"N/A","threeMon'
-== https://api.stock.naver.com/index/KPI200/enrollStocks?page=1&pageSize=20 
- 200 58 '{"reutersCode":"KPI200","indexName":"코스피 200","stocks":[]}'
-== https://m.stock.naver.com/api/index/KPI200/integration 
- 200 16341 '{"stockEndType":"index","itemCode":"KPI200","reutersCode":"KPI200","stockName":"코스피 200","totalInfos":[{"code":"lastClosePrice","key":"전일","value":"1,073.63"},{"code":"openPrice","key":"시가","value":"1,074.98","compareToPreviousPrice":{"code":"2","text":"상승","name":"RISING"}},{"code":"highPrice","key":"고가","value":"1,076.70","compareToPreviousPrice":{"code":"2","text":"상승","name":"RISING"}},{"code":"lowPrice","key":"저가","v'
-== https://finance.naver.com/sise/entryJongmok.naver?type=KPI200&page=1 
- 410 2942 '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\n<html>\n<head>\n<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">\n<title>Npay </title>\n\n<link rel="stylesheet" type="text/css" href="https://ssl.pstatic.net/imgstock/static.pc/20261001211942/css/newstock.css">\n<link rel="stylesheet" type="text/css" href="https://ssl.pstatic.net/imgstock/static.pc/20261001211942/css/co'
-== https://finance.naver.com/sise/sise_index.naver?code=KPI200 
- 200 131569 '<!DOCTYPE html><html lang="ko" class="" data-theme="light"><head><meta charSet="utf-8"/><meta name="viewport" content="width=1366, initial-scale=1.0, user-scalable=yes"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="https://ssl.pstatic.net/imgstock/fn/real/pc/_next/static/css/9349f3b462cc41d1.css" data-precedence="next"/><link rel="stylesheet" hr'
-== https://api.finance.naver.com/siseJson.naver?symbol=005930&requestType=1&startTime=20260901&endTime=20261008&timeframe=day 
- 200 1713 '\n [[\'날짜\', \'시가\', \'고가\', \'저가\', \'종가\', \'거래량\', \'외국인소진율\'],\n\n\t\n\t\n\t\t\n["20260901", 256500, 262500, 254000, 261000, 15319615, 46.71],\n\t\t\n["20260902", 252000, 255500, 249500, 250500, 15176841, 46.69],\n\t\t\n["20260903", 254000, 255000, 243000, 250000, 13756022, 46.71],\n\t\t\n["20260904", 254000, 259000, 252500, 255500, 14031862, 46.73],\n\t\t\n["20260907", 267000, 270000, 264000, 270000, 18314016, 46.79],\n\t\t\n["20260908'
-== https://api.finance.naver.com/siseJson.naver?symbol=KPI200&requestType=1&startTime=20260901&endTime=20261008&timeframe=day 
- 200 1700 '\n [[\'날짜\', \'시가\', \'고가\', \'저가\', \'종가\', \'거래량\', \'외국인소진율\'],\n\n\t\n\t\t\n["20260901", 1065.37, 1079.91, 1056.64, 1075.3, 110574, 0.0],\n\t\t\n["20260902", 1040.43, 1053.2, 1030.77, 1031.53, 104459, 0.0],\n\t\t\n["20260903", 1046.17, 1050.77, 1009.7, 1032.82, 220979, 0.0],\n\t\t\n["20260904", 1045.4, 1062.76, 1041.46, 1051.52, 103784, 0.0],\n\t\t\n["20260907", 1090.72, 1105.19, 1083.21, 1105.19, 110233, 0.0],\n\t\t\n["20260908", 111'
-네이버 응답 410 3000 '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\n<html>\n<head>\n<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">\n<title>Npay 증권</title>\n\n<link rel="stylesheet" type="text/css" href="https://ssl.pstatic.net/imgstock/static.pc/20261001211942/css/newstock.css">\n<link rel="stylesheet" type="text/css" href="https://ssl.pstatic.net/imgstock/static.pc/20261001211942/css/common.css">\n<link rel="stylesheet" type="text/css" href="https://ssl.pstatic.net/imgstock/static.pc/20261001211942/css/finance_header.css">\n<link rel="stylesheet" type="text/css" href="https://ssl.ps'
-네이버 코스피200 실패: RuntimeError('코스피200 목록이 0개만 잡힘 — 페이지 구조 변경 의심')
-모바일 코스피200 실패: JSONDecodeError('Expecting value: line 1 column 1 (char 0)')
-KRX 로그인 실패: KRX_ID 또는 KRX_PW 환경 변수가 설정되지 않았습니다.
-Error occurred in get_index_ohlcv_by_date: Expecting value: line 1 column 1 (char 0)
-Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/core/indexes/range.py", line 1018, in __getitem__
-    return self._range[new_key]
-           ~~~~~~~~~~~^^^^^^^^^
-IndexError: range object index out of range
+20선 20개, 코스피200 201개, 교집합 8개: 오리온홀딩스, 영원무역홀딩스, 기아, 신세계, 롯데쇼핑, 대한유화, TKG휴켐스, 동원산업
+/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py:160: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+  dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
+/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py:160: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+  dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
+/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py:160: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+  dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
+/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py:160: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+  dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
+📊 BB+RSI 백테스트 (2015-10-28 ~ 2026-10-08)
+교집합 8종목: 오리온홀딩스, 영원무역홀딩스, 기아, 신세계, 롯데쇼핑, 대한유화, TKG휴켐스, 동원산업
+비용 반영(매도 거래세 0.20% 등), 최대 5종목
 
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py", line 350, in <module>
-    run(a.picks, a.telegram)
-  File "/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py", line 272, in run
-    k200 = kospi200_codes()
-           ^^^^^^^^^^^^^^^^
-  File "/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py", line 71, in kospi200_codes
-    codes = stock.get_index_portfolio_deposit_file("1028")
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pykrx/stock/stock_api.py", line 1298, in get_index_portfolio_deposit_file
-    target_date = get_nearest_business_day_in_a_week()
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pykrx/stock/stock_api.py", line 69, in get_nearest_business_day_in_a_week
-    return krx.get_nearest_business_day_in_a_week(date, prev)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pykrx/website/krx/__init__.py", line 39, in get_nearest_business_day_in_a_week
-    return df.index[-1].strftime("%Y%m%d")
-           ~~~~~~~~^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/core/indexes/range.py", line 1020, in __getitem__
-    raise IndexError(
-IndexError: index -1 is out of bounds for axis 0 with size 0
+• 교집합 · 200일선 필터
+  CAGR -0.0% · MDD -4.3% · 총 -0% · 거래 9회 · 승률 44% · 건당 +0.03% · 평균 9.0일 · 평균 투자비중 1%
+• 교집합 · 필터 없음
+  CAGR +1.9% · MDD -27.9% · 총 +23% · 거래 165회 · 승률 56% · 건당 +0.78% · 평균 7.8일 · 평균 투자비중 10%
+• 교집합 · 단순보유(동일비중)
+  CAGR +0.4% · MDD -60.1% · 총 +4%
+• 코스피200 전체 · 200일선 필터
+  CAGR +4.6% · MDD -23.5% · 총 +63% · 거래 217회 · 승률 56% · 건당 +1.26% · 평균 8.2일 · 평균 투자비중 13%
+• 코스피200 전체 · 필터 없음
+  CAGR -1.4% · MDD -61.6% · 총 -14% · 거래 1029회 · 승률 49% · 건당 +0.06% · 평균 8.3일 · 평균 투자비중 64%
+• 코스피200 전체 · 단순보유(동일비중)
+  CAGR +13.6% · MDD -46.5% · 총 +305%
+• 코스피200 지수
+  CAGR +14.0% · MDD -41.2% · 총 +318%
+⚠️ 오늘 기준 종목군이라 과거 성과는 낙관적으로 나옴(생존·선정 편향)
