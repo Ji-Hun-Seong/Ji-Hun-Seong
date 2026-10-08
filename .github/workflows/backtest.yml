@@ -24,6 +24,9 @@ jobs:
           python-version: "3.12"
       - run: pip install requests pandas numpy pykrx finance-datareader
 
+      - run: python backtest/probe.py
+        continue-on-error: true
+
       - name: Current value picks (top 20)
         working-directory: value-bot
         run: python recommend.py --profile profile.json --top 20 --no-html
@@ -35,7 +38,7 @@ jobs:
         run: |
           mkdir -p backtest/results
           set -o pipefail
-          python -u backtest/backtest.py ${{ github.event.inputs.telegram == '1' && '--telegram' || '' }} 2>&1 | tee backtest/results/run_log.txt
+          python -u backtest/probe.py; python -u backtest/backtest.py ${{ github.event.inputs.telegram == '1' && '--telegram' || '' }} 2>&1 | tee backtest/results/run_log.txt
 
       - name: Save results
         if: always()
