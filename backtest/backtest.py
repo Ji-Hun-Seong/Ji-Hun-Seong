@@ -30,7 +30,7 @@ import requests
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.path.join(HERE, "results")
-UA = {"User-Agent": "Mozilla/5.0 (value-dna-backtest)"}
+UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36"}
 
 START = "2015-01-01"
 BUY_COST = 0.00015 + 0.001
@@ -46,18 +46,12 @@ STOP = 0.08
 def kospi200_codes() -> dict[str, str]:
     """코스피200 편입종목(코드→이름). 네이버 → pykrx 순으로 시도."""
     try:
-        return _k200_naver()
-    except Exception as e:
-        print("네이버 코스피200 실패:", repr(e))
-    try:
         out = {}
-        for page in range(1, 6):
+        for page in range(1, 16):
             r = requests.get("https://m.stock.naver.com/api/index/KPI200/enrollStocks",
-                             params={"page": page, "pageSize": 100}, headers=UA, timeout=20)
+                             params={"page": page, "pageSize": 20}, headers=UA, timeout=20)
             j = r.json()
             items = j.get("stocks", j) if isinstance(j, dict) else j
-            if page == 1:
-                print("모바일 응답", r.status_code, str(j)[:300])
             new = {it["itemCode"]: it.get("stockName", "") for it in items if it.get("itemCode") not in out}
             if not new:
                 break
@@ -67,6 +61,10 @@ def kospi200_codes() -> dict[str, str]:
         print("모바일 코스피200", len(out))
     except Exception as e:
         print("모바일 코스피200 실패:", repr(e))
+    try:
+        return _k200_naver()
+    except Exception as e:
+        print("네이버 PC 코스피200 실패:", repr(e))
     from pykrx import stock
     codes = stock.get_index_portfolio_deposit_file("1028")
     if len(codes) < 150:
