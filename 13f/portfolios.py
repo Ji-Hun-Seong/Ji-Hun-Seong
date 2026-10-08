@@ -15,14 +15,14 @@ TOP_N = 25
 MANAGERS = [
     ("프렘 왓사 · Fairfax", "가치", None, "fairfax financial"),
     ("데이비드 테퍼 · Appaloosa", "가치", "0001656456", None),
-    ("가이 스파이어 · Aquamarine", "가치", None, "aquamarine capital"),
+    ("빌 애크먼 · Pershing Square", "가치", "0001336528", None),
     ("스탠리 드러켄밀러 · Duquesne", "성장", "0001536411", None),
 ]
 
 NOTES = {
     "프렘 왓사 · Fairfax": "※ 13F는 페어팩스의 미국 상장주식 일부만 보여줌. 진짜 '따라하기'는 페어팩스(FFH) 주식 자체 보유.",
     "데이비드 테퍼 · Appaloosa": "※ 역발상 가치 스타일이지만 현재 보유는 기술주 위주.",
-    "가이 스파이어 · Aquamarine": "※ 매매가 거의 없는 집중 포트폴리오. 성과 대부분이 마이크론.",
+    "빌 애크먼 · Pershing Square": "※ 5년 조건 미달(13F 5년 +17%, 실제 펀드 연 ~8%)이지만 요청에 따라 포함.",
     "스탠리 드러켄밀러 · Duquesne": "※ 종목 수·회전율이 높아 공시 시점엔 이미 바뀌었을 가능성 큼.",
 }
 
@@ -152,7 +152,10 @@ def main():
         except Exception as e:
             print(f"::error::{label}: {type(e).__name__}: {str(e)[:300]}")
     msgs.append(WYMER)
-    intro = "📂 <b>나스닥100을 5년간 이긴 5인 · 포트폴리오 전체</b>\n(SEC 13F 최신 공시 기준, 비중은 13F 신고 금액 대비)"
+    intro = ("📂 <b>5인 포트폴리오 전체</b> (SEC 13F 최신 공시, 비중은 13F 신고 금액 대비)\n\n"
+             "⚠️ <b>정정</b>: 가이 스파이어는 2022년 6월 이후 13F 제출이 없어 제외합니다. "
+             "앞서 보낸 '5년 +121%'는 2022년 보유종목을 고정해 계산한 값이라 실제 성과가 아닙니다. "
+             "그 자리는 빌 애크먼(조건 미달)으로 대체.")
     msgs[0] = intro + "\n\n" + msgs[0]
     for m in msgs:
         if do_send:
