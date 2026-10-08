@@ -1,12 +1,4 @@
 20선 20개, 코스피200 201개, 교집합 8개: 오리온홀딩스, 영원무역홀딩스, 기아, 신세계, 롯데쇼핑, 대한유화, TKG휴켐스, 동원산업
-/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py:160: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
-  dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
-/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py:160: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
-  dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
-/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py:160: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
-  dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
-/home/runner/work/Ji-Hun-Seong/Ji-Hun-Seong/backtest/backtest.py:160: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
-  dates = [d for d in dates if d >= pd.Timestamp(START) + pd.Timedelta(days=300)]   # 200일선 워밍업
 📊 BB+RSI 백테스트 (2015-10-28 ~ 2026-10-08)
 교집합 8종목: 오리온홀딩스, 영원무역홀딩스, 기아, 신세계, 롯데쇼핑, 대한유화, TKG휴켐스, 동원산업
 비용 반영(매도 거래세 0.20% 등), 최대 5종목
