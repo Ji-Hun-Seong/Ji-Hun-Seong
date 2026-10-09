@@ -1,0 +1,13 @@
+listing sample: {'stockListSortType': 'MARKET_VALUE', 'stockListCategoryType': 'KOSPI', 'stocks': [{'stockType': 'domestic', 'stockEndType': 'stock', 'itemCode': '005930', 'reutersCode': '005930', 'stockName': '삼성전자', 'sosok': '0', 'closePrice': '263,000', 'compareToPreviousClosePrice': '-5,500', 'compareToPrevious
+KOSPI stocks: 944
+0
+100
+200
+300
+400
+500
+600
+700
+800
+900
+945 series 2665912 rows
