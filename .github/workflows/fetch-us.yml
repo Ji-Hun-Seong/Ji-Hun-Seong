@@ -27,6 +27,6 @@ jobs:
           mkdir -p /tmp/d && cp backtest/data/us_* /tmp/d/
           git checkout --orphan bt-data-us
           git rm -rq --cached . && git clean -fdq
-          cp /tmp/d/* . && git add us_prices.csv.gz us_members.csv
+          cp /tmp/d/* . && git add us_prices.csv.gz us_members.csv us_changes.csv
           git commit -qm "S&P500 prices $(date +%F)"
           git push -f origin bt-data-us
