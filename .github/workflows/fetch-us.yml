@@ -1,0 +1,32 @@
+name: Fetch S&P500 price data (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "backtest/fetch_us.py"
+      - ".github/workflows/fetch-us.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy yfinance lxml
+      - run: python -u backtest/fetch_us.py
+      - name: Push to bt-data-us branch
+        run: |
+          git config user.name "backtest-bot"
+          git config user.email "backtest-bot@users.noreply.github.com"
+          mkdir -p /tmp/d && cp backtest/data/us_* /tmp/d/
+          git checkout --orphan bt-data-us
+          git rm -rq --cached . && git clean -fdq
+          cp /tmp/d/* . && git add us_prices.csv.gz us_members.csv
+          git commit -qm "S&P500 prices $(date +%F)"
+          git push -f origin bt-data-us
