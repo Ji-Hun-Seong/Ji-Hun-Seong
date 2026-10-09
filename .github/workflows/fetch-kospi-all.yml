@@ -1,0 +1,36 @@
+name: Fetch all KOSPI price data (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "backtest/fetch_kospi_all.py"
+      - ".github/workflows/fetch-kospi-all.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy finance-datareader
+      - run: |
+          mkdir -p backtest/data
+          set -o pipefail
+          python -u backtest/fetch_kospi_all.py 2>&1 | tee backtest/data/kospi_all_log.txt
+      - name: Push to bt-data-kr branch
+        if: always()
+        run: |
+          git config user.name "backtest-bot"
+          git config user.email "backtest-bot@users.noreply.github.com"
+          mkdir -p /tmp/d && cp backtest/data/kospi_all* /tmp/d/
+          git checkout --orphan bt-data-kr
+          git rm -rq --cached . && git clean -fdq
+          cp /tmp/d/* . && git add kospi_all*
+          git commit -qm "KOSPI all prices $(date +%F)"
+          git push -f origin bt-data-kr
