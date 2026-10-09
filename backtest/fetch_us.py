@@ -17,14 +17,20 @@ print("tables:", [(i, t.shape, list(t.columns)[:6]) for i, t in enumerate(tables
 members = tables[0]
 members["yf"] = members["Symbol"].str.replace(".", "-", regex=False)
 members.to_csv(os.path.join(D, "us_members.csv"), index=False)
-# 편입·제외 이력(시점별 구성종목 복원용)
-ch = next(t for t in tables[1:] if any("Removed" in str(c) for c in t.columns))
-ch.columns = ["_".join(str(x) for x in c).strip() if isinstance(c, tuple) else str(c) for c in ch.columns]
-ch.to_csv(os.path.join(D, "us_changes.csv"), index=False)
-print(ch.columns.tolist(), len(ch))
-removed_col = [c for c in ch.columns if "Removed" in c and ("Ticker" in c or "Symbol" in c)][0]
-removed = ch[removed_col].dropna().astype(str).str.replace(".", "-", regex=False).unique().tolist()
-tickers = sorted(set(members["yf"]) | set(removed)) + ["SPY"]
+# 시점별 구성종목 이력: github.com/fja05680/sp500 의 "S&P 500 Historical Components & Changes" CSV
+api = requests.get("https://api.github.com/repos/fja05680/sp500/contents/", timeout=30).json()
+names = sorted(x["name"] for x in api if x["name"].startswith("S&P 500 Historical Components") and x["name"].endswith(".csv"))
+print("history files:", names[-3:])
+dl = next(x["download_url"] for x in api if x["name"] == names[-1])
+hist = pd.read_csv(io.StringIO(requests.get(dl, timeout=60).text))
+hist["date"] = pd.to_datetime(hist["date"])
+hist = hist[hist["date"] >= "2013-06-01"]
+hist.to_csv(os.path.join(D, "us_hist.csv"), index=False)
+ever = set()
+for t in hist["tickers"]:
+    ever |= {x.strip().replace(".", "-") for x in t.split(",")}
+print("tickers ever in S&P500 since 2013-06:", len(ever), "last hist date", hist["date"].max())
+tickers = sorted(set(members["yf"]) | ever) + ["SPY"]
 print(len(tickers), "tickers")
 
 px = yf.download(tickers, start="2014-01-01", auto_adjust=True, group_by="column", threads=True, progress=False)
