@@ -1,0 +1,33 @@
+name: Fetch KOSPI200 price data (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "backtest/fetch_data.py"
+      - ".github/workflows/fetch-data.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy finance-datareader
+      - run: python -u backtest/fetch_data.py
+      # 시세 파일은 main을 어지럽히지 않도록 bt-data 브랜치에만 올린다
+      - name: Push to bt-data branch
+        run: |
+          git config user.name "backtest-bot"
+          git config user.email "backtest-bot@users.noreply.github.com"
+          mkdir -p /tmp/d && cp backtest/data/* /tmp/d/
+          git checkout --orphan bt-data
+          git rm -rq --cached . && git clean -fdq -e /tmp/d
+          cp /tmp/d/* . && git add k200_prices.csv.gz k200_members.csv
+          git commit -qm "KOSPI200 prices $(date +%F)"
+          git push -f origin bt-data
