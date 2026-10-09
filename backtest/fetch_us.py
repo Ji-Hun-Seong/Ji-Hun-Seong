@@ -13,15 +13,16 @@ os.makedirs(D, exist_ok=True)
 html = requests.get("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
                     headers={"User-Agent": "Mozilla/5.0 backtest"}, timeout=30).text
 tables = pd.read_html(io.StringIO(html))
+print("tables:", [(i, t.shape, list(t.columns)[:6]) for i, t in enumerate(tables)])
 members = tables[0]
 members["yf"] = members["Symbol"].str.replace(".", "-", regex=False)
 members.to_csv(os.path.join(D, "us_members.csv"), index=False)
 # 편입·제외 이력(시점별 구성종목 복원용)
-ch = tables[1]
+ch = next(t for t in tables[1:] if any("Removed" in str(c) for c in t.columns))
 ch.columns = ["_".join(str(x) for x in c).strip() if isinstance(c, tuple) else str(c) for c in ch.columns]
 ch.to_csv(os.path.join(D, "us_changes.csv"), index=False)
 print(ch.columns.tolist(), len(ch))
-removed_col = [c for c in ch.columns if "Removed" in c and "Ticker" in c][0]
+removed_col = [c for c in ch.columns if "Removed" in c and ("Ticker" in c or "Symbol" in c)][0]
 removed = ch[removed_col].dropna().astype(str).str.replace(".", "-", regex=False).unique().tolist()
 tickers = sorted(set(members["yf"]) | set(removed)) + ["SPY"]
 print(len(tickers), "tickers")
