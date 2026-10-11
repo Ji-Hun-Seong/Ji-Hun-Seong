@@ -1,0 +1,39 @@
+name: Fetch DART disclosures (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "backtest/fetch_dart.py"
+      - ".github/workflows/fetch-dart.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas
+      - run: |
+          mkdir -p backtest/data
+          set -o pipefail
+          python -u backtest/fetch_dart.py 2>&1 | tee backtest/data/dart_log.txt
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+      - name: Push to bt-data-dart branch
+        if: always()
+        run: |
+          git config user.name "backtest-bot"
+          git config user.email "backtest-bot@users.noreply.github.com"
+          mkdir -p /tmp/d && cp backtest/data/dart_* /tmp/d/
+          git checkout --orphan bt-data-dart
+          git rm -rq --cached . && git clean -fdq
+          cp /tmp/d/* . && git add dart_*
+          git commit -qm "DART $(date +%F)"
+          git push -f origin bt-data-dart
