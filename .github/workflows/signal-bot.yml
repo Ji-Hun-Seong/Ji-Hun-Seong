@@ -3,6 +3,9 @@ name: KOSPI daily signals
 on:
   schedule:
     - cron: "43 7 * * 1-5"     # 평일 UTC 07:43 = 한국 16:43 (장 마감 후)
+    # GitHub 예약 실행은 지연·누락될 수 있어 예비 실행 2회(이미 처리한 날이면 전송하지 않음)
+    - cron: "13 9 * * 1-5"     # 한국 18:13
+    - cron: "13 11 * * 1-5"    # 한국 20:13
   workflow_dispatch:
     inputs:
       force:
