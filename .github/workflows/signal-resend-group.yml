@@ -1,0 +1,22 @@
+name: KOSPI signals → group (resend)
+
+# 마지막 일일 신호를 가치주 봇 그룹방(VALUE_TG_CHAT_ID)으로 다시 보낸다.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "signal-bot/resend_request.txt"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy
+      - run: python signal-bot/resend.py
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID }}
