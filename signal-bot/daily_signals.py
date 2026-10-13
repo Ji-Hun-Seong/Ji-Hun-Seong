@@ -410,7 +410,8 @@ def build_message(x, res, state, names):
         held = {p["name"] for p in S["squeeze"]["positions"].values()}
         extra = [s for s in res["squeeze"]["signals"] if s not in {b[0] for b in res["squeeze"]["buys"]} and s not in held]
         if extra:
-            L.append("(자리 부족 등으로 제외된 신호: " + ", ".join(extra[:8]) + ")")
+            why = "시장 필터로 보류된 신호" if not x["regime"] else "자리 부족으로 제외된 신호"
+            L.append(f"({why}: " + ", ".join(extra[:8]) + ")")
         L.append("")
         rb = res["buyback"]
         L.append(f"③ B. 자사주 공시 스윙 (최대 {BB_MAX_POS}종목, {BB_HOLD}거래일 보유 · RSI>{BB_TAKE} 익절)")
