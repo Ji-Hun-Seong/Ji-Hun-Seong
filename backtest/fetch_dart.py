@@ -1,4 +1,4 @@
-"""fetch_dart.py — 코스피 상장사의 DART 공시(2014~)를 받아 backtest/data/ 에 저장.
+"""fetch_dart.py — 코스피 상장사의 DART 공시(2014~)를 받아 backtest/data/ 에 저장한다.
 
   dart_filings.csv.gz : 주요사항보고(B)·거래소공시(I) 목록 (rcept_dt, stock_code, report_nm, rcept_no, flr_nm)
   dart_insider.csv.gz : 임원·주요주주 특정증권 소유상황 보고(증감 수량·비율)
