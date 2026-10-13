@@ -43,6 +43,16 @@ jobs:
         run: |
           set -o pipefail
           python -u signal-bot/daily_signals.py ${{ github.event.inputs.force == '1' && '--force' || '' }} 2>&1 | tee signal-bot/last_run.txt
+      # 같은 내용을 가치주 봇 그룹방(아빠와 함께)에도 전송 — 새 메시지를 보낸 날만
+      - name: Also send to group
+        if: success()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID }}
+        run: |
+          if grep -q "텔레그램 전송 완료" signal-bot/last_run.txt && [ -n "$TELEGRAM_CHAT_ID" ]; then
+            python signal-bot/resend.py || echo "::warning::그룹 전송 실패"
+          fi
       # 모의 포트폴리오 상태를 커밋 → 매일 저장소 활동이 생겨 GitHub이 예약 실행을 멈추지 않음
       - name: Save state
         if: always()
