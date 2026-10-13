@@ -23,9 +23,12 @@ jobs:
       - run: |
           mkdir -p backtest/data
           set -o pipefail
-          python -u backtest/fetch_dart.py 2>&1 | tee backtest/data/dart_log.txt
+          echo "secret DART_API_KEY 있음: $HAS_SECRET / variable DART_API_KEY 있음: $HAS_VAR" | tee backtest/data/dart_log.txt
+          python -u backtest/fetch_dart.py 2>&1 | tee -a backtest/data/dart_log.txt
         env:
-          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          DART_API_KEY: ${{ secrets.DART_API_KEY || vars.DART_API_KEY || secrets.DART_KEY || secrets.OPENDART_API_KEY || secrets.DART_API }}
+          HAS_SECRET: ${{ secrets.DART_API_KEY != '' }}
+          HAS_VAR: ${{ vars.DART_API_KEY != '' }}
       - name: Push to bt-data-dart branch
         if: always()
         run: |
