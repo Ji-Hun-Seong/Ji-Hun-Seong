@@ -2,10 +2,11 @@ name: KOSPI daily signals
 
 on:
   schedule:
-    - cron: "43 7 * * 1-5"     # 평일 UTC 07:43 = 한국 16:43 (장 마감 후)
+    # 장 마감 후 공시(대부분 18시 전 접수)까지 반영하려고 저녁에 실행
+    - cron: "13 10 * * 1-5"    # 평일 UTC 10:13 = 한국 19:13
     # GitHub 예약 실행은 지연·누락될 수 있어 예비 실행 2회(이미 처리한 날이면 전송하지 않음)
-    - cron: "13 9 * * 1-5"     # 한국 18:13
-    - cron: "13 11 * * 1-5"    # 한국 20:13
+    - cron: "13 12 * * 1-5"    # 한국 21:13
+    - cron: "43 14 * * 1-5"    # 한국 23:43
   workflow_dispatch:
     inputs:
       force:
@@ -38,6 +39,7 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.SIGNAL_TG_TOKEN || secrets.VALUE_TG_TOKEN }}
           # 받을 곳: SIGNAL_TG_CHAT_ID(따로 지정 시) → 없으면 본인(TG_CHAT_ID)
           TELEGRAM_CHAT_ID: ${{ secrets.SIGNAL_TG_CHAT_ID || secrets.TG_CHAT_ID }}
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
         run: |
           set -o pipefail
           python -u signal-bot/daily_signals.py ${{ github.event.inputs.force == '1' && '--force' || '' }} 2>&1 | tee signal-bot/last_run.txt

@@ -3,7 +3,9 @@ daily_signals.py — 코스피 일일 신호 봇 (평일 장 마감 후 텔레�
 
 보내는 내용
   1) 시장: 코스피200 200일선 추세 + 시장 전체 외국인 20일 순매수 → ETF 비중 판단
-  2) 스퀴즈 돌파 모의 포트폴리오(가상 1천만 원, 최대 15종목): 오늘 신호 → 내일 시가 매수/매도
+  2) 모의 포트폴리오 두 개(각 가상 1천만 원, 합산 성적 함께 표시)
+     A. 스퀴즈 돌파(BB·RSI): 최대 15종목, RSI<40 청산
+     B. 자사주 공시 스윙(DART): 자사주 취득·신탁계약 공시 다음 날 시가 매수, 10거래일 보유 또는 RSI>70 익절
   3) 우선주 괴리: 우선주가 보통주 대비 고평가(괴리 BB 상단 & RSI>70) → 보통주로 갈아타기
   4) 외국인 60일 순매수 상위(참고)
 
@@ -40,6 +42,9 @@ BUY_COST = 0.00015 + 0.001
 SELL_COST = 0.00015 + 0.002 + 0.001
 START_CASH = 10_000_000
 PREF_LIQ = 3e8
+# 자사주 공시 스윙(백테스트 2015~2026: 연 12.9%, MDD -29%, Sharpe 1.01 / 스퀴즈와 50:50 합산 연 15.9%, MDD -26%, Sharpe 1.17)
+BB_MAX_POS, BB_HOLD, BB_TAKE, BB_LIQ = 10, 10, 70, 3e8
+DART = "https://opendart.fss.or.kr/api"
 
 
 # ---------------------------------------------------------------------------
@@ -163,81 +168,177 @@ def compute(names, piv, idx):
                                   ratio=float(np.exp(Rr[p].iloc[-1])), pb=float(pb[p].iloc[-1]),
                                   rsi=float(rR[p].iloc[-1]), liquid=bool(liq[p].iloc[-1] > PREF_LIQ)))
 
-    return dict(t=t, C=C, O=O, r14=r14, mom=mom, entry=entry, regime=regime, idx=idx,
+    return dict(t=t, C=C, O=O, r14=r14, mom=mom, entry=entry, regime=regime, idx=idx, tv=tv,
                 ma200_idx=float(idx.rolling(200).mean().iloc[-1]), agg=agg, dfr60=dfr60, uni=uni,
                 prefs=pd.DataFrame(pref_rows))
 
 
 # ---------------------------------------------------------------------------
-# 모의 포트폴리오 (신호는 종가, 체결은 다음 거래일 시가)
+# DART: 자사주 취득·신탁계약 공시
 # ---------------------------------------------------------------------------
+BUYBACK = re.compile(r"^(주요사항보고서\()?(자기주식취득결정|자기주식취득신탁계약체결결정)")
+
+
+def dart_buybacks(since: date, until: date):
+    """since < 접수일 <= until 인 코스피 자사주 취득·신탁계약 원공시(정정·연장 제외)."""
+    key = (os.environ.get("DART_API_KEY") or "").strip()
+    if not key:
+        print("::warning::DART_API_KEY 없음 — 자사주 공시 전략 건너뜀")
+        return None
+    out, page = [], 1
+    while True:
+        try:
+            j = requests.get(f"{DART}/list.json", params={
+                "crtfc_key": key, "corp_cls": "Y", "pblntf_ty": "B",
+                "bgn_de": (since + timedelta(days=1)).strftime("%Y%m%d"), "end_de": until.strftime("%Y%m%d"),
+                "page_no": page, "page_count": 100}, timeout=30).json()
+        except Exception as e:
+            print("::warning::DART 조회 실패", e)
+            return None
+        if j.get("status") == "013":          # 조회 결과 없음
+            break
+        if j.get("status") != "000":
+            print("::warning::DART 응답", j.get("status"), j.get("message"))
+            return None
+        for it in j.get("list", []):
+            nm = re.sub(r"\s+", "", it.get("report_nm", ""))
+            if BUYBACK.search(nm) and it.get("stock_code"):
+                out.append({"code": it["stock_code"], "corp": it.get("corp_name", ""), "dt": it["rcept_dt"],
+                            "kind": "신탁" if "신탁" in nm else "직접", "rcept_no": it["rcept_no"]})
+        if page >= int(j.get("total_page", 1)):
+            break
+        page += 1
+        time.sleep(0.2)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# 모의 포트폴리오 (신호는 종가, 체결은 다음 거래일 시가). 슬리브 A·B 각각 가상 1천만 원
+# ---------------------------------------------------------------------------
+def new_sleeve():
+    return {"cash": START_CASH, "positions": {}, "pending_buy": [], "pending_sell": [], "trades": [], "equity": []}
+
+
 def new_state(t, idx_level):
-    return {"start": str(t.date()), "start_index": idx_level, "cash": START_CASH, "positions": {},
-            "pending_buy": [], "pending_sell": [], "trades": [], "equity": [], "last_date": None}
+    return {"version": 2, "start": str(t.date()), "start_index": idx_level, "last_date": None,
+            "sleeves": {"squeeze": new_sleeve(), "buyback": new_sleeve()}, "seen_rcept": []}
 
 
-def step(state, x, names):
-    t, C, O = x["t"], x["C"], x["O"]
-    today = str(t.date())
-    if state["last_date"] == today:
-        return None                                   # 이미 처리한 날(휴장일 재실행 등)
+def fill_orders(sl, x, names, today, max_pos):
+    C, O = x["C"], x["O"]
     filled = {"buy": [], "sell": []}
-    # 1) 어제 신호 → 오늘 시가 체결
-    for code in list(state["pending_sell"]):
-        p = state["positions"].get(code)
+    for code in list(sl["pending_sell"]):
+        p = sl["positions"].get(code)
         px = O[code].iloc[-1] if code in O else np.nan
         if p is None or not np.isfinite(px):
             continue
         proceeds = p["shares"] * px * (1 - SELL_COST)
-        state["cash"] += proceeds
+        sl["cash"] += proceeds
         ret = proceeds / p["cost"] - 1
-        state["trades"].append({"code": code, "name": p["name"], "entry": p["date"], "exit": today, "ret": round(ret, 4)})
+        sl["trades"].append({"code": code, "name": p["name"], "entry": p["date"], "exit": today, "ret": round(ret, 4)})
         filled["sell"].append((p["name"], ret))
-        del state["positions"][code]
-    state["pending_sell"] = []
-    equity_open = state["cash"] + sum(p["shares"] * C[c].iloc[-2] for c, p in state["positions"].items()
-                                      if c in C and np.isfinite(C[c].iloc[-2]))
-    for code in state["pending_buy"]:
-        if len(state["positions"]) >= MAX_POS or code in state["positions"]:
+        del sl["positions"][code]
+    sl["pending_sell"] = [c for c in sl["pending_sell"] if c in sl["positions"]]
+    equity_open = sl["cash"] + sum(p["shares"] * C[c].iloc[-2] for c, p in sl["positions"].items()
+                                   if c in C and np.isfinite(C[c].iloc[-2]))
+    for code in sl["pending_buy"]:
+        if len(sl["positions"]) >= max_pos or code in sl["positions"]:
             continue
         px = O[code].iloc[-1] if code in O else np.nan
         if not np.isfinite(px):
             continue
-        budget = min(state["cash"], equity_open / MAX_POS)
+        budget = min(sl["cash"], equity_open / max_pos)
         if budget <= 0:
             break
-        state["positions"][code] = {"name": names.get(code, code), "shares": budget / (px * (1 + BUY_COST)),
-                                    "cost": budget, "entry_px": float(px), "date": today}
-        state["cash"] -= budget
+        sl["positions"][code] = {"name": names.get(code, code), "shares": budget / (px * (1 + BUY_COST)),
+                                 "cost": budget, "entry_px": float(px), "date": today, "days": 0}
+        sl["cash"] -= budget
         filled["buy"].append((names.get(code, code), float(px)))
-    state["pending_buy"] = []
+    sl["pending_buy"] = []
+    return filled
 
-    # 2) 오늘 종가로 청산 신호
+
+def mark(sl, x, today):
+    C = x["C"]
+    eq = sl["cash"] + sum(p["shares"] * C[c].iloc[-1] for c, p in sl["positions"].items()
+                          if c in C and np.isfinite(C[c].iloc[-1]))
+    sl["equity"].append([today, round(eq)])
+    sl["equity"] = sl["equity"][-800:]
+    return eq
+
+
+def step(state, x, names, buybacks):
+    t, C = x["t"], x["C"]
+    today = str(t.date())
+    if state["last_date"] == today:
+        return None
+    out = {}
+    # A. 스퀴즈 돌파
+    sl = state["sleeves"]["squeeze"]
+    filled = fill_orders(sl, x, names, today, MAX_POS)
     sells = []
-    for code, p in state["positions"].items():
+    for code, p in sl["positions"].items():
+        p["days"] = p.get("days", 0) + 1
         r = x["r14"][code].iloc[-1]
         if np.isfinite(r) and r < RSI_OUT:
-            state["pending_sell"].append(code)
-            sells.append((p["name"], float(r), C[code].iloc[-1] / p["entry_px"] - 1))
-    # 3) 진입 신호 (시장 필터 통과 시)
-    sig_today = [c for c in x["entry"].columns if x["entry"][c].iloc[-1]]
-    sig_today = sorted(sig_today, key=lambda c: -(x["mom"][c].iloc[-1] if np.isfinite(x["mom"][c].iloc[-1]) else -9))
+            sl["pending_sell"].append(code)
+            sells.append((p["name"], f"RSI {r:.0f} < {RSI_OUT}", C[code].iloc[-1] / p["entry_px"] - 1))
+    sig = [c for c in x["entry"].columns if x["entry"][c].iloc[-1]]
+    sig = sorted(sig, key=lambda c: -(x["mom"][c].iloc[-1] if np.isfinite(x["mom"][c].iloc[-1]) else -9))
     buys = []
     if x["regime"]:
-        slots = MAX_POS - (len(state["positions"]) - len(state["pending_sell"]))
-        for c in sig_today:
+        slots = MAX_POS - (len(sl["positions"]) - len(sl["pending_sell"]))
+        for c in sig:
             if slots <= 0:
                 break
-            if c in state["positions"]:
+            if c in sl["positions"]:
                 continue
-            state["pending_buy"].append(c)
-            buys.append((names.get(c, c), float(x["r14"][c].iloc[-1]), float(C[c].iloc[-1])))
+            sl["pending_buy"].append(c)
+            buys.append((names.get(c, c), f"RSI {x['r14'][c].iloc[-1]:.0f}", float(C[c].iloc[-1])))
             slots -= 1
-    eq = state["cash"] + sum(p["shares"] * C[c].iloc[-1] for c, p in state["positions"].items() if np.isfinite(C[c].iloc[-1]))
-    state["equity"].append([today, round(eq), float(x["idx"].iloc[-1])])
-    state["equity"] = state["equity"][-800:]
+    out["squeeze"] = dict(filled=filled, sells=sells, buys=buys, signals=[names.get(c, c) for c in sig], equity=mark(sl, x, today))
+
+    # B. 자사주 공시 스윙
+    sl = state["sleeves"]["buyback"]
+    filled = fill_orders(sl, x, names, today, BB_MAX_POS)
+    sells = []
+    for code, p in sl["positions"].items():
+        p["days"] = p.get("days", 0) + 1
+        r = x["r14"][code].iloc[-1] if code in x["r14"] else np.nan
+        why = f"RSI {r:.0f} > {BB_TAKE} 익절" if np.isfinite(r) and r > BB_TAKE else (f"{BB_HOLD}거래일 경과" if p["days"] >= BB_HOLD else "")
+        if why:
+            sl["pending_sell"].append(code)
+            sells.append((p["name"], why, C[code].iloc[-1] / p["entry_px"] - 1))
+    buys, events, skipped = [], [], []
+    if buybacks is not None:
+        seen = set(state.get("seen_rcept", []))
+        fresh = [e for e in buybacks if e["rcept_no"] not in seen]
+        state["seen_rcept"] = (state.get("seen_rcept", []) + [e["rcept_no"] for e in fresh])[-1000:]
+        cand = []
+        for e in fresh:
+            c = e["code"]
+            nm = names.get(c, e["corp"])
+            events.append(f"{nm}({e['kind']})")
+            if c not in C or not np.isfinite(C[c].iloc[-1]):
+                skipped.append(f"{nm}: 시세 없음"); continue
+            tvv = x["tv"][c].iloc[-1]
+            if not (np.isfinite(tvv) and tvv >= BB_LIQ):
+                skipped.append(f"{nm}: 거래대금 부족"); continue
+            if c in sl["positions"] or c in [b for b in sl["pending_buy"]]:
+                continue
+            cand.append(c)
+        cand = sorted(set(cand), key=lambda c: x["r14"][c].iloc[-1] if np.isfinite(x["r14"][c].iloc[-1]) else 99)
+        slots = BB_MAX_POS - (len(sl["positions"]) - len(sl["pending_sell"]))
+        for c in cand:
+            if slots <= 0:
+                skipped.append(f"{names.get(c, c)}: 자리 부족"); continue
+            sl["pending_buy"].append(c)
+            buys.append((names.get(c, c), f"RSI {x['r14'][c].iloc[-1]:.0f}", float(C[c].iloc[-1])))
+            slots -= 1
+    out["buyback"] = dict(filled=filled, sells=sells, buys=buys, events=events, skipped=skipped,
+                          ok=buybacks is not None, equity=mark(sl, x, today))
     state["last_date"] = today
-    return dict(filled=filled, sells=sells, buys=buys, signals=[names.get(c, c) for c in sig_today], equity=eq)
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -248,6 +349,27 @@ def holdings():
     if not os.path.exists(path):
         return set()
     return {l.strip() for l in open(path, encoding="utf-8") if l.strip() and not l.startswith("#")}
+
+
+def sleeve_lines(L, r, sl, x, hold):
+    for nm, px in r["filled"]["buy"]:
+        L.append(f"✅ 오늘 시가 매수: {nm} {px:,.0f}원")
+    for nm, ret in r["filled"]["sell"]:
+        L.append(f"✅ 오늘 시가 매도: {nm} ({ret:+.1%})")
+    for nm, why, c in r["buys"]:
+        L.append(f"🟢 내일 매수: {nm}{' 📌' if nm in hold else ''} ({why}, 종가 {c:,.0f})")
+    for nm, why, pnl in r["sells"]:
+        L.append(f"🔴 내일 매도: {nm} ({why}, 평가 {pnl:+.1%})")
+    if not (r["buys"] or r["sells"] or r["filled"]["buy"] or r["filled"]["sell"]):
+        L.append("변동 없음")
+    pos = sl["positions"]
+    if pos:
+        L.append(f"보유 {len(pos)}종목: " + ", ".join(
+            f"{p['name']} {x['C'][c].iloc[-1] / p['entry_px'] - 1:+.0%}" for c, p in pos.items() if c in x["C"]))
+    eq = r["equity"]
+    n = len(sl["trades"])
+    tail = f" · 청산 {n}건 승률 {sum(1 for tr in sl['trades'] if tr['ret'] > 0) / n:.0%}" if n else ""
+    L.append(f"평가액 {eq:,.0f}원 ({eq / START_CASH - 1:+.1%}){tail}")
 
 
 def build_message(x, res, state, names):
@@ -273,59 +395,50 @@ def build_message(x, res, state, names):
           f"코스피200 {lvl:,.1f} / 200일선 {ma:,.1f} ({lvl / ma - 1:+.1%})",
           f"외국인 20일 순매수 {a:+.2f}%p ({'순매수' if foreign_buy else '순매도'} {streak}일째)",
           stance, ""]
-
-    L.append(f"② 스퀴즈 돌파 모의 포트폴리오 (최대 {MAX_POS}종목, 신호는 내일 시가 체결)")
+    S = state["sleeves"]
     if res is None:
-        L.append("오늘은 이미 처리됨(휴장일 재실행)")
+        L += ["오늘은 이미 처리됨(휴장일 재실행)", ""]
     else:
+        eqA, eqB = res["squeeze"]["equity"], res["buyback"]["equity"]
+        tot = (eqA + eqB) / (2 * START_CASH) - 1
+        L.append(f"💼 모의투자 합산(A+B, 시작 {state['start']}): {tot:+.1%} · 같은 기간 코스피200 {lvl / state['start_index'] - 1:+.1%}")
+        L.append("")
+        L.append(f"② A. 스퀴즈 돌파 (BB·RSI, 최대 {MAX_POS}종목)")
         if not x["regime"]:
             L.append("⛔ 시장 필터 꺼짐(지수 200일선 아래) → 신규 매수 없음")
-        for nm, px in res["filled"]["buy"]:
-            L.append(f"✅ 오늘 시가 매수: {nm} {px:,.0f}원")
-        for nm, r in res["filled"]["sell"]:
-            L.append(f"✅ 오늘 시가 매도: {nm} ({r:+.1%})")
-        for nm, r, c in res["buys"]:
-            L.append(f"🟢 내일 매수: {nm}{' 📌' if nm in hold else ''} (RSI {r:.0f}, 종가 {c:,.0f})")
-        for nm, r, pnl in res["sells"]:
-            L.append(f"🔴 내일 매도: {nm} (RSI {r:.0f} < {RSI_OUT}, 평가 {pnl:+.1%})")
-        if not (res["buys"] or res["sells"] or res["filled"]["buy"] or res["filled"]["sell"]):
-            L.append("변동 없음")
-        held_names = {p["name"] for p in state["positions"].values()}
-        extra = [s for s in res["signals"] if s not in {b[0] for b in res["buys"]} and s not in held_names]
+        sleeve_lines(L, res["squeeze"], S["squeeze"], x, hold)
+        held = {p["name"] for p in S["squeeze"]["positions"].values()}
+        extra = [s for s in res["squeeze"]["signals"] if s not in {b[0] for b in res["squeeze"]["buys"]} and s not in held]
         if extra:
             L.append("(자리 부족 등으로 제외된 신호: " + ", ".join(extra[:8]) + ")")
-        pos = state["positions"]
-        if pos:
-            items = []
-            for c, p in pos.items():
-                cur = x["C"][c].iloc[-1]
-                items.append(f"{p['name']} {cur / p['entry_px'] - 1:+.0%}")
-            L.append(f"보유 {len(pos)}종목: " + ", ".join(items))
-        eq = res["equity"]
-        idx_ret = lvl / state["start_index"] - 1
-        L.append(f"평가액 {eq:,.0f}원 ({eq / START_CASH - 1:+.1%}) · 같은 기간 코스피200 {idx_ret:+.1%} · 시작 {state['start']}")
-        n = len(state["trades"])
-        if n:
-            wins = sum(1 for tr in state["trades"] if tr["ret"] > 0)
-            L.append(f"누적 청산 {n}건 · 승률 {wins / n:.0%}")
-    L.append("")
+        L.append("")
+        rb = res["buyback"]
+        L.append(f"③ B. 자사주 공시 스윙 (최대 {BB_MAX_POS}종목, {BB_HOLD}거래일 보유 · RSI>{BB_TAKE} 익절)")
+        if not rb["ok"]:
+            L.append("⚠️ DART 조회 실패 — 오늘 공시 신호 없음")
+        elif rb["events"]:
+            L.append("오늘 자사주 공시: " + ", ".join(rb["events"][:12]))
+        else:
+            L.append("오늘 자사주 취득·신탁 공시 없음")
+        for msg in rb["skipped"][:6]:
+            L.append(f"  · 제외 {msg}")
+        sleeve_lines(L, rb, S["buyback"], x, hold)
+        L.append("")
 
     pr = x["prefs"]
-    L.append("③ 우선주 괴리 (우선주÷보통주에 BB·RSI)")
+    L.append("④ 우선주 괴리 (우선주÷보통주에 BB·RSI)")
     if len(pr):
         over = pr[(pr.pb > 1) & (pr.rsi > 70) & pr.liquid]
         if len(over):
             L.append("🔁 우선주 고평가 → 보통주가 유리: " + ", ".join(f"{r['name']}(괴리 {r['ratio']:.2f}, RSI {r['rsi']:.0f})" for _, r in over.iterrows()))
         else:
             L.append("고평가 신호 없음")
-        mine = pr[pr["name"].isin(hold)]
-        for _, r in mine.iterrows():
+        for _, r in pr[pr["name"].isin(hold)].iterrows():
             state_txt = "고평가→보통주 고려" if (r.pb > 1 and r.rsi > 70) else ("정상 복귀" if r.pb < 0.5 else "중립")
             L.append(f"📌 보유 {r['name']}: 괴리 {r['ratio']:.2f}, %b {r.pb:.2f}, RSI {r.rsi:.0f} → {state_txt}")
     L.append("")
-
     d60 = x["dfr60"].iloc[-1].where(x["uni"].iloc[-1]).dropna().sort_values(ascending=False).head(8)
-    L.append("④ 외국인 60일 순매수 상위 (참고용, 매매신호 아님)")
+    L.append("⑤ 외국인 60일 순매수 상위 (참고용, 매매신호 아님)")
     L.append(", ".join(f"{names.get(c, c)}{' 📌' if names.get(c, c) in hold else ''} {v:+.1f}%p" for c, v in d60.items()))
     L.append("")
     L.append("※ 모의 매매입니다. 실제 주문은 직접 판단하세요.")
@@ -363,9 +476,14 @@ def main():
     start = (date.today() - timedelta(days=620)).strftime("%Y%m%d")
     names, piv, idx = load_all(start)
     x = compute(names, piv, idx)
-    state = json.load(open(STATE, encoding="utf-8")) if os.path.exists(STATE) else new_state(x["t"], float(idx.iloc[-1]))
+    state = json.load(open(STATE, encoding="utf-8")) if os.path.exists(STATE) else None
+    if not state or state.get("version") != 2:
+        state = new_state(x["t"], float(idx.iloc[-1]))
     already = state.get("last_date") == str(x["t"].date())
-    res = step(state, x, names)
+    # 자사주 공시: 직전 거래일 다음 날 ~ 오늘(마지막 거래일) 접수분 → 내일 시가 매수 (백테스트와 같은 기준)
+    t_prev = x["C"].index[-2].date()
+    buybacks = None if already else dart_buybacks(t_prev, x["t"].date())
+    res = step(state, x, names, buybacks)
     if already and not a.force:
         print("이미 처리한 거래일입니다(휴장일). 전송하지 않습니다.")
         return
