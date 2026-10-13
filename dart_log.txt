@@ -1,0 +1,25 @@
+secret DART_API_KEY 있음: true / variable DART_API_KEY 있음: false
+DART_API_KEY 길이 40
+상장사 고유번호 3998
+대상 종목 719
+0 744 3376 calls 16
+retry list.json HTTPSConnectionPool(host='opendart.fss.or.kr', port=443): Read timed out. (read timeout=30)
+50 31012 7677 calls 728
+retry list.json HTTPSConnectionPool(host='opendart.fss.or.kr', port=443): Read timed out. (read timeout=30)
+retry list.json HTTPSConnectionPool(host='opendart.fss.or.kr', port=443): Read timed out. (read timeout=30)
+retry list.json HTTPSConnectionPool(host='opendart.fss.or.kr', port=443): Read timed out. (read timeout=30)
+100 52457 9283 calls 1360
+150 71461 10245 calls 1968
+retry list.json HTTPSConnectionPool(host='opendart.fss.or.kr', port=443): Read timed out. (read timeout=30)
+200 89882 10739 calls 2570
+250 106592 11573 calls 3152
+300 119480 12009 calls 3695
+350 133702 12603 calls 4254
+400 146976 13148 calls 4803
+450 160229 13496 calls 5351
+500 171779 13866 calls 5888
+550 183732 14038 calls 6423
+600 195613 14349 calls 6959
+650 207578 14634 calls 7494
+700 219754 15072 calls 8033
+완료 filings 224330 insider 15175 dps 3123 calls 8227
