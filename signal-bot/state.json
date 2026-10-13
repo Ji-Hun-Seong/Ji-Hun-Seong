@@ -1,0 +1,39 @@
+{
+ "version": 2,
+ "start": "2026-10-13",
+ "start_index": 942.07,
+ "last_date": "2026-10-13",
+ "sleeves": {
+  "squeeze": {
+   "cash": 10000000,
+   "positions": {},
+   "pending_buy": [],
+   "pending_sell": [],
+   "trades": [],
+   "equity": [
+    [
+     "2026-10-13",
+     10000000
+    ]
+   ]
+  },
+  "buyback": {
+   "cash": 10000000,
+   "positions": {},
+   "pending_buy": [
+    "018670"
+   ],
+   "pending_sell": [],
+   "trades": [],
+   "equity": [
+    [
+     "2026-10-13",
+     10000000
+    ]
+   ]
+  }
+ },
+ "seen_rcept": [
+  "20261013000297"
+ ]
+}
