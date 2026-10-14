@@ -1,0 +1,43 @@
+name: Intraday buyback alerts
+
+# cron-job.org가 평일 장중 5분마다 이 워크플로를 실행시킨다(workflow_dispatch API).
+# GitHub 자체 예약 실행은 몇 시간씩 밀릴 수 있어 외부에서 깨운다.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "signal-bot/intraday_dart.py"
+      - ".github/workflows/intraday-dart.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: intraday-dart
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy
+      - name: Check DART
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.SIGNAL_TG_TOKEN || secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.SIGNAL_TG_CHAT_ID || secrets.TG_CHAT_ID }}
+          GROUP_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID }}
+        run: python -u signal-bot/intraday_dart.py ${{ github.event_name == 'push' && '--any-time --dry-run' || '' }}
+      - name: Save seen list
+        run: |
+          git config user.name "signal-bot"
+          git config user.email "signal-bot@users.noreply.github.com"
+          git add signal-bot/intraday_seen.json 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -qm "intraday: seen $(date +%F)"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
