@@ -23,7 +23,8 @@ import os
 import re
 import sys
 import time
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
@@ -105,6 +106,11 @@ def load_all(start: str):
         if i % 200 == 0:
             print(f"{i}/{len(names)}", flush=True)
     idx = daily("KPI200", start)["Close"]
+    # 장중·장 마감 직후(18:30 전) 실행이면 오늘 봉은 미확정이고 공시도 덜 나왔으므로 제외
+    now = datetime.now(ZoneInfo("Asia/Seoul"))
+    if idx.index[-1].date() == now.date() and (now.hour, now.minute) < (18, 30):
+        print(f"KST {now:%H:%M} — 오늘({now.date()}) 봉은 18:30 이후에 처리합니다.")
+        idx = idx.iloc[:-1]
     piv = {f: pd.DataFrame({c: d[f] for c, d in frames.items()}) for f in ["Open", "Close", "Volume", "FR"]}
     dates = idx.index
     piv = {f: v.reindex(dates) for f, v in piv.items()}
