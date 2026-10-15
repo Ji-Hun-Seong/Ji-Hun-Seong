@@ -15,11 +15,14 @@ jobs:
   send:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy
       - env:
-          TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
-          CHAT: ${{ github.event.inputs.chat }}
+          TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ github.event.inputs.chat }}
           TEXT: ${{ github.event.inputs.text }}
-        run: |
-          code=$(curl -s -o /tmp/r.json -w "%{http_code}" "https://api.telegram.org/bot$TOKEN/sendMessage" \
-            --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$TEXT")
-          echo "HTTP $code"; [ "$code" = "200" ] || { echo "::error::텔레그램 응답 $code $(cat /tmp/r.json)"; exit 1; }
+        # send()는 토큰의 공백·줄바꿈을 정리하고 실패 시 원인을 알려 준다
+        run: python -c "import os,sys; sys.path.insert(0,'signal-bot'); from daily_signals import send; send(os.environ['TEXT'])"
