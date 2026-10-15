@@ -167,7 +167,13 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--any-time", action="store_true", help="시간 제한 없이 실행(시험용)")
     ap.add_argument("--date", help="YYYYMMDD (시험용, 기본 오늘)")
+    ap.add_argument("--show-doc", help="접수번호 원문 텍스트 일부 출력(파서 점검용)")
     a = ap.parse_args()
+    if a.show_doc:
+        t = doc_text(a.show_doc, (os.environ.get("DART_API_KEY") or "").strip())
+        i = max(t.find("매출액"), 0)
+        print(f"[{a.show_doc}] 길이 {len(t)}\n앞부분: {t[:400]}\n매출액 주변: {t[max(0, i - 200):i + 900]}\n배당 주변: {t[max(0, t.find('1주당')):t.find('1주당') + 600]}")
+        return
     now = datetime.now(KST)
     if not a.any_time and (now.weekday() >= 5 or not (7 <= now.hour < 19)):
         print(f"KST {now:%a %H:%M} — 평일 07~19시에만 확인합니다.")
