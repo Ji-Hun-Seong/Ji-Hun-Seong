@@ -403,6 +403,9 @@ def find_chats():
             ch = (u.get(key) or {}).get("chat")
             if ch and ch.get("type") in ("group", "supergroup"):
                 chats[ch["id"]] = ch.get("title", "")
+    want = os.environ.get("FIND_TITLE", "").strip()
+    if want:                                   # 특정 그룹에만 안내(다른 그룹에 불필요한 메시지 방지)
+        chats = {c: t for c, t in chats.items() if want in t}
     if not chats:
         sys.exit("::error::봇이 들어간 그룹을 찾지 못했습니다. 그룹에 봇을 초대한 뒤 그룹에서 /start@KoreaValueStock_Bot 을 보내고 24시간 안에 다시 실행해 주세요.")
     for cid, title in chats.items():
