@@ -94,7 +94,7 @@ def daily(code: str, start: str) -> pd.DataFrame:
     return df
 
 
-def load_all(start: str):
+def load_all(start: str, include_today: bool = False):
     names = kospi_listing()
     frames = {}
     for i, c in enumerate(names):
@@ -108,7 +108,7 @@ def load_all(start: str):
     idx = daily("KPI200", start)["Close"]
     # 장중·장 마감 직후(18:30 전) 실행이면 오늘 봉은 미확정이고 공시도 덜 나왔으므로 제외
     now = datetime.now(ZoneInfo("Asia/Seoul"))
-    if idx.index[-1].date() == now.date() and (now.hour, now.minute) < (18, 30):
+    if not include_today and idx.index[-1].date() == now.date() and (now.hour, now.minute) < (18, 30):
         print(f"KST {now:%H:%M} — 오늘({now.date()}) 봉은 18:30 이후에 처리합니다.")
         idx = idx.iloc[:-1]
     piv = {f: pd.DataFrame({c: d[f] for c, d in frames.items()}) for f in ["Open", "Close", "Volume", "FR"]}
@@ -487,14 +487,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true", help="이미 처리한 날이어도 메시지 전송")
+    ap.add_argument("--preview", action="store_true", help="테스트: 지금 장중 가격으로 미리 계산해 보내되 기록은 남기지 않음")
     a = ap.parse_args()
 
     start = (date.today() - timedelta(days=620)).strftime("%Y%m%d")
-    names, piv, idx = load_all(start)
+    names, piv, idx = load_all(start, include_today=a.preview)
     x = compute(names, piv, idx)
     state = json.load(open(STATE, encoding="utf-8")) if os.path.exists(STATE) else None
     if not state or state.get("version") != 2:
         state = new_state(x["t"], float(idx.iloc[-1]))
+    if a.preview:
+        import copy
+        state = copy.deepcopy(state)          # 기록에 남기지 않음
     already = state.get("last_date") == str(x["t"].date())
     # 자사주 공시: 직전 거래일 다음 날 ~ 오늘(마지막 거래일) 접수분 → 내일 시가 매수 (백테스트와 같은 기준)
     t_prev = x["C"].index[-2].date()
@@ -504,6 +508,15 @@ def main():
         print("이미 처리한 거래일입니다(휴장일). 전송하지 않습니다.")
         return
     msgs = build_message(x, res, state, names)
+    if a.preview:
+        now = datetime.now(ZoneInfo("Asia/Seoul"))
+        tag = f"🧪 테스트 · {now:%m/%d %H:%M} 장중 가격 기준 (모의투자 기록 안 됨, 실제 신호는 19:15)\n"
+        msgs = [tag + m for m in msgs]
+        print("\n\n".join(msgs))
+        if not a.dry_run:
+            for m in msgs:
+                send(m)
+        return
     print("\n\n".join(msgs))
     if a.dry_run:
         return

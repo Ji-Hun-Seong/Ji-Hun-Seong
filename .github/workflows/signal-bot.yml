@@ -13,6 +13,9 @@ on:
       force:
         description: "1 = 이미 처리한 날이어도 다시 보내기"
         default: "0"
+      preview:
+        description: "1 = 테스트(지금 장중 가격으로 본인에게만, 기록 안 함)"
+        default: "0"
   push:
     paths:
       - "signal-bot/daily_signals.py"
@@ -44,10 +47,10 @@ jobs:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
         run: |
           set -o pipefail
-          python -u signal-bot/daily_signals.py ${{ github.event.inputs.force == '1' && '--force' || '' }} 2>&1 | tee signal-bot/last_run.txt
+          python -u signal-bot/daily_signals.py ${{ github.event.inputs.force == '1' && '--force' || '' }} ${{ github.event.inputs.preview == '1' && '--preview' || '' }} 2>&1 | tee signal-bot/last_run.txt
       # 같은 내용을 가치주 봇 그룹방(아빠와 함께)에도 전송 — 새 메시지를 보낸 날만
       - name: Also send to group
-        if: success()
+        if: success() && github.event.inputs.preview != '1'
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID }}
