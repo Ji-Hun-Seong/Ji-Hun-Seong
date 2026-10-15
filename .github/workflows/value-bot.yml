@@ -10,6 +10,9 @@ on:
         type: choice
         options: [picks, find_chat]
         default: picks
+      to:
+        description: "picks일 때 이 chat ID 한 곳에만 보내기(비우면 평소대로)"
+        default: ""
       title:
         description: "find_chat일 때 그룹 이름에 들어간 글자(비우면 봇이 있는 모든 그룹)"
         default: ""
@@ -53,8 +56,17 @@ jobs:
             echo "skip=1" >> $GITHUB_OUTPUT; echo "이번 달 이미 전송함"
           fi
 
+      # 특정 방 한 곳에만 다시 보내기(기록·다른 방은 건드리지 않음)
+      - name: Send picks to one chat
+        if: ${{ github.event.inputs.mode == 'picks' && github.event.inputs.to != '' }}
+        working-directory: value-bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ github.event.inputs.to }}
+        run: python recommend.py --profile profile.json --top 20 --telegram --no-html
+
       - name: Send picks to Telegram
-        if: ${{ github.event.inputs.mode != 'find_chat' && steps.sent.outputs.skip != '1' }}
+        if: ${{ github.event.inputs.mode != 'find_chat' && (github.event.inputs.to == '' || github.event.inputs.to == null) && steps.sent.outputs.skip != '1' }}
         working-directory: value-bot
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
