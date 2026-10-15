@@ -1,6 +1,6 @@
 name: KOSPI signals → group (resend)
 
-# 마지막 일일 신호를 가치주 봇 그룹방(VALUE_TG_CHAT_ID)으로 다시 보낸다.
+# 마지막 일일 신호를 두 그룹방(기존 그룹 + 아빠 매매일지 바탕 추천 봇)으로 다시 보낸다.
 on:
   workflow_dispatch:
   push:
@@ -16,7 +16,11 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install requests pandas numpy
-      - run: python signal-bot/resend.py
+      - name: Resend to both groups
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID }}
+          GROUPS: "${{ secrets.VALUE_TG_CHAT_ID }},-5137568055"
+        run: |
+          for c in $(echo "$GROUPS" | tr ',' ' '); do
+            TELEGRAM_CHAT_ID="$c" python signal-bot/resend.py
+          done
