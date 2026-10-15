@@ -40,7 +40,7 @@ TYPES = [
     ("자사주 소각",     r"주식소각결정", "효과 확인 안 됨(참고용)"),
     ("무상증자",        r"^(주요사항보고서\()?무상증자결정", "20일 +2~3%, 표본 적어 유의성 약함"),
     ("액면분할",        r"주식분할결정", "60일 +7~8%, 표본 적어 유의성 약함"),
-    ("현금배당 결정",   r"현금ㆍ현물배당결정|현금배당결정", "배당 20%↑ 증가 시 과거엔 60일 +3%, 최근 약해짐"),
+    ("배당 증가",       r"현금ㆍ현물배당결정|현금배당결정", "배당 20%↑ 증가 시 과거엔 60일 +3%, 최근 약해짐"),
     ("공급계약",        r"단일판매ㆍ공급계약체결", "대형주 60일 +3.2%(유의), 승률 45%"),
     ("잠정실적",        r"영업\(잠정\)실적", "실적 공시 전체로는 효과 없음 — 증가폭 큰 경우만 참고"),
     ("손익구조 변경",   r"매출액또는손익구조", "증가 공시만 참고(별도 검증 전)"),
@@ -122,16 +122,23 @@ def analyze(kind: str, text: str):
             return (p >= 5, ", ".join(s))
         return (None, ", ".join(s))
     if kind == "잠정실적":
+        # 표준 표: 매출액 당해실적 [당기, 전기, 전기대비%, 흑자전환여부, 전년동기, 전년동기대비%, 여부]
         s, good = [], None
         for lab in ("매출액", "영업이익"):
-            v = nums_after(text, lab, 5, "당해실적")      # 당기, 전기, 전기대비%, 전년동기, 전년동기대비%
-            if v:
-                s.append(f"{lab} 전년동기 대비 {v[4]:+.1f}%")
-                if lab == "매출액":
-                    good = v[4] > 10
-                elif good is not False:
-                    good = good or v[4] > 20
-        return (good, ", ".join(s))
+            m = re.search(re.escape(lab) + r"\s*당해실적((?:\s+\S+){7})", text)
+            if not m:
+                continue
+            tok = m.group(1).split()
+            try:
+                yoy = float(tok[5].replace(",", "").replace("%", ""))
+            except ValueError:
+                continue                    # '-' 만 있는 월별 매출 공시 등
+            s.append(f"{lab} 전년동기 대비 {yoy:+.1f}%")
+            if lab == "매출액":
+                good = yoy > 10
+            elif good is not False:
+                good = bool(good) or yoy > 20
+        return (good if s else False, ", ".join(s))   # 수치가 없으면(월별 매출 등) 알리지 않음
     if kind == "손익구조 변경":
         s, good = [], None
         for lab in ("매출액", "영업이익"):
@@ -144,6 +151,37 @@ def analyze(kind: str, text: str):
                     good = good or v[3] > 0
         return (good, ", ".join(s))
     return (True, "")
+
+
+def dps_of(text: str):
+    m = re.search(r"1주당\s*배당금\s*\(원\)\s*보통주식\s*" + NUM, text)
+    return float(m.group(1).replace(",", "")) if m else None
+
+
+def dividend(e, text: str, key: str, day: str):
+    """이번 주당배당금을 작년 같은 시기(300~430일 전) 배당결정과 비교. 늘었을 때만 호재."""
+    now_dps = dps_of(text)
+    yld = re.search(r"시가배당률\s*\(%\)\s*보통주식\s*" + NUM, text)
+    yl = f", 시가배당률 {float(yld.group(1)):.2f}%" if yld else ""
+    if now_dps is None:
+        return (None, "")
+    d0 = datetime.strptime(day, "%Y%m%d")
+    try:
+        j = requests.get(f"{DART}/list.json", params={
+            "crtfc_key": key, "corp_code": e["corp_code"], "pblntf_ty": "I",
+            "bgn_de": (d0 - timedelta(days=430)).strftime("%Y%m%d"), "end_de": (d0 - timedelta(days=300)).strftime("%Y%m%d"),
+            "page_count": 100}, timeout=30).json()
+        prev = [it for it in j.get("list", []) if re.search(r"^(현금ㆍ현물배당결정|현금배당결정)", re.sub(r"\s+", "", it["report_nm"]))]
+    except Exception:
+        prev = []
+    if not prev:
+        return (None, f"주당 {now_dps:,.0f}원{yl} · 작년 비교 불가")
+    p = min(prev, key=lambda it: abs((datetime.strptime(it["rcept_dt"], "%Y%m%d") - (d0 - timedelta(days=365))).days))
+    old = dps_of(doc_text(p["rcept_no"], key))
+    if not old:
+        return (None, f"주당 {now_dps:,.0f}원{yl} · 작년 비교 불가")
+    chg = now_dps / old - 1
+    return (chg > 0.001, f"주당 {now_dps:,.0f}원 (작년 같은 시기 {old:,.0f}원, {chg:+.0%}){yl}")
 
 
 def quote(code: str):
@@ -198,7 +236,8 @@ def main():
             continue
         for kind, pat, why in TYPES:
             if re.search(pat, nm):
-                fresh.append({"code": code, "name": k200[code], "kind": kind, "why": why, "rcept_no": no})
+                fresh.append({"code": code, "name": k200[code], "kind": kind, "why": why, "rcept_no": no,
+                              "corp_code": it.get("corp_code")})
                 break
     print(f"{day} 코스피200 관련 새 공시 {len(fresh)}건")
 
@@ -207,6 +246,9 @@ def main():
         good, summ = (True, "")
         if e["kind"] in ("공급계약", "잠정실적", "손익구조 변경"):
             good, summ = analyze(e["kind"], doc_text(e["rcept_no"], key))
+            time.sleep(0.3)
+        elif e["kind"] == "배당 증가":
+            good, summ = dividend(e, doc_text(e["rcept_no"], key), key, day)
             time.sleep(0.3)
         e["summary"] = summ
         (picks if good else others).append(e) if good is not None else others.append(e)
