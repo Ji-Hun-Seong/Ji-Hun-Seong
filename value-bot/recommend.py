@@ -206,6 +206,34 @@ def explain(c: Candidate, dna: DNA):
         c.risks.insert(0, f"보유 중인 {', '.join(same)}와 같은 그룹이라 노출이 겹침")
 
 
+def apply_recent_buys(dna: DNA, path: str):
+    """매매일지 이후의 최근 매수(recent_buys.txt: 날짜,종목명)를 성향에 반영한다.
+    같은 그룹·업종·유형의 선호를 올려 비슷한 종목이 추천 상위로 오게 한다(금액 정보 없이 가중치만)."""
+    if not os.path.exists(path):
+        return
+    buys = []
+    for line in open(path, encoding="utf-8"):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        d, _, name = line.partition(",")
+        buys.append((d.strip(), name.strip()))
+    for d, name in buys:
+        info = TAXONOMY.get(name)
+        if not info:
+            print(f"⚠ 최근 매수 {name}: 분류표(TAXONOMY)에 없어 성향 반영 생략")
+            continue
+        g, sec, k = info["group"], info["sector"], info["kind"]
+        dna.group_aff[g] = max(dna.group_aff.get(g, 0), 0.8)
+        dna.tag_pnl[("group", g)] = max(dna.tag_pnl.get(("group", g), 0), 1)   # 다시 산 그룹은 긍정으로
+        if sec in dna.sector_aff:
+            dna.sector_aff[sec] = min(1.0, dna.sector_aff[sec] + 0.15)
+        dna.kind_aff[k] = min(1.0, dna.kind_aff.get(k, 0) + 0.1)
+        dna.traded.add(name)
+    if buys:
+        print("최근 매수 반영:", ", ".join(f"{n}({d})" for d, n in buys))
+
+
 def rank(dna: DNA, universe: list[Candidate], include_kosdaq=False, include_holdings=True):
     held = set(dna.holdings)
     for c in universe:
@@ -421,6 +449,7 @@ def main(argv=None):
         if real:
             dna.holdings = real
             print("실제 보유 종목 반영:", ", ".join(real))
+    apply_recent_buys(dna, os.path.join(os.path.dirname(os.path.abspath(a.universe)), "recent_buys.txt"))
     if dna.unknown:
         print("⚠ value_dna.TAXONOMY 에 없는 종목(분류 후 다시 실행):", dna.unknown)
     picked, excluded = rank(dna, load_universe(a.universe), a.include_kosdaq, not a.exclude_holdings)
