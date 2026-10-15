@@ -475,8 +475,15 @@ def send(text):
         cur += line + "\n"
     chunks.append(cur)
     for c in chunks:
-        r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
-                          json={"chat_id": chat, "text": c, "disable_web_page_preview": True}, timeout=20)
+        for _ in range(2):
+            r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
+                              json={"chat_id": chat, "text": c, "disable_web_page_preview": True}, timeout=20)
+            # 일반 그룹이 슈퍼그룹으로 바뀌면(예: 새 멤버에게 기록 보이기) chat ID가 바뀐다 → 새 ID로 자동 재전송
+            new_id = (r.json().get("parameters") or {}).get("migrate_to_chat_id") if r.status_code == 400 else None
+            if not new_id:
+                break
+            chat = str(new_id)
+            print(f"::warning::그룹 chat ID 변경됨 → 새 ID로 전송")
         if r.status_code != 200:
             sys.exit(f"::error::텔레그램 전송 실패 {r.status_code} {r.text.replace(tok, '***')[:200]}")
         time.sleep(1)
