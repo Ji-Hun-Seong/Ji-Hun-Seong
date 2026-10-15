@@ -22,4 +22,4 @@ jobs:
         run: |
           code=$(curl -s -o /tmp/r.json -w "%{http_code}" "https://api.telegram.org/bot$TOKEN/sendMessage" \
             --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$TEXT")
-          echo "HTTP $code"; [ "$code" = "200" ]
+          echo "HTTP $code"; [ "$code" = "200" ] || { echo "::error::텔레그램 응답 $code $(cat /tmp/r.json)"; exit 1; }
