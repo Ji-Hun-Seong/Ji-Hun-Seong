@@ -26,7 +26,8 @@ permissions:
   actions: write
 
 concurrency:
-  group: signal-bot
+  # 테스트(preview)는 기록을 건드리지 않으므로 따로 줄 세움 — 본 실행에 밀려 취소되지 않도록
+  group: signal-bot-${{ github.event.inputs.preview == '1' && 'preview' || 'main' }}
   cancel-in-progress: false
 
 jobs:
