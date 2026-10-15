@@ -1,0 +1,41 @@
+name: Analyst data fetch (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      extra:
+        description: "추가 종목코드(공백 구분)"
+        default: ""
+  push:
+    paths:
+      - "value-bot/analyst/fetch.py"
+      - ".github/workflows/analyst-fetch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python -u value-bot/analyst/fetch.py /tmp/analyst_raw 2>&1 | tee /tmp/analyst_log.txt
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          EXTRA: ${{ github.event.inputs.extra }}
+      - name: Push to analyst-data branch
+        if: always()
+        run: |
+          git config user.name "analyst-bot"
+          git config user.email "analyst-bot@users.noreply.github.com"
+          git checkout --orphan analyst-data
+          git rm -rq --cached . && git clean -fdq
+          cp -r /tmp/analyst_raw . && cp /tmp/analyst_log.txt .
+          git add analyst_raw analyst_log.txt
+          git commit -qm "analyst data $(date +%F)"
+          git push -f origin analyst-data
