@@ -31,7 +31,7 @@ jobs:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.SIGNAL_TG_TOKEN || secrets.VALUE_TG_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.SIGNAL_TG_CHAT_ID || secrets.TG_CHAT_ID }}
-          GROUP_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID }}
+          GROUP_CHAT_ID: "${{ secrets.VALUE_TG_CHAT_ID }},-5137568055"   # 기존 그룹, 아빠 매매일지 바탕 추천 봇
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
             # 코드 변경 시: 최근 거래일 몇 개로 전송 없이 시험하고 결과를 저장

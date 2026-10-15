@@ -63,6 +63,8 @@ jobs:
         run: |
           python recommend.py --profile profile.json --top 20 --telegram
           TZ=Asia/Seoul date +%Y-%m > LAST_SENT
+          # "아빠 매매일지 바탕 추천 봇" 그룹에도 같은 20선 전송
+          TELEGRAM_CHAT_ID="-5137568055" python recommend.py --profile profile.json --top 20 --telegram --no-html || echo "::warning::새 그룹 전송 실패"
 
       # 실패하면 본인 텔레그램으로 바로 알림 (어느 하나도 놓치지 않도록)
       - name: Notify on failure

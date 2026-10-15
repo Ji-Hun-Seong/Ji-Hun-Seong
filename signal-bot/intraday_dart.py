@@ -277,8 +277,7 @@ def main():
         has_alert = bool(picks)
         if has_alert and not a.dry_run:
             send(text)
-            gchat = os.environ.get("GROUP_CHAT_ID", "").strip()
-            if gchat:
+            for gchat in [g.strip() for g in os.environ.get("GROUP_CHAT_ID", "").split(",") if g.strip()]:
                 os.environ["TELEGRAM_CHAT_ID"] = gchat
                 try:
                     send(text)

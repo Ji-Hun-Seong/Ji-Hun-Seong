@@ -1,0 +1,25 @@
+name: Telegram message (manual)
+
+# 특정 대화방에 안내 메시지를 한 번 보낸다(연결 확인용).
+on:
+  workflow_dispatch:
+    inputs:
+      chat:
+        description: "chat ID"
+        required: true
+      text:
+        description: "보낼 내용"
+        required: true
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          CHAT: ${{ github.event.inputs.chat }}
+          TEXT: ${{ github.event.inputs.text }}
+        run: |
+          code=$(curl -s -o /tmp/r.json -w "%{http_code}" "https://api.telegram.org/bot$TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$TEXT")
+          echo "HTTP $code"; [ "$code" = "200" ]

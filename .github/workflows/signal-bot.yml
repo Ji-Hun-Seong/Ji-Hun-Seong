@@ -50,15 +50,18 @@ jobs:
           set -o pipefail
           python -u signal-bot/daily_signals.py ${{ github.event.inputs.force == '1' && '--force' || '' }} ${{ github.event.inputs.preview == '1' && '--preview' || '' }} 2>&1 | tee signal-bot/last_run.txt
       # 같은 내용을 가치주 봇 그룹방(아빠와 함께)에도 전송 — 새 메시지를 보낸 날만
-      - name: Also send to group
+      # 같은 내용을 그룹방들에도 전송 — 새 메시지를 보낸 날만
+      #   VALUE_TG_CHAT_ID: 기존 가치주 봇 그룹 / -5137568055: "아빠 매매일지 바탕 추천 봇"
+      - name: Also send to groups
         if: success() && github.event.inputs.preview != '1'
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID }}
+          GROUPS: "${{ secrets.VALUE_TG_CHAT_ID }},-5137568055"
         run: |
-          if grep -q "텔레그램 전송 완료" signal-bot/last_run.txt && [ -n "$TELEGRAM_CHAT_ID" ]; then
-            python signal-bot/resend.py || echo "::warning::그룹 전송 실패"
-          fi
+          grep -q "텔레그램 전송 완료" signal-bot/last_run.txt || exit 0
+          for c in $(echo "$GROUPS" | tr ',' ' '); do
+            TELEGRAM_CHAT_ID="$c" python signal-bot/resend.py || echo "::warning::그룹 전송 실패"
+          done
       # 월 1회 가치주 20선 안전장치: 이번 달 전송 기록이 없으면 가치주 봇을 실행시킨다
       - name: Monthly value picks safety net
         if: always()
