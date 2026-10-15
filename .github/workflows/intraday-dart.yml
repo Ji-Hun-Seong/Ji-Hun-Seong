@@ -1,4 +1,4 @@
-name: Intraday buyback alerts   # (장중 공시 알림 · 코스피200)
+name: Intraday buyback alerts   # (장중 공시 알림 · 코스피 전체, 검증된 공시만)
 
 # cron-job.org가 평일 장중 5분마다 이 워크플로를 실행시킨다(workflow_dispatch API).
 # GitHub 자체 예약 실행은 몇 시간씩 밀릴 수 있어 외부에서 깨운다.
@@ -44,7 +44,19 @@ jobs:
           else
             python -u signal-bot/intraday_dart.py
           fi
+      # 실패하면 본인 텔레그램으로 바로 알림 (어느 하나도 놓치지 않도록)
+      - name: Notify on failure
+        if: failure() && github.event_name != 'push'
+        env:
+          TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          CHAT: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          [ "$(date +%M)" -lt 5 ] || exit 0   # 같은 장애로 5분마다 알리지 않도록 정각 실행에서만
+          curl -s -o /dev/null "https://api.telegram.org/bot$TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT" \
+            --data-urlencode "text=⚠️ 장중 공시 알림 봇 실행 실패 ($(TZ=Asia/Seoul date '+%m/%d %H:%M')). 다음 예약 실행 때 자동으로 다시 시도합니다. 확인: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - name: Save seen list
+        if: always()
         run: |
           git config user.name "signal-bot"
           git config user.email "signal-bot@users.noreply.github.com"

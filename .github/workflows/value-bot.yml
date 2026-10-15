@@ -40,20 +40,42 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
         run: python recommend.py --find-chats
 
+      # 예약 실행이 늦게 와도, 이미 이번 달에 보냈으면 다시 보내지 않음
+      - name: Already sent this month?
+        id: sent
+        run: |
+          m=$(TZ=Asia/Seoul date +%Y-%m)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(cat value-bot/LAST_SENT 2>/dev/null)" = "$m" ]; then
+            echo "skip=1" >> $GITHUB_OUTPUT; echo "이번 달 이미 전송함"
+          fi
+
       - name: Send picks to Telegram
-        if: ${{ github.event.inputs.mode != 'find_chat' }}
+        if: ${{ github.event.inputs.mode != 'find_chat' && steps.sent.outputs.skip != '1' }}
         working-directory: value-bot
         env:
           TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
           # 그룹 ID(VALUE_TG_CHAT_ID)가 있으면 그룹으로, 없으면 본인에게
           TELEGRAM_CHAT_ID: ${{ secrets.VALUE_TG_CHAT_ID || secrets.TG_CHAT_ID }}
-        run: python recommend.py --profile profile.json --top 20 --telegram
+        run: |
+          python recommend.py --profile profile.json --top 20 --telegram
+          TZ=Asia/Seoul date +%Y-%m > LAST_SENT
 
+      # 실패하면 본인 텔레그램으로 바로 알림 (어느 하나도 놓치지 않도록)
+      - name: Notify on failure
+        if: failure()
+        env:
+          TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          CHAT: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          curl -s -o /dev/null "https://api.telegram.org/bot$TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT" \
+            --data-urlencode "text=⚠️ 가치주 20선 봇 실행 실패 ($(TZ=Asia/Seoul date '+%m/%d %H:%M')). 다음 예약 실행 때 자동으로 다시 시도합니다. 확인: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - name: Save refreshed data
+        if: always()
         run: |
           git config user.name "value-bot"
           git config user.email "value-bot@users.noreply.github.com"
-          git add value-bot/universe.csv value-bot/DATA_ASOF
+          git add value-bot/universe.csv value-bot/DATA_ASOF value-bot/LAST_SENT 2>/dev/null || git add value-bot/universe.csv value-bot/DATA_ASOF
           git diff --cached --quiet || git commit -m "update value-bot data"
           git push
     env:

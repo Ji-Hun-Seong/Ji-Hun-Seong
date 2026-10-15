@@ -20,6 +20,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: signal-bot
@@ -54,12 +55,33 @@ jobs:
           if grep -q "텔레그램 전송 완료" signal-bot/last_run.txt && [ -n "$TELEGRAM_CHAT_ID" ]; then
             python signal-bot/resend.py || echo "::warning::그룹 전송 실패"
           fi
+      # 월 1회 가치주 20선 안전장치: 이번 달 전송 기록이 없으면 가치주 봇을 실행시킨다
+      - name: Monthly value picks safety net
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          m=$(TZ=Asia/Seoul date +%Y-%m)
+          if [ "$(cat value-bot/LAST_SENT 2>/dev/null)" != "$m" ]; then
+            echo "이번 달($m) 가치주 20선 전송 기록 없음 → 실행"
+            gh workflow run value-bot.yml -f mode=picks || echo "::warning::가치주 봇 실행 요청 실패"
+          fi
+      # 실패하면 본인 텔레그램으로 바로 알림 (어느 하나도 놓치지 않도록)
+      - name: Notify on failure
+        if: failure()
+        env:
+          TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          CHAT: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          curl -s -o /dev/null "https://api.telegram.org/bot$TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT" \
+            --data-urlencode "text=⚠️ 저녁 일일 신호 봇 실행 실패 ($(TZ=Asia/Seoul date '+%m/%d %H:%M')). 다음 예약 실행 때 자동으로 다시 시도합니다. 확인: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       # 모의 포트폴리오 상태를 커밋 → 매일 저장소 활동이 생겨 GitHub이 예약 실행을 멈추지 않음
       - name: Save state
         if: always()
         run: |
           git config user.name "signal-bot"
           git config user.email "signal-bot@users.noreply.github.com"
-          git add signal-bot/state.json signal-bot/last_run.txt 2>/dev/null || true
+          for f in signal-bot/state.json signal-bot/last_run.txt signal-bot/last_messages.json; do [ -f "$f" ] && git add "$f"; done
           git diff --cached --quiet || git commit -m "signal-bot: $(date +%F)"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done

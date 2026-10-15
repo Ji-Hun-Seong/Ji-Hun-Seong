@@ -396,15 +396,15 @@ def build_message(x, res, state, names):
         else:
             break
     hold = holdings()
-    L = [f"📈 코스피 일일 신호 · {t.strftime('%Y-%m-%d')} 종가 기준", ""]
+    day = t.strftime('%Y-%m-%d')
+    S = state["sleeves"]
+    # ── 메시지 1: 시장 + A. 스퀴즈 돌파 ──
+    L = [f"📈 [1/3] 시장 · 스퀴즈 돌파 · {day} 종가 기준", ""]
     L += ["① 시장",
           f"코스피200 {lvl:,.1f} / 200일선 {ma:,.1f} ({lvl / ma - 1:+.1%})",
           f"외국인 20일 순매수 {a:+.2f}%p ({'순매수' if foreign_buy else '순매도'} {streak}일째)",
           stance, ""]
-    S = state["sleeves"]
-    if res is None:
-        L += ["오늘은 이미 처리됨(휴장일 재실행)", ""]
-    else:
+    if res is not None:
         eqA, eqB = res["squeeze"]["equity"], res["buyback"]["equity"]
         tot = (eqA + eqB) / (2 * START_CASH) - 1
         L.append(f"💼 모의투자 합산(A+B, 시작 {state['start']}): {tot:+.1%} · 같은 기간 코스피200 {lvl / state['start_index'] - 1:+.1%}")
@@ -418,11 +418,18 @@ def build_message(x, res, state, names):
         if extra:
             why = "시장 필터로 보류된 신호" if not x["regime"] else "자리 부족으로 제외된 신호"
             L.append(f"({why}: " + ", ".join(extra[:8]) + ")")
-        L.append("")
+    else:
+        L.append("오늘은 이미 처리됨(휴장일 재실행)")
+    L += ["", "※ 모의 매매입니다. 실제 주문은 직접 판단하세요."]
+    msgs = ["\n".join(L)]
+
+    # ── 메시지 2: B. 자사주 공시 스윙 ──
+    if res is not None:
         rb = res["buyback"]
-        L.append(f"③ B. 자사주 공시 스윙 (최대 {BB_MAX_POS}종목, {BB_HOLD}거래일 보유 · RSI>{BB_TAKE} 익절)")
+        L = [f"🏢 [2/3] 자사주 공시 스윙 · {day}", "",
+             f"B. 최대 {BB_MAX_POS}종목, 공시 다음 날 시가 매수 · {BB_HOLD}거래일 보유 · RSI>{BB_TAKE} 익절"]
         if not rb["ok"]:
-            L.append("⚠️ DART 조회 실패 — 오늘 공시 신호 없음")
+            L.append("⚠️ DART 조회 실패 — 오늘 공시 신호 없음 (다음 실행 때 다시 확인)")
         elif rb["events"]:
             L.append("오늘 자사주 공시: " + ", ".join(rb["events"][:12]))
         else:
@@ -430,8 +437,11 @@ def build_message(x, res, state, names):
         for msg in rb["skipped"][:6]:
             L.append(f"  · 제외 {msg}")
         sleeve_lines(L, rb, S["buyback"], x, hold)
-        L.append("")
+        L += ["", "※ 모의 매매입니다. 실제 주문은 직접 판단하세요."]
+        msgs.append("\n".join(L))
 
+    # ── 메시지 3: 우선주 괴리 + 외국인 매집 ──
+    L = [f"🔁 [3/3] 우선주 괴리 · 외국인 매집 · {day}", ""]
     pr = x["prefs"]
     L.append("④ 우선주 괴리 (우선주÷보통주에 BB·RSI)")
     if len(pr):
@@ -447,9 +457,8 @@ def build_message(x, res, state, names):
     d60 = x["dfr60"].iloc[-1].where(x["uni"].iloc[-1]).dropna().sort_values(ascending=False).head(8)
     L.append("⑤ 외국인 60일 순매수 상위 (참고용, 매매신호 아님)")
     L.append(", ".join(f"{names.get(c, c)}{' 📌' if names.get(c, c) in hold else ''} {v:+.1f}%p" for c, v in d60.items()))
-    L.append("")
-    L.append("※ 모의 매매입니다. 실제 주문은 직접 판단하세요.")
-    return "\n".join(L)
+    msgs.append("\n".join(L))
+    return msgs
 
 
 def send(text):
@@ -494,13 +503,16 @@ def main():
     if already and not a.force:
         print("이미 처리한 거래일입니다(휴장일). 전송하지 않습니다.")
         return
-    text = build_message(x, res, state, names)
-    print(text)
+    msgs = build_message(x, res, state, names)
+    print("\n\n".join(msgs))
     if a.dry_run:
         return
     with open(STATE, "w", encoding="utf-8") as f:
         json.dump(state, f, ensure_ascii=False, indent=1)
-    send(text)
+    with open(os.path.join(HERE, "last_messages.json"), "w", encoding="utf-8") as f:
+        json.dump(msgs, f, ensure_ascii=False, indent=1)
+    for m in msgs:                       # 세 가지를 각각 따로 보낸다
+        send(m)
 
 
 if __name__ == "__main__":
