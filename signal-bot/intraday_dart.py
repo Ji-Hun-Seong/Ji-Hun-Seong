@@ -1,12 +1,11 @@
 """
-intraday_dart.py — 장중 호재 공시 알림 (코스피200 종목)
+intraday_dart.py — 장중 공시 알림: 백테스트로 효과가 확인된 공시만 (코스피)
 
 cron-job.org가 평일 장중 5분마다 GitHub Actions(workflow_dispatch)를 깨우면 실행된다.
-오늘 접수된 코스피200 종목의 원공시(정정 제외) 중 주가에 긍정적일 만한 것을 골라 텔레그램으로 알린다.
-  - 자사주 취득·신탁계약, 자사주 소각, 무상증자, 액면분할, 현금배당 결정
-  - 단일판매·공급계약 (원문에서 계약금액·매출액 대비 % 추출)
-  - 영업(잠정)실적, 매출액·손익구조 30%(대규모 15%) 이상 변경 (원문에서 매출·영업이익 증감률 추출 → 증가한 경우만)
-알림마다 2014~2026 백테스트(backtest/research/README.md 4차)의 근거 강도를 함께 적는다.
+오늘 접수된 원공시(정정 제외) 중 2015~2026 백테스트에서 두 기간(2015~2020, 2021~2026) 모두 유의했던 것만 알린다.
+  - 자사주 신탁계약·취득결정: 코스피 전체, 20일 평균 거래대금 3억 원 이상 (효과는 30억 미만 중소형에서 가장 큼)
+  - 단일판매·공급계약: 주가가 200일선 위일 때만, 거래대금 3억 원 이상
+(무상증자·액면분할·소각·잠정실적·배당은 표본이 적거나 최근 효과가 약해 제외. backtest/research/README.md 4차)
 
     python signal-bot/intraday_dart.py                     # 오늘 확인 + 전송 + 본 공시 기록
     python signal-bot/intraday_dart.py --date 20261013 --dry-run --any-time   # 지난 날짜 시험
@@ -35,16 +34,14 @@ KST = ZoneInfo("Asia/Seoul")
 
 # (이름, 정규식, 근거) — 근거는 공시 다음 날 시가 매수 기준, 유사 종목 대비 초과수익(2015~2026)
 TYPES = [
-    ("자사주 신탁계약", r"자기주식취득신탁계약체결결정", "중소형주 20일 +2~4%(유의). 대형주는 효과 약함"),
-    ("자사주 취득",     r"^(주요사항보고서\()?자기주식취득결정", "중소형주 20일 +2~3%(유의). 대형주는 효과 약함"),
-    ("자사주 소각",     r"주식소각결정", "효과 확인 안 됨(참고용)"),
-    ("무상증자",        r"^(주요사항보고서\()?무상증자결정", "20일 +2~3%, 표본 적어 유의성 약함"),
-    ("액면분할",        r"주식분할결정", "60일 +7~8%, 표본 적어 유의성 약함"),
-    ("배당 증가",       r"현금ㆍ현물배당결정|현금배당결정", "배당 20%↑ 증가 시 과거엔 60일 +3%, 최근 약해짐"),
-    ("공급계약",        r"단일판매ㆍ공급계약체결", "대형주 60일 +3.2%(유의), 승률 45%"),
-    ("잠정실적",        r"영업\(잠정\)실적", "실적 공시 전체로는 효과 없음 — 증가폭 큰 경우만 참고"),
-    ("손익구조 변경",   r"매출액또는손익구조", "증가 공시만 참고(별도 검증 전)"),
+    ("자사주 신탁계약", r"자기주식취득신탁계약체결결정",
+     "공시 다음 날 매수 시 20일 +1.9%(2015~20)·+2.1%(2021~), 거래대금 30억 미만은 +2~4%"),
+    ("자사주 취득",     r"^(주요사항보고서\()?자기주식취득결정",
+     "20일 +1.5%(2015~20)·+1.9%(2021~), 거래대금 30억 미만은 +2~3%"),
+    ("공급계약",        r"단일판매ㆍ공급계약체결",
+     "200일선 위 종목 60일 +2.8%(2015~20)·+3.9%(2021~), 승률 42~45%(일부 급등이 평균을 끌어올림)"),
 ]
+LIQ = 3e8
 
 
 def kospi200() -> dict[str, str]:
@@ -193,8 +190,12 @@ def quote(code: str):
     except Exception:
         pass
     try:
-        d = daily(code, (datetime.now(KST) - timedelta(days=90)).strftime("%Y%m%d"))
-        info["rsi"] = float(rsi(d["Close"]).iloc[-1])
+        d = daily(code, (datetime.now(KST) - timedelta(days=330)).strftime("%Y%m%d"))
+        c = d["Close"]
+        info["tv20"] = float((c * d["Volume"]).iloc[-21:-1].mean())          # 오늘(미완성) 제외
+        info["rsi"] = float(rsi(c).iloc[-1])
+        if len(c) >= 201:
+            info["above200"] = bool(c.iloc[-1] > c.iloc[-201:-1].mean())
     except Exception:
         pass
     return info
@@ -224,44 +225,44 @@ def main():
     seen = {k: v for k, v in seen.items() if k >= (now - timedelta(days=7)).strftime("%Y%m%d")}
     done = set(seen.get(day, [])) if not a.dry_run else set()
 
-    k200 = kospi200()
-    if len(k200) < 150:
-        sys.exit(f"::error::코스피200 목록 {len(k200)}개 — 네이버 응답 확인 필요")
     rows = dart_list(day, "B", key) + dart_list(day, "I", key)
     fresh = []
     for it in rows:
         code, no = it.get("stock_code"), it["rcept_no"]
         nm = re.sub(r"\s+", "", it.get("report_nm", ""))
-        if code not in k200 or no in done or nm.startswith("["):
+        if not code or not code.endswith("0") or no in done or nm.startswith("["):
             continue
         for kind, pat, why in TYPES:
             if re.search(pat, nm):
-                fresh.append({"code": code, "name": k200[code], "kind": kind, "why": why, "rcept_no": no,
+                fresh.append({"code": code, "name": it.get("corp_name", code), "kind": kind, "why": why, "rcept_no": no,
                               "corp_code": it.get("corp_code")})
                 break
-    print(f"{day} 코스피200 관련 새 공시 {len(fresh)}건")
+    print(f"{day} 대상 유형 새 공시 {len(fresh)}건")
 
     picks, others = [], []
     for e in fresh:
-        good, summ = (True, "")
-        if e["kind"] in ("공급계약", "잠정실적", "손익구조 변경"):
-            good, summ = analyze(e["kind"], doc_text(e["rcept_no"], key))
+        q = quote(e["code"])
+        e["q"] = q
+        tv = q.get("tv20")
+        if tv is None or tv < LIQ:
+            print("제외(거래대금 부족)", e["name"], tv); continue
+        e["summary"] = f"20일 거래대금 {tv / 1e8:,.0f}억"
+        if e["kind"] == "공급계약":
+            if not q.get("above200"):
+                print("제외(200일선 아래)", e["name"]); continue
+            _, summ = analyze("공급계약", doc_text(e["rcept_no"], key))
             time.sleep(0.3)
-        elif e["kind"] == "배당 증가":
-            good, summ = dividend(e, doc_text(e["rcept_no"], key), key, day)
-            time.sleep(0.3)
-        e["summary"] = summ
-        (picks if good else others).append(e) if good is not None else others.append(e)
-        if good is None:
-            e["summary"] = (summ + " · " if summ else "") + "원문 수치 확인 필요"
-    if picks or others:
-        L = [f"⚡ 장중 공시 알림 (코스피200) · {now:%m/%d %H:%M}" + ("" if day == now.strftime("%Y%m%d") else f" · {day}"), ""]
-        for title, group in (("🟢 호재 공시", picks), ("⚪ 확인 필요(수치 미확인·감소)", [o for o in others if "확인 필요" in o["summary"]])):
+            if summ:
+                e["summary"] = summ + " · " + e["summary"]
+        picks.append(e)
+    if picks:
+        L = [f"⚡ 장중 공시 알림 · {now:%m/%d %H:%M}" + ("" if day == now.strftime("%Y%m%d") else f" · {day}"), ""]
+        for title, group in (("🟢 백테스트 검증 공시", picks),):
             if not group:
                 continue
             L.append(title)
             for e in group:
-                q = quote(e["code"])
+                q = e["q"]
                 px = f"{q['price']:,.0f}원 ({q['chg']:+.1f}%)" if q.get("price") == q.get("price") and "price" in q else ""
                 r = f" · RSI {q['rsi']:.0f}" if "rsi" in q else ""
                 L.append(f"• {e['name']} — {e['kind']}" + (f" ({e['summary']})" if e["summary"] else ""))
@@ -270,10 +271,10 @@ def main():
                 L.append(f"  근거: {e['why']}")
                 L.append(f"  https://dart.fss.or.kr/dsaf001/main.do?rcpNo={e['rcept_no']}")
             L.append("")
-        L.append("※ 참고용 알림입니다. 모의투자 B는 검증된 규칙(자사주 공시 → 다음 날 시가)대로 따로 기록합니다.")
+        L.append("※ 수치는 공시 다음 날 시가 매수 기준 유사 종목 대비 평균 초과수익(과거 성과이며 보장 아님). 자사주는 모의투자 B에 다음 날 시가 매수로 기록됩니다.")
         text = "\n".join(L)
         print(text)
-        has_alert = bool(picks) or any("확인 필요" in o["summary"] for o in others)
+        has_alert = bool(picks)
         if has_alert and not a.dry_run:
             send(text)
             gchat = os.environ.get("GROUP_CHAT_ID", "").strip()
