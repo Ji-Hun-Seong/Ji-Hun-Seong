@@ -44,6 +44,13 @@ jobs:
           else
             python -u signal-bot/intraday_dart.py
           fi
+      # 애널리스트 노트: 평일 하루 5종목씩 그룹방에 (09시 이후 첫 실행에서 1회)
+      - name: Analyst notes batch
+        if: always() && github.event_name != 'push'
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          GROUPS: "${{ secrets.VALUE_TG_CHAT_ID }},-5137568055"
+        run: python -u value-bot/analyst/send_batch.py || echo "::warning::애널리스트 노트 전송 실패"
       # 실패하면 본인 텔레그램으로 바로 알림 (어느 하나도 놓치지 않도록)
       - name: Notify on failure
         if: failure() && github.event_name != 'push'
@@ -60,7 +67,7 @@ jobs:
         run: |
           git config user.name "signal-bot"
           git config user.email "signal-bot@users.noreply.github.com"
-          for f in signal-bot/intraday_seen.json signal-bot/intraday_test.txt signal-bot/intraday_doc.txt; do [ -f "$f" ] && git add "$f"; done
+          for f in signal-bot/intraday_seen.json signal-bot/intraday_test.txt signal-bot/intraday_doc.txt value-bot/analyst/batch_state.json; do [ -f "$f" ] && git add "$f"; done
           git diff --cached --quiet && exit 0
           git commit -qm "intraday: seen $(date +%F)"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
