@@ -195,7 +195,7 @@ def buyback_detail(kind: str, text: str) -> str:
         m = re.search(r"취득예정주식\s*\(주\)\s*보통주식\s*" + NUM, text)
         if m:
             out.append(f"{float(m.group(1).replace(',', '')):,.0f}주")
-        m = re.search(r"취득예상금액\s*\(원\)\s*보통주식\s*" + NUM, text)
+        m = re.search(r"취득예(?:상|정)금액\s*\(원\)\s*보통주식\s*" + NUM, text)
         if m and float(m.group(1).replace(',', '')) > 0:
             out.append(f"{float(m.group(1).replace(',', '')) / 1e8:,.0f}억")
         m = re.search(r"취득예상기간\s*시작일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D+종료일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})", text)
