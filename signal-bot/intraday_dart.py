@@ -181,6 +181,67 @@ def dividend(e, text: str, key: str, day: str):
     return (chg > 0.001, f"주당 {now_dps:,.0f}원 (작년 같은 시기 {old:,.0f}원, {chg:+.0%}){yl}")
 
 
+def buyback_detail(kind: str, text: str) -> str:
+    """자사주 취득결정·신탁계약 원문에서 금액·기간·목적을 뽑는다(못 찾은 항목은 생략)."""
+    if not text:
+        return ""
+    out = []
+    if "신탁" in kind:
+        m = re.search(r"계약금액\s*\(원\)\s*" + NUM, text)
+        if m:
+            out.append(f"계약금액 {float(m.group(1).replace(',', '')) / 1e8:,.0f}억")
+        m = re.search(r"계약기간\s*시작일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D+종료일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})", text)
+    else:
+        m = re.search(r"취득예정주식\s*\(주\)\s*보통주식\s*" + NUM, text)
+        if m:
+            out.append(f"{float(m.group(1).replace(',', '')):,.0f}주")
+        m = re.search(r"취득예상금액\s*\(원\)\s*보통주식\s*" + NUM, text)
+        if m and float(m.group(1).replace(',', '')) > 0:
+            out.append(f"{float(m.group(1).replace(',', '')) / 1e8:,.0f}억")
+        m = re.search(r"취득예상기간\s*시작일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D+종료일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})", text)
+    if m:
+        g = [int(x) for x in m.groups()]
+        out.append(f"{g[0]}.{g[1]:02d}.{g[2]:02d}~{g[3]}.{g[4]:02d}.{g[5]:02d}")
+    m = re.search(r"(?:취득|계약)\s*목적\s*(.{2,60}?)(?=\s*(?:\d+\.|취득방법|계약체결|기타|$))", text)
+    if m:
+        out.append("목적: " + m.group(1).strip(" :-"))
+    return " · ".join(out)
+
+
+def buyback_digest(day: str, rows, key: str, now) -> str:
+    """오늘 접수된 코스피 자사주 취득·신탁체결 공시 전체(거래대금 필터 없이)."""
+    items = []
+    for it in rows:
+        nm = re.sub(r"\s+", "", it.get("report_nm", ""))
+        if not it.get("stock_code") or not it["stock_code"].endswith("0"):
+            continue
+        for kind, pat, _ in TYPES[:2]:
+            if re.search(pat, nm):
+                tag = "정정 " if nm.startswith("[") else ""
+                items.append((it, kind, tag))
+                break
+    head = f"📋 오늘의 자사주 매입 공시 · {day[4:6]}/{day[6:]}"
+    if not items:
+        return head + "\n\n오늘 코스피 자사주 취득·신탁계약 공시는 없었습니다."
+    L = [head, f"코스피 {len(items)}건 (정정 포함, 거래대금 필터 없음)", ""]
+    for it, kind, tag in items:
+        d = buyback_detail(kind, doc_text(it["rcept_no"], key)) if not tag else ""
+        time.sleep(0.3)
+        L.append(f"• {it.get('corp_name', it['stock_code'])} — {tag}{kind}" + (f" ({d})" if d else ""))
+        L.append(f"  https://dart.fss.or.kr/dsaf001/main.do?rcpNo={it['rcept_no']}")
+    return "\n".join(L)
+
+
+def broadcast(text: str):
+    send(text)
+    for gchat in [g.strip() for g in os.environ.get("GROUP_CHAT_ID", "").split(",") if g.strip()]:
+        os.environ["TELEGRAM_CHAT_ID"] = gchat
+        try:
+            send(text)
+        except SystemExit as ex:
+            print("::warning::그룹 전송 실패", ex)
+
+
 def quote(code: str):
     info = {}
     try:
@@ -244,9 +305,15 @@ def main():
         q = quote(e["code"])
         e["q"] = q
         tv = q.get("tv20")
-        if tv is None or tv < LIQ:
+        is_bb = e["kind"].startswith("자사주")
+        if (tv is None or tv < LIQ) and not is_bb:
             print("제외(거래대금 부족)", e["name"], tv); continue
-        e["summary"] = f"20일 거래대금 {tv / 1e8:,.0f}억"
+        e["summary"] = (f"20일 거래대금 {tv / 1e8:,.0f}억" if tv else "거래대금 확인 불가") + (" · 유동성 낮음(참고)" if is_bb and (tv or 0) < LIQ else "")
+        if is_bb:
+            d = buyback_detail(e["kind"], doc_text(e["rcept_no"], key))
+            time.sleep(0.3)
+            if d:
+                e["summary"] = d + " · " + e["summary"]
         if e["kind"] == "공급계약":
             if not q.get("above200"):
                 print("제외(200일선 아래)", e["name"]); continue
@@ -276,13 +343,14 @@ def main():
         print(text)
         has_alert = bool(picks)
         if has_alert and not a.dry_run:
-            send(text)
-            for gchat in [g.strip() for g in os.environ.get("GROUP_CHAT_ID", "").split(",") if g.strip()]:
-                os.environ["TELEGRAM_CHAT_ID"] = gchat
-                try:
-                    send(text)
-                except SystemExit as ex:
-                    print("::warning::그룹 전송 실패", ex)
+            broadcast(text)
+    # 하루 1회: 오늘 자사주 매입 공시 전체 요약(0건이어도 "없음"으로 알림) — 18시 이후 첫 실행
+    if (a.any_time or (now.weekday() < 5 and now.hour >= 18)) and "DIGEST" not in done:
+        dg = buyback_digest(day, rows, key, now)
+        print(dg)
+        if not a.dry_run:
+            broadcast(dg)
+            done.add("DIGEST")
     if not a.dry_run:
         seen[day] = sorted(done | {e["rcept_no"] for e in fresh})
         with open(SEEN, "w", encoding="utf-8") as f:
