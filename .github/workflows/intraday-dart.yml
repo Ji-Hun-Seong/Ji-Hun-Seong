@@ -35,8 +35,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
             # 코드 변경 시: 최근 거래일 몇 개로 전송 없이 시험하고 결과를 저장
-            for r in ; do
-              python -u signal-bot/intraday_dart.py --show-doc $r
+            for r in 20261014000434 20261013000297 20260930000006; do
+              python -u signal-bot/intraday_dart.py --dump-doc $r
             done 2>&1 | tee signal-bot/intraday_doc.txt
             for d in 20261015 20261014 20261013 20261008 20261002 20260930; do
               python -u signal-bot/intraday_dart.py --dry-run --any-time --date $d

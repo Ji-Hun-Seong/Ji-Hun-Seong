@@ -267,8 +267,17 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--any-time", action="store_true", help="시간 제한 없이 실행(시험용)")
     ap.add_argument("--date", help="YYYYMMDD (시험용, 기본 오늘)")
+    ap.add_argument("--dump-doc", help="자사주 공시 원문의 항목 부분 출력(파서 점검용)")
     ap.add_argument("--show-doc", help="접수번호 원문 텍스트 일부 출력(파서 점검용)")
     a = ap.parse_args()
+    if a.dump_doc:
+        t = doc_text(a.dump_doc, (os.environ.get("DART_API_KEY") or "").strip())
+        i = max(t.find("취득예정주식"), t.find("계약금액"), 0)
+        print(f"[{a.dump_doc}] 길이 {len(t)}\n본문: {t[max(0, i - 100):i + 1800]}")
+        for kw in ("보유현황", "보유비율", "지분율"):
+            j = t.find(kw)
+            print(f"--{kw}: {t[max(0, j - 150):j + 500] if j >= 0 else '없음'}")
+        return
     if a.show_doc:
         t = doc_text(a.show_doc, (os.environ.get("DART_API_KEY") or "").strip())
         i = max(t.find("매출액"), 0)
