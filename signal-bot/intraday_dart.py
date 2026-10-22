@@ -181,31 +181,76 @@ def dividend(e, text: str, key: str, day: str):
     return (chg > 0.001, f"주당 {now_dps:,.0f}원 (작년 같은 시기 {old:,.0f}원, {chg:+.0%}){yl}")
 
 
-def buyback_detail(kind: str, text: str) -> str:
-    """자사주 취득결정·신탁계약 원문에서 금액·기간·목적을 뽑는다(못 찾은 항목은 생략)."""
-    if not text:
-        return ""
-    out = []
-    if "신탁" in kind:
-        m = re.search(r"계약금액\s*\(원\)\s*" + NUM, text)
-        if m:
-            out.append(f"계약금액 {float(m.group(1).replace(',', '')) / 1e8:,.0f}억")
-        m = re.search(r"계약기간\s*시작일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D+종료일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})", text)
-    else:
-        m = re.search(r"취득예정주식\s*\(주\)\s*보통주식\s*" + NUM, text)
-        if m:
-            out.append(f"{float(m.group(1).replace(',', '')):,.0f}주")
-        m = re.search(r"취득예(?:상|정)금액\s*\(원\)\s*보통주식\s*" + NUM, text)
-        if m and float(m.group(1).replace(',', '')) > 0:
-            out.append(f"{float(m.group(1).replace(',', '')) / 1e8:,.0f}억")
-        m = re.search(r"취득예상기간\s*시작일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D+종료일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})", text)
+def _n(x):
+    return float(x.replace(",", ""))
+
+
+def bb_parse(kind: str, t: str) -> dict:
+    """자사주 취득결정·신탁계약 원문에서 항목을 뽑는다(못 찾은 항목은 키 없음)."""
+    d = {}
+    if not t:
+        return d
+    tr = "신탁" in kind
+    m = re.search(r"계약금액\s*\(원\)\s*" + NUM, t) if tr else re.search(r"취득예(?:상|정)금액\s*\(원\)\s*보통주식\s*" + NUM, t)
+    if m and _n(m.group(1)) > 0:
+        d["amount"] = _n(m.group(1))
+    m = re.search(r"취득예정주식\s*(?:수)?\s*\(주\)\s*보통주식\s*" + NUM, t)
+    if m and _n(m.group(1)) > 0:
+        d["shares"] = _n(m.group(1))
+    m = re.search(r"(?:취득예상기간|계약기간)\s*시작일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D+종료일\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})", t)
     if m:
         g = [int(x) for x in m.groups()]
-        out.append(f"{g[0]}.{g[1]:02d}.{g[2]:02d}~{g[3]}.{g[4]:02d}.{g[5]:02d}")
-    m = re.search(r"(?:취득|계약)\s*목적\s*(.{2,60}?)(?=\s*(?:\d+\.|취득방법|계약체결|기타|$))", text)
+        d["period"] = f"{g[0]}.{g[1]:02d}.{g[2]:02d}~{g[3]}.{g[4]:02d}.{g[5]:02d}"
+    m = re.search(r"(?:취득|계약)\s*목적\s*(.{2,70}?)(?=\s*(?:\d+\.|취득방법|계약체결|기타|$))", t)
     if m:
-        out.append("목적: " + m.group(1).strip(" :-"))
-    return " · ".join(out)
+        d["purpose"] = m.group(1).strip(" :-")
+    m = re.search(r"취득방법\s*(.{2,40}?)\s*(?=\d+\.\s*위탁)", t)
+    if m:
+        d["method"] = m.group(1).strip(" :-")
+    m = re.search(r"위탁투자중개업자\s*(.{2,80}?)\s*(?=\d+\.\s)", t)
+    if m:
+        d["broker"] = re.sub(r"\s*\([^)]*\)", "", m.group(1)).strip(" :-,")
+    m = re.search(r"계약체결기관\s*(.{2,60}?)\s*(?=\d+\.\s)", t)
+    if m and "broker" not in d:
+        d["broker"] = re.sub(r"\s*\([^)]*\)", "", m.group(1)).strip(" :-,")
+    # 취득(계약) 전 자기주식 보유현황: 배당가능이익 범위 내 취득 + 기타취득
+    m = re.search(r"(?:취득|계약)\s*전\s*자기주식\s*보유현황\s*(.{0,300}?)\d+\.\s*(?:취득결정일|이사회결의일)", t)
+    if m:
+        seg, sh, pc = m.group(1), 0.0, 0.0
+        for mm in re.finditer(r"\(주\)\s*보통주식\s*" + NUM + r"\s*비율\s*\(%\)\s*" + NUM, seg):
+            sh += _n(mm.group(1)); pc += _n(mm.group(2))
+        for mm in re.finditer(r"\(주\)\s*보통주식\s*-\s*비율", seg):
+            pass
+        d["held"] = (sh, pc)
+    if "전량 소각" in t or "소각 예정" in t or "소각할 예정" in t:
+        d["burn"] = True
+    return d
+
+
+def bb_lines(kind: str, d: dict, price=None) -> list:
+    tr = "신탁" in kind
+    L = []
+    if d.get("shares"):
+        L.append(f"▪ 취득 예정 수량: 보통주 {d['shares']:,.0f}주")
+    if d.get("amount"):
+        a = d["amount"]
+        L.append(f"▪ {'계약' if tr else '취득 예정'} 금액: {a:,.0f}원 (약 {a / 1e8:,.0f}억원)" if a >= 1e8 else f"▪ {'계약' if tr else '취득 예정'} 금액: {a:,.0f}원")
+    if d.get("purpose"):
+        L.append(f"▪ {'계약' if tr else '취득'} 목적: {d['purpose']}" + (" (소각 예정)" if d.get("burn") and "소각" not in d["purpose"] else ""))
+    if d.get("method"):
+        L.append(f"▪ 취득 방법: {d['method']}")
+    if d.get("period"):
+        L.append(f"▪ {'계약' if tr else '취득 예정'} 기간: {d['period']}")
+    if d.get("broker"):
+        L.append(f"▪ {'계약 체결 기관' if tr else '매수 위탁'}: {d['broker']}")
+    if d.get("held"):
+        sh, pc = d["held"]
+        L.append(f"▪ 기존 자기주식 보유: {sh:,.0f}주 ({pc:.2f}%)" if sh else "▪ 기존 자기주식 보유: 없음")
+    return L
+
+
+def buyback_detail(kind: str, text: str) -> str:
+    return " · ".join(l[2:] for l in bb_lines(kind, bb_parse(kind, text)))
 
 
 def buyback_digest(day: str, rows, key: str, now) -> str:
@@ -225,10 +270,12 @@ def buyback_digest(day: str, rows, key: str, now) -> str:
         return head + "\n\n오늘 코스피 자사주 취득·신탁계약 공시는 없었습니다."
     L = [head, f"코스피 {len(items)}건 (정정 포함, 거래대금 필터 없음)", ""]
     for it, kind, tag in items:
-        d = buyback_detail(kind, doc_text(it["rcept_no"], key)) if not tag else ""
+        dl = bb_lines(kind, bb_parse(kind, doc_text(it["rcept_no"], key))) if not tag else []
         time.sleep(0.3)
-        L.append(f"• {it.get('corp_name', it['stock_code'])} — {tag}{kind}" + (f" ({d})" if d else ""))
+        L.append(f"■ {it.get('corp_name', it['stock_code'])} ({it['stock_code']}) — {tag}{kind}")
+        L += dl
         L.append(f"  https://dart.fss.or.kr/dsaf001/main.do?rcpNo={it['rcept_no']}")
+        L.append("")
     return "\n".join(L)
 
 
@@ -319,10 +366,8 @@ def main():
             print("제외(거래대금 부족)", e["name"], tv); continue
         e["summary"] = (f"20일 거래대금 {tv / 1e8:,.0f}억" if tv else "거래대금 확인 불가") + (" · 유동성 낮음(참고)" if is_bb and (tv or 0) < LIQ else "")
         if is_bb:
-            d = buyback_detail(e["kind"], doc_text(e["rcept_no"], key))
+            e["bb"] = bb_lines(e["kind"], bb_parse(e["kind"], doc_text(e["rcept_no"], key)))
             time.sleep(0.3)
-            if d:
-                e["summary"] = d + " · " + e["summary"]
         if e["kind"] == "공급계약":
             if not q.get("above200"):
                 print("제외(200일선 아래)", e["name"]); continue
@@ -341,7 +386,13 @@ def main():
                 q = e["q"]
                 px = f"{q['price']:,.0f}원 ({q['chg']:+.1f}%)" if q.get("price") == q.get("price") and "price" in q else ""
                 r = f" · RSI {q['rsi']:.0f}" if "rsi" in q else ""
-                L.append(f"• {e['name']} — {e['kind']}" + (f" ({e['summary']})" if e["summary"] else ""))
+                if e.get("bb") is not None:
+                    L.append(f"■ {e['name']} ({e['code']}) — {e['kind']}결정")
+                    L.append(f"▪ 확인 시각: {now:%H:%M} (공시 접수일 {day[4:6]}/{day[6:]})")
+                    L += e["bb"]
+                    L.append(f"▪ {e['summary']}")
+                else:
+                    L.append(f"• {e['name']} — {e['kind']}" + (f" ({e['summary']})" if e["summary"] else ""))
                 if px or r:
                     L.append(f"  {px}{r}")
                 L.append(f"  근거: {e['why']}")
