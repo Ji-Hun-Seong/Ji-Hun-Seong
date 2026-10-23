@@ -1,0 +1,5 @@
+284740 list 181 elestock 0 major 2
+192400 list 195 elestock 0 major 0
+done
+docs done
+full done
