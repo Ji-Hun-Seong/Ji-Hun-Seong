@@ -72,3 +72,20 @@ def daily(t):
 res["daily"] = {t: daily(t) for t in ("284740", "021240", "192400")}
 json.dump(res, open(os.path.join(OUT, "kuku.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("done")
+
+
+# 핵심 공시 원문 일부(태그 제거) — 대주주 매각·증여·공정공시 내용 확인용
+import re
+DOCS = "20210622000221 20210622800063 20211104000136 20211104800078 20211122800353 20220824800277 20241227800518 20241024800499 20180514800933".split()
+with open(os.path.join(OUT, "docs.txt"), "w", encoding="utf-8") as f:
+    for no in DOCS:
+        try:
+            r = requests.get(f"{DART}/document.xml", params={"crtfc_key": KEY, "rcept_no": no}, timeout=40)
+            zz = zipfile.ZipFile(io.BytesIO(r.content))
+            raw = " ".join(zz.read(n).decode("utf-8", "ignore") for n in zz.namelist())
+            t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", raw))
+        except Exception as e:
+            t = f"실패 {e}"
+        f.write(f"\n===== {no} (길이 {len(t)}) =====\n{t[:4500]}\n")
+        time.sleep(0.3)
+print("docs done")
