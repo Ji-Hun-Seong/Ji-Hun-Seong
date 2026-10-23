@@ -1,0 +1,36 @@
+name: Kuku deep-dive data (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "value-bot/analyst/kuku_fetch.py"
+      - ".github/workflows/kuku-fetch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python -u value-bot/analyst/kuku_fetch.py /tmp/kuku_raw 2>&1 | tee /tmp/kuku_log.txt
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+      - name: Push to kuku-data branch
+        if: always()
+        run: |
+          git config user.name "analyst-bot"
+          git config user.email "analyst-bot@users.noreply.github.com"
+          git checkout --orphan kuku-data
+          git rm -rq --cached . && git clean -fdq
+          cp -r /tmp/kuku_raw . && cp /tmp/kuku_log.txt .
+          git add kuku_raw kuku_log.txt
+          git commit -qm "kuku data $(date +%F)"
+          git push -f origin kuku-data
