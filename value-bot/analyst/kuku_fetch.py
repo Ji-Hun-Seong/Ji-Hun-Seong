@@ -89,3 +89,15 @@ with open(os.path.join(OUT, "docs.txt"), "w", encoding="utf-8") as f:
         f.write(f"\n===== {no} (길이 {len(t)}) =====\n{t[:4500]}\n")
         time.sleep(0.3)
 print("docs done")
+
+
+# 재무상태표·현금흐름표 전체(순현금·영업현금흐름·배당 지급액) — 쿠쿠홈시스·쿠쿠홀딩스·코웨이, 2019~2025
+full = {}
+for t in ("284740", "192400", "021240"):
+    cc = codes.get(t)
+    full[t] = {}
+    for y in range(2019, 2026):
+        j = dart("fnlttSinglAcntAll.json", corp_code=cc, bsns_year=str(y), reprt_code="11011", fs_div="CFS")
+        full[t][y] = j.get("list") if j.get("status") == "000" else None
+json.dump(full, open(os.path.join(OUT, "full.json"), "w", encoding="utf-8"), ensure_ascii=False)
+print("full done")
