@@ -1,0 +1,55 @@
+name: Ackman weekly TOP10
+
+on:
+  schedule:
+    - cron: "10 23 * * 5"     # 토요일 08:10 KST (미국 금요일 장 마감 후)
+    - cron: "10 2 * * 6"      # 토요일 11:10 KST 예비 실행 — 이미 보냈으면 건너뜀
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "send = 전송(이번 주 1회), force = 재전송, preview = 미리보기"
+        default: "preview"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ackman-weekly
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests yfinance
+      - name: Load state
+        run: |
+          git fetch -f origin +refs/heads/ackman-weekly:refs/remotes/origin/ackman-weekly 2>/dev/null \
+            && git show origin/ackman-weekly:weekly_state.json > /tmp/weekly_state.json || echo "{}" > /tmp/weekly_state.json
+      - name: Run
+        run: |
+          MODE="${{ github.event.inputs.mode }}"
+          [ "${{ github.event_name }}" = "schedule" ] && MODE=send
+          ARGS=""
+          [ "$MODE" = "send" ] && ARGS="--send"
+          [ "$MODE" = "force" ] && ARGS="--send --force"
+          python -u 13f/ackman_weekly.py /tmp/weekly_state.json $ARGS
+        env:
+          SEC_UA: ${{ secrets.SEC_UA }}
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: "-5433065254"   # 텔레그램 그룹 "Bilackman Portfolio"
+      - name: Save state
+        run: |
+          git config user.name "ackman-bot"
+          git config user.email "ackman-bot@users.noreply.github.com"
+          cp /tmp/weekly_state.json /tmp/ws.json
+          git checkout -q --orphan ackman-weekly-tmp
+          git rm -rq --cached . && git clean -fdq
+          cp /tmp/ws.json weekly_state.json
+          git add weekly_state.json
+          git commit -qm "weekly state $(date +%F)"
+          git push -qf origin HEAD:ackman-weekly
