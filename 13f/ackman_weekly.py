@@ -325,20 +325,20 @@ def evaluate(t, d, D):
     fcf = fcf * fx if fcf is not None else None
     ni = ni * fx if ni is not None else None
     fy = fcf / mc if fcf is not None and mc else None
-    fpe = num(i.get("forwardPE"))
-    if fpe and fpe > 0 and price:
-        feps = price / fpe
-    else:
-        feps = num(i.get("forwardEps"))
-        feps = feps * fx if feps else None
-        fpe = price / feps if feps and feps > 0 and price else None
+    # PER은 과거와 같은 기준(최근 12개월 실적)으로 비교: 현재 PER = 주가 ÷ 최근 12개월 EPS
+    fpe = num(i.get("trailingPE"))
+    teps = price / fpe if fpe and fpe > 0 and price else None
+    if not teps:
+        e0 = num(i.get("trailingEps")) or (d["eps"][0][1] if d["eps"] else None)
+        teps = e0 * fx if e0 and e0 > 0 else None
+        fpe = price / teps if teps and price else None
     ph = pe_hist(d)
 
-    # 적정주가: ① PER 방식 = 선행EPS × 과거 PER  ② 현금흐름 할인(10년, 할인율 9%)
+    # 적정주가: ① PER 방식 = 최근 12개월 EPS × 과거 PER(10~30배로 제한)  ② 현금흐름 할인(10년, 할인율 9%)
     fv_parts = {}
-    if feps and feps > 0:
-        tpe = clamp(ph, 10, 35) if ph else 18
-        fv_parts["per"] = (feps, tpe, feps * tpe)
+    if teps:
+        tpe = clamp(ph, 10, 30) if ph else 18
+        fv_parts["per"] = (teps, tpe, teps * tpe)
     if t not in FIN_LIKE:
         sh = num(i.get("sharesOutstanding")) or (mc / price if mc and price else None)
         cash, norm = fcf, False
@@ -450,7 +450,7 @@ def build(res, D, state, week, asof, last_q):
     if out_:
         m2 += ["", "↘️ 이번 주 TOP10 이탈: " + ", ".join(out_)]
     m2 += ["", "🟢 적정가보다 20%+ 쌈 · 🟡 적정가 이하 · 🔴 적정가 초과 · ⚪ 계산 불가",
-           "PER = 주가 ÷ 내년 예상 주당순이익(배). 과거 = 최근 4~5년 결산 시점 PER 중앙값",
+           "PER = 주가 ÷ 최근 12개월 주당순이익(EPS), 단위 '배'. 과거 = 최근 4~5년 결산 시점 PER 중앙값. 적정가 계산엔 과거 PER을 10~30배로 제한",
            "점수(100): 매출성장 12 · 영업이익성장 12 · 잉여현금흐름 12 · 수익성 16 · 재무 8 · 밸류 10 · 애크먼 행태 일치 15 · AI·디지털 5 · 경쟁우위 10"]
     blocks = []
     for n, s in enumerate(top, 1):
@@ -460,7 +460,7 @@ def build(res, D, state, week, asof, last_q):
         fp = s["fvp"]
         calc = []
         if "per" in fp:
-            calc.append(f"내년 EPS ${fp['per'][0]:.2f} × PER {fp['per'][1]:.0f}배 = {money(fp['per'][2])}")
+            calc.append(f"EPS ${fp['per'][0]:.2f} × PER {fp['per'][1]:.0f}배 = {money(fp['per'][2])}")
         if "dcf" in fp:
             calc.append(f"현금흐름 할인 {money(fp['dcf'][0])}" + (" (순이익 기준)" if fp["dcf"][1] else ""))
         if "dcf_drop" in fp:
