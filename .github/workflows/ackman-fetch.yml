@@ -1,0 +1,36 @@
+name: Ackman data fetch (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "13f/ackman_fetch.py"
+      - ".github/workflows/ackman-fetch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests yfinance
+      - run: python -u 13f/ackman_fetch.py /tmp/ackman_raw 2>&1 | tee /tmp/ackman_log.txt
+        env:
+          SEC_UA: ${{ secrets.SEC_UA }}
+      - name: Push to ackman-data branch
+        if: always()
+        run: |
+          git config user.name "analyst-bot"
+          git config user.email "analyst-bot@users.noreply.github.com"
+          git checkout --orphan ackman-data
+          git rm -rq --cached . && git clean -fdq
+          cp -r /tmp/ackman_raw . && cp /tmp/ackman_log.txt .
+          git add ackman_raw ackman_log.txt
+          git commit -qm "ackman data $(date +%F)"
+          git push -f origin ackman-data
