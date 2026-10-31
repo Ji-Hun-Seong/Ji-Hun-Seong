@@ -228,7 +228,7 @@ def fair_value(t, d, g):
     if t in FIN_LIKE or not price:
         return None, [], False
     sh = num(i.get("sharesOutstanding")) or (num(i.get("marketCap")) / price if num(i.get("marketCap")) else None)
-    eps, fcf = num(i.get("forwardEps")), num(i.get("freeCashflow"))
+    eps, fcf = num(i.get("forwardEps")), (d["fcf"][0] if d["fcf"] else num(i.get("freeCashflow")))
     ni = num(i.get("netIncomeToCommon")) or ((num(i.get("trailingEps")) or 0) * sh if sh else None)
     gg = clamp(g, 0, 0.20)
     out, norm = [], False
@@ -258,7 +258,8 @@ def score(t, d, own):
     rg_q, eg_q = num(i.get("revenueGrowth")), num(i.get("earningsGrowth"))
     rg = statistics.mean([x for x in (rg_hist, rg_q) if x is not None]) if (rg_hist is not None or rg_q is not None) else None
     ng = statistics.mean([x for x in (ni_hist, eg_q) if x is not None]) if (ni_hist is not None or eg_q is not None) else None
-    mc, fcf = num(i.get("marketCap")), num(i.get("freeCashflow"))
+    mc = num(i.get("marketCap"))
+    fcf = d["fcf"][0] if d["fcf"] else num(i.get("freeCashflow"))       # 연간 현금흐름표 우선(info 값은 추정치라 튐)
     fy = fcf / mc if fcf is not None and mc else None
     pos_years = sum(1 for x in d["fcf"][:4] if x > 0) / len(d["fcf"][:4]) if d["fcf"] else (1.0 if (fcf or 0) > 0 else 0.0)
     opm, roe = num(i.get("operatingMargins")), num(i.get("returnOnEquity"))
@@ -348,7 +349,7 @@ def build(res, f13, state, week, asof):
             f"미국 {asof} 종가 · 13F {f13['date']} (제출 {f13['filed']})", ""]
     for n, s in enumerate(top, 1):
         pr = prev_rank.get(s["t"])
-        mv = "🆕" if pr is None else ("" if pr == n else (f"▲{pr - n}" if pr > n else f"▼{n - pr}"))
+        mv = "" if not prev_rank else "🆕" if pr is None else ("" if pr == n else (f"▲{pr - n}" if pr > n else f"▼{n - pr}"))
         head.append(f"{n}. <b>{s['t']}</b> {s['total']:.0f}점 {mv}".rstrip())
         head.append(f"   {money(s['price'])} · 적정 {money(s['fv'])} · 매수 ≤{money(s['buy'])} {status(s)[:1]}")
     out_ = [t for t in prev_rank if t not in [s["t"] for s in top]]
