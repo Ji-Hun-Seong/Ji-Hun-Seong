@@ -100,6 +100,11 @@ try:
                     "operatingMargins", "profitMargins", "returnOnEquity", "revenueGrowth", "earningsGrowth", "dividendYield",
                     "enterpriseValue", "trailingEps", "forwardEps", "sector", "industry", "targetMeanPrice", "recommendationMean"]
             market[t]["info"] = {k: info.get(k) for k in keep}
+            try:
+                h = yf.Ticker(t).history(period="6y", interval="1d")["Close"]
+                market[t]["px"] = [(str(i.date()), round(float(v), 4)) for i, v in h.items()]
+            except Exception as e2:
+                print("::warning::yf history", t, str(e2)[:100])
             print("info", t, market[t]["info"].get("forwardPE"), flush=True)
         except Exception as e:
             print("::warning::yf", t, str(e)[:100])
