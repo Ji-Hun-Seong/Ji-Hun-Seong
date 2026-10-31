@@ -1,0 +1,22 @@
+name: Ackman reco (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      send:
+        description: "1 = 텔레그램 전송, 0 = 미리보기"
+        default: "0"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python 13f/ackman_reco.py ${{ github.event.inputs.send == '1' && '--send' || '' }}
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: "-5433065254"   # 텔레그램 그룹 "Bilackman Portfolio"
