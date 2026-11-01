@@ -1,0 +1,5 @@
+# 토스봇 일정 (서버 시간대 Asia/Seoul) — 주말·휴장일은 봇이 토스 장 운영 캘린더로 스스로 건너뜀
+CRON_TZ=Asia/Seoul
+45 8 * * 1-5   cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py open    >> state/cron.log 2>&1
+10 9 * * 1-5   cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py confirm >> state/cron.log 2>&1
+45 15 * * 1-5  cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py evening >> state/cron.log 2>&1

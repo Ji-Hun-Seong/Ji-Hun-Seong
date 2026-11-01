@@ -1,0 +1,150 @@
+"""토스증권 Open API 클라이언트 (REST, v1.2.x 기준)
+- 토큰: client 당 1개만 유효 → 파일 캐시로 재사용 (재발급하면 이전 토큰 즉시 무효)
+- 허용 IP 에서만 호출 가능 (WTS 설정 > Open API > 허용 IP 관리)
+"""
+import json, os, time, threading
+import requests
+
+BASE = "https://openapi.tossinvest.com"
+# API 그룹별 초당 한도(공식 문서) — 여유 있게 80%만 사용
+TPS = {"AUTH": 5, "ACCOUNT": 1, "ASSET": 5, "STOCK": 5, "STOCK_ALL": 1, "MARKET_INFO": 3, "MARKET_DATA": 15,
+       "MARKET_DATA_CHART": 20, "RANKING": 5, "MARKET_INDICATOR_CHART": 5, "ORDER": 10, "ORDER_HISTORY": 5,
+       "ORDER_INFO": 3}
+
+
+class TossError(Exception):
+    def __init__(self, status, code, message, request_id=None):
+        super().__init__(f"{status} {code}: {message} (requestId={request_id})")
+        self.status, self.code, self.request_id = status, code, request_id
+
+
+class Toss:
+    def __init__(self, client_id, client_secret, token_file, account_seq=None):
+        self.cid, self.secret, self.token_file = client_id, client_secret, token_file
+        self.account = account_seq
+        self.s = requests.Session()
+        self._last = {}
+        self._lock = threading.Lock()
+
+    # ── 공통 ──
+    def _throttle(self, group):
+        gap = 1.0 / (TPS.get(group, 3) * 0.8)
+        with self._lock:
+            wait = self._last.get(group, 0) + gap - time.time()
+            if wait > 0:
+                time.sleep(wait)
+            self._last[group] = time.time()
+
+    def token(self, force=False):
+        if not force and os.path.exists(self.token_file):
+            t = json.load(open(self.token_file))
+            if t.get("exp", 0) > time.time() + 300:
+                return t["access_token"]
+        self._throttle("AUTH")
+        r = self.s.post(f"{BASE}/oauth2/token", timeout=20,
+                        data={"grant_type": "client_credentials", "client_id": self.cid, "client_secret": self.secret})
+        if r.status_code != 200:
+            try:
+                j = r.json()
+            except Exception:
+                j = {}
+            hint = " — 허용 IP 미등록일 수 있음" if r.status_code == 403 else ""
+            raise TossError(r.status_code, j.get("error", "auth"), (j.get("error_description") or r.text[:200]) + hint)
+        j = r.json()
+        tmp = self.token_file + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump({"access_token": j["access_token"], "exp": time.time() + int(j.get("expires_in", 3600))}, f)
+        os.chmod(tmp, 0o600)
+        os.replace(tmp, self.token_file)
+        return j["access_token"]
+
+    def req(self, method, path, group, params=None, body=None, account=False, retry=3):
+        for i in range(retry):
+            self._throttle(group)
+            h = {"Authorization": f"Bearer {self.token()}", "Accept": "application/json"}
+            if account:
+                h["X-Tossinvest-Account"] = str(self.account)
+            try:
+                r = self.s.request(method, BASE + path, params=params, json=body, headers=h, timeout=20)
+            except requests.RequestException as e:
+                if method != "GET" and body is not None and not (body or {}).get("clientOrderId"):
+                    raise                                   # 멱등키 없는 주문은 재시도 안 함
+                if i == retry - 1:
+                    raise
+                time.sleep(2 * (i + 1)); continue
+            if r.status_code == 200:
+                return r.json().get("result")
+            try:
+                err = r.json().get("error") or {}
+            except Exception:
+                err = {}
+            code = err.get("code", "") if isinstance(err, dict) else str(err)
+            if r.status_code == 401 or code in ("invalid-token", "expired-token"):
+                self.token(force=True); continue
+            if r.status_code == 429 or r.status_code >= 500:
+                if i < retry - 1:
+                    time.sleep(1.5 * (i + 1)); continue
+            msg = err.get("message", r.text[:200]) if isinstance(err, dict) else r.text[:200]
+            if r.status_code == 403:
+                msg += " — 서버 IP가 토스 허용 IP에 등록됐는지 확인"
+            raise TossError(r.status_code, code, msg, err.get("requestId") if isinstance(err, dict) else None)
+        raise TossError(0, "retry-exhausted", path)
+
+    # ── 시세·종목 ──
+    def candles(self, symbol, count=200, before=None):
+        p = {"symbol": symbol, "interval": "1d", "count": count, "adjusted": "true"}
+        if before:
+            p["before"] = before
+        return self.req("GET", "/api/v1/candles", "MARKET_DATA_CHART", p)
+
+    def index_candles(self, symbol="KOSPI", count=200, before=None):
+        p = {"interval": "1d", "count": count}
+        if before:
+            p["before"] = before
+        return self.req("GET", f"/api/v1/market-indicators/{symbol}/candles", "MARKET_INDICATOR_CHART", p)
+
+    def stocks_all(self, market="KOSPI"):
+        return self.req("GET", "/api/v1/stocks/all", "STOCK_ALL",
+                        {"market": market, "status": "ACTIVE", "securityType": "STOCK", "commonShare": "true"})
+
+    def prices(self, symbols):
+        out = []
+        for i in range(0, len(symbols), 200):
+            out += self.req("GET", "/api/v1/prices", "MARKET_DATA", {"symbols": ",".join(symbols[i:i + 200])}) or []
+        return out
+
+    def warnings(self, symbol):
+        return self.req("GET", f"/api/v1/stocks/{symbol}/warnings", "STOCK")
+
+    def calendar(self, date=None):
+        return self.req("GET", "/api/v1/market-calendar/KR", "MARKET_INFO", {"date": date} if date else None)
+
+    # ── 계좌 ──
+    def accounts(self):
+        return self.req("GET", "/api/v1/accounts", "ACCOUNT")
+
+    def holdings(self):
+        return self.req("GET", "/api/v1/holdings", "ASSET", account=True)
+
+    def buying_power(self):
+        return float(self.req("GET", "/api/v1/buying-power", "ORDER_INFO", {"currency": "KRW"}, account=True)["cashBuyingPower"])
+
+    def sellable(self, symbol):
+        return int(float(self.req("GET", "/api/v1/sellable-quantity", "ORDER_INFO", {"symbol": symbol}, account=True)["sellableQuantity"]))
+
+    # ── 주문 ──
+    def order(self, symbol, side, qty, client_order_id, order_type="MARKET", tif="OPG", price=None):
+        body = {"clientOrderId": client_order_id, "symbol": symbol, "side": side, "orderType": order_type,
+                "timeInForce": tif, "quantity": str(int(qty))}
+        if order_type == "LIMIT":
+            body["price"] = str(int(price))
+        return self.req("POST", "/api/v1/orders", "ORDER", body=body, account=True)
+
+    def get_order(self, order_id):
+        return self.req("GET", f"/api/v1/orders/{order_id}", "ORDER_HISTORY", account=True)
+
+    def open_orders(self):
+        return (self.req("GET", "/api/v1/orders", "ORDER_HISTORY", {"status": "OPEN"}, account=True) or {}).get("orders", [])
+
+    def cancel(self, order_id):
+        return self.req("POST", f"/api/v1/orders/{order_id}/cancel", "ORDER", body={}, account=True)
