@@ -1,0 +1,36 @@
+name: Fetch ETF/index data (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "backtest/fetch_etf.py"
+      - ".github/workflows/fetch-etf.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pandas yfinance
+      - run: |
+          mkdir -p backtest/data
+          set -o pipefail
+          python -u backtest/fetch_etf.py 2>&1 | tee backtest/data/etf_log.txt
+      - name: Push to bt-data-etf branch
+        if: always()
+        run: |
+          git config user.name "backtest-bot"
+          git config user.email "backtest-bot@users.noreply.github.com"
+          mkdir -p /tmp/d && cp backtest/data/etf_* /tmp/d/
+          git checkout --orphan bt-data-etf
+          git rm -rq --cached . && git clean -fdq
+          cp /tmp/d/* . && git add etf_*
+          git commit -qm "ETF prices $(date +%F)"
+          git push -f origin bt-data-etf
