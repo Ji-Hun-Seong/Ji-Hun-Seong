@@ -1,5 +1,9 @@
-# 토스봇 일정 (서버 시간대 Asia/Seoul) — 주말·휴장일은 봇이 토스 장 운영 캘린더로 스스로 건너뜀
-CRON_TZ=Asia/Seoul
-45 8 * * 1-5   cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py open    >> state/cron.log 2>&1
-10 9 * * 1-5   cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py confirm >> state/cron.log 2>&1
-45 15 * * 1-5  cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py evening >> state/cron.log 2>&1
+# 토스봇 일정 (서버 시간대 Asia/Seoul — install.sh가 설정). 휴장일은 봇이 토스 장 운영 캘린더로 스스로 건너뜀
+# 한국: 공시 감시(07:25 시작, 꺼지면 10분마다 다시 켬 — 이미 돌고 있으면 바로 종료), 시가 주문, 체결 확인, 마감 보고
+25 7 * * 1-5     cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py watch      >> state/cron.log 2>&1
+*/10 8-19 * * 1-5 cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py watch      >> state/cron.log 2>&1
+45 8 * * 1-5     cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py kr_open    >> state/cron.log 2>&1
+10 9 * * 1-5     cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py kr_confirm >> state/cron.log 2>&1
+40 15 * * 1-5    cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py kr_close   >> state/cron.log 2>&1
+# 미국: 화·수 00:10 (미국 월·화 장중). 주 1회만 실행, 월요일 휴장이면 화요일에
+10 0 * * 2,3     cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python bot.py us_rebalance >> state/cron.log 2>&1

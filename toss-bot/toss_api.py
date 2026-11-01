@@ -113,6 +113,12 @@ class Toss:
             out += self.req("GET", "/api/v1/prices", "MARKET_DATA", {"symbols": ",".join(symbols[i:i + 200])}) or []
         return out
 
+    def stock_info(self, symbols):
+        return self.req("GET", "/api/v1/stocks", "STOCK", {"symbols": ",".join(symbols)}) or []
+
+    def us_calendar(self, date=None):
+        return self.req("GET", "/api/v1/market-calendar/US", "MARKET_INFO", {"date": date} if date else None)
+
     def warnings(self, symbol):
         return self.req("GET", f"/api/v1/stocks/{symbol}/warnings", "STOCK")
 
@@ -133,12 +139,20 @@ class Toss:
         return int(float(self.req("GET", "/api/v1/sellable-quantity", "ORDER_INFO", {"symbol": symbol}, account=True)["sellableQuantity"]))
 
     # ── 주문 ──
-    def order(self, symbol, side, qty, client_order_id, order_type="MARKET", tif="OPG", price=None):
-        body = {"clientOrderId": client_order_id, "symbol": symbol, "side": side, "orderType": order_type,
-                "timeInForce": tif, "quantity": str(int(qty))}
+    def order(self, symbol, side, qty=None, client_order_id=None, order_type="MARKET", tif="DAY", price=None, amount=None):
+        body = {"clientOrderId": client_order_id, "symbol": symbol, "side": side, "orderType": order_type}
+        if tif:
+            body["timeInForce"] = tif
+        if amount is not None:
+            body["orderAmount"] = f"{amount:.2f}"          # 미국 시장가 금액 주문(정규장)
+        else:
+            body["quantity"] = str(qty)
         if order_type == "LIMIT":
-            body["price"] = str(int(price))
+            body["price"] = str(price)
         return self.req("POST", "/api/v1/orders", "ORDER", body=body, account=True)
+
+    def buying_power_usd(self):
+        return float(self.req("GET", "/api/v1/buying-power", "ORDER_INFO", {"currency": "USD"}, account=True)["cashBuyingPower"])
 
     def get_order(self, order_id):
         return self.req("GET", f"/api/v1/orders/{order_id}", "ORDER_HISTORY", account=True)

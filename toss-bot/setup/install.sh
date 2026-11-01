@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Oracle Cloud(Ubuntu 22.04/24.04) 서버에서 한 번 실행: bash install.sh
 set -e
-sudo timedatectl set-timezone Asia/Seoul
+sudo timedatectl set-timezone Asia/Seoul && sudo systemctl restart cron
 sudo apt-get update -y && sudo apt-get install -y python3-venv git
 cd $HOME
 [ -d ji-hun-seong ] || git clone https://github.com/Ji-Hun-Seong/Ji-Hun-Seong.git ji-hun-seong
