@@ -1,0 +1,13 @@
+[Unit]
+Description=Toss bot dashboard
+After=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ji-hun-seong/toss-bot
+ExecStart=/home/ubuntu/ji-hun-seong/toss-bot/.venv/bin/python dashboard.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

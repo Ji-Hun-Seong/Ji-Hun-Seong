@@ -2,3 +2,4 @@
 state/
 STOP
 __pycache__/
+static/chart.umd.min.js

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="자동매매">
+<meta name="theme-color" content="#0f1720">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>내 자동매매</title>
+<script src="chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js'"></script>
+<style>
+:root{--bg:#0f1720;--card:#17212b;--line:#243140;--txt:#e8eef5;--sub:#8a9bb0;--blue:#4f8cff;--up:#f04452;--dn:#3d8bfd;--ok:#2fbf71;--warn:#f5a524}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased}
+body{padding:calc(env(safe-area-inset-top) + 8px) 16px calc(env(safe-area-inset-bottom) + 84px);max-width:720px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 14px}
+h1{font-size:20px;font-weight:700}
+.badge{font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;background:var(--line);color:var(--sub)}
+.badge.live{background:#3a1f24;color:#ff8a94}.badge.paper{background:#1d2c45;color:#8fb6ff}
+.card{background:var(--card);border-radius:18px;padding:18px;margin-bottom:12px}
+.label{font-size:13px;color:var(--sub);margin-bottom:4px}
+.big{font-size:30px;font-weight:700;letter-spacing:-.5px}
+.mid{font-size:20px;font-weight:700}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.up{color:var(--up)}.dn{color:var(--dn)}.mut{color:var(--sub)}
+.small{font-size:13px}.tiny{font-size:12px}
+h2{font-size:16px;font-weight:700;margin-bottom:12px}
+.item{padding:12px 0;border-top:1px solid var(--line)}.item:first-of-type{border-top:0;padding-top:0}
+.name{font-weight:600}
+.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;background:var(--line);color:var(--sub);margin-left:6px;vertical-align:middle}
+.pill.sell{background:#3a2a12;color:var(--warn)}
+.empty{color:var(--sub);font-size:14px;padding:6px 0}
+.stopbtn{width:100%;border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:700;background:#3a1f24;color:#ff8a94}
+.stopbtn.on{background:#173826;color:#6fe3a2}
+.banner{background:#3a1f24;color:#ffb3b9;border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:12px;display:none}
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(15,23,32,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+nav div{display:flex;max-width:720px;width:100%}
+nav button{flex:1;background:none;border:0;color:var(--sub);font-size:12px;padding:10px 0 12px;font-family:inherit}
+nav button b{display:block;font-size:19px;margin-bottom:2px;font-weight:400}
+nav button.act{color:var(--txt)}
+section{display:none}section.act{display:block}
+canvas{max-height:200px}
+.gauge{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin:10px 0 6px}
+.gauge i{display:block;height:100%;background:var(--blue);border-radius:99px}
+a{color:var(--blue);text-decoration:none}
+.foot{text-align:center;color:var(--sub);font-size:12px;margin:8px 0}
+</style>
+</head>
+<body>
+<header><h1>내 자동매매</h1><span id="mode" class="badge">…</span></header>
+<div id="stopBanner" class="banner">⛔ 긴급 정지 중 — 새 주문을 내지 않습니다</div>
+<div id="errBanner" class="banner"></div>
+
+<section id="t-home" class="act">
+  <div class="card">
+    <div class="label">전략 평가 합계 (원화 환산 전)</div>
+    <div class="grid2" style="margin-top:6px">
+      <div><div class="tiny mut">🇰🇷 한국 자사주</div><div class="mid" id="h-kr">-</div><div class="small" id="h-krr">-</div></div>
+      <div><div class="tiny mut">🇺🇸 나스닥 레버리지</div><div class="mid" id="h-us">-</div><div class="small" id="h-usr">-</div></div>
+    </div>
+  </div>
+  <div class="card"><h2>오늘 할 일</h2><div id="h-todo"></div></div>
+  <div class="card"><h2>최근 자사주 공시</h2><div id="h-det"></div></div>
+  <div class="card">
+    <div class="row" style="margin-bottom:10px"><h2 style="margin:0">긴급 정지</h2><span class="tiny mut">켜면 새 주문 전부 중지</span></div>
+    <button id="stopBtn" class="stopbtn">…</button>
+  </div>
+</section>
+
+<section id="t-kr">
+  <div class="card">
+    <div class="label">한국 · 자사주 공시 스윙</div>
+    <div class="big" id="k-eq">-</div>
+    <div class="small" id="k-sub">-</div>
+    <canvas id="k-chart" style="margin-top:12px"></canvas>
+  </div>
+  <div class="card"><h2 id="k-pos-h">보유 종목</h2><div id="k-pos"></div></div>
+  <div class="card"><h2>시가 매수 예약</h2><div id="k-pend"></div></div>
+  <div class="card"><h2>청산 내역</h2><div id="k-stat" class="small mut" style="margin-bottom:10px"></div><div id="k-closed"></div></div>
+</section>
+
+<section id="t-us">
+  <div class="card">
+    <div class="label">미국 · 나스닥 변동성 맞춤 레버리지</div>
+    <div class="big" id="u-eq">-</div>
+    <div class="small" id="u-sub">-</div>
+    <canvas id="u-chart" style="margin-top:12px"></canvas>
+  </div>
+  <div class="card">
+    <h2>이번 주 신호</h2>
+    <div id="u-sig"></div>
+    <canvas id="q-chart" style="margin-top:12px"></canvas>
+  </div>
+  <div class="card"><h2>조정 내역</h2><div id="u-hist"></div></div>
+</section>
+
+<section id="t-acct">
+  <div class="card">
+    <div class="label">실제 토스증권 계좌</div>
+    <div class="big" id="a-val">-</div>
+    <div class="small" id="a-sub">-</div>
+  </div>
+  <div class="card"><h2>보유 종목 (봇 외 포함)</h2><div id="a-items"></div></div>
+</section>
+
+<section id="t-det">
+  <div class="card"><h2>자사주 공시 감지 기록</h2><div class="tiny mut" style="margin-bottom:10px">공시가 뜬 뒤 봇이 잡은 시각과 처리 결과</div><div id="d-list"></div></div>
+</section>
+
+<div class="foot" id="upd">불러오는 중…</div>
+
+<nav><div>
+  <button data-t="home" class="act"><b>⌂</b>홈</button>
+  <button data-t="kr"><b>🇰🇷</b>한국</button>
+  <button data-t="us"><b>🇺🇸</b>미국</button>
+  <button data-t="acct"><b>◎</b>계좌</button>
+  <button data-t="det"><b>📢</b>공시</button>
+</div></nav>
+
+<script>
+const $ = id => document.getElementById(id);
+const won = v => v == null ? "-" : Math.round(v).toLocaleString("ko-KR") + "원";
+const usd = v => v == null ? "-" : "$" + Number(v).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const pct = (v, d = 1) => v == null ? "-" : (v > 0 ? "+" : "") + (v * 100).toFixed(d) + "%";
+const cls = v => v > 0 ? "up" : v < 0 ? "dn" : "mut";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const charts = {};
+let D = null;
+
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("act", x === b));
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("act", s.id === "t-" + b.dataset.t));
+  try { localStorage.setItem("tab", b.dataset.t); } catch (e) {}
+  window.scrollTo(0, 0);
+});
+try { const t = localStorage.getItem("tab"); if (t) document.querySelector(`nav button[data-t="${t}"]`)?.click(); } catch (e) {}
+
+function line(id, labels, sets) {
+  const c = $(id);
+  c.style.display = window.Chart && labels.length > 1 ? "block" : "none";
+  if (c.style.display === "none") return;
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(c, {
+    type: "line",
+    data: {labels, datasets: sets.map(s => ({data: s.data, borderColor: s.color, borderWidth: 2, pointRadius: 0, tension: .25,
+      borderDash: s.dash || [], fill: false, label: s.label}))},
+    options: {responsive: true, maintainAspectRatio: true, aspectRatio: 2.2, animation: false,
+      plugins: {legend: {display: sets.length > 1, labels: {color: "#8a9bb0", boxWidth: 12, font: {size: 11}}},
+        tooltip: {mode: "index", intersect: false}},
+      scales: {x: {ticks: {color: "#5d6d80", maxTicksLimit: 5, font: {size: 10}}, grid: {display: false}},
+        y: {ticks: {color: "#5d6d80", maxTicksLimit: 5, font: {size: 10}}, grid: {color: "#1f2b38"}}}}
+  });
+}
+
+function render(d) {
+  D = d;
+  $("mode").textContent = d.mode === "live" ? "💰 실전" : "🧪 가상";
+  $("mode").className = "badge " + d.mode;
+  $("stopBanner").style.display = d.stopped ? "block" : "none";
+  $("stopBtn").textContent = d.stopped ? "▶️ 정지 해제하고 다시 매매" : "⛔ 긴급 정지 켜기";
+  $("stopBtn").className = "stopbtn" + (d.stopped ? " on" : "");
+
+  const k = d.kr, u = d.us, kr = k.equity / k.capital - 1, ur = u.equity / u.capital - 1;
+  $("h-kr").textContent = won(k.equity); $("h-krr").innerHTML = `<span class="${cls(kr)}">${pct(kr)}</span> <span class="mut">원금 ${won(k.capital)}</span>`;
+  $("h-us").textContent = usd(u.equity); $("h-usr").innerHTML = `<span class="${cls(ur)}">${pct(ur)}</span> <span class="mut">원금 ${usd(u.capital)}</span>`;
+
+  const todo = [];
+  k.positions.filter(p => p.sell).forEach(p => todo.push(`🔻 내일 시가 매도 · <b>${esc(p.name)}</b> <span class="mut">${esc(p.sell)}</span>`));
+  k.pending.forEach(p => todo.push(`🔺 ${p.how === "open" ? (p.for + " 시가 매수") : "지정가 체결 대기"} · <b>${esc(p.name)}</b> ${p.qty}주`));
+  const sg = u.signal || {};
+  if (sg.lev != null) todo.push(`🇺🇸 이번 주 목표 ${u.symbol} 비중 <b>${(sg.weight * 100).toFixed(0)}%</b> <span class="mut">(레버리지 ${sg.lev.toFixed(2)}배)</span>`);
+  $("h-todo").innerHTML = todo.length ? todo.map(t => `<div class="item small">${t}</div>`).join("") : `<div class="empty">예정된 주문 없음</div>`;
+
+  const det = d.detections.slice(0, 4);
+  $("h-det").innerHTML = det.length ? det.map(detRow).join("") : `<div class="empty">아직 감지된 공시 없음 (평일 07:30~20:00 감시)</div>`;
+  $("d-list").innerHTML = d.detections.length ? d.detections.map(detRow).join("") : `<div class="empty">아직 감지된 공시 없음</div>`;
+
+  // 한국
+  $("k-eq").textContent = won(k.equity);
+  $("k-sub").innerHTML = `<span class="${cls(kr)}">${pct(kr)}</span> · 현금 ${won(k.cash)} · ${k.positions.length}/${k.slots}종목`;
+  line("k-chart", k.curve.map(x => x[0].slice(5)), [{data: k.curve.map(x => x[1]), color: "#4f8cff"}]);
+  $("k-pos-h").textContent = `보유 종목 ${k.positions.length}`;
+  $("k-pos").innerHTML = k.positions.length ? k.positions.map(p => `
+    <div class="item"><div class="row"><div><span class="name">${esc(p.name)}</span>${p.sell ? `<span class="pill sell">내일 매도</span>` : ""}
+      <div class="tiny mut">${p.qty}주 · 매수 ${won(p.entry)} · ${p.days}거래일째 · ${esc(p.how || "")}</div></div>
+      <div style="text-align:right"><div class="${cls(p.rate)} name">${pct(p.rate)}</div><div class="tiny mut">${won(p.last)}</div></div></div></div>`).join("")
+    : `<div class="empty">보유 종목 없음 — 남는 돈은 현금으로 대기</div>`;
+  $("k-pend").innerHTML = k.pending.length ? k.pending.map(p => `<div class="item small"><b>${esc(p.name)}</b> ${p.qty}주
+    <span class="mut">· ${p.how === "open" ? p.for + " 시가" : "지정가 대기"}</span></div>`).join("") : `<div class="empty">없음</div>`;
+  const st = k.stats;
+  $("k-stat").textContent = st.n ? `${st.n}건 · 승률 ${(st.win * 100).toFixed(0)}% · 평균 ${pct(st.avg)} · 손익 ${won(st.pnl)}` : "";
+  $("k-closed").innerHTML = k.closed.length ? k.closed.map(c => `<div class="item"><div class="row"><div><span class="name">${esc(c.name)}</span>
+      <div class="tiny mut">${c.in} → ${c.out} · ${esc(c.why || "")}</div></div>
+      <div style="text-align:right"><div class="${cls(c.ret)} name">${pct(c.ret)}</div><div class="tiny mut">${won(c.pnl)}</div></div></div></div>`).join("")
+    : `<div class="empty">아직 청산 없음</div>`;
+
+  // 미국
+  $("u-eq").textContent = usd(u.equity);
+  $("u-sub").innerHTML = `<span class="${cls(ur)}">${pct(ur)}</span> · ${u.symbol} ${Number(u.qty).toFixed(4)}주 ${u.price ? "@ " + usd(u.price) : ""} · 현금 ${usd(u.cash)}`;
+  line("u-chart", u.curve.map(x => x[0].slice(5)), [{data: u.curve.map(x => x[1]), color: "#4f8cff"}]);
+  if (sg.error) $("u-sig").innerHTML = `<div class="empty">${esc(sg.error)}</div>`;
+  else if (sg.qqq != null) {
+    const above = sg.qqq >= sg.ma200;
+    $("u-sig").innerHTML = `
+      <div class="row small"><span class="mut">QQQ / 200일선</span><span>${usd(sg.qqq)} / ${usd(sg.ma200)} ${above ? "🟢 위" : "🔴 아래 → 현금"}</span></div>
+      <div class="row small" style="margin-top:6px"><span class="mut">최근 20일 변동성</span><span>${(sg.vol * 100).toFixed(1)}%</span></div>
+      <div class="row small" style="margin-top:6px"><span class="mut">목표 레버리지</span><span><b>${sg.lev.toFixed(2)}배</b> = ${u.symbol} ${(sg.weight * 100).toFixed(0)}%</span></div>
+      <div class="gauge"><i style="width:${(sg.weight * 100).toFixed(0)}%"></i></div>
+      <div class="tiny mut">0배(현금) ─ 최대 2배(${u.symbol} 67%) · 차이 5%p 이상일 때만 주 1회 조정</div>`;
+    line("q-chart", sg.series.map(x => x[0].slice(5)), [
+      {data: sg.series.map(x => x[1]), color: "#e8eef5", label: "QQQ"},
+      {data: sg.series.map(x => (sg.ma_series.find(m => m[0] === x[0]) || [])[1] ?? null), color: "#f5a524", dash: [4, 3], label: "200일선"}]);
+  }
+  $("u-hist").innerHTML = u.history.length ? u.history.map(h => `<div class="item small row"><span>${h.date} ${h.side === "BUY" ? "🔺 매수" : "🔻 매도"}</span>
+    <span>${Number(h.qty).toFixed(4)}주 @ ${usd(h.px)} <span class="mut">목표 ${(h.target * 100).toFixed(0)}%</span></span></div>`).join("") : `<div class="empty">아직 조정 없음 (매주 화요일 00:10)</div>`;
+
+  // 계좌
+  const a = d.account || {};
+  if (a.error && !a.items) { $("a-val").textContent = "-"; $("a-sub").textContent = a.error; }
+  else {
+    $("a-val").textContent = won(a.value_krw) + (a.value_usd ? " + " + usd(a.value_usd) : "");
+    $("a-sub").innerHTML = `수익률 <span class="${cls(a.rate)}">${pct(a.rate, 2)}</span> · 오늘 <span class="${cls(a.day)}">${pct(a.day, 2)}</span><br>
+      매수 가능 ${won(a.cash_krw)}${a.cash_usd != null ? " · " + usd(a.cash_usd) : ""}`;
+    $("a-items").innerHTML = (a.items || []).length ? a.items.map(i => `<div class="item"><div class="row"><div><span class="name">${esc(i.name)}</span>
+        <div class="tiny mut">${i.qty}주 · 평균 ${i.currency === "USD" ? usd(i.avg) : won(i.avg)}</div></div>
+        <div style="text-align:right"><div class="${cls(i.rate)} name">${pct(i.rate, 2)}</div>
+        <div class="tiny mut">${i.currency === "USD" ? usd(i.value) : won(i.value)}</div></div></div></div>`).join("") : `<div class="empty">보유 종목 없음</div>`;
+  }
+  const errs = [a.stale && "계좌 정보 갱신 실패(이전 값 표시)", sg.stale && "나스닥 신호 갱신 실패"].filter(Boolean);
+  $("errBanner").style.display = errs.length ? "block" : "none"; $("errBanner").textContent = errs.join(" · ");
+  $("upd").textContent = "업데이트 " + d.now.slice(11, 19) + " · 30초마다 자동 새로고침";
+}
+
+function detRow(x) {
+  const t = (x.t || "").slice(5, 16).replace("T", " ");
+  return `<div class="item small"><div class="row"><b>${esc(x.name)}</b><span class="tiny mut">${t}</span></div>
+    <div class="tiny mut" style="margin-top:3px">${esc(x.kind)} · ${esc(x.result)}</div>
+    <a class="tiny" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${esc(x.rcept_no)}" target="_blank">공시 원문</a></div>`;
+}
+
+async function load() {
+  try {
+    const r = await fetch("api/data", {cache: "no-store"});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    render(await r.json());
+  } catch (e) {
+    $("errBanner").style.display = "block"; $("errBanner").textContent = "서버 연결 실패: " + e.message;
+  }
+}
+$("stopBtn").onclick = async () => {
+  if (!D) return;
+  const on = !D.stopped;
+  if (!confirm(on ? "긴급 정지를 켤까요? 새 주문이 모두 멈춥니다." : "정지를 해제하고 다시 매매할까요?")) return;
+  await fetch("api/stop", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({on})});
+  load();
+};
+load(); setInterval(load, 30000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+</script>
+</body>
+</html>

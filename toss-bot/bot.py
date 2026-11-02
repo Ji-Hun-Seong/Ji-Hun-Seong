@@ -469,6 +469,9 @@ def kr_close(a):
                      + (f" → 내일 매도({why})" if why else ""))
         eq = k["cash"] + sum(p["qty"] * p["last"] for p in k["positions"].values())
         k["equity"].append([today, round(eq)])
+        with contextlib.suppress(Exception):                       # 대시보드용 미국 평가 기록
+            u = s["us"]; upx = float(a.prices([CFG["us_symbol"]])[0]["lastPrice"])
+            u.setdefault("equity", []).append([today, round(u["cash"] + u["qty"] * upx, 2)])
         cl = k["closed"]
         mode = s["mode"]
         days_run = (now().date() - dt.date.fromisoformat(s["created"])).days

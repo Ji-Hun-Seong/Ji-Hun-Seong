@@ -31,6 +31,14 @@
 - 긴급 정지: `touch ~/ji-hun-seong/toss-bot/STOP` (해제 `rm STOP`)
 - 공시 감지 기록 `state/detections.jsonl` — 감지 시각·가격으로 실제로 갭을 얼마나 잡는지 측정
 
+## 대시보드 (폰 앱처럼)
+`dashboard.py` — 서버에서 상시 실행, 폰에서는 **Tailscale**(내 기기끼리만 연결되는 비공개 네트워크)로 접속. 인터넷에 공개되지 않음.
+- 홈: 한국·미국 전략 평가, 오늘 할 일(매도 예정·시가 예약·이번 주 TQQQ 목표), 최근 공시, **긴급 정지 버튼**
+- 한국: 수익 곡선, 보유 종목(토스 실시간가), 예약, 청산 내역·승률 / 미국: 수익 곡선, QQQ·200일선 차트, 목표 레버리지
+- 계좌: 실제 토스 계좌 잔고·보유 종목 / 공시: 감지 기록
+- 설치: `bash setup/dashboard.sh` → 폰에 Tailscale 앱 설치·같은 계정 로그인 → `http://toss-bot:8080` → 사파리 공유 → **홈 화면에 추가**
+- 실전 전환은 안전을 위해 대시보드에서 못 하고 서버 명령으로만
+
 ## 설치·업데이트
 ```
 curl -sL https://raw.githubusercontent.com/Ji-Hun-Seong/Ji-Hun-Seong/main/toss-bot/setup/install.sh | bash
