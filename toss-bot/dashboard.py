@@ -1,6 +1,7 @@
 """토스봇 대시보드 — 서버에서 상시 실행(systemd), 폰에서는 Tailscale(비공개 네트워크)로 접속
 
   .venv/bin/python dashboard.py          # 포트 8080 (DASH_PORT로 변경)
+  차트 탭: 종목 검색 → 볼린저(책 기법)·자사주 공시·외국인 수급 판정 (chartpage/ 모듈, 별도 서버 없음)
   선택: .env 에 DASH_PASSWORD=... 를 넣으면 접속 시 비밀번호(아이디는 아무거나)를 물어봄
 
 보여주는 것: 운용 모드·긴급정지, 한국/미국 전략 평가·수익 곡선, 보유 종목(토스 실시간가), 시가 예약·매도 예정,
@@ -9,9 +10,11 @@
 """
 import base64, datetime as dt, json, math, os, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import parse_qs, urlparse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.join(HERE, "chartpage"))
 import bot  # .env 로드, 장부·API 함수 재사용
 
 STATIC = os.path.join(HERE, "static")
@@ -139,6 +142,62 @@ def data():
     }
 
 
+# ── 차트 탭: 종목 검색 → 볼린저(책 기법) + 자사주 공시 + 외국인 수급 AND 판정 ─────────────
+def chart_search(q):
+    import data_sources as ds
+    return [{"name": c["name"], "code": c["code"], "us": bool(c.get("us"))} for c in ds.search(q, 8)]
+
+
+def chart_ohlcv(code, us):
+    """토스 일봉(대시보드와 같은 출처) → 실패하면 야후"""
+    import pandas as pd
+    import data_sources as ds
+    try:
+        rows = bot.daily(api(), code, 260)
+        if len(rows) < 60:
+            raise ValueError("일봉 부족")
+        df = pd.DataFrame(rows, columns=["date", "open", "high", "low", "close", "volume"])
+        df.index = pd.to_datetime(df.pop("date"))
+        return df[~df.index.duplicated(keep="last")], "토스증권"
+    except Exception:
+        return ds.get_ohlcv(code, us=us, rng="2y"), "야후 파이낸스"
+
+
+def chart_data(q):
+    import data_sources as ds
+    from bb_strategy import Config, add_indicators, evaluate, scan
+    hits = ds.search(q, 1)
+    if not hits:
+        return {"error": f"'{q}' 종목을 찾지 못했습니다"}
+    it = hits[0]
+    us = bool(it.get("us"))
+    df, src = chart_ohlcv(it["code"], us)
+    buybacks = [] if us else ds.get_buybacks(it.get("corp_code"))
+    flows = None if us else ds.get_flows(it["code"])
+    cfg = Config(require=("bollinger",)) if us else Config()
+    r = evaluate(df, buybacks, flows, cfg)
+    d = add_indicators(df, cfg).join(scan(df, buybacks, flows, cfg)[["buy", "bollinger_ok"]], how="left").tail(120)
+    labels = {"buyback": "자사주 공시", "bollinger": "볼린저", "foreign": "외국인 수급"}
+    checks = [{"label": labels[k], "ok": bool(ok),
+               "msg": "수급 데이터 없음 (KIS 키 미설정)" if k == "foreign" and flows is None else msg}
+              for k, (ok, msg) in r["checks"].items() if k in cfg.require]
+    num = lambda s: [None if v != v else round(float(v), 4) for v in s]     # NaN → null
+    fl = None
+    if flows is not None and not flows.empty:
+        fl = num(flows["frgn_eok"].reindex(d.index))
+    last, prev = d.iloc[-1], d.iloc[-2]
+    return {"name": it["name"], "code": it["code"], "us": us, "src": src, "asof": f"{d.index[-1]:%Y-%m-%d}",
+            "close": float(last["close"]), "chg": float(last["close"] / prev["close"] - 1),
+            "pctb": float(last["pctb"]), "bw": float(last["bw"]), "mfi": float(last["mfi"]),
+            "buy": bool(r["buy"]), "checks": checks,
+            "dates": [f"{t:%m-%d}" for t in d.index], "closeS": num(d["close"]), "upper": num(d["upper"]),
+            "mid": num(d["mid"]), "lower": num(d["lower"]), "pctbS": num(d["pctb"]), "bwS": num(d["bw"]),
+            "buyS": [bool(x) if x == x else False for x in d["buy"]],
+            "bbS": [bool(x) if x == x else False for x in d["bollinger_ok"]],
+            "flows": fl, "buybacks": sorted(buybacks, key=lambda e: e["date"], reverse=True)[:8],
+            "buyback_marks": [f"{pd_date[5:7]}-{pd_date[8:10]}" for pd_date in (e["date"] for e in buybacks)]}
+
+
 class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
@@ -172,6 +231,17 @@ class H(BaseHTTPRequestHandler):
         if not self._auth():
             return
         path = self.path.split("?")[0]
+        if path in ("/api/search", "/api/chart"):
+            q = (parse_qs(urlparse(self.path).query).get("q") or [""])[0].strip()
+            try:
+                if path == "/api/search":
+                    out = chart_search(q) if q else []
+                else:
+                    out = cached("chart:" + q, 300, lambda: chart_data(q)) if q else {"error": "종목을 입력하세요"}
+                return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
+            except Exception as e:
+                return self._send(200, json.dumps({"error": f"{type(e).__name__}: {str(e)[:200]}"}, ensure_ascii=False),
+                                  "application/json; charset=utf-8")
         if path == "/api/data":
             try:
                 return self._send(200, json.dumps(data(), ensure_ascii=False, default=str), "application/json; charset=utf-8")
