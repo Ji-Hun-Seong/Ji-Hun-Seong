@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "next = 다음 Day 보내기(오늘 보냈어도) / day = 아래 번호 Day / normal = 오늘 안 보냈을 때만"
+        description: "next = 다음 Day 보내기(오늘 보냈어도) / day = 아래 번호 Day / normal = 오늘 안 보냈을 때만 / cleanup = 잘못 보낸 메시지 삭제"
         default: "next"
       day:
         description: "mode=day일 때 보낼 Day 번호"
@@ -33,12 +33,32 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install requests
-      - name: Send today's lesson
+      # 2026-11-02 가치주 봇(KoreaValueStock)으로 잘못 간 Day 1 메시지(사진 1 + 본문 1) 삭제
+      - name: Cleanup wrong bot messages
+        if: github.event.inputs.mode == 'cleanup'
         env:
-          # 받는 봇: STUDY_TG_TOKEN(따로 지정 시, 예: 토스 자동매매 봇 토큰) → 없으면 신호봇 → 가치주봇
-          TELEGRAM_TOKEN: ${{ secrets.STUDY_TG_TOKEN || secrets.SIGNAL_TG_TOKEN || secrets.VALUE_TG_TOKEN }}
+          TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          CHAT: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import os, requests
+          t, c = os.environ["TOKEN"].strip(), os.environ["CHAT"].strip()
+          u = f"https://api.telegram.org/bot{t}/"
+          p = requests.post(u + "sendMessage", data={"chat_id": c, "text": "."}).json()["result"]["message_id"]
+          for mid in (p, p - 1, p - 2):
+              r = requests.post(u + "deleteMessage", data={"chat_id": c, "message_id": mid}).json()
+              print(mid, r.get("ok"), r.get("description", ""))
+          PY
+      - name: Send today's lesson
+        if: github.event.inputs.mode != 'cleanup'
+        env:
+          # 받는 봇: 토스 자동매매 봇(t.me/bstmode_toss_trade_bot)만. 다른 봇으로 대신 보내지 않는다.
+          TELEGRAM_TOKEN: ${{ secrets.STUDY_TG_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.STUDY_TG_CHAT_ID || secrets.TG_CHAT_ID }}
         run: |
+          if [ -z "$TELEGRAM_TOKEN" ]; then
+            echo "::warning::STUDY_TG_TOKEN(토스 자동매매 봇 토큰) 시크릿이 없어 보내지 않습니다"; exit 0
+          fi
           ARGS=""
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             [ "${{ github.event.inputs.mode }}" = "next" ] && ARGS="--force"
@@ -46,16 +66,16 @@ jobs:
           fi
           python -u chart-study/study_bot.py send $ARGS
       - name: Notify on failure
-        if: failure()
+        if: failure() && github.event.inputs.mode != 'cleanup'
         env:
-          TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
+          TOKEN: ${{ secrets.STUDY_TG_TOKEN }}
           CHAT: ${{ secrets.TG_CHAT_ID }}
         run: |
           curl -s -o /dev/null "https://api.telegram.org/bot$TOKEN/sendMessage" \
             --data-urlencode "chat_id=$CHAT" \
             --data-urlencode "text=⚠️ 차트 공부봇 전송 실패. 확인: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - name: Save progress
-        if: success()
+        if: success() && github.event.inputs.mode != 'cleanup'
         run: |
           git config user.name "chart-study-bot"
           git config user.email "chart-study-bot@users.noreply.github.com"
