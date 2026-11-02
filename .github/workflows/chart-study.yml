@@ -52,12 +52,13 @@ jobs:
       - name: Send today's lesson
         if: github.event.inputs.mode != 'cleanup'
         env:
-          # 받는 봇: 토스 자동매매 봇(t.me/bstmode_toss_trade_bot)만. 다른 봇으로 대신 보내지 않는다.
-          TELEGRAM_TOKEN: ${{ secrets.STUDY_TG_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.STUDY_TG_CHAT_ID || secrets.TG_CHAT_ID }}
+          # 받는 봇: 토스 자동매매 봇(STUDY_TG_TOKEN 등록 시) → 없으면 가치주 봇
+          # 받는 곳: 본인 개인 채팅(TG_CHAT_ID)만. 그룹방은 study_bot.py에서도 차단
+          TELEGRAM_TOKEN: ${{ secrets.STUDY_TG_TOKEN || secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
         run: |
           if [ -z "$TELEGRAM_TOKEN" ]; then
-            echo "::warning::STUDY_TG_TOKEN(토스 자동매매 봇 토큰) 시크릿이 없어 보내지 않습니다"; exit 0
+            echo "::warning::텔레그램 토큰이 없어 보내지 않습니다"; exit 0
           fi
           ARGS=""
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -68,7 +69,7 @@ jobs:
       - name: Notify on failure
         if: failure() && github.event.inputs.mode != 'cleanup'
         env:
-          TOKEN: ${{ secrets.STUDY_TG_TOKEN }}
+          TOKEN: ${{ secrets.STUDY_TG_TOKEN || secrets.VALUE_TG_TOKEN }}
           CHAT: ${{ secrets.TG_CHAT_ID }}
         run: |
           curl -s -o /dev/null "https://api.telegram.org/bot$TOKEN/sendMessage" \

@@ -126,6 +126,8 @@ def tg(method: str, **kw):
     chat = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
     if not tok or not chat:
         sys.exit("::error::TELEGRAM_TOKEN / TELEGRAM_CHAT_ID 가 없습니다")
+    if chat.startswith("-"):   # 그룹·채널 ID는 음수 — 공부 메시지는 개인 채팅에만
+        sys.exit("::error::그룹방으로는 보내지 않습니다 (개인 채팅 ID만 허용)")
     files = kw.pop("files", None)
     for i in range(3):
         r = requests.post(f"https://api.telegram.org/bot{tok}/{method}", data={"chat_id": chat, **kw},
