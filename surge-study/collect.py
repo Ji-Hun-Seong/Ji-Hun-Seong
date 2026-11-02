@@ -368,7 +368,8 @@ def main():
         dart_tags = classify([x["title"] for x in fl], CATALYST_DART)
         news_tags = classify([x["title"] for x in nw], CATALYST_NEWS)
         s["catalysts_dart"], s["catalysts_news"] = dart_tags, news_tags
-        s["catalysts"] = list(dict.fromkeys([t for t in dart_tags if t != "거래소 조치"] + news_tags))
+        s["catalysts"] = list(dict.fromkeys([t for t in dart_tags if t != "거래소 조치"] +
+                                            [t for t in news_tags if t != "상한가·급등"]))   # 결과 태그는 재료 아님
         s["themes"] = themes_of([x["title"] for x in nw] + [x["title"] for x in fl])
         time.sleep(0.3)
     surgers.sort(key=lambda s: (-(s["tv"] >= MIN_TV), -s["chg"]))
