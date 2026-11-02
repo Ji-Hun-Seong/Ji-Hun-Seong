@@ -1,0 +1,64 @@
+name: Fund accounting study daily
+
+# 매일 저녁 펀드회계 백과 1일치를 텔레그램 개인 채팅으로 보낸다(그룹방 금지 — study_bot.py에서도 차단).
+# GitHub 예약 실행이 늦게 시작되는 일이 있어 여러 번 걸어 두고, 오늘 이미 보냈으면 건너뛴다.
+on:
+  schedule:
+    - cron: "13 9 * * *"    # 한국 18:13
+    - cron: "43 10 * * *"   # 한국 19:43 (예비)
+    - cron: "13 12 * * *"   # 한국 21:13 (예비)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "next = 다음 Day 보내기(오늘 보냈어도) / day = 아래 번호 Day / normal = 오늘 안 보냈을 때만"
+        default: "next"
+      day:
+        description: "mode=day일 때 보낼 Day 번호"
+        default: "1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fund-study
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Send today's lesson
+        env:
+          # 받는 봇: 토스 자동매매 봇(STUDY_TG_TOKEN 등록 시) → 없으면 가치주 봇 / 받는 곳: 본인 개인 채팅만
+          TELEGRAM_TOKEN: ${{ secrets.STUDY_TG_TOKEN || secrets.VALUE_TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          ARGS=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            [ "${{ github.event.inputs.mode }}" = "next" ] && ARGS="--force"
+            [ "${{ github.event.inputs.mode }}" = "day" ] && ARGS="--day ${{ github.event.inputs.day }}"
+          fi
+          python -u fund-study/study_bot.py send $ARGS
+      - name: Notify on failure
+        if: failure()
+        env:
+          TOKEN: ${{ secrets.STUDY_TG_TOKEN || secrets.VALUE_TG_TOKEN }}
+          CHAT: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          curl -s -o /dev/null "https://api.telegram.org/bot$TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT" \
+            --data-urlencode "text=⚠️ 펀드회계 공부봇 전송 실패. 확인: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Save progress
+        if: success()
+        run: |
+          git config user.name "fund-study-bot"
+          git config user.email "fund-study-bot@users.noreply.github.com"
+          git add fund-study/progress.json
+          git diff --cached --quiet || git commit -m "fund-study: $(TZ=Asia/Seoul date +%F) 진도"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
