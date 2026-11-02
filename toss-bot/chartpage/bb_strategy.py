@@ -183,11 +183,12 @@ def evaluate(ohlcv: pd.DataFrame, buybacks: list[dict], flows: pd.DataFrame | No
 
 
 def scan(ohlcv: pd.DataFrame, buybacks: list[dict], flows: pd.DataFrame | None = None,
-         cfg: Config = Config()) -> pd.DataFrame:
-    """전 구간 판정(백테스트·차트용). 매수일과 각 조건 통과 여부를 표로."""
+         cfg: Config = Config(), last: int | None = None) -> pd.DataFrame:
+    """전 구간(또는 마지막 last봉) 판정 — 백테스트·차트용. 매수일과 각 조건 통과 여부를 표로."""
     d = add_indicators(ohlcv, cfg)
     rows = []
-    for i in range(cfg.n, len(d)):
+    start = cfg.n if last is None else max(cfg.n, len(d) - last)
+    for i in range(start, len(d)):
         r = evaluate(ohlcv, buybacks, flows, cfg, i, d)
         rows.append({"date": r["date"], "buy": r["buy"],
                      **{f"{k}_ok": v[0] for k, v in r["checks"].items()},

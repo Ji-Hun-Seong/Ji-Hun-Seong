@@ -303,7 +303,7 @@ document.addEventListener("click", e => { if (!e.target.closest(".srch")) csug.s
 async function cGo(q) {
   q = String(q || "").trim(); if (!q) return;
   csug.style.display = "none"; cq.blur();
-  $("c-out").innerHTML = `<div class="card"><div class="empty">차트 그리는 중…</div></div>`;
+  $("c-out").innerHTML = `<div class="card"><div class="empty">차트 그리는 중… <span class="tiny">(처음 보는 종목은 몇 초 걸릴 수 있어요)</span></div></div>`;
   try {
     const a = await (await fetch("api/chart?q=" + encodeURIComponent(q))).json();
     if (a.error) { $("c-out").innerHTML = `<div class="card"><div class="empty">${esc(a.error)}</div></div>`; return; }
@@ -315,7 +315,7 @@ function cRender(a) {
   const money = v => a.us ? usd(v) : won(v);
   $("c-out").innerHTML = `
   <div class="card">
-    <div class="row"><div><div class="mid">${esc(a.name)}</div><div class="tiny mut">${esc(a.code)} · ${a.asof} 종가 · ${esc(a.src)}</div></div>
+    <div class="row"><div><div class="mid">${esc(a.name)}</div><div class="tiny mut">${esc(a.code)} · ${a.asof} 종가 · ${esc(a.src)}${a.timing ? ` · ${(a.timing.data + a.timing.calc).toFixed(1)}초` : ""}</div></div>
       <div style="text-align:right"><div class="mid">${money(a.close)}</div><div class="small ${cls(a.chg)}">${pct(a.chg, 2)}</div></div></div>
     <div class="verdict ${a.buy ? "buy" : ""}">${a.buy ? "✅ 매수 조건 모두 충족" : "매수 조건 미충족 — 대기"}</div>
     ${a.checks.map(c => `<div class="chk"><b>${c.ok ? "✅" : "❌"} ${c.label}</b><span class="mut">${esc(c.msg)}</span></div>`).join("")}

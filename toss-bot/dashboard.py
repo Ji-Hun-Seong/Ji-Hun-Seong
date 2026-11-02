@@ -163,20 +163,23 @@ def chart_ohlcv(code, us):
         return ds.get_ohlcv(code, us=us, rng="2y"), "야후 파이낸스"
 
 
-def chart_data(q):
+def chart_data(it):
     import data_sources as ds
+    from concurrent.futures import ThreadPoolExecutor
     from bb_strategy import Config, add_indicators, evaluate, scan
-    hits = ds.search(q, 1)
-    if not hits:
-        return {"error": f"'{q}' 종목을 찾지 못했습니다"}
-    it = hits[0]
     us = bool(it.get("us"))
-    df, src = chart_ohlcv(it["code"], us)
-    buybacks = [] if us else ds.get_buybacks(it.get("corp_code"))
-    flows = None if us else ds.get_flows(it["code"])
+    t0 = time.time()
+    safe = lambda fn, default: (lambda: _try(fn, default))
+    with ThreadPoolExecutor(3) as ex:                      # 시세·공시·수급을 동시에
+        f_px = ex.submit(chart_ohlcv, it["code"], us)
+        f_bb = ex.submit(safe(lambda: [] if us else ds.get_buybacks(it.get("corp_code")), []))
+        f_fl = ex.submit(safe(lambda: None if us else ds.get_flows(it["code"]), None))
+        df, src = f_px.result()
+        buybacks, flows = f_bb.result(), f_fl.result()
+    t1 = time.time()
     cfg = Config(require=("bollinger",)) if us else Config()
     r = evaluate(df, buybacks, flows, cfg)
-    d = add_indicators(df, cfg).join(scan(df, buybacks, flows, cfg)[["buy", "bollinger_ok"]], how="left").tail(120)
+    d = add_indicators(df, cfg).join(scan(df, buybacks, flows, cfg, last=120)[["buy", "bollinger_ok"]], how="left").tail(120)
     labels = {"buyback": "자사주 공시", "bollinger": "볼린저", "foreign": "외국인 수급"}
     checks = [{"label": labels[k], "ok": bool(ok),
                "msg": "수급 데이터 없음 (KIS 키 미설정)" if k == "foreign" and flows is None else msg}
@@ -195,7 +198,44 @@ def chart_data(q):
             "buyS": [bool(x) if x == x else False for x in d["buy"]],
             "bbS": [bool(x) if x == x else False for x in d["bollinger_ok"]],
             "flows": fl, "buybacks": sorted(buybacks, key=lambda e: e["date"], reverse=True)[:8],
-            "buyback_marks": [f"{pd_date[5:7]}-{pd_date[8:10]}" for pd_date in (e["date"] for e in buybacks)]}
+            "buyback_marks": [e["date"][5:10] for e in buybacks],
+            "timing": {"data": round(t1 - t0, 2), "calc": round(time.time() - t1, 2)}}
+
+
+def _try(fn, default):
+    try:
+        return fn()
+    except Exception:
+        return default
+
+
+def chart_ttl():
+    """장중(평일 09:00~15:40)엔 10분, 그 외엔 데이터가 안 바뀌므로 6시간"""
+    n = bot.now()
+    return 600 if n.weekday() < 5 and (9, 0) <= (n.hour, n.minute) <= (15, 40) else 6 * 3600
+
+
+def chart_lookup(q):
+    import data_sources as ds
+    hits = ds.search(q, 1)
+    if not hits:
+        return {"error": f"'{q}' 종목을 찾지 못했습니다"}
+    it = hits[0]
+    key = "chart:" + it["code"]
+    out = cached(key, chart_ttl(), lambda: chart_data(it))
+    if isinstance(out, dict) and out.get("error") and not out.get("stale"):
+        with _lock:
+            _cache.pop(key, None)                 # 실패는 캐시하지 않음 → 다음 검색 때 다시 시도
+    return out
+
+
+def warm_up():
+    """대시보드 시작 시 종목 목록을 미리 받아 둠 → 첫 검색이 느리지 않게"""
+    try:
+        import data_sources as ds
+        ds.load_corps()
+    except Exception as e:
+        print("종목 목록 준비 실패:", e, flush=True)
 
 
 class H(BaseHTTPRequestHandler):
@@ -237,7 +277,7 @@ class H(BaseHTTPRequestHandler):
                 if path == "/api/search":
                     out = chart_search(q) if q else []
                 else:
-                    out = cached("chart:" + q, 300, lambda: chart_data(q)) if q else {"error": "종목을 입력하세요"}
+                    out = chart_lookup(q) if q else {"error": "종목을 입력하세요"}
                 return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
             except Exception as e:
                 return self._send(200, json.dumps({"error": f"{type(e).__name__}: {str(e)[:200]}"}, ensure_ascii=False),
@@ -274,4 +314,5 @@ class H(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     host, port = os.environ.get("DASH_HOST", "0.0.0.0"), int(os.environ.get("DASH_PORT", "8080"))
     print(f"대시보드 http://{host}:{port}", flush=True)
+    threading.Thread(target=warm_up, daemon=True).start()
     ThreadingHTTPServer((host, port), H).serve_forever()

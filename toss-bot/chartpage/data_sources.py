@@ -39,8 +39,20 @@ def _dart_key() -> str | None:
     return os.environ.get("DART_API_KEY") or os.environ.get("DART_KEY")
 
 
+_MEM: dict = {}
+
+
 def load_corps() -> list[dict]:
-    """[{name, code, corp_code}] — 상장사만. 24시간 캐시."""
+    """[{name, code, corp_code}] — 상장사만. 메모리 + 파일 24시간 캐시."""
+    hit = _MEM.get("corps")
+    if hit and time.time() - hit[0] < 86400:
+        return hit[1]
+    corps = _load_corps_uncached()
+    _MEM["corps"] = (time.time(), corps)
+    return corps
+
+
+def _load_corps_uncached() -> list[dict]:
     f = CACHE / "corps.json"
     if f.exists() and time.time() - f.stat().st_mtime < 86400:
         return json.loads(f.read_text())
@@ -130,10 +142,26 @@ BUYBACK_PATTERNS = [
 ]
 
 
-def get_buybacks(corp_code: str | None, days: int = 730) -> list[dict]:
+def get_buybacks(corp_code: str | None, days: int = 400) -> list[dict]:
+    """자사주 관련 공시. 종목별 6시간 캐시 (장중 새 공시는 봇의 공시 감시가 따로 잡음)"""
     key = _dart_key()
     if not key or not corp_code:
         return []
+    mk = f"bb:{corp_code}"
+    hit = _MEM.get(mk)
+    if hit and time.time() - hit[0] < 6 * 3600:
+        return hit[1]
+    f = CACHE / f"buyback_{corp_code}.json"
+    if f.exists() and time.time() - f.stat().st_mtime < 6 * 3600:
+        out = json.loads(f.read_text())
+    else:
+        out = _get_buybacks_uncached(key, corp_code, days)
+        f.write_text(json.dumps(out, ensure_ascii=False))
+    _MEM[mk] = (time.time(), out)
+    return out
+
+
+def _get_buybacks_uncached(key: str, corp_code: str, days: int) -> list[dict]:
     out, page = [], 1
     bgn = (datetime.now() - timedelta(days=days)).strftime("%Y%m%d")
     while page <= 5:
