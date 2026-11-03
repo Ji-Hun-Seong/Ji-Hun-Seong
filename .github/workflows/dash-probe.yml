@@ -2,16 +2,32 @@ name: dash probe
 on:
   push:
     branches: [dash-probe]
+permissions:
+  contents: write
 jobs:
   p:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
-      - run: pip install -q requests yfinance pandas numpy
-      - run: python .probe/probe.py
-        env:
-          DART_API_KEY: ${{ secrets.DART_API_KEY }}
-      - uses: actions/upload-artifact@v4
-        with: {name: out, path: out}
+      - run: pip install -q requests yfinance pandas numpy matplotlib playwright && python -m playwright install --with-deps chromium >/dev/null 2>&1
+      - name: candidates from 11/02 close
+        env: {DART_API_KEY: "${{ secrets.DART_API_KEY }}"}
+        run: python -u surge-study/collect.py --date 2026-11-02 --no-send --workers 8 2>&1 | tail -8 && python surge-study/candidates.py --show latest
+      - name: dashboard
+        env: {DART_API_KEY: "${{ secrets.DART_API_KEY }}"}
+        run: |
+          curl -sL https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js -o toss-bot/static/chart.umd.min.js
+          cd toss-bot && (python dashboard.py > /tmp/dash.log 2>&1 &) && sleep 25
+          mkdir -p ../shots
+          for k in surge value ackman; do curl -s "http://127.0.0.1:8080/api/picks?k=$k" > ../shots/picks_$k.json; head -c 300 ../shots/picks_$k.json; echo; done
+          curl -s "http://127.0.0.1:8080/api/stock?q=005930" | head -c 400; echo
+          cd .. && python .probe/shots.py; cat shots/console.txt | head -30; tail -20 /tmp/dash.log
+      - name: save
+        if: always()
+        run: |
+          git config user.name probe; git config user.email probe@users.noreply.github.com
+          cp -r surge-study/data/candidates shots/ 2>/dev/null || true
+          git add -f shots && git commit -qm "probe shots" && git push -q origin HEAD:dash-probe

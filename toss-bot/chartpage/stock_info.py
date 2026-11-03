@@ -507,8 +507,9 @@ def us_detail(sym: str, ohlcv=None) -> dict:
                 "short_pct": g("shortPercentOfFloat"), "roe": g("returnOnEquity"), "de": g("debtToEquity"),
                 "opm": g("operatingMargins"), "npm": g("profitMargins"), "rev_growth": g("revenueGrowth"),
                 "summary": (g("longBusinessSummary") or "")[:400]}
-        if prof["div_yield"] is not None and prof["div_yield"] < 0.5:      # 버전에 따라 0.0032 또는 0.32(%)
-            prof["div_yield"] = prof["div_yield"] * 100
+        px_now = float(df["close"].iloc[-1])
+        rate = g("dividendRate") or g("trailingAnnualDividendRate")
+        prof["div_yield"] = rate / px_now * 100 if rate and px_now else 0.0   # yfinance 버전마다 dividendYield 단위가 달라 직접 계산
         for kind, src in (("annual", "income_stmt"), ("quarter", "quarterly_income_stmt")):
             try:
                 ps, rows = _yf_rows(getattr(tk, src), US_ROWS)

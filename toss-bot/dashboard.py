@@ -236,6 +236,8 @@ def warm_up():
         ds.load_corps()
     except Exception as e:
         print("종목 목록 준비 실패:", e, flush=True)
+    for k in PICKS:                               # 발굴 목록도 미리 (종목 상세의 '어느 목록' 표시에 씀)
+        picks(k)
 
 
 # ── 감시 탭: scanner.py 가 쓰는 state/scanner/{kr|us}-날짜.json 을 읽어 보여 줌 ─────────────
@@ -254,6 +256,132 @@ def scan_data(mkt):
             "events": s.get("events", [])[-60:][::-1],
             "counts": {"ge10": sum(1 for v in s["stocks"].values() if (v.get("max_chg") or 0) >= 10 and not v.get("pref")),
                        "limit": sum(1 for v in s["stocks"].values() if v.get("limit_up_at") and not v.get("pref"))}}
+
+
+# ── 발굴 탭: 급등 후보 · 가치주 20선 · 애크먼 TOP10 ─────────────────────────────
+#   데이터는 GitHub(Actions가 매일·매주 갱신)에서 직접 받아 옴 → 서버에서 git pull 안 해도 최신.
+#   GitHub에 못 가면 서버에 있는 저장소 파일을 씀.
+REPO = os.path.dirname(HERE)
+GH_RAW = "https://raw.githubusercontent.com/Ji-Hun-Seong/Ji-Hun-Seong"
+
+
+def gh_text(path, branch="main", ttl=1800):
+    def fetch():
+        import requests
+        r = requests.get(f"{GH_RAW}/{branch}/{path}", timeout=10)
+        r.raise_for_status()
+        return {"text": r.text, "src": "github"}
+    out = cached(f"gh:{branch}:{path}", ttl, fetch)
+    if isinstance(out, dict) and "text" in out:
+        return out["text"]
+    local = os.path.join(REPO, path)
+    if branch == "main" and os.path.exists(local):
+        return open(local, encoding="utf-8").read()
+    raise FileNotFoundError(f"{path} 를 GitHub·서버 어디서도 못 찾음 ({out.get('error') if isinstance(out, dict) else ''})")
+
+
+def picks_surge():
+    j = json.loads(gh_text("surge-study/data/candidates/latest.json", ttl=900))
+    return {"kind": "surge", "date": j["date"], "method": j.get("method"), "n_scored": j.get("n_scored"),
+            "items": [{"rank": i, **c} for i, c in enumerate(j["candidates"][:10], 1)],
+            "more": j["candidates"][10:20], "prev": j.get("prev")}
+
+
+def picks_value():
+    import tempfile
+    vb = os.path.join(REPO, "value-bot")
+    if vb not in sys.path:
+        sys.path.insert(0, vb)
+    import recommend
+    from value_dna import load_profile
+    tmp = tempfile.mkdtemp(prefix="vb-")
+    for fn in ("universe.csv", "profile.json", "holdings.txt", "recent_buys.txt", "DATA_ASOF"):
+        try:
+            open(os.path.join(tmp, fn), "w", encoding="utf-8").write(gh_text(f"value-bot/{fn}", ttl=3600))
+        except Exception:
+            pass
+    dna = load_profile(os.path.join(tmp, "profile.json"))
+    hf = os.path.join(tmp, "holdings.txt")
+    if os.path.exists(hf):
+        real = [l.strip() for l in open(hf, encoding="utf-8") if l.strip() and not l.startswith("#")]
+        if real:
+            dna.holdings = real
+    import contextlib, io
+    with contextlib.redirect_stdout(io.StringIO()):
+        recommend.apply_recent_buys(dna, os.path.join(tmp, "recent_buys.txt"))
+        picked, _ = recommend.rank(dna, recommend.load_universe(os.path.join(tmp, "universe.csv")))
+    asof = open(os.path.join(tmp, "DATA_ASOF")).read().strip() if os.path.exists(os.path.join(tmp, "DATA_ASOF")) else ""
+    held = set(dna.holdings)
+    items = []
+    for i, c in enumerate(picked[:20], 1):
+        r = c.row
+        items.append({"rank": i, "name": c.name, "code": r["ticker"], "total": round(c.total, 1),
+                      "scores": {k: round(v) for k, v in c.scores.items()}, "penalty": c.penalty,
+                      "reasons": c.reasons, "risks": c.risks, "held": c.name in held, "sector": r.get("sector"),
+                      "group": r.get("group"), "pbr": recommend.num(r.get("pbr")), "per": recommend.num(r.get("per")),
+                      "yield": recommend.num(r.get("yield_pct")), "note": r.get("note")})
+    return {"kind": "value", "asof": asof, "items": items}
+
+
+def picks_ackman():
+    j = json.loads(gh_text("weekly_state.json", branch="ackman-weekly", ttl=3600))
+    b = j.get("board")
+    if b:
+        return {"kind": "ackman", "week": b["week"], "asof": b["asof"], "last_13f": b.get("last_13f"),
+                "items": b["items"][:10], "more": b["items"][10:20]}
+    # 대시보드 기능 추가 전 저장본: 순위·편입가만 있음
+    ranks, base = j.get("ranks", {}), j.get("baseline", {})
+    items = [{"rank": n, "t": t, "name": t, "price": (base.get(t) or {}).get("price"), "since": (base.get(t) or {}).get("date")}
+             for t, n in sorted(ranks.items(), key=lambda x: x[1])]
+    return {"kind": "ackman", "week": j.get("sent_week"), "asof": None, "items": items, "partial": True}
+
+
+PICKS = {"surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600)}
+
+
+def picks(kind):
+    fn, ttl = PICKS.get(kind, PICKS["surge"])
+    return cached("picks:" + kind, ttl, fn)
+
+
+# ── 종목 상세: 시세·이평선·볼린저·수급·재무·공시·밸류를 한 번에 ─────────────────────
+def stock_detail(q, us_hint=None):
+    import data_sources as ds
+    import stock_info as si
+    q = q.strip()
+    hits = ds.search(q, 1)
+    if not hits:
+        return {"error": f"'{q}' 종목을 찾지 못했습니다"}
+    it = hits[0]
+    if us_hint and not it.get("us"):
+        it = {"name": q.upper(), "code": q.upper(), "us": True}
+    key = "stock:" + it["code"]
+
+    def us_px(sym):
+        df, _ = chart_ohlcv(sym, True)
+        return df
+    out = cached(key, chart_ttl(), lambda: si.detail(it, us_px))
+    if isinstance(out, dict) and out.get("error") and not out.get("stale"):
+        with _lock:
+            _cache.pop(key, None)
+        return out
+    # 어느 목록에 들어 있는지 표시 (보유·후보·20선·애크먼)
+    tags = []
+    try:
+        s = bot.peek()
+        if it["code"] in s["kr"]["positions"]:
+            tags.append("🤖 봇 보유")
+    except Exception:
+        pass
+    for kind, label in (("surge", "🚀 급등 후보"), ("value", "💎 가치주"), ("ackman", "🇺🇸 애크먼")):
+        p = _cache.get("picks:" + kind)
+        if p and isinstance(p[1], dict):
+            for x in p[1].get("items", []):
+                if (x.get("code") or x.get("t")) == it["code"]:
+                    tags.append(f"{label} {x.get('rank') or ''}{'위' if x.get('rank') else ''}".strip())
+                    if kind == "value" and x.get("held"):
+                        tags.append("📌 내 계좌 보유")
+    return {**out, "tags": tags}
 
 
 class H(BaseHTTPRequestHandler):
@@ -295,6 +423,16 @@ class H(BaseHTTPRequestHandler):
                 return self._send(200, json.dumps(scan_data(m), ensure_ascii=False, default=str), "application/json; charset=utf-8")
             except Exception as e:
                 return self._send(200, json.dumps({"error": str(e)[:200]}, ensure_ascii=False), "application/json; charset=utf-8")
+        if path in ("/api/picks", "/api/stock"):
+            qs = parse_qs(urlparse(self.path).query)
+            try:
+                if path == "/api/picks":
+                    out = picks((qs.get("k") or ["surge"])[0])
+                else:
+                    out = stock_detail((qs.get("q") or [""])[0], (qs.get("us") or [""])[0] == "1")
+            except Exception as e:
+                out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path in ("/api/search", "/api/chart"):
             q = (parse_qs(urlparse(self.path).query).get("q") or [""])[0].strip()
             try:
