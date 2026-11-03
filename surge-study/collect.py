@@ -198,7 +198,7 @@ def dart_filings(key: str, days: list[str]) -> dict[str, list[dict]]:
 def classify(texts: list[str], rules) -> list[str]:
     tags = []
     for tag, pat in rules:
-        if any(re.search(pat, t) for t in texts) and tag not in tags:
+        if any(re.search(pat, t, re.I) for t in texts) and tag not in tags:
             tags.append(tag)
     return tags
 
