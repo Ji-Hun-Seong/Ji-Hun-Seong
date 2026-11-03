@@ -4,13 +4,16 @@
 점수로 합산하고, 다음 날 실제로 얼마나 올랐는지 매일 채점해 `candidates/날짜.json`에 같이 남깁니다.
 한 달치가 쌓이면 universe/ 데이터로 학습한 모형 점수로 바꿉니다 (README '한 달 뒤 계획').
 
-점수(100점) = 재료 35 + 거래량 선행 20 + 차트 에너지 25 + 종가 강도 10 + 유동성 10 − 감점
+점수(100점) = 재료 35 + 거래량 선행 20 + 차트 에너지 25 + 종가 강도 10 + 유동성 10 − 감점 − 추격
+  v1(2026-11-03): '이미 한참 오른 종목'이 위로 올라오던 문제 수정 — 오늘 많이 오른 공시는 이미 반영된 것으로 보고 재료 할인,
+                  최근 5일·20일 상승폭·연속 상승·밴드 상단 돌파는 '추격' 감점, 20일 횡보(아직 덜 오름)는 가산
   재료        : 오늘 DART 공시 — 공급계약·무상증자·공개매수 > 임상·허가·특허 > 자사주 > 실적(방향 모름)
   거래량 선행  : 오늘 거래량이 20일 평균의 2·3·5배↑인데 주가는 아직 덜 오름(−2% ~ +9%) = '매집'
   차트 에너지  : 볼린저 스퀴즈(밴드폭 6개월 하위 15%), 상단 밴드 근처, 52주 고점 근처, 정배열
   종가 강도    : 종가가 하루 고저 범위 위쪽(고가 마감)
   유동성       : 거래대금 (너무 작으면 신호가 아니라 잡음)
-  감점·제외    : 오늘 이미 +15%↑(추격), RSI 80↑, 긴 윗꼬리, 유상증자·CB, 거래소 경고·과열, 1,000원 미만, 우선주
+  추격 감점    : 오늘 +4%↑, 5일 +8%↑, 20일 +15%↑, 4일 연속 상승, 볼린저 상단 돌파
+  감점·제외    : 오늘 이미 +10%↑ 또는 5일 +30%↑(제외), RSI 80↑, 긴 윗꼬리, 유상증자·CB, 거래소 경고·과열, 1,000원 미만, 우선주
 
   python surge-study/candidates.py --show 2026-11-03     # 저장된 후보 보기
 """
@@ -25,7 +28,7 @@ import pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "data", "candidates")
-METHOD = "v0-rules-2026-11"
+METHOD = "v1-rules-2026-11-03"
 N_SHOW, N_KEEP = 10, 30
 
 CAT_RULES = [   # (태그, 정규식, 점수)
@@ -69,11 +72,16 @@ def score_row(f: dict, tb: dict, filings: list[dict]) -> tuple[float, dict, list
         cat *= 0.4
     elif cat and tv20 >= 100e8:
         cat *= 0.7
+    vr, chg = tb.get("vol_ratio") or 0, tb.get("chg") or 0
+    priced = ""
+    if cat and chg >= 8:                      # 공시가 장중에 나와 오늘 이미 크게 올랐으면 재료는 상당 부분 반영
+        cat *= 0.3; priced = f" (오늘 {chg:+.1f}% — 이미 반영)"
+    elif cat and chg >= 5:
+        cat *= 0.6; priced = f" (오늘 {chg:+.1f}% — 일부 반영)"
     parts["재료"] = round(cat)
     if tags:
-        why.append("오늘 공시: " + "·".join(tags) + (" (대형주라 반영 축소)" if tv20 >= 100e8 else ""))
+        why.append("오늘 공시: " + "·".join(tags) + (" (대형주라 반영 축소)" if tv20 >= 100e8 else "") + priced)
     # 거래량 선행
-    vr, chg = tb.get("vol_ratio") or 0, tb.get("chg") or 0
     v = 0
     if -2 <= chg <= 9:
         v = 20 if vr >= 5 else 15 if vr >= 3 else 10 if vr >= 2 else 4 if vr >= 1.5 else 0
@@ -87,16 +95,21 @@ def score_row(f: dict, tb: dict, filings: list[dict]) -> tuple[float, dict, list
     bp, pb, fh = f.get("bw_pctile"), f.get("pctb"), f.get("from_high")
     if bp is not None and bp <= 0.15:
         e += 10; why.append(f"볼린저 스퀴즈(밴드폭 6개월 하위 {bp * 100:.0f}%)")
-    if pb is not None and 0.8 <= pb <= 1.15:
+    r5, r20, up = f.get("ret5"), f.get("ret20"), f.get("up_days") or 0
+    if pb is not None and 0.8 <= pb <= 1.0:                # 상단에 '붙은' 것만 (돌파해 버린 건 추격 쪽)
         e += 8; why.append(f"상단 밴드 근처(%b {pb:.2f})")
-    if fh is not None and fh >= -0.05:
+    if fh is not None and fh >= -0.05 and (r20 is None or r20 < 0.15):   # 횡보 끝 고점 근처만 (급등 후 고점은 제외)
         e += 7; why.append("52주 고점 근처" if fh < 0 else "52주 신고가")
+    if r20 is not None and -0.10 <= r20 <= 0.10 and chg < 4:
+        e += 5; why.append(f"20일간 {r20 * 100:+.0f}% 횡보(아직 덜 오름)")
     if f.get("ma_aligned"):
         e += 5; why.append("정배열")
-    parts["차트"] = min(25, e)
+    if e and chg <= -3:                       # 오늘 크게 빠졌으면 차트 신호는 반만 (떨어지는 칼날)
+        e *= 0.5; warn.append(f"오늘 {chg:+.1f}% 하락")
+    parts["차트"] = round(min(25, e))
     # 종가 강도
     cp = tb.get("close_pos")
-    parts["종가"] = 10 if cp is not None and cp >= 0.8 and chg > 0 else 5 if cp is not None and cp >= 0.6 and chg > 0 else 0
+    parts["종가"] = 10 if cp is not None and cp >= 0.8 and 0 < chg < 5 else 5 if cp is not None and cp >= 0.6 and chg > 0 else 0
     if parts["종가"] == 10:
         why.append("고가 근처 마감")
     # 유동성
@@ -110,6 +123,23 @@ def score_row(f: dict, tb: dict, filings: list[dict]) -> tuple[float, dict, list
     if (tb.get("upper_wick") or 0) >= 5:
         pen -= 5; warn.append(f"윗꼬리 {tb['upper_wick']:.1f}%")
     parts["감점"] = pen
+    # 추격 — 이미 오른 만큼 깎음
+    run = 0
+    if chg >= 7:
+        run -= 10
+    elif chg >= 4:
+        run -= 5
+    if r5 is not None and r5 >= 0.08:
+        run -= 20 if r5 >= 0.25 else 12 if r5 >= 0.15 else 5
+        warn.append(f"5일 {r5 * 100:+.0f}%")
+    if r20 is not None and r20 >= 0.15:
+        run -= 20 if r20 >= 0.5 else 12 if r20 >= 0.3 else 5
+        warn.append(f"20일 {r20 * 100:+.0f}%")
+    if up >= 4:
+        run -= 5; warn.append(f"{up}일 연속 상승")
+    if pb is not None and pb > 1.0:
+        run -= 5; warn.append(f"볼린저 상단 돌파(%b {pb:.2f})")
+    parts["추격"] = run
     total = sum(parts.values())
     return total, parts, why, warn
 
@@ -125,9 +155,11 @@ def build(frames: dict, names: pd.DataFrame, filings: dict, today: pd.Timestamp,
         if bool(nm["pref"]):
             continue
         tb = today_bar(df)
-        if tb["close"] < 1000 or tb["tv"] < 5e8 or tb["chg"] >= 15:
+        if tb["close"] < 1000 or tb["tv"] < 5e8 or tb["chg"] >= 10:
             continue
         f = features(df)                      # 오늘 종가까지 (내일 기준으로는 '전날까지' 정보)
+        if (f.get("ret5") or 0) >= 0.30:      # 5일 새 +30%↑ = 이미 급등한 종목 → 후보 아님
+            continue
         fl = [x for x in filings.get(c, []) if x.get("date") == f"{today:%Y%m%d}"]
         total, parts, why, warn = score_row(f, tb, fl)
         if total <= -50:                      # 거래소 경고 등 → 제외
@@ -137,6 +169,7 @@ def build(frames: dict, names: pd.DataFrame, filings: dict, today: pd.Timestamp,
                      "vol_ratio": round(tb["vol_ratio"] or 0, 2), "close_pos": round(tb["close_pos"], 2),
                      "pctb": f.get("pctb"), "bw_pctile": f.get("bw_pctile"), "rsi14": f.get("rsi14"),
                      "from_high": f.get("from_high"), "ma_aligned": f.get("ma_aligned"),
+                     "ret5": f.get("ret5"), "ret20": f.get("ret20"),
                      "filings": [{"title": x["title"], "rcept_no": x["rcept_no"]} for x in fl[:5]]})
     rows.sort(key=lambda r: (-r["score"], -r["tv"]))
     return {"date": tstr, "for": "다음 거래일", "method": METHOD, "n_scored": len(rows), "candidates": rows[:N_KEEP]}

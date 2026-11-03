@@ -654,13 +654,13 @@ function pRender(d) {
   if (d.kind === "surge") {
     const p = d.prev;
     head = `<div class="card"><div class="label">다음 거래일 급등 후보 · ${d.date} 장 마감 기준</div>
-      <div class="small" style="margin-top:6px;line-height:1.6">재료(오늘 공시) 35 · 거래량 선행 20 · 차트 에너지 25 · 종가 강도 10 · 유동성 10 − 감점. ${fmtN(d.n_scored)}종목 채점</div>
+      <div class="small" style="margin-top:6px;line-height:1.6">재료(오늘 공시) 35 · 거래량 선행 20 · 차트 에너지 25 · 종가 강도 10 · 유동성 10 − 감점 − 추격(이미 오른 만큼). ${fmtN(d.n_scored)}종목 채점</div>
       ${p ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 ${p.from} 후보의 다음 날 성적: 평균 <b class="${cls(p.avg)}">${p.avg != null ? (p.avg >= 0 ? "+" : "") + p.avg + "%" : "-"}</b> (시장 ${p.market_avg >= 0 ? "+" : ""}${p.market_avg}%) · 상승 ${p.up}/${p.n} · +10%↑ ${p.hit10}개
         <div class="tiny mut" style="margin-top:4px">${p.results.map(r => `${esc(r.name)} ${r.next_chg == null ? "-" : (r.next_chg >= 0 ? "+" : "") + r.next_chg + "%"}`).join(" · ")}</div></div>` : ""}
       <div class="tiny mut" style="margin-top:8px">v0 규칙 점수 — 매일 채점하면서 한 달 데이터가 쌓이면 학습 모형으로 바꿉니다. 매수 추천 아님</div></div>`;
     rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>
         <span class="tiny mut"> ${esc(x.market)}</span></div><div style="text-align:right"><span class="score">${x.score}</span><span class="tiny mut">점</span></div></div>
-      <div class="row tiny mut" style="margin-top:3px"><span>${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억</span></div>
+      <div class="row tiny mut" style="margin-top:3px"><span>${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억${x.ret5 != null ? ` · 5일 <span class="${cls(x.ret5)}">${pct(x.ret5, 0)}</span>` : ""}${x.ret20 != null ? ` · 20일 <span class="${cls(x.ret20)}">${pct(x.ret20, 0)}</span>` : ""}</span></div>
       <div>${x.why.slice(0, 4).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.warn.map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div></div>`).join("");
     if (d.more && d.more.length) rows += `<div class="tiny mut" style="padding-top:12px">11~20위: ${d.more.map((x, j) => `<a ${open(d.items.length + j)} href="javascript:void 0">${esc(x.name)}</a>`).join(" · ")}</div>`;
   } else if (d.kind === "value") {
