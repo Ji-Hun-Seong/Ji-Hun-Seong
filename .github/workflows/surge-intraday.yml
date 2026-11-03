@@ -1,0 +1,36 @@
+name: Surge intraday snapshots
+
+# 장중 20분마다 상승률 상위 종목을 기록한다. 한국장(09:00~15:45 KST)·미국장(09:30~16:15 ET) 밖이면 스크립트가 알아서 건너뜀.
+on:
+  schedule:
+    - cron: "*/20 0-6 * * 1-5"     # 한국장 (UTC 00~06시 = KST 09~15시)
+    - cron: "*/20 14-21 * * 1-5"   # 미국장 (UTC 14~21시, 서머타임 여부는 스크립트가 뉴욕 시간으로 판단)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: surge-intraday
+  cancel-in-progress: false
+
+jobs:
+  snap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests pandas
+      - run: |
+          python surge-study/intraday.py kr || echo "::warning::한국 스냅샷 실패"
+          python surge-study/intraday.py us || echo "::warning::미국 스냅샷 실패"
+      - name: Save
+        run: |
+          git config user.name "surge-intraday-bot"
+          git config user.email "surge-intraday-bot@users.noreply.github.com"
+          git add surge-study/data/intraday 2>/dev/null || true
+          git diff --cached --quiet || git commit -qm "surge-intraday: $(TZ=Asia/Seoul date '+%m-%d %H:%M') 스냅샷"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
