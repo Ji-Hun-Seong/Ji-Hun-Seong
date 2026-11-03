@@ -10,6 +10,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>내 자동매매</title>
+<script src="kchart.js"></script>
 <script src="chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js'"></script>
 <style>
 :root{--bg:#0f1720;--card:#17212b;--line:#243140;--txt:#e8eef5;--sub:#8a9bb0;--blue:#4f8cff;--up:#f04452;--dn:#3d8bfd;--ok:#2fbf71;--warn:#f5a524}
@@ -87,6 +88,17 @@ canvas.c-big{max-height:none}
 .tbl th,.tbl td{padding:7px 4px;text-align:right;border-top:1px solid var(--line);white-space:nowrap}.tbl th:first-child,.tbl td:first-child{text-align:left;color:var(--sub);font-weight:400}
 .tbl thead th{border-top:0;color:var(--sub);font-weight:600}.tbl .est{color:#8fb6ff}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.kc-bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.kc-seg{display:flex;background:var(--bg);border-radius:10px;padding:3px}.kc-seg button{border:0;background:none;color:var(--sub);padding:6px 10px;border-radius:8px;font-size:12.5px;font-family:inherit}
+.kc-seg button.act{background:var(--line);color:var(--txt);font-weight:700}
+.kc-tg{background:var(--bg);color:var(--sub);border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-size:12px;font-family:inherit}.kc-tg.act{border-color:var(--blue);color:var(--txt)}
+.kc-info{min-height:40px;margin:10px 0 4px;font-size:11.5px;font-variant-numeric:tabular-nums;line-height:1.55}
+.kc-l1{display:flex;flex-wrap:wrap;gap:2px 9px;color:var(--sub)}.kc-l1 b{color:var(--txt)}.kc-l1 i{font-style:normal;font-weight:600}
+.kc-l2{display:flex;flex-wrap:wrap;gap:2px 10px}.kc-mk{color:#f5c26b;margin-top:2px}
+.kc-wrap{position:relative;margin:0 -6px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.kc-wrap canvas{display:block;max-height:none}
+.kc-help{text-align:center;color:var(--sub);font-size:11px;margin-top:4px;opacity:.7}
+.kc-full{position:fixed;inset:0;z-index:90;background:var(--card);padding:calc(10px + env(safe-area-inset-top)) 14px calc(10px + env(safe-area-inset-bottom));overflow:hidden}
+.kc-full{display:flex;flex-direction:column}.kc-full .kc-wrap{flex:1;min-height:0;position:relative}.kc-full .kc-wrap canvas{position:absolute;top:0;left:0}
 .tap{cursor:pointer;-webkit-tap-highlight-color:transparent}.tap:active{opacity:.6}.tap .chev{color:var(--sub);margin-left:6px;font-size:16px;flex:none}
 #sheet{position:fixed;inset:0;z-index:100;display:none}#sheet.on{display:block}
 #sheet .bd{position:absolute;inset:0;background:rgba(0,0,0,.55)}
@@ -427,7 +439,8 @@ const eokFmt = v => { if (v == null) return "-"; const a = Math.abs(v), sg = v <
 const usdBig = v => v == null ? "-" : v >= 1e12 ? "$" + (v / 1e12).toFixed(2) + "T" : v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : "$" + (v / 1e6).toFixed(0) + "M";
 const sEok = v => v == null ? "-" : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? fmtN(v) : fmtN(v, 1)) + "억";
 
-let SD = {prev: "home", last: null, range: 120, ma: true, bb: true, who: "frgn", fin: "annual", ctx: null};
+let SD = {prev: "home", last: null, range: 120, ma: true, bb: true, who: "frgn", fin: "annual", ctx: null,
+  kc: (() => { try { return JSON.parse(localStorage.getItem("kc-state")) || {tf: "D", rng: "6M", ma: true, bb: true}; } catch (e) { return {tf: "D", rng: "6M", ma: true, bb: true}; } })()};
 
 async function openStock(q, opt = {}) {
   q = String(q || "").trim(); if (!q) return;
@@ -475,11 +488,7 @@ function sdRender(a) {
   <div class="card"><h2>👀 한눈에 보기</h2><div class="tally" style="margin:-4px 0 10px">${tally}</div>${sigs}
     <div class="tiny mut" style="margin-top:8px">🟢 긍정 · 🟠 주의 · ⚪ 중립 — 기계적 기준이라 참고용</div></div>
   <div class="card"><h2>📈 차트</h2>
-    <div class="minis" id="sd-rng">${[[60, "3개월"], [120, "6개월"], [250, "1년"]].map(([n, l]) => `<button data-n="${n}" class="${SD.range === n ? "act" : ""}">${l}</button>`).join("")}
-      <span style="flex:1"></span><button data-o="ma" class="${SD.ma ? "act" : ""}">이평선</button><button data-o="bb" class="${SD.bb ? "act" : ""}">볼린저</button></div>
-    <canvas id="sd-px" class="c-big"></canvas>
-    <div class="tiny mut" style="margin:6px 0 2px" id="sd-leg"></div>
-    <canvas id="sd-vol"></canvas><div class="tiny mut" style="margin:8px 0 2px">RSI(14) · 70↑ 과매수 30↓ 과매도</div><canvas id="sd-rsi"></canvas>
+    <div id="sd-kc"></div>
     <div class="fl" style="margin-top:12px;grid-template-columns:repeat(4,1fr)">${[5, 20, 60, 120].map(n => `<div><b>${n}일선</b><br>${money(T["ma" + n])}<br><span class="${cls(T["gap" + n])}">${pct(T["gap" + n])}</span></div>`).join("")}</div>
     <div class="tiny mut">수익률 1주 ${pct(T.ret5)} · 1개월 ${pct(T.ret20)} · 3개월 ${pct(T.ret60)} · 1년 ${pct(T.ret250)}</div>
   </div>
@@ -489,10 +498,6 @@ function sdRender(a) {
   <div id="sd-bb"><div class="card"><h2>🤖 자동매매 전략 판정</h2><div class="tiny mut" style="margin-bottom:10px">자사주 공시 · 볼린저(책 기법) · 외국인 수급 세 조건 확인</div>
     <button class="stopbtn on" id="sd-bb-btn">판정 불러오기</button></div></div>
   <div class="foot">${Object.entries(a.links || {}).map(([k, u]) => `<a href="${u}" target="_blank">${{naver: "네이버 증권", dart: "DART 공시", yahoo: "야후 파이낸스"}[k] || k} ↗</a>`).join(" · ")}</div>`;
-  $("sd-rng").querySelectorAll("button").forEach(b => b.onclick = () => {
-    if (b.dataset.n) SD.range = +b.dataset.n; else SD[b.dataset.o] = !SD[b.dataset.o];
-    $("sd-rng").querySelectorAll("button").forEach(x => x.classList.toggle("act", x.dataset.n ? +x.dataset.n === SD.range : SD[x.dataset.o]));
-    sdCharts(a); });
   document.querySelectorAll("#sd-who button").forEach(b => b.onclick = () => { SD.who = b.dataset.w;
     document.querySelectorAll("#sd-who button").forEach(x => x.classList.toggle("act", x === b)); flowChart(a); });
   document.querySelectorAll("#sd-fin button").forEach(b => b.onclick = () => { SD.fin = b.dataset.f; $("sd-fin-out").outerHTML = finTable(a); finChart(a);
@@ -580,31 +585,17 @@ function researchCard(a) {
 const AX = {ticks: {color: "#5d6d80", maxTicksLimit: 5, font: {size: 10}}, grid: {color: "#1f2b38"}};
 const XAX = {ticks: {color: "#5d6d80", maxTicksLimit: 5, font: {size: 10}, maxRotation: 0}, grid: {display: false}};
 function mk(id, cfg) { if (charts[id]) charts[id].destroy(); const el = $(id); if (!el || !window.Chart) return; charts[id] = new Chart(el, cfg); }
+// 증권사식 차트 (kchart.js) — 끌기·핀치·십자선·일/주/월봉
+let KC = null;
 function sdCharts(a) {
-  const S = a.series, N = S.dates.length, n = Math.min(SD.range, N), off = N - n, sl = k => (S[k] || []).slice(off);
-  const L = sl("dates").map(d => d.slice(2).replace(/-/g, ".")), o = sl("open"), h = sl("high"), l = sl("low"), c = sl("close");
-  const upc = c.map((v, i) => v >= o[i] ? "#f04452" : "#3d8bfd");
-  const lo = Math.min(...l.filter(x => x != null)), hi = Math.max(...h.filter(x => x != null)), eps = (hi - lo) * 0.003;
-  const ln = (k, color, w = 1.2, dash = []) => ({type: "line", data: sl(k), borderColor: color, borderWidth: w, borderDash: dash, pointRadius: 0, tension: .2, spanGaps: true, order: 0});
-  const ds = [
-    {type: "bar", data: l.map((v, i) => [v, h[i]]), backgroundColor: upc, barPercentage: .2, categoryPercentage: 1, grouped: false, order: 3},
-    {type: "bar", data: o.map((v, i) => { const a1 = Math.min(v, c[i]), b1 = Math.max(v, c[i]); return [a1, b1 - a1 < eps ? a1 + eps : b1]; }), backgroundColor: upc, barPercentage: .8, categoryPercentage: 1, grouped: false, order: 2}];
-  const leg = [];
-  if (SD.ma) { [["ma5", "#ffd166", "5"], ["ma20", "#ef8bff", "20"], ["ma60", "#4fd1c5", "60"], ["ma120", "#a0aec0", "120"]].forEach(([k, col, t]) => { ds.push(ln(k, col)); leg.push(`<span style="color:${col}">━ ${t}일</span>`); }); }
-  if (SD.bb) { ds.push({...ln("bb_up", "#4f8cff", 1, [4, 3]), fill: "+1", backgroundColor: "rgba(79,140,255,.07)"}, ln("bb_lo", "#4f8cff", 1, [4, 3])); leg.push(`<span style="color:#4f8cff">┅ 볼린저(20,2)</span>`); }
-  $("sd-leg").innerHTML = leg.join(" &nbsp;");
-  mk("sd-px", {data: {labels: L, datasets: ds}, options: {responsive: true, animation: false, aspectRatio: 1.25,
-    plugins: {legend: {display: false}, tooltip: {mode: "index", intersect: false, filter: it => it.datasetIndex === 1,
-      callbacks: {label: it => { const i = it.dataIndex; return `시 ${fmtN(o[i], 2)} 고 ${fmtN(h[i], 2)} 저 ${fmtN(l[i], 2)} 종 ${fmtN(c[i], 2)}`; }}}},
-    scales: {x: XAX, y: {...AX, position: "right", min: lo - (hi - lo) * .03, max: hi + (hi - lo) * .03}}}});
-  const v = sl("volume");
-  mk("sd-vol", {data: {labels: L, datasets: [{type: "bar", data: v, backgroundColor: upc.map(x => x + "aa"), barPercentage: .8, categoryPercentage: 1, order: 2},
-    {type: "line", data: sl("vma20"), borderColor: "#f5a524", borderWidth: 1, pointRadius: 0, order: 1}]},
-    options: {responsive: true, animation: false, aspectRatio: 4.2, plugins: {legend: {display: false}, tooltip: {enabled: false}},
-      scales: {x: {display: false}, y: {...AX, position: "right", ticks: {...AX.ticks, maxTicksLimit: 3, callback: x => x >= 1e6 ? (x / 1e6).toFixed(0) + "M" : x >= 1e3 ? (x / 1e3).toFixed(0) + "K" : x}}}}});
-  mk("sd-rsi", {type: "line", data: {labels: L, datasets: [ln("rsi", "#a78bfa", 1.5), {...ln("rsi", "#f04452", 1, [2, 2]), data: L.map(() => 70)}, {...ln("rsi", "#2fbf71", 1, [2, 2]), data: L.map(() => 30)}]},
-    options: {responsive: true, animation: false, aspectRatio: 4.2, plugins: {legend: {display: false}, tooltip: {enabled: false}},
-      scales: {x: {display: false}, y: {...AX, position: "right", min: 0, max: 100, ticks: {...AX.ticks, stepSize: 30}}}}});
+  if (KC) { KC.destroy(); KC = null; }
+  const el = $("sd-kc"); if (!el || !window.KChart) return;
+  let raw = a.ohlc;
+  if (!raw || !raw.d || !raw.d.length) {                 // 서버가 옛 버전이면 1년치 series로
+    const S = a.series || {}; raw = {d: (S.dates || []).map(x => x.replace(/-/g, "")), o: S.open, h: S.high, l: S.low, c: S.close, v: S.volume};
+  }
+  const markers = (a.filings || []).filter(f => f.tag && f.tag !== "정기보고서").map(f => ({date: f.date, tag: f.tag, title: f.title}));
+  KC = new KChart(el, raw, {us: a.us, markers, state: SD.kc, onState: st => { SD.kc = {...st}; try { localStorage.setItem("kc-state", JSON.stringify(SD.kc)); } catch (e) {} }});
 }
 function flowChart(a) {
   if (!a.flows || !a.flows.length || !$("sd-fl")) return;
