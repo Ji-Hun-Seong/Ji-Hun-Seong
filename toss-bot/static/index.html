@@ -120,6 +120,19 @@ canvas.c-big{max-height:none}
 .minis{display:flex;gap:6px;margin:0 0 10px;flex-wrap:wrap}.minis button{background:var(--bg);color:var(--sub);border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-size:12px;font-family:inherit}
 .minis button.act{color:var(--txt);border-color:var(--blue)}
 .fl{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:6px 10px;font-size:13px;font-variant-numeric:tabular-nums;margin-bottom:10px}.fl b{color:var(--sub);font-weight:400}
+/* 장기·단기 비율 · 영웅 */
+.mixbar{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--line);margin:12px 0 6px;position:relative}
+.mixbar i{display:block;height:100%}.mixbar .l{background:var(--ok)}.mixbar .s{background:var(--warn)}.mixbar.bad .s{background:var(--up)}
+.mixmk{position:relative;height:14px;font-size:10px;color:var(--sub)}.mixmk span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.mixmk span::before{content:"";position:absolute;left:50%;top:-22px;height:18px;border-left:1px dashed var(--sub)}
+.st{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px}.st.ok{background:#173826;color:#6fe3a2}.st.warn{background:#3a2a12;color:#f5c26b}.st.bad{background:#3a1f24;color:#ff9aa3}
+.hbars{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:7px}.hbars div{font-size:10.5px;color:var(--sub);text-align:center}
+.hbars i{display:block;height:5px;border-radius:9px;background:var(--line);margin-top:3px;overflow:hidden}.hbars i b{display:block;height:100%;background:var(--blue)}
+.hero{padding:11px 0;border-top:1px solid var(--line)}.hero:first-of-type{border-top:0;padding-top:0}
+.hero .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.hero .ck{font-size:13px;padding:3px 0 0 4px;line-height:1.5}
+.grade{border-radius:12px;padding:12px;margin:4px 0 12px;background:var(--bg)}.grade b{font-size:16px}
+.prin{font-size:13px;line-height:1.6}.prin div{padding:6px 0;border-top:1px solid var(--line)}.prin div:first-child{border-top:0}.prin em{font-style:normal;color:var(--sub);font-size:12px}
+details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}details summary::-webkit-details-marker{display:none}
 .more{background:none;border:0;color:var(--blue);font-size:13px;padding:8px 0 0;font-family:inherit}
 </style>
 </head>
@@ -129,6 +142,7 @@ canvas.c-big{max-height:none}
 <div id="errBanner" class="banner"></div>
 
 <section id="t-home" class="act">
+  <div class="card" id="h-mix"><div class="row"><h2 style="margin:0">⚖️ 장기 9 : 단기 1</h2><span class="tiny mut">불러오는 중…</span></div></div>
   <div class="card">
     <div class="label">전략 평가 합계 (원화 환산 전)</div>
     <div class="grid2" style="margin-top:6px">
@@ -192,7 +206,7 @@ canvas.c-big{max-height:none}
 </section>
 
 <section id="t-pick">
-  <div class="seg" id="p-seg"><button data-k="surge" class="act">🚀 급등 후보</button><button data-k="value">💎 가치주 20</button><button data-k="ackman">🇺🇸 애크먼 10</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 영웅</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 가치주</button><button data-k="ackman">🇺🇸 애크먼</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -331,9 +345,64 @@ function render(d) {
         <div style="text-align:right"><div class="${cls(i.rate)} name">${pct(i.rate, 2)}</div>
         <div class="tiny mut">${i.currency === "USD" ? usd(i.value) : won(i.value)}</div></div></div></div>`).join("") : `<div class="empty">보유 종목 없음</div>`;
   }
+  mixRender(d.mix);
   const errs = [a.stale && "계좌 정보 갱신 실패(이전 값 표시)", sg.stale && "나스닥 신호 갱신 실패"].filter(Boolean);
   $("errBanner").style.display = errs.length ? "block" : "none"; $("errBanner").textContent = errs.join(" · ");
   $("upd").textContent = "업데이트 " + d.now.slice(11, 19) + " · 30초마다 자동 새로고침";
+}
+
+// ── 장기 9 : 단기 1 ──────────────────────────────────
+const GCLS = {core: "g", sat: "y", watch: "", no: "r", na: ""};
+function mixRender(m) {
+  const el = $("h-mix"); if (!m) return;
+  const T = Math.round(m.target * 100), M = Math.round(m.max * 100);
+  if (m.error || m.share == null) {
+    el.innerHTML = `<div class="row"><h2 style="margin:0">⚖️ 장기 9 : 단기 1</h2><span class="st warn">확인 불가</span></div>
+      <div class="small mut" style="margin-top:8px">${esc(m.error || "")}</div>
+      <div class="small" style="margin-top:8px">단기(봇 운용금) ${won(m.short)} · 봇 원금 한도 ${won(m.limit)}</div>
+      <div class="tiny mut" style="margin-top:6px">${esc(m.text)}</div>`; return;
+  }
+  const s = m.share, sp = (s * 100).toFixed(1), lp = (100 - s * 100).toFixed(1);
+  const lab = {ok: `목표 안 (단기 ≤ ${T}%)`, warn: `허용 범위 (${T}~${M}%) — 더 늘리지 않기`, bad: `상한 ${M}% 초과 — 단기 줄이기`}[m.status];
+  const advise = m.status === "bad" ? `단기를 ${won(Math.max(0, m.short - m.long * m.max / (1 - m.max)))} 이상 줄이거나 장기 자산을 늘리면 ${M}% 안으로 들어옵니다.`
+    : m.status === "warn" ? `목표 ${T}%까지 단기 ${won(Math.max(0, m.short - m.long * m.target / (1 - m.target)))} 초과 — 봇 원금을 늘리지 마세요.` : "지금 비율을 유지하세요.";
+  const limWarn = m.limit_share != null && m.limit_share > m.max ? `<div class="small" style="margin-top:8px;color:#ff9aa3">⚠︎ 봇 원금 한도(${won(m.limit)})가 다 차면 단기가 ${(m.limit_share * 100).toFixed(0)}%가 됩니다 → .env의 KR_CAPITAL·US_CAPITAL_USD를 낮추세요</div>` : "";
+  const top = (m.longs || []).slice(0, 6).map(x => `<div class="srow" data-stock="${esc(x.us ? x.code : x.name)}" data-us="${x.us ? 1 : 0}"><span class="small">${esc(x.name)}${x.grade ? ` <span class="tag ${GCLS[x.grade.key]}">${esc(x.grade.label)}</span>` : ""}</span>
+      <span class="small ${x.w > 0.15 ? "up" : "mut"}">${(x.w * 100).toFixed(1)}%</span></div>`).join("");
+  el.innerHTML = `<div class="row"><h2 style="margin:0">⚖️ 장기 9 : 단기 1</h2><span class="st ${m.status}">${m.status === "ok" ? "🟢" : m.status === "warn" ? "🟡" : "🔴"} 단기 ${sp}%</span></div>
+    <div class="mixbar ${m.status}"><i class="l" style="width:${lp}%"></i><i class="s" style="width:${sp}%"></i></div>
+    <div class="mixmk"><span style="left:${100 - M}%">${M}%</span><span style="left:${100 - T}%">${T}%</span></div>
+    <div class="grid2" style="margin-top:10px"><div><div class="tiny mut">🌳 장기 (계좌 주식${m.mode === "live" ? ", 봇 종목 제외" : ""})</div><div class="mid">${won(m.long)}</div><div class="tiny mut">${m.n_long}종목</div></div>
+      <div><div class="tiny mut">⚡ 단기 (봇: 자사주 스윙+${esc(D.us.symbol)})</div><div class="mid">${won(m.short)}</div><div class="tiny mut">한국 ${won(m.short_kr)} · 미국 ${won(m.short_us)}${m.mode !== "live" ? " · 🧪가상" : ""}</div></div></div>
+    <div class="small" style="margin-top:10px">${lab}. ${advise}</div>${limWarn}
+    ${m.over15 && m.over15.length ? `<div class="small" style="margin-top:6px;color:#f5c26b">⚠︎ 한 종목 15% 초과: ${m.over15.map(esc).join(", ")} — 장기 자산 안에서도 분산</div>` : ""}
+    ${top ? `<div class="tiny mut" style="margin:12px 0 2px">장기 보유 비중 · 🏛️ 영웅 등급</div>${top}` : ""}
+    <div class="row" style="margin-top:8px"><span class="tiny mut">환율 ${fmtN(m.fx)}원 · ${esc(m.text)}</span></div>
+    <button class="more" onclick="openHero()">🏛️ 나의 투자 원칙 · 영웅 채점 보기 ›</button>`;
+}
+
+function principlesCard(P, heroes, open) {
+  if (!P) return "";
+  return `<div class="card"><details ${open ? "open" : ""}><summary><div class="row"><h2 style="margin:0">🏛️ 나의 투자 원칙</h2><span class="tiny" style="color:var(--blue)">펼치기/접기</span></div></summary>
+    <div class="small" style="margin:12px 0;padding:10px;background:var(--bg);border-radius:10px">⚖️ <b>${esc(P.mix.text)}</b></div>
+    <div class="prin">${P.rules.map(([who, step, txt], i) => `<div><b>${i + 1}. ${esc(step)}</b> <em>${esc(who)}</em><br>${esc(txt)}</div>`).join("")}</div>
+    <div class="tiny mut" style="margin:12px 0 4px">포트폴리오 규칙</div><div class="prin">${P.portfolio.map(x => `<div>${esc(x)}</div>`).join("")}</div>
+    ${heroes ? `<div class="tiny mut" style="margin:12px 0 4px">채점 기준 (각 20점)</div><div class="prin">${heroes.map(h => `<div>${h.icon} <b>${esc(h.name)}</b> <em>${esc(h.theme)}</em><br>${esc(h.motto)}</div>`).join("")}</div>` : ""}
+  </details></div>`;
+}
+const HKEYS = [["graham", "🛡️ 그레이엄"], ["buffett", "🏰 버핏"], ["fisher", "🌱 피셔"], ["lynch", "🔎 린치"], ["ackman", "🎯 애크먼"]];
+const hbars = h => `<div class="hbars">${HKEYS.map(([k, l]) => `<div>${l.split(" ")[1]}<i><b style="width:${h[k] == null ? 0 : h[k] * 5}%"></b></i></div>`).join("")}</div>`;
+function heroCard(a) {
+  const H = a.heroes; if (!H) return "";
+  if (H.error) return `<div class="card"><h2>🏛️ 영웅 5인 체크</h2><div class="empty">${esc(H.error)}</div></div>`;
+  return `<div class="card"><div class="row"><h2 style="margin:0">🏛️ 영웅 5인 체크</h2><span><span class="score">${H.total ?? "-"}</span><span class="tiny mut">/100</span></span></div>
+    <div class="grade" style="margin-top:12px"><b>${esc(H.grade.label)}</b><div class="small mut" style="margin-top:4px">${esc(H.grade.desc)}</div>
+      ${H.note ? `<div class="small" style="margin-top:6px">${esc(H.note)}</div>` : ""}
+      <div class="small" style="margin-top:6px">🔎 린치 분류: <b>${esc(H.lynch_cat)}</b> <span class="mut">· 매도 기준: ${esc(H.lynch_sell || "")}</span></div></div>
+    ${H.heroes.map(h => `<div class="hero"><div class="hd"><span><b>${h.icon} ${esc(h.name)}</b> <span class="tiny mut">${esc(h.theme)}</span></span>
+        <span class="name">${h.score == null ? "-" : h.score}<span class="tiny mut">/20</span></span></div>
+      ${h.checks.map(c => `<div class="ck ${c.ok == null ? "mut" : ""}">${c.ok === true ? "✅" : c.ok === false ? "❌" : "·"} ${esc(c.text)}</div>`).join("")}</div>`).join("")}
+    <div class="tiny mut" style="margin-top:10px">데이터 반영률 ${Math.round((H.coverage || 0) * 100)}% · 연간 재무(네이버)·공시(DART) 기준의 기계적 채점 — 산 이유는 직접 두 문장으로 적어 보세요</div></div>`;
 }
 
 function detRow(x) {
@@ -489,6 +558,7 @@ function sdRender(a) {
     <div class="kv">${kvs.join("")}</div>${err}
   </div>
   ${ctxCard()}
+  ${heroCard(a)}
   <div class="card"><h2>👀 한눈에 보기</h2><div class="tally" style="margin:-4px 0 10px">${tally}</div>${sigs}
     <div class="tiny mut" style="margin-top:8px">🟢 긍정 · 🟠 주의 · ⚪ 중립 — 기계적 기준이라 참고용</div></div>
   <div class="card kc-card"><div id="sd-kc"></div></div>
@@ -526,6 +596,7 @@ function ctxCard() {
     <div class="tally" style="margin:-4px 0 8px">${[["value", "밸류"], ["payout", "주주환원"], ["cash", "현금·재무"], ["fit", "내 성향"]].map(([k, l]) => `<span class="tag ${x.scores[k] >= 70 ? "g" : x.scores[k] < 40 ? "r" : ""}">${l} ${x.scores[k]}</span>`).join("")}</div>
     ${x.reasons.map(w => `<div class="small" style="padding:3px 0">✔︎ ${esc(w)}</div>`).join("")}${x.risks.map(w => `<div class="small" style="padding:3px 0;color:#ff9aa3">⚠︎ ${esc(w)}</div>`).join("")}
     ${x.note ? `<div class="tiny mut" style="margin-top:6px">📝 ${esc(x.note)}</div>` : ""}</div>`;
+  if (c.kind === "hero") return "";                 // 영웅 목록에서 왔으면 아래 '영웅 5인 체크'가 같은 내용
   if (c.kind === "ackman" && x.total == null) return "";
   if (c.kind === "ackman") return `<div class="card"><h2>🇺🇸 애크먼 TOP ${x.rank} · ${x.total != null ? x.total + "점" : ""} ${x.status || ""}</h2>
     ${x.fv ? `<div class="small">적정가 <b>${usd(x.fv)}</b> · 매수가 ≤ <b>${usd(x.buy)}</b> · 현재 ${usd(x.price)} <span class="mut">(${esc(x.word || "")})</span></div>` : ""}
@@ -625,18 +696,20 @@ function finChart(a) {
 }
 
 // ── 발굴 탭 ──────────────────────────────────────────
-let pKind = "surge"; const PK = {};
-try { pKind = localStorage.getItem("p-kind") || "surge"; } catch (e) {}
+let pKind = "hero"; const PK = {};
+try { pKind = localStorage.getItem("p-kind") || "hero"; } catch (e) {}
 document.querySelectorAll("#p-seg button").forEach(b => {
   b.classList.toggle("act", b.dataset.k === pKind);
   b.onclick = () => { pKind = b.dataset.k; try { localStorage.setItem("p-kind", pKind); } catch (e) {}
     document.querySelectorAll("#p-seg button").forEach(x => x.classList.toggle("act", x === b)); pLoad(); };
 });
 document.querySelector('nav button[data-t="pick"]').addEventListener("click", () => pLoad());
+function openHero() { pKind = "hero"; try { localStorage.setItem("p-kind", "hero"); } catch (e) {}
+  document.querySelectorAll("#p-seg button").forEach(x => x.classList.toggle("act", x.dataset.k === "hero")); goTab("pick"); }
 async function pLoad(force) {
   const k = pKind;
   if (PK[k] && !force && Date.now() - PK[k].t < 300000) return pRender(PK[k].d);
-  if (!PK[k]) $("p-out").innerHTML = `<div class="card"><div class="empty">불러오는 중…</div></div>`;
+  if (!PK[k]) $("p-out").innerHTML = `<div class="card"><div class="empty">불러오는 중…${k === "hero" ? "<br><span class=\"tiny\">영웅 채점은 후보 약 90종목의 재무·공시를 모아서 처음엔 1분쯤 걸립니다 (이후 6시간 저장)</span>" : ""}</div></div>`;
   try { const d = await (await fetch("api/picks?k=" + k, {cache: "no-store"})).json(); PK[k] = {t: Date.now(), d}; if (k === pKind) pRender(d); }
   catch (e) { $("p-out").innerHTML = `<div class="card"><div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
@@ -646,7 +719,20 @@ function pRender(d) {
   pItems = d.items.concat(d.more || []);
   const open = i => `data-pi="${i}"`;
   let head = "", rows = "";
-  if (d.kind === "surge") {
+  if (d.kind === "hero") {
+    const G = d.grades || {}, f = filt => d.items.filter(x => filt === "all" || x.grade.key === filt);
+    head = principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 영웅 5인 채점 · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
+      <div class="small" style="margin-top:6px;line-height:1.6">그레이엄(안전마진) · 버핏(해자·ROE) · 피셔(성장) · 린치(성장 대비 가격) · 애크먼(촉매·환원) 각 20점</div>
+      <div class="tally"><span class="tag g">🟢 핵심 ${G.core || 0}</span><span class="tag y">🟡 위성 ${G.sat || 0}</span><span class="tag">⚪ 관찰 ${G.watch || 0}</span><span class="tag r">🔴 부적합 ${G.no || 0}</span></div>
+      <div class="tiny mut" style="margin-top:8px">후보 = 내가 아는 회사(toss-bot/heroes_pool.txt) + 가치주 후보 + 📌 내 계좌 · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
+    rows = d.items.slice(0, 30).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>${x.held ? " 📌" : ""}
+        <span class="tag ${GCLS[x.grade.key]}">${esc(x.grade.label)}</span></div><div style="text-align:right"><span class="score">${Math.round(x.total)}</span><span class="tiny mut">점</span></div></div>
+      <div class="tiny mut" style="margin-top:3px">${esc(x.lynch_cat)} · PER ${x.per != null ? x.per.toFixed(1) : "-"} · PBR ${x.pbr != null ? x.pbr.toFixed(2) : "-"} · 배당 ${x.yield != null ? x.yield.toFixed(1) + "%" : "-"} · ${eokFmt(x.mcap_eok)}</div>
+      ${hbars(x.heroes)}
+      <div>${x.best.slice(0, 2).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.worst.slice(0, 1).map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div>
+      ${x.note ? `<div class="why">${esc(x.note)}</div>` : ""}</div>`).join("");
+    if (d.failed && d.failed.length) rows += `<div class="tiny mut" style="padding-top:12px">데이터 부족·실패 ${d.failed.length}종목: ${d.failed.slice(0, 12).map(x => esc(x.name)).join(" · ")}</div>`;
+  } else if (d.kind === "surge") {
     const p = d.prev;
     head = `<div class="card"><div class="label">다음 거래일 급등 후보 · ${d.date} 장 마감 기준</div>
       <div class="small" style="margin-top:6px;line-height:1.6">재료(오늘 공시) 35 · 거래량 선행 20 · 차트 에너지 25 · 종가 강도 10 · 유동성 10 − 감점 − 추격(이미 오른 만큼). ${fmtN(d.n_scored)}종목 채점</div>

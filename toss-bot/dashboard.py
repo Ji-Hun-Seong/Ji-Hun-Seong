@@ -4,11 +4,13 @@
   차트 탭: 종목 검색 → 볼린저(책 기법)·자사주 공시·외국인 수급 판정 (chartpage/ 모듈, 별도 서버 없음)
   선택: .env 에 DASH_PASSWORD=... 를 넣으면 접속 시 비밀번호(아이디는 아무거나)를 물어봄
 
+투자 원칙: 장기 9 : 단기 1 (단기는 최대 2) — 홈 '장기·단기 비율' 카드, 발굴 '🏛️ 영웅' 목록, 종목 상세 '영웅 체크'
+            (그레이엄·버핏·피셔·린치·애크먼 기준, chartpage/heroes.py)
 보여주는 것: 운용 모드·긴급정지, 한국/미국 전략 평가·수익 곡선, 보유 종목(토스 실시간가), 시가 예약·매도 예정,
             최근 자사주 공시 감지, 청산 내역, 나스닥 200일선·목표 레버리지, 실제 토스 계좌 잔고
 할 수 있는 것: 긴급 정지 켜기/끄기 (실전 전환은 안전을 위해 서버 명령으로만)
 """
-import base64, datetime as dt, json, math, os, sys, threading, time
+import base64, csv, datetime as dt, io, json, math, os, re, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
@@ -139,7 +141,62 @@ def data():
                "signal": cached("us_signal", 600, us_signal)},
         "detections": detections(),
         "account": cached("account", 60, account),
+        "mix": _try(lambda: mix(s["mode"], pos, kr_eq, us_eq, u["qty"], upx), {"error": "비율 계산 실패"}),
     }
+
+
+# ── 장기 9 : 단기 1 — 내 돈이 어디에 얼마나 있나 ─────────────────────────────
+#   단기 = 봇 운용금(한국 자사주 스윙 + 미국 TQQQ 레버리지, 봇 현금 포함)
+#   장기 = 실제 계좌 주식 평가액 − (실전 모드일 때) 봇이 산 종목
+def usdkrw():
+    def fetch():
+        if os.environ.get("USDKRW"):
+            return {"fx": float(os.environ["USDKRW"]), "src": ".env"}
+        import data_sources as ds
+        df = ds._yahoo("KRW=X", "3mo")
+        return {"fx": float(df["close"].iloc[-1]), "src": "야후"}
+    out = cached("usdkrw", 6 * 3600, fetch)
+    return out.get("fx") or 1400.0
+
+
+def mix(mode, pos, kr_eq, us_eq, us_qty, us_px):
+    import heroes
+    P = heroes.PRINCIPLES["mix"]
+    fx = usdkrw()
+    short = kr_eq + us_eq * fx
+    limit = bot.CFG["kr_capital"] + bot.CFG["us_capital"] * fx
+    acct = cached("account", 60, account)
+    out = {"target": P["target_short"], "max": P["max_short"], "text": P["text"], "fx": fx, "mode": mode,
+           "short": short, "short_kr": kr_eq, "short_us": us_eq * fx, "limit": limit}
+    if not isinstance(acct, dict) or not acct.get("items"):
+        out["error"] = (acct or {}).get("error") if isinstance(acct, dict) and acct.get("error") else "계좌 보유 종목이 없어 장기 금액을 알 수 없음"
+        return out
+    bot_codes = {c for c in (pos and [p["code"] for p in pos] or [])}
+    longs = []
+    for i in acct["items"]:
+        v = (i.get("value") or 0) * (fx if i.get("currency") == "USD" else 1)
+        code = re.sub(r"\D", "", str(i.get("symbol") or ""))[-6:]
+        if mode == "live" and (code in bot_codes or i.get("symbol") == bot.CFG["us_symbol"]):
+            continue                              # 실전 모드: 봇이 산 종목은 단기 쪽에 이미 들어 있음
+        longs.append({"name": i.get("name"), "code": code if i.get("currency") != "USD" else i.get("symbol"),
+                      "us": i.get("currency") == "USD", "value": v})
+    long_v = sum(x["value"] for x in longs)
+    tot = long_v + short
+    share = short / tot if tot else None
+    lim_share = limit / (long_v + limit) if (long_v + limit) else None
+    longs.sort(key=lambda x: -x["value"])
+    for x in longs:
+        x["w"] = x["value"] / long_v if long_v else None
+    # 장기 보유 종목의 영웅 등급 (발굴 '영웅' 목록이 계산돼 있으면)
+    hp = _cache.get("picks:hero")
+    gmap = {x["code"]: x["grade"] for x in (hp[1].get("items", []) if hp and isinstance(hp[1], dict) else [])}
+    for x in longs:
+        if x["code"] in gmap:
+            x["grade"] = gmap[x["code"]]
+    status = "ok" if share is not None and share <= P["target_short"] + 0.005 else "warn" if share is not None and share <= P["max_short"] else "bad"
+    out.update({"long": long_v, "share": share, "limit_share": lim_share, "status": status, "longs": longs,
+                "n_long": len(longs), "over15": [x["name"] for x in longs if (x["w"] or 0) > 0.15]})
+    return out
 
 
 # ── 차트 탭: 종목 검색 → 볼린저(책 기법) + 자사주 공시 + 외국인 수급 AND 판정 ─────────────
@@ -242,7 +299,7 @@ def warm_up():
         ds.load_corps()
     except Exception as e:
         print("종목 목록 준비 실패:", e, flush=True)
-    for k in PICKS:                               # 발굴 목록도 미리 (종목 상세의 '어느 목록' 표시에 씀)
+    for k in ("surge", "value", "ackman", "hero"):  # 발굴 목록도 미리 (종목 상세의 '어느 목록' 표시에 씀) · 영웅은 1분쯤 걸려 마지막
         picks(k)
 
 
@@ -342,11 +399,78 @@ def picks_ackman():
     return {"kind": "ackman", "week": j.get("sent_week"), "asof": None, "items": items, "partial": True}
 
 
-PICKS = {"surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600)}
+def hero_pool():
+    """채점 후보 = toss-bot/heroes_pool.txt(내가 아는 회사) + value-bot 가치주 후보 + 내 계좌 보유 종목"""
+    import data_sources as ds
+    pool = {}
+
+    def add(code, name, src, held=False):
+        code = re.sub(r"\D", "", str(code or ""))[-6:]
+        if len(code) != 6:
+            return
+        p = pool.setdefault(code, {"code": code, "name": name, "src": [], "held": False})
+        if src not in p["src"]:
+            p["src"].append(src)
+        p["held"] = p["held"] or held
+    try:
+        for l in gh_text("toss-bot/heroes_pool.txt", ttl=3600).splitlines():
+            l = l.strip()
+            if l and not l.startswith("#"):
+                c, _, n = l.partition(",")
+                add(c, n.strip() or None, "아는 회사")
+    except Exception:
+        pass
+    by_name = {}
+    try:
+        for r in csv.DictReader(io.StringIO(gh_text("value-bot/universe.csv", ttl=3600).lstrip("\ufeff"))):
+            add(r.get("ticker"), r.get("name"), "가치주 후보")
+            by_name[r.get("name")] = r.get("ticker")
+    except Exception:
+        pass
+    acct = _cache.get("account")
+    acct = acct[1] if acct else None
+    if not (isinstance(acct, dict) and acct.get("items")):
+        acct = _try(account, {})
+    for i in (acct or {}).get("items") or []:
+        if i.get("currency") != "USD":
+            add(i.get("symbol"), i.get("name"), "내 계좌", True)
+    try:                                          # value-bot 보유 목록(이름) — 계좌 API가 안 될 때 대비
+        for l in gh_text("value-bot/holdings.txt", ttl=3600).splitlines():
+            l = l.strip()
+            if l and not l.startswith("#"):
+                if by_name.get(l):
+                    add(by_name[l], l, "내 계좌", True)
+                    continue
+                h = ds.search(l, 1)
+                if h and h[0].get("name") == l and not h[0].get("us"):
+                    add(h[0]["code"], l, "내 계좌", True)
+    except Exception:
+        pass
+    for p in pool.values():
+        try:
+            h = ds.search(p["code"], 1)
+            if h:
+                p["corp_code"] = h[0].get("corp_code")
+                p["name"] = p["name"] or h[0].get("name")
+        except Exception:
+            pass
+    return list(pool.values())
+
+
+def picks_hero():
+    import heroes
+    t0 = time.time()
+    b = heroes.board(hero_pool())
+    return {"kind": "hero", "asof": bot.now().strftime("%Y-%m-%d %H:%M"), "took": round(time.time() - t0, 1),
+            "principles": heroes.PRINCIPLES, "heroes": [{"key": k, "name": n, "icon": i, "theme": th, "motto": m}
+                                                        for k, n, i, th, m in heroes.HEROES], **b}
+
+
+PICKS = {"hero": (picks_hero, 6 * 3600), "surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600)}
 
 
 def picks(kind):
-    fn, ttl = PICKS.get(kind, PICKS["surge"])
+    fn, ttl = PICKS.get(kind, PICKS["hero"])
     return cached("picks:" + kind, ttl, fn)
 
 
@@ -371,6 +495,11 @@ def stock_detail(q, us_hint=None):
         with _lock:
             _cache.pop(key, None)
         return out
+    try:                                          # 🏛️ 영웅 5인 체크 (이미 받은 데이터로 계산 — 추가 요청 없음)
+        import heroes
+        out = {**out, "heroes": heroes.score(out)}
+    except Exception as e:
+        out = {**out, "heroes": {"error": f"{type(e).__name__}: {str(e)[:120]}"}}
     # 어느 목록에 들어 있는지 표시 (보유·후보·20선·애크먼)
     tags = []
     try:
@@ -379,7 +508,7 @@ def stock_detail(q, us_hint=None):
             tags.append("🤖 봇 보유")
     except Exception:
         pass
-    for kind, label in (("surge", "🚀 급등 후보"), ("value", "💎 가치주"), ("ackman", "🇺🇸 애크먼")):
+    for kind, label in (("hero", "🏛️ 영웅"), ("surge", "🚀 급등 후보"), ("value", "💎 가치주"), ("ackman", "🇺🇸 애크먼")):
         p = _cache.get("picks:" + kind)
         if p and isinstance(p[1], dict):
             for x in p[1].get("items", []):
