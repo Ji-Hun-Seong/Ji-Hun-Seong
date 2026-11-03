@@ -87,6 +87,20 @@ canvas.c-big{max-height:none}
 .tbl th,.tbl td{padding:7px 4px;text-align:right;border-top:1px solid var(--line);white-space:nowrap}.tbl th:first-child,.tbl td:first-child{text-align:left;color:var(--sub);font-weight:400}
 .tbl thead th{border-top:0;color:var(--sub);font-weight:600}.tbl .est{color:#8fb6ff}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tap{cursor:pointer;-webkit-tap-highlight-color:transparent}.tap:active{opacity:.6}.tap .chev{color:var(--sub);margin-left:6px;font-size:16px;flex:none}
+#sheet{position:fixed;inset:0;z-index:100;display:none}#sheet.on{display:block}
+#sheet .bd{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+#sheet .pn{position:absolute;left:0;right:0;bottom:0;max-height:90vh;background:var(--card);border-radius:20px 20px 0 0;display:flex;flex-direction:column;animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+#sheet .hd{padding:10px 18px 12px;border-bottom:1px solid var(--line)}#sheet .grab{width:38px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 10px}
+#sheet .hd .row{align-items:flex-start}#sheet .x{background:var(--line);border:0;color:var(--txt);width:30px;height:30px;border-radius:50%;font-size:15px;flex:none}
+#sheet .bdy{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 18px calc(18px + env(safe-area-inset-bottom))}
+#sheet .bdy p{font-size:14px;line-height:1.65;margin:0 0 10px;white-space:pre-wrap}#sheet .dh{font-weight:700;font-size:15px;margin:14px 0 8px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}.facts div{background:var(--bg);border-radius:10px;padding:9px 10px}
+.facts small{display:block;color:var(--sub);font-size:11px;margin-bottom:2px}.facts b{font-size:14px;word-break:break-all}
+.dt{border-collapse:collapse;font-size:12.5px;margin-bottom:12px;min-width:100%}.dt td{border:1px solid var(--line);padding:6px 7px;vertical-align:top;line-height:1.45;white-space:pre-wrap;min-width:64px}
+.dt td:first-child{color:var(--sub)}
+.btnrow{display:flex;gap:8px;margin-top:6px}.btnrow a{flex:1;text-align:center;background:var(--line);color:var(--txt);border-radius:12px;padding:12px;font-size:14px;font-weight:600}.btnrow a.pri{background:var(--blue);color:#fff}
 .minis{display:flex;gap:6px;margin:0 0 10px;flex-wrap:wrap}.minis button{background:var(--bg);color:var(--sub);border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-size:12px;font-family:inherit}
 .minis button.act{color:var(--txt);border-color:var(--blue)}
 .fl{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:6px 10px;font-size:13px;font-variant-numeric:tabular-nums;margin-bottom:10px}.fl b{color:var(--sub);font-weight:400}
@@ -177,6 +191,10 @@ canvas.c-big{max-height:none}
 </section>
 
 <div class="foot" id="upd">불러오는 중…</div>
+
+<div id="sheet"><div class="bd" onclick="closeDoc()"></div><div class="pn">
+  <div class="hd"><div class="grab"></div><div class="row"><div style="flex:1;min-width:0"><div class="tiny mut" id="sh-meta"></div><div style="font-weight:700;font-size:16px;margin-top:3px;line-height:1.4" id="sh-title"></div></div><button class="x" onclick="closeDoc()">✕</button></div></div>
+  <div class="bdy" id="sh-body"></div></div></div>
 
 <nav><div>
   <button data-t="home" class="act"><b>⌂</b>홈</button>
@@ -546,8 +564,8 @@ function finCard(a) {
 function filingCard(a) {
   const f = a.filings || [];
   const tc = t => t === "good" ? "g" : t === "bad" ? "r" : "";
-  return `<div class="card"><h2>📢 최근 공시 <span class="tiny mut">(120일)</span></h2>${f.length ? f.slice(0, 15).map(x => `<div class="srow small" style="align-items:flex-start;gap:8px">
-    <span style="flex:1">${x.tag ? `<span class="tag ${tc(x.tone)}">${esc(x.tag)}</span>` : ""}<a href="${x.url}" target="_blank" style="color:var(--txt)">${esc(x.title)}</a></span><span class="tiny mut">${x.date.slice(5)}</span></div>`).join("")
+  return `<div class="card"><h2>📢 최근 공시 <span class="tiny mut">(120일)</span></h2>${f.length ? f.slice(0, 15).map(x => `<div class="srow small tap" style="align-items:flex-start;gap:8px" data-doc="filing:${docId(x.url)}" data-t="${esc(x.title)}" data-m="${esc((x.filer || "") + " · " + x.date)}">
+    <span style="flex:1">${x.tag ? `<span class="tag ${tc(x.tone)}">${esc(x.tag)}</span>` : ""}${esc(x.title)}</span><span class="tiny mut">${x.date.slice(5)}</span><span class="chev">›</span></div>`).join("")
     : `<div class="empty">공시 없음 (DART 키 확인)</div>`}</div>`;
 }
 function researchCard(a) {
@@ -555,7 +573,7 @@ function researchCard(a) {
   const rec = P.recomm ? ["", "매도", "비중축소", "중립", "매수", "강력매수"][Math.round(P.recomm)] : null;
   return `<div class="card"><h2>📑 증권사 리포트</h2>
     ${P.target ? `<div class="small" style="margin-bottom:8px">컨센서스 목표가 <b>${fmtN(P.target)}원</b> (${pct(P.target / (a.tech || {}).close - 1, 0)})${rec ? ` · 투자의견 ${P.recomm.toFixed(1)} (${rec})` : ""}</div>` : ""}
-    ${r.length ? r.map(x => `<div class="srow small"><a href="${x.url}" target="_blank" style="color:var(--txt);flex:1">${esc(x.title)}</a><span class="tiny mut" style="margin-left:8px">${esc(x.broker)} ${(x.date || "").slice(4, 6)}/${(x.date || "").slice(6)}</span></div>`).join("") : `<div class="empty">최근 리포트 없음</div>`}</div>`;
+    ${r.length ? r.map(x => `<div class="srow small tap" data-doc="research:${docId(x.url)}" data-t="${esc(x.title)}" data-m="${esc(x.broker)} · ${(x.date || "").slice(0, 4)}.${(x.date || "").slice(4, 6)}.${(x.date || "").slice(6)}"><span style="flex:1">${esc(x.title)}</span><span class="tiny mut" style="margin-left:8px">${esc(x.broker)} ${(x.date || "").slice(4, 6)}/${(x.date || "").slice(6)}</span><span class="chev">›</span></div>`).join("") : `<div class="empty">최근 리포트 없음</div>`}</div>`;
 }
 
 // ── 차트 그리기 ──────────────────────────────────────
@@ -708,6 +726,64 @@ setInterval(sLoad, 10000); sLoad();
 load(); setInterval(load, 30000);
 if ($("t-pick").classList.contains("act")) pLoad();
 document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+
+// ── 공시·리포트 상세 시트 (누르면 앱 안에서 바로 보기) ─────────
+function docId(u) { const m = String(u || "").match(/rcpNo=(\d{14})/) || String(u || "").match(/research\/company\/(\d+)/); return m ? m[1] : ""; }
+function docKind(u) { return /rcpNo=/.test(u) ? "filing" : /research\/company\//.test(u) ? "research" : null; }
+let shOpen = false, shKey = "";
+function closeDoc(fromPop) {
+  if (!shOpen) return; shOpen = false; $("sheet").classList.remove("on"); document.body.style.overflow = "";
+  if (!fromPop && history.state && history.state.sheet) history.back();
+}
+window.addEventListener("popstate", () => closeDoc(true));
+const docCache = {};
+async function openDoc(kind, id, title, meta) {
+  if (!kind || !id) return;
+  $("sh-title").textContent = title || ""; $("sh-meta").textContent = meta || (kind === "filing" ? "DART 공시" : "증권사 리포트");
+  $("sh-body").innerHTML = `<div class="empty">불러오는 중…</div>`; $("sh-body").scrollTop = 0;
+  $("sheet").classList.add("on"); document.body.style.overflow = "hidden";
+  if (!shOpen) { shOpen = true; history.pushState({sheet: 1}, ""); }
+  const key = kind + ":" + id; shKey = key;
+  try {
+    const d = docCache[key] || await (await fetch(`/api/doc?k=${kind}&id=${encodeURIComponent(id)}`)).json();
+    if (!d.error) docCache[key] = d;
+    if (shKey !== key || !shOpen) return;                 // 그사이 다른 항목을 열었거나 닫음
+    $("sh-body").innerHTML = kind === "filing" ? filingHtml(d) : researchHtml(d);
+    if (d.title && !title) $("sh-title").textContent = d.title;
+  } catch (e) {
+    $("sh-body").innerHTML = `<div class="empty">불러오기 실패: ${esc(e.message)}</div>`;
+  }
+}
+const factsHtml = fs => fs && fs.length ? `<div class="facts">${fs.map(f => `<div><small>${esc(f.k)}</small><b>${esc(f.v)}</b></div>`).join("")}</div>` : "";
+function filingHtml(d) {
+  const btn = `<div class="btnrow"><a class="pri" href="${d.url || "#"}" target="_blank">DART 원문 열기 ↗</a></div>`;
+  if (d.error) return `<div class="empty" style="margin-bottom:12px">${esc(d.error)}</div>${btn}`;
+  const body = (d.blocks || []).map((b, i) => {
+    if (b.t === "h") return i === 0 && b.text === d.title ? "" : `<div class="dh">${esc(b.text)}</div>`;
+    if (b.t === "p") return `<p>${esc(b.text)}</p>`;
+    return `<div class="scroll"><table class="dt">${b.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;
+  }).join("");
+  return `${d.facts && d.facts.length ? `<div class="tiny mut" style="margin-bottom:6px">핵심 요약</div>${factsHtml(d.facts)}` : ""}
+    ${body || `<div class="empty">본문이 비어 있음</div>`}
+    ${d.truncated ? `<div class="tiny mut" style="margin:6px 0 10px">문서가 길어 앞부분만 표시했어요</div>` : ""}
+    ${d.attachments && d.attachments.length ? `<div class="tiny mut" style="margin:6px 0 10px">첨부: ${d.attachments.map(esc).join(" · ")}</div>` : ""}${btn}`;
+}
+function researchHtml(d) {
+  const btn = `<div class="btnrow">${d.pdf ? `<a class="pri" href="${d.pdf}" target="_blank">리포트 PDF ↗</a>` : ""}<a href="${d.url || "#"}" target="_blank">네이버 원문 ↗</a></div>`;
+  if (d.error) return `<div class="empty" style="margin-bottom:12px">${esc(d.error)}</div>${btn}`;
+  const fs = [["목표가", d.target ? d.target + "원" : null], ["투자의견", d.opinion], ["증권사", d.broker], ["작성일", d.date]].filter(x => x[1]).map(([k, v]) => ({k, v}));
+  return `${factsHtml(fs)}${d.body ? `<p>${esc(d.body)}</p>` : `<div class="empty">요약 본문 없음 — PDF로 확인하세요</div>`}
+    <div class="tiny mut" style="margin:4px 0 10px">요약은 증권사 리포트 원문 발췌 · 투자 권유 아님</div>${btn}`;
+}
+// 화면 어디든 공시/리포트 항목이나 링크를 누르면 시트로 (시트 안 버튼은 그대로 외부로)
+document.addEventListener("click", e => {
+  if (e.target.closest("#sheet")) return;
+  const row = e.target.closest("[data-doc]");
+  if (row) { const [k, id] = row.dataset.doc.split(":"); if (id) { e.preventDefault(); openDoc(k, id, row.dataset.t, row.dataset.m); } return; }
+  const a = e.target.closest("a[href]"); if (!a) return;
+  const k = docKind(a.href), id = docId(a.href);
+  if (k && id) { e.preventDefault(); openDoc(k, id, a.textContent.replace(/^📄\s*/, "").replace(/^(공시 )?원문$/, "").trim(), null); }
+}, true);
 </script>
 </body>
 </html>

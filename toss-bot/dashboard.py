@@ -450,6 +450,18 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 return self._send(200, json.dumps({"error": f"{type(e).__name__}: {str(e)[:200]}"}, ensure_ascii=False),
                                   "application/json; charset=utf-8")
+        if path == "/api/doc":                    # 공시·리포트 상세 (앱 안에서 보기)
+            qs = parse_qs(urlparse(self.path).query)
+            k, i = (qs.get("k") or [""])[0], (qs.get("id") or [""])[0]
+            try:
+                import doc_detail
+                out = cached(f"doc:{k}:{i}", 6 * 3600, lambda: doc_detail.detail(k, i))
+                if out.get("error"):              # 실패는 캐시하지 않음 → 다음에 다시 시도
+                    with _lock:
+                        _cache.pop(f"doc:{k}:{i}", None)
+            except Exception as e:
+                out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/data":
             try:
                 return self._send(200, json.dumps(data(), ensure_ascii=False, default=str), "application/json; charset=utf-8")
