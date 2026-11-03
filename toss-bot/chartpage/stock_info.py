@@ -104,7 +104,7 @@ def kr_ohlcv(code: str, days: int = 760) -> pd.DataFrame:
     except Exception:
         pass
     import data_sources as ds                         # 야후 대체
-    df = ds.get_ohlcv(code, us=False, rng="2y")
+    df = ds.get_ohlcv(code, us=False, rng="max" if days > 1900 else "2y")
     df.attrs["src"] = "야후"
     return df
 
@@ -310,11 +310,12 @@ def series(d: pd.DataFrame, n: int = 250) -> dict:
     return out
 
 
-def ohlc(df: pd.DataFrame) -> dict:
-    """대시보드 증권사식 차트용 전체 일봉(약 5년) — 이평선·볼린저·RSI·주봉·월봉은 브라우저에서 계산"""
-    r = lambda k, nd: [None if v != v else round(float(v), nd) for v in df[k]]
-    return {"d": [f"{x:%Y%m%d}" for x in df.index], "o": r("open", 4), "h": r("high", 4), "l": r("low", 4),
-            "c": r("close", 4), "v": r("volume", 0)}
+def ohlc(df: pd.DataFrame, us: bool = False) -> dict:
+    """대시보드 증권사식 차트용 전체 일봉(상장 이후) — 이평선·볼린저·RSI·주/월/년봉은 브라우저에서 계산"""
+    nd = 4 if us else 0
+    r = lambda k, n: [None if v != v else (round(float(v), n) if n else int(round(float(v)))) for v in df[k]]
+    return {"d": [f"{x:%Y%m%d}" for x in df.index], "o": r("open", nd), "h": r("high", nd), "l": r("low", nd),
+            "c": r("close", nd), "v": r("volume", 0)}
 
 
 # ── 한눈에 보기: 신호 카드 ───────────────────────────────
@@ -435,7 +436,7 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
             return default
 
     with ThreadPoolExecutor(6) as ex:
-        f_px = ex.submit(kr_ohlcv, code, 1900)          # 약 5년 (주봉·월봉 차트용)
+        f_px = ex.submit(kr_ohlcv, code, 20000)         # 상장 이후 전체 (차트 '전체' 기간·주/월/년봉용)
         f_pr = ex.submit(safe, "profile", lambda: kr_profile(code), {})
         f_fl = ex.submit(safe, "flows", lambda: kr_flows(code), [])
         f_fa = ex.submit(safe, "finance", lambda: kr_finance(code, "annual"), {})
@@ -478,7 +479,7 @@ US_ROWS = {"매출액": ["Total Revenue", "Operating Revenue"], "영업이익": 
 def us_ohlcv(sym: str) -> pd.DataFrame:
     import data_sources as ds
     try:
-        return ds.get_ohlcv(sym, us=True, rng="5y")
+        return ds.get_ohlcv(sym, us=True, rng="max")
     except Exception:
         import yfinance as yf                      # 야후 차트 API가 막히면 yfinance
         h = yf.Ticker(sym).history(period="2y", auto_adjust=False)
@@ -547,7 +548,7 @@ def us_detail(sym: str, ohlcv=None) -> dict:
         sp_ = prof["short_pct"] * 100
         S.append(_sig("수급", "공매도 비율", f"{sp_:.1f}%", "bad" if sp_ > 10 else "neu", "유통주식 대비"))
     return clean({"us": True, "code": sym, "name": prof.get("name") or sym, "asof": f"{d.index[-1]:%Y-%m-%d}",
-                  "src": "야후", "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df), "flows": [], "flow_sum": {},
+                  "src": "야후", "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df, True), "flows": [], "flow_sum": {},
                   "holders": holders, "finance": fin, "filings": [], "signals": S,
                   "links": {"yahoo": f"https://finance.yahoo.com/quote/{sym}"},
                   "errors": errs, "took": round(time.time() - t0, 2)})
