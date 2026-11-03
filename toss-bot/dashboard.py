@@ -238,6 +238,24 @@ def warm_up():
         print("종목 목록 준비 실패:", e, flush=True)
 
 
+# ── 감시 탭: scanner.py 가 쓰는 state/scanner/{kr|us}-날짜.json 을 읽어 보여 줌 ─────────────
+def scan_data(mkt):
+    import glob
+    mkt = "us" if mkt == "us" else "kr"
+    files = sorted(glob.glob(os.path.join(bot.STATE_DIR, "scanner", f"{mkt}-*.json")))
+    if not files:
+        return {"market": mkt, "empty": True}
+    s = json.load(open(files[-1], encoding="utf-8"))
+    rows = [{"code": c, **v} for c, v in s["stocks"].items()
+            if v.get("in_list", True) and not v.get("pref") and (v.get("chg") or 0) >= 5]
+    rows.sort(key=lambda r: -(r.get("chg") or 0))
+    return {"market": mkt, "day": s["day"], "updated": s.get("updated"), "polls": s.get("polls"),
+            "running": time.time() - os.path.getmtime(files[-1]) < 180, "rows": rows[:40],
+            "events": s.get("events", [])[-60:][::-1],
+            "counts": {"ge10": sum(1 for v in s["stocks"].values() if (v.get("max_chg") or 0) >= 10 and not v.get("pref")),
+                       "limit": sum(1 for v in s["stocks"].values() if v.get("limit_up_at") and not v.get("pref"))}}
+
+
 class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
@@ -271,6 +289,12 @@ class H(BaseHTTPRequestHandler):
         if not self._auth():
             return
         path = self.path.split("?")[0]
+        if path == "/api/scan":
+            m = (parse_qs(urlparse(self.path).query).get("m") or ["kr"])[0]
+            try:
+                return self._send(200, json.dumps(scan_data(m), ensure_ascii=False, default=str), "application/json; charset=utf-8")
+            except Exception as e:
+                return self._send(200, json.dumps({"error": str(e)[:200]}, ensure_ascii=False), "application/json; charset=utf-8")
         if path in ("/api/search", "/api/chart"):
             q = (parse_qs(urlparse(self.path).query).get("q") or [""])[0].strip()
             try:

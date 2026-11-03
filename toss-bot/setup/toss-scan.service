@@ -1,0 +1,13 @@
+[Unit]
+Description=Toss bot realtime surge scanner
+After=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ji-hun-seong/toss-bot
+ExecStart=/home/ubuntu/ji-hun-seong/toss-bot/.venv/bin/python scanner.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

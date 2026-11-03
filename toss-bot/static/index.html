@@ -60,6 +60,14 @@ a{color:var(--blue);text-decoration:none}
 .mets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.mets div{background:var(--bg);border-radius:10px;padding:9px;text-align:center}
 .mets small{display:block;color:var(--sub);font-size:11px}.mets b{font-size:16px}
 canvas.c-big{max-height:none}
+.seg{display:flex;background:var(--card);border-radius:12px;padding:4px;margin-bottom:12px}
+.seg button{flex:1;border:0;background:none;color:var(--sub);padding:9px;border-radius:9px;font-size:14px;font-family:inherit}
+.seg button.act{background:var(--line);color:var(--txt);font-weight:700}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sub);margin-right:6px;vertical-align:middle}
+.live.on{background:var(--ok);box-shadow:0 0 0 3px rgba(47,191,113,.25)}
+.ev{display:flex;gap:8px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}.ev:first-child{border-top:0}
+.ev .t{color:var(--sub);min-width:58px;font-variant-numeric:tabular-nums}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.srow:first-child{border-top:0}
 </style>
 </head>
 <body>
@@ -129,6 +137,16 @@ canvas.c-big{max-height:none}
   <div id="c-out"><div class="card"><div class="empty">종목을 검색하면 볼린저 밴드 차트와 매수 조건(자사주 공시 · 볼린저 · 외국인 수급) 판정을 보여 줍니다.</div></div></div>
 </section>
 
+<section id="t-scan">
+  <div class="seg" id="s-seg"><button data-m="kr" class="act">🇰🇷 한국</button><button data-m="us">🇺🇸 미국</button></div>
+  <div class="card"><div class="row"><div><span class="live" id="s-live"></span><b id="s-title">급등 감시</b></div><span class="tiny mut" id="s-upd">-</span></div>
+    <div class="grid2" style="margin-top:12px"><div><div class="tiny mut">오늘 +10% 도달</div><div class="mid" id="s-n10">-</div></div>
+      <div><div class="tiny mut" id="s-limit-l">상한가</div><div class="mid" id="s-nlim">-</div></div></div></div>
+  <div class="card"><h2>신호 기록</h2><div id="s-ev"></div></div>
+  <div class="card"><h2>지금 +5% 이상</h2><div id="s-rows"></div></div>
+  <div class="tiny mut" style="text-align:center;margin:4px 0 12px">한국 30초 · 미국 60초마다 확인 · 화면은 10초마다 새로고침</div>
+</section>
+
 <div class="foot" id="upd">불러오는 중…</div>
 
 <nav><div>
@@ -138,6 +156,7 @@ canvas.c-big{max-height:none}
   <button data-t="acct"><b>◎</b>계좌</button>
   <button data-t="det"><b>📢</b>공시</button>
   <button data-t="chart"><b>📈</b>차트</button>
+  <button data-t="scan"><b>🔔</b>감시</button>
 </div></nav>
 
 <script>
@@ -352,6 +371,44 @@ function cRender(a) {
     backgroundColor: a.flows.map(v => v >= 0 ? "#2fbf71" : "#f04452")}]}, options: opt({ar: 2.6})});
 }
 cDrawRecent();
+
+// ── 감시 탭 ──────────────────────────────────────
+let sMkt = "kr";
+try { sMkt = localStorage.getItem("s-mkt") || "kr"; } catch (e) {}
+const EVL = {first10: "🚀 +10% 돌파", limit_up: "🔺 상한가", jump: "⚡ 급가속", fade: "↘️ 고점 반납"};
+document.querySelectorAll("#s-seg button").forEach(b => {
+  b.classList.toggle("act", b.dataset.m === sMkt);
+  b.onclick = () => { sMkt = b.dataset.m; try { localStorage.setItem("s-mkt", sMkt); } catch (e) {}
+    document.querySelectorAll("#s-seg button").forEach(x => x.classList.toggle("act", x === b)); sLoad(); };
+});
+async function sLoad() {
+  if (!$("t-scan").classList.contains("act")) return;
+  let a; try { a = await (await fetch("api/scan?m=" + sMkt, {cache: "no-store"})).json(); } catch (e) { return; }
+  const us = sMkt === "us", tv = v => us ? "$" + (v >= 1000 ? (v / 1000).toFixed(1) + "B" : Math.round(v) + "M") : Math.round(v).toLocaleString() + "억";
+  if (a.error || a.empty) {
+    $("s-live").className = "live"; $("s-upd").textContent = "";
+    $("s-ev").innerHTML = `<div class="empty">${a.error ? esc(a.error) : "아직 기록 없음 — 서버에서 감시 프로그램(toss-scan)이 켜져 있는지 확인"}</div>`;
+    $("s-rows").innerHTML = ""; $("s-n10").textContent = "-"; $("s-nlim").textContent = "-"; return;
+  }
+  $("s-live").className = "live" + (a.running ? " on" : "");
+  $("s-title").textContent = (us ? "미국" : "한국") + " 급등 감시 · " + a.day + (a.running ? "" : " (장 마감)");
+  $("s-upd").textContent = a.updated ? new Date(a.updated).toLocaleTimeString("ko-KR", {hour: "2-digit", minute: "2-digit", second: "2-digit"}) : "";
+  $("s-n10").textContent = a.counts.ge10 + "종목"; $("s-limit-l").textContent = us ? "확인 횟수" : "상한가";
+  $("s-nlim").textContent = us ? a.polls + "회" : a.counts.limit + "종목";
+  $("s-ev").innerHTML = a.events.length ? a.events.slice(0, 30).map(e => `<div class="ev"><span class="t">${esc(e.t.slice(0, 5))}</span>
+    <span style="flex:1">${EVL[e.type] || e.type} · <b>${esc(e.name)}</b> <span class="${cls(e.chg)}">${e.chg >= 0 ? "+" : ""}${Number(e.chg).toFixed(1)}%</span>
+    ${e.type === "fade" ? `<span class="mut">(최고 +${Number(e.max).toFixed(1)}%)</span>` : e.type === "jump" && e.prev != null ? `<span class="mut">(${Number(e.prev).toFixed(1)}%→)</span>` : ""}</span></div>`).join("")
+    : `<div class="empty">아직 신호 없음</div>`;
+  $("s-rows").innerHTML = a.rows.length ? a.rows.map(r => `<div class="srow" data-c="${esc(r.code)}">
+    <div><span class="name">${esc(r.name)}</span>${r.limit_up ? `<span class="pill sell">상한가</span>` : ""}
+      <div class="tiny mut">${esc(r.code)} · ${tv(r.tv || 0)}${r.vol_ratio ? " · 거래량 " + r.vol_ratio + "배" : ""} · 첫 +10% ${esc((r.first10 || "-").slice(0, 5))}</div></div>
+    <div style="text-align:right"><div class="${cls(r.chg)} name">+${Number(r.chg).toFixed(1)}%</div><div class="tiny mut">최고 +${Number(r.max_chg).toFixed(1)}%</div></div></div>`).join("")
+    : `<div class="empty">+5% 이상 종목 없음</div>`;
+  $("s-rows").querySelectorAll(".srow").forEach(el => el.onclick = () => {
+    document.querySelector('nav button[data-t="chart"]').click(); cGo(el.dataset.c); });
+}
+document.querySelector('nav button[data-t="scan"]').addEventListener("click", sLoad);
+setInterval(sLoad, 10000); sLoad();
 load(); setInterval(load, 30000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
 </script>

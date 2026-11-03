@@ -39,6 +39,11 @@
 - 설치: `bash setup/dashboard.sh` → 폰에 Tailscale 앱 설치·같은 계정 로그인 → `http://toss-bot:8080` → 사파리 공유 → **홈 화면에 추가**
 - 실전 전환은 안전을 위해 대시보드에서 못 하고 서버 명령으로만
 
+## 실시간 급등 감시 (scanner.py)
+- 한국 30초(09:00~15:35)·미국 60초(09:30~16:05 ET)마다 전 종목 상승률 순위 확인 → +10% 돌파·상한가·급가속(+3%p)·고점 반납(−5%p) 기록
+- 대시보드 **🔔 감시** 탭에서 확인. 텔레그램 알림은 기본 꺼짐(`.env`에 `SCAN_TG=1`이면 개인 채팅으로)
+- 설치: `sudo cp setup/toss-scan.service /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now toss-scan`
+
 ## 설치·업데이트
 ```
 curl -sL https://raw.githubusercontent.com/Ji-Hun-Seong/Ji-Hun-Seong/main/toss-bot/setup/install.sh | bash
