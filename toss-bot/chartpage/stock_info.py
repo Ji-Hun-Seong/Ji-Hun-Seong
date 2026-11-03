@@ -1,0 +1,539 @@
+"""
+stock_info.py — 대시보드 '종목 상세' 화면용 데이터 (종목을 누르면 한 화면에 다 보이게)
+
+한국 종목
+  시세·이평선·볼린저 : 네이버 일봉(siseJson, 2년, 외국인 소진율 포함) → 실패하면 야후
+  밸류·컨센서스·리포트: 네이버 증권 모바일 API(integration) — 시총·PER·PBR·배당·목표가·증권사 리포트·업종 비교
+  투자자 수급       : 네이버(trend, 최근 약 60영업일) — 외국인·기관·개인 순매수 수량(+금액 환산), 외국인 보유율
+  재무제표          : 네이버(finance/annual·quarter) — 매출·영업이익·순이익·이익률·ROE·부채비율·EPS·PER·PBR·배당 (컨센서스 포함)
+  공시             : DART 최근 120일 전체 공시(중요 공시 표시)                         ← DART_API_KEY
+미국 종목
+  시세: 야후 차트 / 밸류·재무·기관 보유: yfinance(설치돼 있으면)
+
+단독 테스트:  python3 stock_info.py 005930      python3 stock_info.py AAPL
+"""
+from __future__ import annotations
+
+import datetime as dt
+import json
+import math
+import os
+import re
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+import numpy as np
+import pandas as pd
+import requests
+
+UA = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
+                    "Version/17.0 Mobile/15E148 Safari/604.1"}
+NAVER = "https://m.stock.naver.com/api/stock"
+
+
+# ── 숫자 정리 ─────────────────────────────────────────
+def num(v):
+    """'+515,900' '46.16%' '9.82배' '22,292원' '-' → float / None"""
+    if v is None:
+        return None
+    if isinstance(v, (int, float)):
+        return None if (isinstance(v, float) and math.isnan(v)) else float(v)
+    s = re.sub(r"[,%배원\s+]", "", str(v))
+    if s in ("", "-", "N/A"):
+        return None
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def eok_from_text(v):
+    """'1,280조 3,350억' → 12803350 (억원)"""
+    if not v:
+        return None
+    s = str(v).replace(",", "")
+    jo = re.search(r"([\d.]+)조", s)
+    ek = re.search(r"([\d.]+)억", s)
+    if not jo and not ek:
+        return num(s)
+    return (float(jo.group(1)) * 10000 if jo else 0) + (float(ek.group(1)) if ek else 0)
+
+
+def clean(x):
+    """JSON으로 보내기 전 NaN/inf → None"""
+    if isinstance(x, dict):
+        return {k: clean(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [clean(v) for v in x]
+    if isinstance(x, (np.floating, float)):
+        return None if (math.isnan(x) or math.isinf(x)) else round(float(x), 6)
+    if isinstance(x, np.integer):
+        return int(x)
+    if isinstance(x, np.bool_):
+        return bool(x)
+    return x
+
+
+def _get(url, params=None, timeout=15):
+    r = requests.get(url, params=params, headers=UA, timeout=timeout)
+    r.raise_for_status()
+    return r
+
+
+# ── 한국: 시세 ────────────────────────────────────────
+ROW = re.compile(r'\["(\d{8})",\s*([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\]')
+
+
+def kr_ohlcv(code: str, days: int = 760) -> pd.DataFrame:
+    end = dt.date.today() + dt.timedelta(days=1)
+    start = end - dt.timedelta(days=days)
+    try:
+        r = _get("https://api.finance.naver.com/siseJson.naver", {
+            "symbol": code, "requestType": 1, "timeframe": "day",
+            "startTime": f"{start:%Y%m%d}", "endTime": f"{end:%Y%m%d}"}, timeout=20)
+        rows = ROW.findall(r.text)
+        if len(rows) >= 30:
+            df = pd.DataFrame(rows, columns=["date", "open", "high", "low", "close", "volume", "fr"])
+            df["date"] = pd.to_datetime(df["date"])
+            df = df.set_index("date").replace("", np.nan).astype(float)
+            df = df[df["close"] > 0]
+            df.loc[df["open"] <= 0, "open"] = df["close"]
+            df.attrs["src"] = "네이버"
+            return df
+    except Exception:
+        pass
+    import data_sources as ds                         # 야후 대체
+    df = ds.get_ohlcv(code, us=False, rng="2y")
+    df.attrs["src"] = "야후"
+    return df
+
+
+# ── 한국: 네이버 integration (밸류·컨센서스·리포트·업종 비교) ───────────
+def kr_profile(code: str) -> dict:
+    j = _get(f"{NAVER}/{code}/integration").json()
+    ti = {x.get("code"): x for x in j.get("totalInfos") or []}
+    val = lambda k: (ti.get(k) or {}).get("value")
+    desc = lambda k: (ti.get(k) or {}).get("valueDesc")
+    out = {
+        "name": j.get("stockName"), "industry_code": j.get("industryCode"),
+        "mcap_eok": eok_from_text(val("marketValue")),
+        "per": num(val("per")), "per_asof": desc("per"), "eps": num(val("eps")),
+        "fper": num(val("cnsPer")), "feps": num(val("cnsEps")),
+        "pbr": num(val("pbr")), "bps": num(val("bps")),
+        "div_yield": num(val("dividendYieldRatio")), "dps": num(val("dividend")), "div_asof": desc("dividend"),
+        "foreign_rate": num(val("foreignRate")),
+        "hi52": num(val("highPriceOf52Weeks")), "lo52": num(val("lowPriceOf52Weeks")),
+        "trading_value": val("accumulatedTradingValue"),
+    }
+    c = j.get("consensusInfo") or {}
+    out["target"] = num(c.get("priceTargetMean"))
+    out["recomm"] = num(c.get("recommMean"))            # 5 = 강력매수 … 1 = 매도
+    out["consensus_date"] = c.get("createDate")
+    out["researches"] = [{"broker": r.get("bnm"), "title": r.get("tit"), "date": r.get("wdt"),
+                          "url": f"https://m.stock.naver.com/research/company/{r.get('id')}"} for r in (j.get("researches") or [])[:6]]
+    peers = []
+    ic = j.get("industryCompareInfo") or []
+    for p in ic if isinstance(ic, list) else []:
+        try:
+            peers.append({"name": p.get("stockName"), "code": p.get("itemCode"),
+                          "price": num(p.get("closePrice")), "chg": num(p.get("fluctuationsRatio")),
+                          "mcap": p.get("marketValue")})
+        except Exception:
+            pass
+    out["peers"] = peers[:6]
+    return out
+
+
+# ── 한국: 투자자 수급 ──────────────────────────────────
+def kr_flows(code: str, n: int = 60) -> list[dict]:
+    """최신 → 과거. 수량은 주, 금액(억원)은 종가 × 수량으로 환산한 근사치"""
+    rows = _get(f"{NAVER}/{code}/trend", {"pageSize": n}).json() or []
+    out = []
+    for r in rows:
+        close = num(r.get("closePrice")) or 0
+        f, o, p = (num(r.get(k)) or 0 for k in ("foreignerPureBuyQuant", "organPureBuyQuant", "individualPureBuyQuant"))
+        d = r.get("bizdate", "")
+        out.append({"date": f"{d[:4]}-{d[4:6]}-{d[6:8]}", "close": close, "vol": num(r.get("accumulatedTradingVolume")),
+                    "frgn": f, "orgn": o, "prsn": p, "frgn_ratio": num(r.get("foreignerHoldRatio")),
+                    "frgn_eok": f * close / 1e8, "orgn_eok": o * close / 1e8, "prsn_eok": p * close / 1e8})
+    return out
+
+
+def flow_summary(fl: list[dict]) -> dict:
+    if not fl:
+        return {}
+    s = {}
+    for who in ("frgn", "orgn", "prsn"):
+        for n in (5, 20, 60):
+            s[f"{who}_{n}"] = sum(x[f"{who}_eok"] for x in fl[:n]) if len(fl) >= min(n, 5) else None
+        streak = 0
+        sign = 1 if fl[0][who] > 0 else -1 if fl[0][who] < 0 else 0
+        for x in fl:
+            if sign and (x[who] > 0) == (sign > 0) and x[who] != 0:
+                streak += 1
+            else:
+                break
+        s[f"{who}_streak"] = streak * sign                 # +3 = 3일 연속 순매수, -2 = 2일 연속 순매도
+    r = [x["frgn_ratio"] for x in fl if x["frgn_ratio"] is not None]
+    if len(r) >= 2:
+        s["frgn_ratio"] = r[0]
+        s["frgn_ratio_chg20"] = r[0] - r[min(19, len(r) - 1)]
+    vol20 = [x["vol"] for x in fl[:20] if x["vol"]]
+    s["avg_tv20_eok"] = sum(x["vol"] * x["close"] for x in fl[:20] if x["vol"]) / 1e8 / max(1, len(vol20))
+    return s
+
+
+# ── 한국: 재무 (네이버 요약 재무) ───────────────────────────
+FIN_ROWS = ["매출액", "영업이익", "당기순이익", "영업이익률", "순이익률", "ROE", "부채비율", "당좌비율", "유보율",
+            "EPS", "PER", "BPS", "PBR", "주당배당금"]
+
+
+def kr_finance(code: str, kind: str) -> dict:
+    j = _get(f"{NAVER}/{code}/finance/{kind}").json()
+    fi = j.get("financeInfo") or {}
+    periods = [{"key": t["key"], "title": t["title"].rstrip("."), "est": t.get("isConsensus") == "Y"}
+               for t in fi.get("trTitleList") or []]
+    rows = {}
+    for r in fi.get("rowList") or []:
+        if r.get("title") in FIN_ROWS:
+            rows[r["title"]] = [num((r.get("columns") or {}).get(p["key"], {}).get("value")) for p in periods]
+    return {"periods": periods, "rows": rows}
+
+
+# ── 한국: 공시 ────────────────────────────────────────
+KEY_FILINGS = [
+    ("자사주", r"자기주식취득|자기주식.*신탁계약체결|주식소각"),
+    ("배당", r"현금ㆍ현물배당|현금·현물배당|배당"),
+    ("실적", r"영업\(잠정\)실적|잠정실적|매출액또는손익구조"),
+    ("수주", r"단일판매|공급계약"),
+    ("무상증자", r"무상증자"),
+    ("증자·CB", r"유상증자|전환사채|신주인수권부사채|교환사채"),
+    ("M&A", r"합병|공개매수|최대주주변경|영업양수|타법인주식"),
+    ("지분", r"대량보유|최대주주등소유주식"),
+    ("거래소", r"투자경고|투자주의|단기과열|조회공시|매매거래정지|불성실"),
+    ("정기보고서", r"사업보고서|반기보고서|분기보고서"),
+]
+GOOD = {"자사주", "배당", "수주", "무상증자"}
+BAD = {"증자·CB", "거래소"}
+
+
+def kr_filings(corp_code: str | None, days: int = 120) -> list[dict]:
+    key = os.environ.get("DART_API_KEY") or os.environ.get("DART_KEY")
+    if not key or not corp_code:
+        return []
+    bgn = (dt.date.today() - dt.timedelta(days=days)).strftime("%Y%m%d")
+    out, page = [], 1
+    while page <= 3:
+        d = _get("https://opendart.fss.or.kr/api/list.json", {
+            "crtfc_key": key, "corp_code": corp_code, "bgn_de": bgn, "page_no": page, "page_count": 100}).json()
+        if d.get("status") != "000":
+            break
+        for it in d.get("list", []):
+            title = re.sub(r"\s+", " ", it["report_nm"]).strip()
+            nospace = title.replace(" ", "")
+            tag = next((t for t, p in KEY_FILINGS if re.search(p, nospace)), None)
+            if tag is None and re.search(r"임원ㆍ주요주주특정증권|임원·주요주주", nospace):
+                tag = "임원매매"
+            d8 = it["rcept_dt"]
+            out.append({"date": f"{d8[:4]}-{d8[4:6]}-{d8[6:]}", "title": title, "tag": tag,
+                        "tone": "good" if tag in GOOD else "bad" if tag in BAD else "neu",
+                        "filer": it.get("flr_nm"), "url": f"https://dart.fss.or.kr/dsaf001/main.do?rcpNo={it['rcept_no']}"})
+        if page >= int(d.get("total_page", 1)):
+            break
+        page += 1
+    return out
+
+
+# ── 지표 ─────────────────────────────────────────────
+def indicators(df: pd.DataFrame) -> pd.DataFrame:
+    d = df.copy()
+    c = d["close"]
+    for n in (5, 20, 60, 120):
+        d[f"ma{n}"] = c.rolling(n).mean()
+    sd = c.rolling(20).std(ddof=0)
+    d["bb_up"], d["bb_lo"] = d["ma20"] + 2 * sd, d["ma20"] - 2 * sd
+    d["pctb"] = (c - d["bb_lo"]) / (d["bb_up"] - d["bb_lo"])
+    d["bw"] = (d["bb_up"] - d["bb_lo"]) / d["ma20"]
+    delta = c.diff()
+    up = delta.clip(lower=0).ewm(alpha=1 / 14, adjust=False).mean()
+    dn = (-delta.clip(upper=0)).ewm(alpha=1 / 14, adjust=False).mean()
+    d["rsi"] = 100 - 100 / (1 + up / dn.replace(0, np.nan))
+    d["vma20"] = d["volume"].rolling(20).mean()
+    return d
+
+
+def tech_summary(d: pd.DataFrame) -> dict:
+    last = d.iloc[-1]
+    c = d["close"]
+    s = {"close": last["close"], "chg": (c.iloc[-1] / c.iloc[-2] - 1) if len(c) > 1 else None,
+         "rsi": last["rsi"], "pctb": last["pctb"], "bw": last["bw"]}
+    for n in (5, 20, 60, 120):
+        s[f"ma{n}"] = last[f"ma{n}"]
+        s[f"gap{n}"] = last["close"] / last[f"ma{n}"] - 1 if last[f"ma{n}"] == last[f"ma{n}"] else None
+    m5, m20, m60, m120 = (last[f"ma{n}"] for n in (5, 20, 60, 120))
+    s["aligned"] = "정배열" if m5 > m20 > m60 > m120 else "역배열" if m5 < m20 < m60 < m120 else "혼조"
+    bw = d["bw"].dropna().tail(120)
+    s["bw_pctile"] = float((bw < bw.iloc[-1]).mean()) if len(bw) > 20 else None
+    s["vol_ratio"] = last["volume"] / last["vma20"] if last["vma20"] else None
+    hi, lo = d["high"].tail(250).max(), d["low"].tail(250).min()
+    s["hi52"], s["lo52"] = hi, lo
+    s["pos52"] = (last["close"] - lo) / (hi - lo) if hi > lo else None
+    s["from_hi"] = last["close"] / hi - 1
+    for n in (5, 20, 60, 250):
+        s[f"ret{n}"] = c.iloc[-1] / c.iloc[-n - 1] - 1 if len(c) > n else None
+    # 최근 20일 안의 골든·데드크로스 (5일선 × 20일선, 20일선 × 60일선)
+    cross = []
+    for a, b in ((5, 20), (20, 60)):
+        diff = (d[f"ma{a}"] - d[f"ma{b}"]).tail(21)
+        sgn = np.sign(diff)
+        for i in range(1, len(sgn)):
+            if sgn.iloc[i - 1] < 0 < sgn.iloc[i]:
+                cross.append({"type": "golden", "pair": f"{a}/{b}", "date": f"{diff.index[i]:%m-%d}"})
+            elif sgn.iloc[i - 1] > 0 > sgn.iloc[i]:
+                cross.append({"type": "dead", "pair": f"{a}/{b}", "date": f"{diff.index[i]:%m-%d}"})
+    s["cross"] = cross[-3:]
+    return s
+
+
+def series(d: pd.DataFrame, n: int = 250) -> dict:
+    t = d.tail(n)
+    col = lambda k: [None if v != v else round(float(v), 4) for v in t[k]]
+    out = {"dates": [f"{x:%Y-%m-%d}" for x in t.index]}
+    for k in ("open", "high", "low", "close", "volume", "ma5", "ma20", "ma60", "ma120", "bb_up", "bb_lo", "rsi", "vma20"):
+        out[k] = col(k)
+    if "fr" in t:
+        out["fr"] = col("fr")
+    return out
+
+
+# ── 한눈에 보기: 신호 카드 ───────────────────────────────
+def _sig(cat, title, value, tone, detail=""):
+    return {"cat": cat, "title": title, "value": value, "tone": tone, "detail": detail}
+
+
+def _eok(v):
+    if v is None:
+        return "-"
+    return f"{v:+,.0f}억" if abs(v) >= 1 else f"{v:+.1f}억"
+
+
+def signals(tech: dict, prof: dict | None = None, fs: dict | None = None, fin: dict | None = None,
+            filings: list | None = None, us: bool = False) -> list[dict]:
+    S = []
+    t = tech
+    # 추세
+    tone = "good" if t["aligned"] == "정배열" else "bad" if t["aligned"] == "역배열" else "neu"
+    above = [n for n in (20, 60, 120) if t.get(f"gap{n}") is not None and t[f"gap{n}"] > 0]
+    S.append(_sig("차트", "이평선 배열", t["aligned"], tone,
+                  f"종가가 {', '.join(f'{n}일' for n in above) + '선 위' if above else '20·60·120일선 모두 아래'}"))
+    for x in t.get("cross", []):
+        S.append(_sig("차트", f"{x['pair']} {'골든' if x['type'] == 'golden' else '데드'}크로스", x["date"],
+                      "good" if x["type"] == "golden" else "bad", "최근 20거래일 안"))
+    pb = t.get("pctb")
+    if pb is not None:
+        tone = "bad" if pb > 1 else "good" if pb < 0 else "neu"
+        txt = "상단 돌파(과열 주의)" if pb > 1 else "하단 이탈(과매도)" if pb < 0 else "상단 근처" if pb > 0.8 else "하단 근처" if pb < 0.2 else "밴드 중간"
+        sq = t.get("bw_pctile")
+        S.append(_sig("차트", "볼린저 %b", f"{pb:.2f}", tone, txt + (" · 밴드 수축(스퀴즈)" if sq is not None and sq <= 0.1 else "")))
+    r = t.get("rsi")
+    if r is not None and r == r:
+        S.append(_sig("차트", "RSI(14)", f"{r:.0f}", "bad" if r >= 70 else "good" if r <= 30 else "neu",
+                      "과매수" if r >= 70 else "과매도" if r <= 30 else "보통"))
+    vr = t.get("vol_ratio")
+    if vr is not None and vr == vr:
+        S.append(_sig("차트", "거래량", f"{vr:.1f}배", "good" if vr >= 2 else "neu", "20일 평균 대비"))
+    if t.get("pos52") is not None:
+        p = t["pos52"]
+        S.append(_sig("차트", "52주 위치", f"{p * 100:.0f}%", "neu",
+                      f"고점 대비 {t['from_hi'] * 100:+.0f}% · 0%=최저 100%=최고"))
+    # 수급 (한국)
+    if fs:
+        for who, label in (("frgn", "외국인"), ("orgn", "기관")):
+            v5, v20, st = fs.get(f"{who}_5"), fs.get(f"{who}_20"), fs.get(f"{who}_streak") or 0
+            if v5 is None:
+                continue
+            tone = "good" if (v5 > 0 and (v20 or 0) > 0) else "bad" if (v5 < 0 and (v20 or 0) < 0) else "neu"
+            S.append(_sig("수급", f"{label} 순매수", f"5일 {_eok(v5)}", tone,
+                          f"20일 {_eok(v20)} · " + (f"{st}일 연속 순매수" if st > 0 else f"{-st}일 연속 순매도" if st < 0 else "보합")))
+        if fs.get("frgn_ratio") is not None:
+            ch = fs.get("frgn_ratio_chg20") or 0
+            S.append(_sig("수급", "외국인 보유율", f"{fs['frgn_ratio']:.2f}%", "good" if ch > 0.3 else "bad" if ch < -0.3 else "neu",
+                          f"20일 {ch:+.2f}%p"))
+    # 밸류
+    if prof:
+        per, fper, pbr = prof.get("per"), prof.get("fper"), prof.get("pbr")
+        if per is not None or fper is not None:
+            p = fper if fper else per
+            tone = "good" if p and 0 < p < 10 else "bad" if (p is None or p <= 0 or p > 30) else "neu"
+            S.append(_sig("밸류", "PER", f"{per:.1f}배" if per else "적자", tone,
+                          f"추정 {fper:.1f}배" if fper else ""))
+        if pbr is not None:
+            S.append(_sig("밸류", "PBR", f"{pbr:.2f}배", "good" if pbr < 1 else "bad" if pbr > 3 else "neu",
+                          "청산가치 아래" if pbr < 1 else ""))
+        if prof.get("div_yield") is not None:
+            dy = prof["div_yield"]
+            S.append(_sig("밸류", "배당수익률", f"{dy:.2f}%", "good" if dy >= 4 else "neu", prof.get("div_asof") or ""))
+        if prof.get("target") and t.get("close"):
+            up = prof["target"] / t["close"] - 1
+            S.append(_sig("밸류", "증권사 목표가", f"{up * 100:+.0f}%", "good" if up > 0.2 else "bad" if up < 0 else "neu",
+                          f"평균 {prof['target']:,.0f}{'$' if us else '원'}"))
+    # 실적·재무
+    if fin:
+        q = fin.get("quarter") or {}
+        rows, ps = q.get("rows") or {}, q.get("periods") or []
+        op = rows.get("영업이익") or []
+        idx = [i for i, p in enumerate(ps) if not p["est"] and i < len(op) and op[i] is not None]
+        if len(idx) >= 1:
+            i = idx[-1]
+            prev_y = next((j for j in idx if ps[j]["key"][:4] == str(int(ps[i]["key"][:4]) - 1) and ps[j]["key"][4:] == ps[i]["key"][4:]), None)
+            if prev_y is not None and op[prev_y]:
+                g = op[i] / abs(op[prev_y]) - 1 if op[prev_y] else None
+                S.append(_sig("실적", f"영업이익 {ps[i]['title']}", f"{g * 100:+.0f}% YoY" if g is not None else "-",
+                              "good" if g and g > 0.1 else "bad" if g is not None and g < -0.1 else "neu", f"{op[i]:,.0f}{'' if us else '억'}"))
+            elif op[i] is not None:
+                S.append(_sig("실적", f"영업이익 {ps[i]['title']}", f"{op[i]:,.0f}{'' if us else '억'}",
+                              "good" if op[i] > 0 else "bad"))
+        a = fin.get("annual") or {}
+        dr = (a.get("rows") or {}).get("부채비율") or []
+        drv = [v for v, p in zip(dr, a.get("periods") or []) if v is not None and not p["est"]]
+        if drv:
+            S.append(_sig("실적", "부채비율", f"{drv[-1]:.0f}%", "good" if drv[-1] < 100 else "bad" if drv[-1] > 200 else "neu"))
+        roe = (a.get("rows") or {}).get("ROE") or []
+        rv = [v for v, p in zip(roe, a.get("periods") or []) if v is not None and not p["est"]]
+        if rv:
+            S.append(_sig("실적", "ROE", f"{rv[-1]:.1f}%", "good" if rv[-1] >= 12 else "bad" if rv[-1] < 5 else "neu"))
+    # 공시
+    for f in (filings or [])[:40]:
+        if f["tag"] in ("자사주", "수주", "무상증자", "증자·CB", "거래소", "M&A", "실적"):
+            S.append(_sig("공시", f["tag"], f["date"][5:], f["tone"], f["title"][:40]))
+            if sum(1 for x in S if x["cat"] == "공시") >= 3:
+                break
+    return S
+
+
+# ── 한국 종목 상세 ─────────────────────────────────────
+def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) -> dict:
+    t0 = time.time()
+    errs = {}
+
+    def safe(key, fn, default):
+        try:
+            return fn()
+        except Exception as e:
+            errs[key] = f"{type(e).__name__}: {str(e)[:120]}"
+            return default
+
+    with ThreadPoolExecutor(6) as ex:
+        f_px = ex.submit(kr_ohlcv, code)
+        f_pr = ex.submit(safe, "profile", lambda: kr_profile(code), {})
+        f_fl = ex.submit(safe, "flows", lambda: kr_flows(code), [])
+        f_fa = ex.submit(safe, "finance", lambda: kr_finance(code, "annual"), {})
+        f_fq = ex.submit(safe, "finance_q", lambda: kr_finance(code, "quarter"), {})
+        f_dt = ex.submit(safe, "filings", lambda: kr_filings(corp_code), [])
+        df = f_px.result()
+        prof, fl, fa, fq, filings = f_pr.result(), f_fl.result(), f_fa.result(), f_fq.result(), f_dt.result()
+    d = indicators(df)
+    tech = tech_summary(d)
+    fs = flow_summary(fl)
+    fin = {"annual": fa, "quarter": fq, "unit": "억원"}
+    return clean({
+        "us": False, "code": code, "name": prof.get("name") or name or code, "asof": f"{d.index[-1]:%Y-%m-%d}",
+        "src": df.attrs.get("src", ""), "profile": prof, "tech": tech, "series": series(d),
+        "flows": fl[::-1], "flow_sum": fs, "finance": fin, "filings": filings[:30],
+        "signals": signals(tech, prof, fs, fin, filings),
+        "links": {"naver": f"https://m.stock.naver.com/domestic/stock/{code}/total",
+                  "dart": f"https://dart.fss.or.kr/dsab007/main.do?option=corp&textCrpNm={name or code}"},
+        "errors": errs, "took": round(time.time() - t0, 2)})
+
+
+# ── 미국 종목 상세 ─────────────────────────────────────
+def _yf_rows(df, names):
+    """yfinance 재무표 → {행: [오래된 → 최신]}, 기간 목록"""
+    if df is None or df.empty:
+        return [], {}
+    cols = sorted(df.columns)
+    rows = {}
+    for label, keys in names.items():
+        k = next((k for k in keys if k in df.index), None)
+        if k:
+            rows[label] = [None if pd.isna(df.at[k, c]) else float(df.at[k, c]) for c in cols]
+    return [{"key": f"{c:%Y%m}", "title": f"{c:%Y.%m}", "est": False} for c in cols], rows
+
+
+US_ROWS = {"매출액": ["Total Revenue", "Operating Revenue"], "영업이익": ["Operating Income", "Total Operating Income As Reported"],
+           "당기순이익": ["Net Income", "Net Income Common Stockholders"], "EPS": ["Diluted EPS", "Basic EPS"]}
+
+
+def us_detail(sym: str) -> dict:
+    import data_sources as ds
+    t0 = time.time()
+    errs = {}
+    df = ds.get_ohlcv(sym, us=True, rng="2y")
+    d = indicators(df)
+    tech = tech_summary(d)
+    prof, fin, holders = {}, {"unit": "백만$"}, []
+    try:
+        import yfinance as yf
+        tk = yf.Ticker(sym)
+        info = tk.info or {}
+        g = info.get
+        prof = {"name": g("shortName") or g("longName") or sym, "sector": g("sector"), "industry": g("industry"),
+                "mcap_usd": g("marketCap"), "per": g("trailingPE"), "fper": g("forwardPE"), "pbr": g("priceToBook"),
+                "div_yield": g("dividendYield"), "target": g("targetMeanPrice"), "recomm_key": g("recommendationKey"),
+                "inst_pct": g("heldPercentInstitutions"), "insider_pct": g("heldPercentInsiders"),
+                "short_pct": g("shortPercentOfFloat"), "roe": g("returnOnEquity"), "de": g("debtToEquity"),
+                "opm": g("operatingMargins"), "npm": g("profitMargins"), "rev_growth": g("revenueGrowth"),
+                "summary": (g("longBusinessSummary") or "")[:400]}
+        if prof["div_yield"] is not None and prof["div_yield"] < 0.5:      # 버전에 따라 0.0032 또는 0.32(%)
+            prof["div_yield"] = prof["div_yield"] * 100
+        for kind, src in (("annual", "income_stmt"), ("quarter", "quarterly_income_stmt")):
+            try:
+                ps, rows = _yf_rows(getattr(tk, src), US_ROWS)
+                for k in ("매출액", "영업이익", "당기순이익"):
+                    if k in rows:
+                        rows[k] = [None if v is None else v / 1e6 for v in rows[k]]
+                if "매출액" in rows and "영업이익" in rows:
+                    rows["영업이익률"] = [o / r * 100 if o is not None and r else None for o, r in zip(rows["영업이익"], rows["매출액"])]
+                fin[kind] = {"periods": ps, "rows": rows}
+            except Exception as e:
+                errs[kind] = str(e)[:120]
+        try:
+            ih = tk.institutional_holders
+            if ih is not None and not ih.empty:
+                for _, r in ih.head(6).iterrows():
+                    holders.append({"name": r.get("Holder"), "pct": float(r.get("pctHeld") or 0) * 100,
+                                    "chg": float(r.get("pctChange") or 0) * 100 if "pctChange" in r else None})
+        except Exception:
+            pass
+    except ImportError:
+        errs["yfinance"] = "yfinance 미설치 — 서버에서 .venv/bin/pip install yfinance"
+    except Exception as e:
+        errs["yfinance"] = f"{type(e).__name__}: {str(e)[:120]}"
+    S = signals(tech, prof, None, fin, None, us=True)
+    if prof.get("inst_pct") is not None:
+        S.append(_sig("수급", "기관 보유", f"{prof['inst_pct'] * 100:.0f}%", "neu", "발행주식 대비"))
+    if prof.get("short_pct") is not None:
+        sp_ = prof["short_pct"] * 100
+        S.append(_sig("수급", "공매도 비율", f"{sp_:.1f}%", "bad" if sp_ > 10 else "neu", "유통주식 대비"))
+    return clean({"us": True, "code": sym, "name": prof.get("name") or sym, "asof": f"{d.index[-1]:%Y-%m-%d}",
+                  "src": "야후", "profile": prof, "tech": tech, "series": series(d), "flows": [], "flow_sum": {},
+                  "holders": holders, "finance": fin, "filings": [], "signals": S,
+                  "links": {"yahoo": f"https://finance.yahoo.com/quote/{sym}"},
+                  "errors": errs, "took": round(time.time() - t0, 2)})
+
+
+def detail(it: dict) -> dict:
+    if it.get("us"):
+        return us_detail(it["code"])
+    return kr_detail(it["code"], it.get("name"), it.get("corp_code"))
+
+
+if __name__ == "__main__":
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    for q in sys.argv[1:] or ["005930"]:
+        us = not re.fullmatch(r"\d{6}", q)
+        r = detail({"code": q.upper() if us else q, "us": us})
+        print(json.dumps({k: r[k] for k in ("name", "asof", "src", "errors", "took")}, ensure_ascii=False))
+        for s in r["signals"]:
+            print(f"  [{s['cat']}] {s['title']}: {s['value']} ({s['tone']}) {s['detail']}")
