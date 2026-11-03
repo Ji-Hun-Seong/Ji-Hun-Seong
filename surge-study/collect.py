@@ -360,6 +360,14 @@ def main():
     prev_day = f"{prev_day[prev_day < today][-1]:%Y%m%d}" if (prev_day < today).any() else None
     filings = dart_filings(key, [d for d in (prev_day, f"{today:%Y%m%d}") if d]) if key else {}
 
+    # 내일 급등 후보 10선 (규칙 점수 v0) + 어제 후보 채점 → data/candidates/
+    try:
+        import candidates
+        cpath, cand = candidates.run(frames, names, filings, today, features, today_bar)
+        print(f"급등 후보 {len(cand['candidates'])}개 저장: {cpath}", flush=True)
+    except Exception as e:
+        print("급등 후보 계산 실패:", type(e).__name__, e, flush=True)
+
     for s in surgers:
         fl = filings.get(s["code"], [])
         nw = news(s["name"])

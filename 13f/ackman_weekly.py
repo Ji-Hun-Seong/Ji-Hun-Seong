@@ -425,6 +425,22 @@ def history_line(runs):
     return "애크먼: " + " / ".join(out)
 
 
+def board(res, D, week, asof, last_q):
+    """대시보드용 TOP 10 + 11위 이하 요약 (텔레그램 메시지와 같은 계산 결과)"""
+    items = []
+    for n, s in enumerate(res, 1):
+        t = s["t"]
+        e, word = status(s)
+        th = THESIS.get(t) or ("", "", "")
+        items.append({"rank": n, "t": t, "name": KR.get(t, t), "total": round(s["total"], 1), "status": e, "word": word,
+                      "price": s["price"], "fv": s["fv"], "buy": s["buy"], "fpe": s["fpe"], "ph": s["ph"],
+                      "rg": s["rg"], "og": s["og"], "opm": s["opm"], "fy": s["fy"], "dd": s["dd"],
+                      "pts": {k: round(v, 1) for k, v in s["pts"].items()}, "history": history_line(s["runs"]),
+                      "thesis": th[0], "outlook": th[1], "risk": th[2]})
+    return {"week": week, "asof": asof, "last_13f": last_q, "dd_med": D["dd_med"], "items": items[:20],
+            "made": dt.datetime.now(KST).isoformat(timespec="minutes")}
+
+
 def build(res, D, state, week, asof, last_q):
     prev_rank = state.get("ranks", {}) if state.get("method") == METHOD else {}
     base = state.get("baseline", {}) if state.get("method") == METHOD else {}
@@ -560,6 +576,7 @@ def main():
         else:
             print("::notice::" + m.replace("%", "%25").replace("\n", "%0A"))
     state["hist"] = hist                      # 13F 캐시는 미리보기여도 저장
+    state["board"] = board(res, D, week, asof, last_q)   # 대시보드 '발굴 > 애크먼' 탭용 (미리보기여도 저장)
     if do_send:
         base = state.get("baseline", {}) if state.get("method") == METHOD else {}
         for s in res[:10]:

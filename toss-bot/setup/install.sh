@@ -8,7 +8,7 @@ cd $HOME
 cd ji-hun-seong && git pull -q
 cd toss-bot
 python3 -m venv .venv
-.venv/bin/pip install -q requests pandas numpy
+.venv/bin/pip install -q requests pandas numpy yfinance
 [ -f .env ] || { cp .env.example .env; chmod 600 .env; }
 mkdir -p state
 echo
