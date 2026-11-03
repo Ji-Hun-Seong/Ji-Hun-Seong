@@ -1,0 +1,420 @@
+{
+ "date": "2026-11-02",
+ "context": {
+  "n_gainers_list": 250,
+  "n_surge": 5,
+  "asof": "2026-11-02T16:04-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-02",
+   "code": "IDXX",
+   "name": "IDEXX Laboratories, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 52912553984,
+   "chg": 21.848295182440538,
+   "gap": 13.386907909124378,
+   "high_chg": 22.12949249946712,
+   "close_pos": 0.9707494229360462,
+   "upper_wick": 0.28119731702658335,
+   "limit_up": false,
+   "tv": 1328029771.1242676,
+   "vol_ratio": 3.518316725978648,
+   "close": 671.6400146484375,
+   "pctb": 0.5857078092923048,
+   "bw": 0.1578991072975429,
+   "bw_pctile": 0.9833333333333333,
+   "squeeze": false,
+   "rsi14": 60.26964507029822,
+   "ma5_gap": -0.023217612863804526,
+   "ma20_gap": 0.01353318657568292,
+   "ma60_gap": 0.02143994068674937,
+   "ma120_gap": 0.0055387311448238385,
+   "ma_aligned": true,
+   "ret5": -0.0163638652882947,
+   "ret20": 0.06331141880978675,
+   "ret60": -0.06574572547007418,
+   "from_high": -0.28412421627236406,
+   "from_low": 0.10107676255310594,
+   "vol_ratio_prev": 2.2664722412677567,
+   "tv20_avg": 304700557.10510254,
+   "tv_prev": 646844960.7849121,
+   "prev_chg": -0.04300489485057313,
+   "up_days": 0,
+   "prev_close_pos": 0.23353234633641265,
+   "fr": null,
+   "price": 551.2100219726562,
+   "filings": [
+    {
+     "date": "2026-11-02",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/874716/000087471626000135/idxx-20260930.htm"
+    },
+    {
+     "date": "2026-11-02",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/874716/000110465926120892/tm2628647d1_8k.htm"
+    },
+    {
+     "date": "2026-10-30",
+     "form": "SCHEDULE 13G",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/874716/000210012126001090/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "IDEXX Laboratories Inc (IDXX) Stock Up 21.9% but GF Value Says O - GuruFocus",
+     "date": "Mon, 02 Nov 2026 23:50:20 GMT"
+    },
+    {
+     "title": "S&P 500 Top Movers Today: IDXX Jumps 20.39%, LITE Drops 18.23% - ChartMill",
+     "date": "Mon, 02 Nov 2026 20:06:11 GMT"
+    },
+    {
+     "title": "IDEXX Laboratories surges 22% on Q3 beat, raised outlook (IDXX:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 02 Nov 2026 21:45:50 GMT"
+    },
+    {
+     "title": "Idexx (IDXX) Q3 Earnings: How Key Metrics Compare to Wall Street Estimates - Yahoo Finance",
+     "date": "Mon, 02 Nov 2026 13:30:02 GMT"
+    },
+    {
+     "title": "IDXX Q3 Earnings & Revenues Surpass Estimates, Stock Up in Pre-Market - The Globe and Mail",
+     "date": "Mon, 02 Nov 2026 15:26:38 GMT"
+    },
+    {
+     "title": "If You Invested $100 In IDEXX Laboratories Stock 15 Years Ago, You Would Have This Much Today - Benzinga",
+     "date": "Mon, 02 Nov 2026 15:45:27 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-02",
+   "code": "NWL",
+   "name": "Newell Brands Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2538960128,
+   "chg": 15.057919607277647,
+   "gap": 0.19305461801615298,
+   "high_chg": 16.698847039011454,
+   "close_pos": 0.9119170728429176,
+   "upper_wick": 1.6409274317338085,
+   "limit_up": false,
+   "tv": 95623486.252038,
+   "vol_ratio": 3.0901819050287993,
+   "close": 5.960000038146973,
+   "pctb": 0.058102632682257925,
+   "bw": 0.13784587678656318,
+   "bw_pctile": 0.275,
+   "squeeze": false,
+   "rsi14": 39.69071949563411,
+   "ma5_gap": -0.014084521103193914,
+   "ma20_gap": -0.060913730047588155,
+   "ma60_gap": -0.0975348011823528,
+   "ma120_gap": -0.017574946885263953,
+   "ma_aligned": false,
+   "ret5": -0.03358214565150763,
+   "ret20": -0.040740789471011896,
+   "ret60": -0.1395349095098518,
+   "from_high": -0.2734923218518348,
+   "from_low": 0.6872963977126416,
+   "vol_ratio_prev": 2.8120123496149136,
+   "tv20_avg": 28343541.00420952,
+   "tv_prev": 69448257.69853592,
+   "prev_chg": 0.0196850208926016,
+   "up_days": 1,
+   "prev_close_pos": 0.4629629956678458,
+   "fr": null,
+   "price": 5.179999828338623,
+   "filings": [
+    {
+     "date": "2026-10-30",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/814453/000081445326000038/nwl-20260930.htm"
+    },
+    {
+     "date": "2026-10-30",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/814453/000210012126001102/xslSCHEDULE_13G_X02/primary_doc.xml"
+    },
+    {
+     "date": "2026-10-30",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/814453/000081445326000035/nwl-20261030.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "UBS Adjusts Newell Brands Price Target to $5.75 From $5.50, Maintains Neutral Rating - Yahoo Finance",
+     "date": "Mon, 02 Nov 2026 15:13:10 GMT"
+    },
+    {
+     "title": "Newell Brands soars 15% on Q3 sales beat, raised outlook (NWL:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 02 Nov 2026 21:18:47 GMT"
+    },
+    {
+     "title": "Newell Brands (NASDAQ:NWL) Stock Jumps 9.7% - What's Next? - MarketBeat",
+     "date": "Mon, 02 Nov 2026 18:19:25 GMT"
+    },
+    {
+     "title": "Netwealth Group Limited (NWL.AX) stock price, news, quote and history - Yahoo Finance Australia",
+     "date": "Mon, 02 Nov 2026 17:00:21 GMT"
+    },
+    {
+     "title": "Newell Brands (NWL) Stock Can Q3 Results Sustain Margin Repair - Simply Wall St",
+     "date": "Sun, 01 Nov 2026 02:30:59 GMT"
+    },
+    {
+     "title": "12 Consumer Discretionary Stocks Moving In Monday's Intraday Session - Benzinga",
+     "date": "Mon, 02 Nov 2026 17:05:40 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-02",
+   "code": "NXT",
+   "name": "Nextpower Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 14001062912,
+   "chg": 14.874568448256387,
+   "gap": 5.143075427810628,
+   "high_chg": 17.206606845854687,
+   "close_pos": 0.8083889305500351,
+   "upper_wick": 2.332038397598294,
+   "limit_up": false,
+   "tv": 502073247.2079315,
+   "vol_ratio": 2.3974108708612007,
+   "close": 91.12999725341797,
+   "pctb": 0.2961962012130375,
+   "bw": 0.16650068063018933,
+   "bw_pctile": 0.25833333333333336,
+   "squeeze": false,
+   "rsi14": 41.945818610129564,
+   "ma5_gap": -0.0012841225746067497,
+   "ma20_gap": -0.03393347121304746,
+   "ma60_gap": -0.06883840489332005,
+   "ma120_gap": -0.2191954571169621,
+   "ma_aligned": false,
+   "ret5": 0.005577417224114978,
+   "ret20": -0.05895612148022922,
+   "ret60": -0.19404651442550847,
+   "from_high": -0.5137007328109695,
+   "from_low": 0.052052292491190366,
+   "vol_ratio_prev": 0.8253292490871017,
+   "tv20_avg": 188402218.69304657,
+   "tv_prev": 151329911.49291992,
+   "prev_chg": -0.006263309389096028,
+   "up_days": 0,
+   "prev_close_pos": 0.9039733426300658,
+   "fr": null,
+   "price": 79.33000183105469,
+   "filings": [
+    {
+     "date": "2026-11-02",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1852131/000095010326016640/xslF345X06/ownership.xml"
+    },
+    {
+     "date": "2026-11-02",
+     "form": "3",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1852131/000095010326016639/xslF345X06/ownership.xml"
+    },
+    {
+     "date": "2026-11-02",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1852131/000185213126000058/nxt-20261002.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Nextpower Inc. (NXT) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 02 Nov 2026 13:16:57 GMT"
+    },
+    {
+     "title": "Nextpower rallies 15% after Jefferies names franchise pick (NXT:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 02 Nov 2026 21:27:26 GMT"
+    },
+    {
+     "title": "Nextpower (NXT) Shares Surge 15.7% After Jefferies Names It Fran - GuruFocus",
+     "date": "Mon, 02 Nov 2026 20:10:52 GMT"
+    },
+    {
+     "title": "Nextpower Inc. (NXT) Faces Revenue Headwinds, but Janus Henderson Maintains Its Long-Term Bullish View - Yahoo Finance",
+     "date": "Mon, 02 Nov 2026 20:09:52 GMT"
+    },
+    {
+     "title": "NEXTPOWER INC (NASDAQ:NXT): Affordable Growth With Strong Revenue and Reasonable Valuation - ChartMill",
+     "date": "Mon, 02 Nov 2026 09:50:52 GMT"
+    },
+    {
+     "title": "Universal Logistics, ChargePoint, Blink Charging, Nextpower, and ESAB shares are soaring, what you need to know - TradingView",
+     "date": "Mon, 02 Nov 2026 18:06:06 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-02",
+   "code": "PHIN",
+   "name": "PHINIA Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2545585664,
+   "chg": 12.507951328050627,
+   "gap": 2.1932691083478284,
+   "high_chg": 12.507951328050627,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "tv": 43659803.854652405,
+   "vol_ratio": 1.5667098511405781,
+   "close": 70.79000091552734,
+   "pctb": 1.1891460288338738,
+   "bw": 0.11863879812665452,
+   "bw_pctile": 0.3,
+   "squeeze": false,
+   "rsi14": 75.41110294600875,
+   "ma5_gap": 0.06050898104337876,
+   "ma20_gap": 0.0817594565946076,
+   "ma60_gap": -0.017895495050415988,
+   "ma120_gap": -0.1197065940198273,
+   "ma_aligned": false,
+   "ret5": 0.09769711276929316,
+   "ret20": 0.05252591926676131,
+   "ret60": -0.1598344414241999,
+   "from_high": -0.2762408703521554,
+   "from_low": 0.22460095097178634,
+   "vol_ratio_prev": 1.073899116301679,
+   "tv20_avg": 22938883.006210327,
+   "tv_prev": 27105935.21118164,
+   "prev_chg": 0.03046178764856533,
+   "up_days": 2,
+   "prev_close_pos": 0.9945343572554218,
+   "fr": null,
+   "price": 62.91999816894531,
+   "filings": [],
+   "news": [
+    {
+     "title": "PHINIA Inc. 2026 Q3 - Results - Earnings Call Presentation (NYSE:PHIN) 2026-11-02 - Seeking Alpha",
+     "date": "Mon, 02 Nov 2026 23:02:20 GMT"
+    },
+    {
+     "title": "PHINIA (NYSE:PHIN) Stock Price Up 7.7% After Analyst Upgrade - MarketBeat",
+     "date": "Mon, 02 Nov 2026 15:50:03 GMT"
+    },
+    {
+     "title": "Will Raised 2026 Guidance Change PHINIA Stock Narrative - Yahoo Finance",
+     "date": "Sun, 01 Nov 2026 09:10:28 GMT"
+    },
+    {
+     "title": "12 Consumer Discretionary Stocks Moving In Monday's After-Market Session - Benzinga",
+     "date": "Mon, 02 Nov 2026 21:05:50 GMT"
+    },
+    {
+     "title": "PHINIA Inc. Just Beat Earnings Expectations: Here's What Analysts Think Will Happen Next - Simply Wall St",
+     "date": "Sun, 01 Nov 2026 12:40:07 GMT"
+    },
+    {
+     "title": "PHINIA (NYSE:PHIN) Price Target Raised to $69.00 - MarketBeat",
+     "date": "Mon, 02 Nov 2026 13:41:59 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-02",
+   "code": "SFM",
+   "name": "Sprouts Farmers Market, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 5094008320,
+   "chg": 11.126757936431497,
+   "gap": 0.6036201860267321,
+   "high_chg": 11.871222576682893,
+   "close_pos": 0.9339287441604462,
+   "upper_wick": 0.7444646402514108,
+   "limit_up": false,
+   "tv": 478718447.7822304,
+   "vol_ratio": 2.402529277250364,
+   "close": 55.22999954223633,
+   "pctb": -0.18212467611844427,
+   "bw": 0.3190846018190184,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 28.02643084677463,
+   "ma5_gap": -0.1431625512539919,
+   "ma20_gap": -0.2176554806701806,
+   "ma60_gap": -0.30781550128568647,
+   "ma120_gap": -0.35694922998758327,
+   "ma_aligned": false,
+   "ret5": -0.24992455236031652,
+   "ret20": -0.22909880840859376,
+   "ret60": -0.4300458428635149,
+   "from_high": -0.4762356298596284,
+   "from_low": 0.04963046176448649,
+   "vol_ratio_prev": 3.207305964757986,
+   "tv20_avg": 210156092.25393295,
+   "tv_prev": 507491677.79045105,
+   "prev_chg": 0.03541668256123853,
+   "up_days": 1,
+   "prev_close_pos": 0.4375003438732786,
+   "fr": null,
+   "price": 49.70000076293945,
+   "filings": [],
+   "news": [
+    {
+     "title": "Sprouts Farmers Market (NASDAQ:SFM) Stock Price Target Cut by Jefferies Financial Group - MarketBeat",
+     "date": "Mon, 02 Nov 2026 20:17:52 GMT"
+    },
+    {
+     "title": "SFM Stock Slumps As Earnings Reset Collides With Expansion - www.timothysykes.com",
+     "date": "Mon, 02 Nov 2026 19:02:00 GMT"
+    },
+    {
+     "title": "US Stock Futures Fall As AMZN, INTC Earnings Trigger Tech Sell-Off: NVDA, RDDT, RIVN, SFM In Focus - Stocktwits",
+     "date": "Sun, 01 Nov 2026 18:36:10 GMT"
+    },
+    {
+     "title": "Sprouts Farmers Market (SFM) Unveils New National Affordability Pricing Strategy - Yahoo Finance",
+     "date": "Sun, 01 Nov 2026 00:16:00 GMT"
+    },
+    {
+     "title": "Sprouts Farmers Market (NASDAQ:SFM) Shares Climb 9.1% - Still a Buy? - MarketBeat",
+     "date": "Mon, 02 Nov 2026 19:10:38 GMT"
+    },
+    {
+     "title": "Sprouts, Camping World, OneWater, and Albertsons stocks trade up, what you need to know - TradingView",
+     "date": "Mon, 02 Nov 2026 20:35:51 GMT"
+    }
+   ],
+   "catalysts": []
+  }
+ ]
+}
