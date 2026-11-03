@@ -292,7 +292,10 @@ def tech_summary(d: pd.DataFrame) -> dict:
                 cross.append({"type": "golden", "pair": f"{a}/{b}", "date": f"{diff.index[i]:%m-%d}"})
             elif sgn.iloc[i - 1] > 0 > sgn.iloc[i]:
                 cross.append({"type": "dead", "pair": f"{a}/{b}", "date": f"{diff.index[i]:%m-%d}"})
-    s["cross"] = cross[-3:]
+    last_by_pair = {}
+    for x in cross:                                    # 같은 쌍은 가장 최근 것만
+        last_by_pair[x["pair"]] = x
+    s["cross"] = list(last_by_pair.values())
     return s
 
 
@@ -465,11 +468,30 @@ US_ROWS = {"매출액": ["Total Revenue", "Operating Revenue"], "영업이익": 
            "당기순이익": ["Net Income", "Net Income Common Stockholders"], "EPS": ["Diluted EPS", "Basic EPS"]}
 
 
-def us_detail(sym: str) -> dict:
+def us_ohlcv(sym: str) -> pd.DataFrame:
     import data_sources as ds
+    try:
+        return ds.get_ohlcv(sym, us=True, rng="2y")
+    except Exception:
+        import yfinance as yf                      # 야후 차트 API가 막히면 yfinance
+        h = yf.Ticker(sym).history(period="2y", auto_adjust=False)
+        if h is None or len(h) < 30:
+            raise LookupError(f"{sym} 시세를 찾지 못했습니다")
+        h.index = pd.to_datetime(h.index).tz_localize(None).normalize()
+        return h.rename(columns=str.lower)[["open", "high", "low", "close", "volume"]]
+
+
+def us_detail(sym: str, ohlcv=None) -> dict:
     t0 = time.time()
     errs = {}
-    df = ds.get_ohlcv(sym, us=True, rng="2y")
+    df = None
+    if ohlcv:
+        try:
+            df = ohlcv(sym)
+        except Exception as e:
+            errs["price"] = str(e)[:100]
+    if df is None or len(df) < 130:
+        df = us_ohlcv(sym)
     d = indicators(df)
     tech = tech_summary(d)
     prof, fin, holders = {}, {"unit": "백만$"}, []
@@ -523,9 +545,9 @@ def us_detail(sym: str) -> dict:
                   "errors": errs, "took": round(time.time() - t0, 2)})
 
 
-def detail(it: dict) -> dict:
+def detail(it: dict, us_ohlcv_fn=None) -> dict:
     if it.get("us"):
-        return us_detail(it["code"])
+        return us_detail(it["code"], us_ohlcv_fn)
     return kr_detail(it["code"], it.get("name"), it.get("corp_code"))
 
 

@@ -2,7 +2,7 @@ import json, os, sys, time
 sys.path.insert(0, "toss-bot/chartpage")
 import data_sources as ds, stock_info as si
 os.makedirs("out", exist_ok=True)
-for q in ["삼성전자", "코웨이", "세방", "워트", "AAPL", "UBER"]:
+for q in ["삼성전자", "코웨이", "세방", "AAPL", "UBER"]:
     it = ds.search(q, 1)[0]
     t = time.time()
     try:
