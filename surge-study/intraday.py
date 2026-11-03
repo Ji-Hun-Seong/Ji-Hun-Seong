@@ -18,7 +18,11 @@ import requests
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36"}
-num = lambda s: float(str(s).replace(",", "") or "nan") if s not in (None, "", "N/A") else float("nan")
+def num(s) -> float:
+    try:
+        return float(str(s).replace(",", ""))
+    except (TypeError, ValueError):          # "-", "N/A", None 등
+        return float("nan")
 
 
 def kr() -> tuple[str, pd.DataFrame]:
