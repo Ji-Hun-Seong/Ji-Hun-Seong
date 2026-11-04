@@ -838,6 +838,50 @@ class H(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b)
 
+    def _sse(self, code):
+        import manual_trade as mt
+        from ob_stream import HUB
+        self.send_response(200)
+        self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Accel-Buffering", "no")
+        self.end_headers()
+        HUB.touch(code)
+        def emit(o):
+            self.wfile.write(("data: " + json.dumps(o, ensure_ascii=False, default=str) + "\n\n").encode())
+            self.wfile.flush()
+        try:
+            snap = mt.orderbook(code)                  # 처음 한 번은 REST 로 전체(상·하한가·현재가 포함)
+            up, lo = snap.get("upper"), snap.get("lower")
+            cur = {**snap, "mode": "rest"}
+            emit(cur)
+            ver, started, last_beat, last_emit = 0, time.time(), time.time(), 0
+            while time.time() - started < 600:         # 10분마다 끊으면 브라우저가 알아서 다시 붙음
+                HUB.touch(code)
+                ver2, x = HUB.wait(code, ver, 5)
+                if ver2 > ver:
+                    ver = ver2
+                    gap = 0.12 - (time.time() - last_emit)  # 화면 갱신은 초당 8번까지(체결이 몰려도)
+                    if gap > 0:
+                        time.sleep(gap)
+                        ver, x = HUB.wait(code, 0, 0)       # 기다리는 동안 들어온 최신 값으로
+                    if x.get("ob"):
+                        cur.update(x["ob"])
+                    if x.get("last") is not None:
+                        cur["last"], cur["tts"] = x["last"], x.get("ts")
+                    cur.update(upper=up, lower=lo, mode=HUB.mode, err=HUB.err)
+                    emit(cur); last_emit = last_beat = time.time()
+                elif time.time() - last_beat > 15:        # 조용한 동안에도 연결 유지
+                    self.wfile.write(b": ping\n\n"); self.wfile.flush(); last_beat = time.time()
+        except (BrokenPipeError, ConnectionResetError, OSError):
+            pass
+        except Exception as e:
+            try:
+                emit({"error": f"{type(e).__name__}: {str(e)[:160]}"})
+            except Exception:
+                pass
+        self.close_connection = True
+
     def do_GET(self):
         if not self._auth():
             return
@@ -895,6 +939,14 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
             return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
+        if path == "/api/ob-stream":              # ⚡ 실시간 호가 (Server-Sent Events) — 토스 웹소켓 → 브라우저
+            code = (parse_qs(urlparse(self.path).query).get("q") or [""])[0].strip().upper()
+            if not re.fullmatch(r"[0-9A-Z.\-]{1,12}", code):
+                return self._send(400, "bad code", "text/plain")
+            import manual_trade as mt
+            if not mt.enabled()[0]:
+                return self._send(503, "disabled", "text/plain")
+            return self._sse(code)
         if path in ("/api/orderbook", "/api/trade"):   # 📒 호가창(누구나) · 주문 화면 정보(주인만)
             code = (parse_qs(urlparse(self.path).query).get("q") or [""])[0].strip().upper()
             J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False, default=str), "application/json; charset=utf-8")

@@ -651,7 +651,7 @@ function goTab(t) {
   document.querySelectorAll("section").forEach(s => s.classList.toggle("act", s.id === "t-" + t));
   window.scrollTo(0, 0);
   if (t === "pick") pLoad();
-  if (t === "chart" && OB.code && !OB.timer && !OB.off) { obPoll(); OB.timer = setInterval(obPoll, 2500); }
+  if (t === "chart") obOpen(); else obStop();
   tbarSync();
 }
 document.addEventListener("click", e => {                 // data-stock 달린 줄은 누르면 종목 상세로
@@ -1105,22 +1105,38 @@ function tbarSync() {
   $("tbar").style.display = on ? "flex" : "none"; document.body.classList.toggle("tb-on", !!on);
 }
 function obStart(a) {
-  OB.code = a.code; OB.a = a; OB.d = null; OB.off = false; OB.info = null;
-  if (OB.timer) clearInterval(OB.timer);
-  obPoll(); OB.timer = setInterval(obPoll, 2500); tbarSync();
+  OB.code = a.code; OB.a = a; OB.d = null; OB.off = false; OB.info = null; OB.errs = 0;
+  obStop(); obOpen(); tbarSync();
+}
+function obStop() { if (OB.es) { OB.es.close(); OB.es = null; } if (OB.timer) { clearInterval(OB.timer); OB.timer = null; } }
+function obOpen() {                                       // ⚡ 실시간: 서버가 토스 웹소켓으로 받은 호가를 바로 밀어 줌 (SSE)
+  if (!OB.code || OB.off || OB.es || OB.timer || !document.querySelector("#t-chart.act") || document.hidden) return;
+  if (!window.EventSource || OB.errs >= 4) { obPoll(); OB.timer = setInterval(obPoll, 1000); return; }   // 안 되면 1초 조회
+  const code = OB.code, es = new EventSource("api/ob-stream?q=" + encodeURIComponent(code));
+  OB.es = es;
+  es.onmessage = e => { if (code !== OB.code) return; OB.errs = 0; let d; try { d = JSON.parse(e.data); } catch (_) { return; }
+    if (d.error) { if ($("ob-st")) $("ob-st").textContent = "⚠️ " + d.error.slice(0, 60); return; }
+    OB.d = d; if (!OB.raf) OB.raf = requestAnimationFrame(() => { OB.raf = 0; obRender(); }); };
+  es.onerror = () => { OB.errs++; if (OB.errs >= 4) { obStop(); obCheckOff(); } };
+}
+async function obCheckOff() {                             // 스트림이 계속 실패 → 서버 설정 문제인지 확인 후 1초 조회로
+  try { const d = await (await fetch("api/orderbook?q=" + encodeURIComponent(OB.code), {cache: "no-store"})).json();
+    if (d.disabled) { OB.off = true; $("sd-ob").innerHTML = `<div class="card"><h2>📒 호가</h2><div class="empty small">${esc(d.error)}</div></div>`; tbarSync(); return; }
+  } catch (e) {}
+  obOpen();
 }
 async function obPoll() {
   const code = OB.code;
   if (!code || !document.querySelector("#t-chart.act") || document.hidden || !$("sd-ob")) {
-    if (!document.querySelector("#t-chart.act") && OB.timer) { clearInterval(OB.timer); OB.timer = null; tbarSync(); }
+    if (!document.querySelector("#t-chart.act")) { obStop(); tbarSync(); }
     return;
   }
   try {
     const d = await (await fetch("api/orderbook?q=" + encodeURIComponent(code), {cache: "no-store"})).json();
     if (code !== OB.code) return;
-    if (d.disabled) { OB.off = true; clearInterval(OB.timer); OB.timer = null; $("sd-ob").innerHTML = `<div class="card"><h2>📒 호가</h2><div class="empty small">${esc(d.error)}</div></div>`; tbarSync(); return; }
+    if (d.disabled) { OB.off = true; obStop(); $("sd-ob").innerHTML = `<div class="card"><h2>📒 호가</h2><div class="empty small">${esc(d.error)}</div></div>`; tbarSync(); return; }
     if (d.error) throw new Error(d.error);
-    OB.d = d; obRender();
+    OB.d = {...d, mode: "poll"}; obRender();
   } catch (e) { if ($("ob-st")) $("ob-st").textContent = "⚠️ " + e.message.slice(0, 60); }
 }
 function obRender() {
@@ -1133,7 +1149,7 @@ function obRender() {
     <span class="op ${pc(x.p)} ${d.last === x.p ? "cur" : ""}">${us ? x.p.toFixed(2) : fmtN(x.p)} ${rt(x.p)}</span>
     <span class="ov">${sideCls === "bid" ? `<i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}` : ""}</span></div>`;
   const sa = d.sum_ask || 0, sb = d.sum_bid || 0;
-  $("sd-ob").innerHTML = `<div class="card"><div class="row"><h2 style="margin:0">📒 호가</h2><span class="tiny mut" id="ob-st">${(d.ts || "").slice(11, 19)} · 2.5초마다</span></div>
+  $("sd-ob").innerHTML = `<div class="card"><div class="row"><h2 style="margin:0">📒 호가</h2><span class="tiny mut" id="ob-st">${(d.tts || d.ts || "").slice(11, 19)} · ${d.mode === "ws" ? "⚡ 실시간" : d.mode === "rest" ? "🔁 0.35초" : d.mode === "poll" ? "🔁 1초" : "연결 중"}</span></div>
     <div class="ob">${asks.map(x => row(x, "ask")).join("")}${bids.map(x => row(x, "bid")).join("")}</div>
     <div class="obsum"><span class="dn">매도 잔량 ${fmtN(sa)}</span><span class="mut tiny">${d.upper ? `상한 ${obMoney(d.upper, us)} · 하한 ${obMoney(d.lower, us)}` : ""}</span><span class="up">매수 잔량 ${fmtN(sb)}</span></div>
     <div class="mixbar" style="margin-top:6px;height:6px"><i style="width:${sa + sb ? sa / (sa + sb) * 100 : 50}%;background:var(--dn)"></i><i style="width:${sa + sb ? sb / (sa + sb) * 100 : 50}%;background:var(--up)"></i></div>
@@ -1252,7 +1268,7 @@ async function otCancel(id) {
   } catch (e) { alert("취소 실패: " + e.message); }
   otInfo();
 }
-document.addEventListener("visibilitychange", () => { if (!document.hidden && OB.code && document.querySelector("#t-chart.act")) { if (!OB.timer && !OB.off) { obPoll(); OB.timer = setInterval(obPoll, 2500); } } });
+document.addEventListener("visibilitychange", () => { if (document.hidden) obStop(); else obOpen(); });   // 화면 꺼지면 끊고, 켜지면 다시
 
 // ── 공시·리포트 상세 시트 (누르면 앱 안에서 바로 보기) ─────────
 function docId(u) { const m = String(u || "").match(/rcpNo=(\d{14})/) || String(u || "").match(/research\/company\/(\d+)/); return m ? m[1] : ""; }

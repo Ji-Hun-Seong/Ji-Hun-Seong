@@ -61,30 +61,37 @@ def _f(x):
         return None
 
 
+def norm_ob(ob: dict) -> dict:
+    """토스 호가(REST·웹소켓 같은 모양) → 매도·매수 모두 비싼 가격부터, 잔량 합계"""
+    asks = sorted([{"p": _f(x.get("price")), "v": _f(x.get("volume"))} for x in ob.get("asks") or [] if _f(x.get("price"))], key=lambda x: -x["p"])
+    bids = sorted([{"p": _f(x.get("price")), "v": _f(x.get("volume"))} for x in ob.get("bids") or [] if _f(x.get("price"))], key=lambda x: -x["p"])
+    return {"ts": ob.get("timestamp"), "ccy": ob.get("currency"), "asks": asks, "bids": bids,
+            "sum_ask": sum(x["v"] or 0 for x in asks), "sum_bid": sum(x["v"] or 0 for x in bids)}
+
+
+def limits(code: str):
+    hit = _limits.get(code)
+    if not hit or time.time() - hit[0] > 300:              # 상·하한가는 하루 고정 → 5분 캐시
+        try:
+            lim = api().price_limits(code) or {}
+            hit = (time.time(), _f(lim.get("upperLimitPrice")), _f(lim.get("lowerLimitPrice")))
+            _limits[code] = hit
+        except Exception:
+            hit = (0, None, None)
+    return hit[1], hit[2]
+
+
 def orderbook(code: str) -> dict:
     """호가창 — 매도(위, 비싼 가격부터) / 매수(아래, 비싼 가격부터) + 상·하한가 + 현재가"""
     a = api()
-    ob = a.orderbook(code) or {}
-    asks = sorted([{"p": _f(x.get("price")), "v": _f(x.get("volume"))} for x in ob.get("asks") or [] if _f(x.get("price"))], key=lambda x: -x["p"])
-    bids = sorted([{"p": _f(x.get("price")), "v": _f(x.get("volume"))} for x in ob.get("bids") or [] if _f(x.get("price"))], key=lambda x: -x["p"])
-    out = {"code": code, "ts": ob.get("timestamp"), "ccy": ob.get("currency") or ("USD" if is_us(code) else "KRW"),
-           "asks": asks, "bids": bids}
+    out = {"code": code, **norm_ob(a.orderbook(code) or {})}
+    out["ccy"] = out["ccy"] or ("USD" if is_us(code) else "KRW")
     try:
         lp = (a.prices([code]) or [{}])[0]
         out["last"] = _f(lp.get("lastPrice"))
     except Exception:
         out["last"] = None
-    hit = _limits.get(code)
-    if not hit or time.time() - hit[0] > 300:              # 상·하한가는 하루 고정 → 5분 캐시
-        try:
-            lim = a.price_limits(code) or {}
-            hit = (time.time(), _f(lim.get("upperLimitPrice")), _f(lim.get("lowerLimitPrice")))
-            _limits[code] = hit
-        except Exception:
-            hit = (0, None, None)
-    out["upper"], out["lower"] = hit[1], hit[2]
-    out["sum_ask"] = sum(x["v"] or 0 for x in asks)
-    out["sum_bid"] = sum(x["v"] or 0 for x in bids)
+    out["upper"], out["lower"] = limits(code)
     return out
 
 
