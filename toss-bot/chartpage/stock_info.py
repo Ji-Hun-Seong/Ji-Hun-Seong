@@ -7,7 +7,7 @@ stock_info.py — 대시보드 '종목 상세' 화면용 데이터 (종목을 �
   투자자 수급       : 네이버(trend, 최근 약 60영업일) — 외국인·기관·개인 순매수 수량(+금액 환산), 외국인 보유율
   재무제표          : 네이버(finance/annual·quarter) — 매출·영업이익·순이익·이익률·ROE·부채비율·EPS·PER·PBR·배당 (컨센서스 포함)
   공시             : DART 최근 120일 전체 공시(중요 공시 표시)                         ← DART_API_KEY
-미국 종목
+해외 종목(미국·일본·중국·홍콩·대만·유럽 등 야후 파이낸스 심볼)
   시세: 야후 차트 / 밸류·재무·기관 보유: yfinance(설치돼 있으면)
 
 단독 테스트:  python3 stock_info.py 005930      python3 stock_info.py AAPL
@@ -514,7 +514,8 @@ def us_detail(sym: str, ohlcv=None) -> dict:
                 "inst_pct": g("heldPercentInstitutions"), "insider_pct": g("heldPercentInsiders"),
                 "short_pct": g("shortPercentOfFloat"), "roe": g("returnOnEquity"), "de": g("debtToEquity"),
                 "opm": g("operatingMargins"), "npm": g("profitMargins"), "rev_growth": g("revenueGrowth"),
-                "summary": (g("longBusinessSummary") or "")[:400]}
+                "summary": (g("longBusinessSummary") or "")[:400], "currency": g("currency") or g("financialCurrency"),
+                "exchange": g("fullExchangeName") or g("exchange"), "country": g("country")}
         px_now = float(df["close"].iloc[-1])
         rate = g("dividendRate") or g("trailingAnnualDividendRate")
         prof["div_yield"] = rate / px_now * 100 if rate and px_now else 0.0   # yfinance 버전마다 dividendYield 단위가 달라 직접 계산
@@ -541,6 +542,11 @@ def us_detail(sym: str, ohlcv=None) -> dict:
         errs["yfinance"] = "yfinance 미설치 — 서버에서 .venv/bin/pip install yfinance"
     except Exception as e:
         errs["yfinance"] = f"{type(e).__name__}: {str(e)[:120]}"
+    import data_sources as ds
+    mkt, ccy0 = ds.market_of(sym)
+    ccy = df.attrs.get("currency") or prof.get("currency") or ccy0
+    prof["currency"] = ccy
+    fin["unit"] = f"백만 {ccy}"
     S = signals(tech, prof, None, fin, None, us=True)
     if prof.get("inst_pct") is not None:
         S.append(_sig("수급", "기관 보유", f"{prof['inst_pct'] * 100:.0f}%", "neu", "발행주식 대비"))
@@ -548,7 +554,7 @@ def us_detail(sym: str, ohlcv=None) -> dict:
         sp_ = prof["short_pct"] * 100
         S.append(_sig("수급", "공매도 비율", f"{sp_:.1f}%", "bad" if sp_ > 10 else "neu", "유통주식 대비"))
     return clean({"us": True, "code": sym, "name": prof.get("name") or sym, "asof": f"{d.index[-1]:%Y-%m-%d}",
-                  "src": "야후", "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df, True), "flows": [], "flow_sum": {},
+                  "mkt": mkt, "ccy": ccy, "src": "야후", "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df, True), "flows": [], "flow_sum": {},
                   "holders": holders, "finance": fin, "filings": [], "signals": S,
                   "links": {"yahoo": f"https://finance.yahoo.com/quote/{sym}"},
                   "errors": errs, "took": round(time.time() - t0, 2)})

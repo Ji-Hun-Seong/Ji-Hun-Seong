@@ -80,22 +80,149 @@ def _load_corps_uncached() -> list[dict]:
     return [{"name": n, "code": c, "corp_code": cc} for n, (c, cc) in FALLBACK.items()]
 
 
+# ── 해외 종목 (야후 파이낸스 심볼) ───────────────────────
+# 거래소 접미사 → (국가 표시, 통화)
+EXCH = {"": ("🇺🇸 미국", "USD"), "T": ("🇯🇵 일본", "JPY"), "SS": ("🇨🇳 중국 상하이", "CNY"), "SZ": ("🇨🇳 중국 선전", "CNY"),
+        "BJ": ("🇨🇳 중국 베이징", "CNY"), "HK": ("🇭🇰 홍콩", "HKD"), "TW": ("🇹🇼 대만", "TWD"), "TWO": ("🇹🇼 대만 OTC", "TWD"),
+        "L": ("🇬🇧 영국", "GBp"), "DE": ("🇩🇪 독일", "EUR"), "F": ("🇩🇪 프랑크푸르트", "EUR"), "PA": ("🇫🇷 프랑스", "EUR"),
+        "AS": ("🇳🇱 네덜란드", "EUR"), "MI": ("🇮🇹 이탈리아", "EUR"), "MC": ("🇪🇸 스페인", "EUR"), "SW": ("🇨🇭 스위스", "CHF"),
+        "ST": ("🇸🇪 스웨덴", "SEK"), "CO": ("🇩🇰 덴마크", "DKK"), "OL": ("🇳🇴 노르웨이", "NOK"), "HE": ("🇫🇮 핀란드", "EUR"),
+        "BR": ("🇧🇪 벨기에", "EUR"), "VI": ("🇦🇹 오스트리아", "EUR"), "LS": ("🇵🇹 포르투갈", "EUR"), "IR": ("🇮🇪 아일랜드", "EUR"),
+        "TO": ("🇨🇦 캐나다", "CAD"), "V": ("🇨🇦 캐나다 벤처", "CAD"), "AX": ("🇦🇺 호주", "AUD"), "NZ": ("🇳🇿 뉴질랜드", "NZD"),
+        "SI": ("🇸🇬 싱가포르", "SGD"), "NS": ("🇮🇳 인도 NSE", "INR"), "BO": ("🇮🇳 인도 BSE", "INR"), "JK": ("🇮🇩 인도네시아", "IDR"),
+        "BK": ("🇹🇭 태국", "THB"), "KL": ("🇲🇾 말레이시아", "MYR"), "VN": ("🇻🇳 베트남", "VND"), "SA": ("🇧🇷 브라질", "BRL"),
+        "MX": ("🇲🇽 멕시코", "MXN"), "JO": ("🇿🇦 남아공", "ZAc"), "TA": ("🇮🇱 이스라엘", "ILA"), "SR": ("🇸🇦 사우디", "SAR"),
+        "KS": ("🇰🇷 코스피", "KRW"), "KQ": ("🇰🇷 코스닥", "KRW")}
+
+# 한글 이름으로 찾기 (야후 검색은 영어 이름만 됨) — 자주 찾는 해외 종목
+WORLD_KO = {
+    # 일본
+    "토요타": "7203.T", "도요타": "7203.T", "소니": "6758.T", "닌텐도": "7974.T", "키엔스": "6861.T", "도쿄일렉트론": "8035.T",
+    "소프트뱅크그룹": "9984.T", "소프트뱅크": "9984.T", "패스트리테일링": "9983.T", "유니클로": "9983.T", "미쓰비시UFJ": "8306.T",
+    "미쓰비시상사": "8058.T", "미쓰이물산": "8031.T", "이토추": "8001.T", "스미토모상사": "8053.T", "마루베니": "8002.T",
+    "혼다": "7267.T", "닛산": "7201.T", "히타치": "6501.T", "파나소닉": "6752.T", "캐논": "7751.T", "신에쓰화학": "4063.T",
+    "어드반테스트": "6857.T", "레이저텍": "6920.T", "디스코": "6146.T", "다이킨": "6367.T", "화낙": "6954.T", "무라타": "6981.T",
+    "NTT": "9432.T", "KDDI": "9433.T", "오리엔탈랜드": "4661.T", "세븐앤아이": "3382.T", "다케다": "4502.T", "다이이찌산쿄": "4568.T",
+    "미쓰비시중공업": "7011.T", "가와사키중공업": "7012.T", "IHI": "7013.T", "리쿠르트": "6098.T", "도쿄해상": "8766.T",
+    "미즈호": "8411.T", "스미토모미쓰이": "8316.T", "JT": "2914.T", "일본담배": "2914.T", "아식스": "7936.T", "반다이남코": "7832.T",
+    "캡콤": "9697.T", "코나미": "9766.T", "스퀘어에닉스": "9684.T", "라쿠텐": "4755.T", "니토리": "9843.T", "시세이도": "4911.T",
+    # 중국 본토
+    "귀주모태": "600519.SS", "구이저우마오타이": "600519.SS", "마오타이": "600519.SS", "CATL": "300750.SZ", "닝더스다이": "300750.SZ",
+    "BYD": "1211.HK", "비야디": "1211.HK", "중국평안": "601318.SS", "초상은행": "600036.SS", "공상은행": "601398.SS",
+    "오량액": "000858.SZ", "미디어그룹": "000333.SZ", "메이디": "000333.SZ", "항서제약": "600276.SS", "융기실리콘": "601012.SS",
+    "중국석유": "601857.SS", "페트로차이나": "601857.SS", "장강전력": "600900.SS", "이리": "600887.SS", "해천미업": "603288.SS",
+    "중신증권": "600030.SS", "BOE": "000725.SZ", "징둥팡": "000725.SZ", "북방화창": "002371.SZ", "중지쉬촹": "300308.SZ",
+    "자금광업": "601899.SS", "중국신화에너지": "601088.SS", "하이크비전": "002415.SZ", "럭스셰어": "002475.SZ", "선전이노반스": "300124.SZ",
+    # 홍콩
+    "텐센트": "0700.HK", "알리바바": "9988.HK", "메이퇀": "3690.HK", "샤오미": "1810.HK", "징둥": "9618.HK", "JD닷컴": "9618.HK",
+    "바이두": "9888.HK", "넷이즈": "9999.HK", "HSBC": "0005.HK", "AIA": "1299.HK", "홍콩거래소": "0388.HK", "중국이동": "0941.HK",
+    "차이나모바일": "0941.HK", "CNOOC": "0883.HK", "중국해양석유": "0883.HK", "리닝": "2331.HK", "안타스포츠": "2020.HK",
+    "팝마트": "9992.HK", "콰이서우": "1024.HK", "리오토": "2015.HK", "샤오펑": "9868.HK", "니오": "9866.HK", "SMIC": "0981.HK",
+    "중국건설은행": "0939.HK", "중국은행": "3988.HK", "지리자동차": "0175.HK", "하이디라오": "6862.HK", "트립닷컴": "9961.HK",
+    # 대만·기타 아시아
+    "TSMC": "2330.TW", "대만반도체": "2330.TW", "폭스콘": "2317.TW", "홍하이": "2317.TW", "미디어텍": "2454.TW", "델타전자": "2308.TW",
+    "콴타": "2382.TW", "ASE": "3711.TW", "UMC": "2303.TW", "에이수스": "2357.TW", "릴라이언스": "RELIANCE.NS", "인포시스": "INFY.NS",
+    "타타모터스": "TATAMOTORS.NS", "DBS": "D05.SI", "그랩": "GRAB",
+    # 유럽
+    "ASML": "ASML.AS", "LVMH": "MC.PA", "루이비통": "MC.PA", "에르메스": "RMS.PA", "로레알": "OR.PA", "토탈에너지": "TTE.PA",
+    "에어버스": "AIR.PA", "사노피": "SAN.PA", "슈나이더": "SU.PA", "SAP": "SAP.DE", "지멘스": "SIE.DE", "알리안츠": "ALV.DE",
+    "폭스바겐": "VOW3.DE", "BMW": "BMW.DE", "벤츠": "MBG.DE", "메르세데스": "MBG.DE", "아디다스": "ADS.DE", "바이엘": "BAYN.DE",
+    "라인메탈": "RHM.DE", "인피니언": "IFX.DE", "네슬레": "NESN.SW", "로슈": "ROG.SW", "노바티스": "NOVN.SW", "UBS": "UBSG.SW",
+    "노보노디스크": "NOVO-B.CO", "셸": "SHEL.L", "BP": "BP.L", "아스트라제네카": "AZN.L", "HSBC런던": "HSBA.L", "유니레버": "ULVR.L",
+    "롤스로이스": "RR.L", "BAE시스템스": "BA.L", "리오틴토": "RIO.L", "페라리": "RACE.MI", "인디텍스": "ITX.MC", "자라": "ITX.MC",
+    "스포티파이": "SPOT", "에릭슨": "ERIC-B.ST", "볼보": "VOLV-B.ST", "에퀴노르": "EQNR.OL",
+    # 미국(한글)
+    "애플": "AAPL", "마이크로소프트": "MSFT", "엔비디아": "NVDA", "구글": "GOOGL", "알파벳": "GOOGL", "아마존": "AMZN", "메타": "META",
+    "테슬라": "TSLA", "버크셔": "BRK-B", "버크셔해서웨이": "BRK-B", "브로드컴": "AVGO", "일라이릴리": "LLY", "JP모건": "JPM",
+    "비자": "V", "마스터카드": "MA", "월마트": "WMT", "코스트코": "COST", "넷플릭스": "NFLX", "코카콜라": "KO", "펩시": "PEP",
+    "맥도날드": "MCD", "스타벅스": "SBUX", "나이키": "NKE", "디즈니": "DIS", "AMD": "AMD", "인텔": "INTC", "퀄컴": "QCOM",
+    "마이크론": "MU", "팔란티어": "PLTR", "오라클": "ORCL", "세일즈포스": "CRM", "어도비": "ADBE", "보잉": "BA", "캐터필러": "CAT",
+    "엑슨모빌": "XOM", "셰브론": "CVX", "존슨앤존슨": "JNJ", "화이자": "PFE", "P&G": "PG", "홈디포": "HD", "치폴레": "CMG",
+    "하워드휴즈": "HHH", "유니버설뮤직": "UMG.AS", "브룩필드": "BN", "힐튼": "HLT", "레스토랑브랜즈": "QSR", "우버": "UBER",
+}
+WORLD_KO = {k: v for k, v in WORLD_KO.items() if v}
+
+
+def market_of(sym: str) -> tuple[str, str]:
+    """야후 심볼 → (국가 표시, 통화)"""
+    suf = sym.rsplit(".", 1)[1].upper() if "." in sym and not re.fullmatch(r"[A-Z]+\.[A-Z]", sym) else ""
+    return EXCH.get(suf, EXCH[""])
+
+
+def _g(sym: str, name: str | None = None) -> dict:
+    mk, ccy = market_of(sym)
+    return {"name": name or sym, "code": sym, "corp_code": None, "us": True, "mkt": mk, "ccy": ccy}
+
+
+def yahoo_search(q: str, limit: int = 8) -> list[dict]:
+    """야후 검색(영문 이름·티커) — 주식만, 메모리 캐시 1시간"""
+    k = "ys:" + q.lower()
+    hit = _MEM.get(k)
+    if hit and time.time() - hit[0] < 3600:
+        return hit[1]
+    out = []
+    try:
+        r = requests.get("https://query2.finance.yahoo.com/v1/finance/search", headers=UA, timeout=8,
+                         params={"q": q, "quotesCount": limit + 4, "newsCount": 0, "listsCount": 0, "enableFuzzyQuery": "false"})
+        for x in (r.json().get("quotes") or []):
+            if x.get("quoteType") not in ("EQUITY", "ETF") or not x.get("symbol"):
+                continue
+            sym = x["symbol"]
+            if sym.endswith((".KS", ".KQ")):       # 한국 종목은 DART 목록 쪽으로
+                continue
+            it = _g(sym, x.get("shortname") or x.get("longname") or sym)
+            it["exch"] = x.get("exchDisp")
+            out.append(it)
+    except Exception as e:
+        print("야후 검색 실패:", e)
+    out = out[:limit]
+    _MEM[k] = (time.time(), out)
+    return out
+
+
 def search(q: str, limit: int = 8) -> list[dict]:
+    """한국(DART 목록) → 한글 해외 별칭 → 숫자 코드 규칙(일본·홍콩·중국) → 야후 심볼/검색"""
     q = q.strip()
     if not q:
         return []
     corps = load_corps()
     if re.fullmatch(r"\d{6}", q):
         hit = [c for c in corps if c["code"] == q]
-        return hit or [{"name": q, "code": q, "corp_code": None}]
+        if hit:
+            return hit
+        # 한국에 없는 6자리 = 중국 A주 (6·9 → 상하이, 0·2·3 → 선전, 4·8 → 베이징)
+        suf = "SS" if q[0] in "69" else "BJ" if q[0] in "48" else "SZ"
+        return [_g(f"{q}.{suf}")]
+    if re.fullmatch(r"\d{4}", q):                 # 4자리: 0으로 시작하면 홍콩, 아니면 일본
+        return [_g(f"{q}.HK")] if q[0] == "0" else [_g(f"{q}.T"), _g(f"{q}.HK"), _g(f"{q}.TW")]
+    if re.fullmatch(r"\d{1,5}\.?(HK)?", q, re.I) and q.upper().endswith("HK"):
+        return [_g(f"{int(re.sub(r'\D', '', q)):04d}.HK")]
     ql = q.lower().replace(" ", "")
     exact = [c for c in corps if c["name"].lower().replace(" ", "") == ql]
     starts = [c for c in corps if c["name"].lower().startswith(ql) and c not in exact]
     contains = [c for c in corps if ql in c["name"].lower() and c not in exact and c not in starts]
     res = (exact + sorted(starts, key=lambda c: len(c["name"])) + contains)[:limit]
-    if not res and re.fullmatch(r"[A-Za-z.\-]{1,10}", q):   # 미국 티커
-        res = [{"name": q.upper(), "code": q.upper(), "corp_code": None, "us": True}]
-    return res
+    # 한글 해외 별칭 (정확히 같으면 맨 앞, 앞부분 일치는 뒤에)
+    ko = [(k, v) for k, v in WORLD_KO.items() if k.lower().replace(" ", "") == ql] + \
+         [(k, v) for k, v in WORLD_KO.items() if k.lower().replace(" ", "").startswith(ql) and k.lower().replace(" ", "") != ql]
+    seen = set()
+    world = []
+    for k, v in ko:
+        if v not in seen:
+            seen.add(v); world.append(_g(v, k))
+    res = (world[:3] + res + world[3:])[:limit] if world and not exact else (res + world)[:limit]
+    if res:
+        return res
+    if re.fullmatch(r"[A-Za-z0-9^=\-]{1,12}(\.[A-Za-z]{1,3})?", q):   # 티커·심볼 (AAPL, 7203.T, MC.PA, BRK-B)
+        sym = q.upper()
+        ticker_like = bool(re.fullmatch(r"[A-Za-z\-]{1,5}", q)) or "." in q or q[0].isdigit()
+        found = [] if re.fullmatch(r"[A-Za-z\-]{1,5}", q) else yahoo_search(q, limit)
+        exact_sym = [x for x in found if x["code"].upper() == sym]
+        rest = [x for x in found if x["code"].upper() != sym]
+        if exact_sym or ticker_like:
+            return ((exact_sym or [_g(sym)]) + rest)[:limit]
+        return found or [_g(sym)]                  # 'toyota' 같은 영문 이름
+    return yahoo_search(q, limit)                  # 영문 회사 이름 (toyota, tencent …)
 
 
 # ── 일봉 (야후) ──────────────────────────────────────

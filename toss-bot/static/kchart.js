@@ -57,7 +57,7 @@
     return R;
   }
 
-  const fmt = (v, us) => v == null ? "-" : us ? Number(v).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2})
+  const fmt = (v, us) => v == null ? "-" : us ? Number(v).toLocaleString("en-US", {minimumFractionDigits: us === true ? 2 : us, maximumFractionDigits: us === true ? 2 : us})
     : Math.round(v).toLocaleString("ko-KR");
   const fvol = v => v >= 1e8 ? (v / 1e8).toFixed(1) + "억" : v >= 1e4 ? (v / 1e4).toFixed(v >= 1e6 ? 0 : 1) + "만" : Math.round(v).toLocaleString();
   const dstr = s => `${s.slice(2, 4)}.${s.slice(4, 6)}.${s.slice(6, 8)}`;

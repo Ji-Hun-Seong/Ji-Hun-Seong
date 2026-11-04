@@ -241,7 +241,7 @@ def score(d: dict) -> dict:
         dil = sum(1 for t in tags if t == "증자·CB")
         a.append(_chk(4 if not dil else 0, 4, "최근 120일 증자·CB(희석) 공시 없음" if not dil else f"증자·CB 공시 {dil}건 — 희석 위험", ok=not dil))
     else:
-        reason = "미국 종목 — 공시 기준 제외" if us else "공시 데이터 없음(DART 키 확인)"
+        reason = "해외 종목 — DART 공시 기준 제외" if us else "공시 데이터 없음(DART 키 확인)"
         a += [_chk(0, 6, reason), _chk(0, 4, reason)]
     if pbr and roe_avg is not None:
         if pbr < 1 and roe_avg >= 8:

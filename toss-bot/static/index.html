@@ -54,6 +54,9 @@ a{color:var(--blue);text-decoration:none}
 .srch input:focus{border-color:var(--blue)}
 .sug{position:absolute;left:0;right:0;top:54px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;z-index:20;display:none}
 .sug div{padding:12px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:15px}.sug div:first-child{border-top:0}
+.rchip{display:inline-flex;align-items:center;background:var(--card);border-radius:99px;overflow:hidden}.rchip .rgo{background:none!important;padding:7px 4px 7px 13px!important}
+.rchip .rdel{background:none!important;color:var(--sub)!important;padding:7px 11px 7px 6px!important;font-size:11px!important}
+.chips .rclr{background:none!important;color:var(--sub)!important;font-size:12px!important;text-decoration:underline}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:-4px 0 12px}.chips button{background:var(--card);color:var(--txt);border:0;border-radius:99px;padding:7px 13px;font-size:13px;font-family:inherit}
 .verdict{margin:12px 0 4px;padding:12px;border-radius:12px;font-weight:700;text-align:center;font-size:15px;background:var(--line);color:var(--sub)}
 .verdict.buy{background:#173826;color:#6fe3a2}
@@ -203,7 +206,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 </section>
 
 <section id="t-chart">
-  <div class="srch"><input id="c-q" placeholder="종목명·코드·미국 티커 (예: 삼성전자, 005930, AAPL)" autocomplete="off" enterkeyhint="search"><div class="sug" id="c-sug"></div></div>
+  <div class="srch"><input id="c-q" placeholder="종목명·코드·해외 티커 (예: 삼성전자, 토요타, 텐센트, 600519, AAPL)" autocomplete="off" enterkeyhint="search"><div class="sug" id="c-sug"></div></div>
   <div class="chips" id="c-recent"></div>
   <div id="c-out"><div class="card"><div class="empty">종목을 검색하거나 💡발굴·계좌·감시 목록에서 종목을 누르면<br>차트(이평선·볼린저·거래량·RSI) · 외국인·기관 수급 · 재무제표 · 밸류 · 공시 · 증권사 리포트를 한 화면에 보여 줍니다.</div></div></div>
 </section>
@@ -443,18 +446,24 @@ $("stopBtn").onclick = async () => {
 // ── 차트 탭 ──────────────────────────────────────
 const cq = $("c-q"), csug = $("c-sug");
 let cTimer, cItems = [];
-const cRecent = () => { try { return JSON.parse(localStorage.getItem("c-recent") || "[]"); } catch (e) { return []; } };
-function cSaveRecent(n) { let r = cRecent().filter(x => x !== n); r.unshift(n); try { localStorage.setItem("c-recent", JSON.stringify(r.slice(0, 6))); } catch (e) {} cDrawRecent(); }
+// 최근 검색: {n: 표시 이름, q: 다시 찾을 값, us} — 칩마다 ✕ 삭제, 전체 삭제
+const cRecent = () => { try { return JSON.parse(localStorage.getItem("c-recent") || "[]").map(x => typeof x === "string" ? {n: x, q: x} : x); } catch (e) { return []; } };
+const cPut = r => { try { localStorage.setItem("c-recent", JSON.stringify(r)); } catch (e) {} cDrawRecent(); };
+function cSaveRecent(n, q, us) { q = q || n; cPut([{n, q, us: !!us}, ...cRecent().filter(x => x.q !== q)].slice(0, 12)); }
 function cDrawRecent() {
-  $("c-recent").innerHTML = cRecent().map(n => `<button>${esc(n)}</button>`).join("");
-  $("c-recent").querySelectorAll("button").forEach(b => b.onclick = () => cGo(b.textContent));
+  const r = cRecent();
+  $("c-recent").innerHTML = r.map((x, i) => `<span class="rchip"><button class="rgo" data-i="${i}">${esc(x.n)}</button><button class="rdel" data-i="${i}" aria-label="삭제">✕</button></span>`).join("")
+    + (r.length ? `<button class="rclr">전체 삭제</button>` : "");
+  $("c-recent").querySelectorAll(".rgo").forEach(b => b.onclick = () => { const x = cRecent()[b.dataset.i]; cGo(x.q, {us: x.us}); });
+  $("c-recent").querySelectorAll(".rdel").forEach(b => b.onclick = () => cPut(cRecent().filter((_, i) => i !== +b.dataset.i)));
+  const clr = $("c-recent").querySelector(".rclr"); if (clr) clr.onclick = () => { if (confirm("최근 검색 기록을 모두 지울까요?")) cPut([]); };
 }
 cq.addEventListener("input", () => {
   clearTimeout(cTimer); const v = cq.value.trim();
   if (!v) { csug.style.display = "none"; return; }
   cTimer = setTimeout(async () => {
     try { cItems = await (await fetch("api/search?q=" + encodeURIComponent(v))).json(); } catch (e) { cItems = []; }
-    csug.innerHTML = cItems.map((c, i) => `<div data-i="${i}"><span>${esc(c.name)}</span><span class="mut">${esc(c.code)}</span></div>`).join("");
+    csug.innerHTML = cItems.map((c, i) => `<div data-i="${i}"><span>${esc(c.name)}</span><span class="mut tiny">${c.mkt ? esc(c.mkt) + " · " : ""}${esc(c.code)}</span></div>`).join("");
     csug.style.display = cItems.length ? "block" : "none";
     csug.querySelectorAll("div").forEach(d => d.onclick = () => cGo(cItems[d.dataset.i].code, {us: cItems[d.dataset.i].us}));
   }, 200);
@@ -476,9 +485,9 @@ function cRender(a) {
   <div class="card"><h2>볼린저 밴드 (20, 2)</h2><canvas id="c-px" class="c-big"></canvas>
     <div class="tiny mut" style="margin-top:8px">🟢▲ 세 조건 모두 충족 · 🔵● 볼린저만 충족 · 주황 세로선 자사주 공시</div></div>
   <div class="card"><h2>%b · 밴드폭</h2><canvas id="c-pb"></canvas><canvas id="c-bw" style="margin-top:10px"></canvas></div>
-  <div class="card"><h2>외국인 순매수 (억원)</h2>${a.flows ? `<canvas id="c-fl"></canvas>` : `<div class="empty">${a.us ? "미국 종목은 해당 없음" : "한국투자증권 키(KIS_APP_KEY)를 .env에 넣으면 표시됩니다"}</div>`}</div>
+  <div class="card"><h2>외국인 순매수 (억원)</h2>${a.flows ? `<canvas id="c-fl"></canvas>` : `<div class="empty">${a.us ? "해외 종목은 해당 없음" : "한국투자증권 키(KIS_APP_KEY)를 .env에 넣으면 표시됩니다"}</div>`}</div>
   <div class="card"><h2>자사주 공시</h2>${a.buybacks.length ? a.buybacks.map(e => `<div class="item small row"><span>${e.date} · ${esc(e.type)}</span><a href="${e.url}" target="_blank">원문</a></div>`).join("")
-    : `<div class="empty">${a.us ? "미국 종목은 조회하지 않음" : "최근 2년 자사주 공시 없음"}</div>`}</div>`;
+    : `<div class="empty">${a.us ? "해외 종목은 조회하지 않음" : "최근 2년 자사주 공시 없음"}</div>`}</div>`;
   if (!window.Chart) return;
   const L = a.dates, opt = (extra = {}) => ({responsive: true, animation: false, aspectRatio: extra.ar || 2.2,
     plugins: {legend: {display: false}, tooltip: {mode: "index", intersect: false}},
@@ -520,6 +529,14 @@ const fmtN = (v, d = 0) => v == null ? "-" : Number(v).toLocaleString("ko-KR", {
 const eokFmt = v => { if (v == null) return "-"; const a = Math.abs(v), sg = v < 0 ? "-" : "";
   if (a >= 10000) { const jo = Math.floor(a / 10000), e = Math.round(a % 10000); return `${sg}${fmtN(jo)}조${e ? " " + fmtN(e) + "억" : ""}`; }
   return sg + fmtN(a) + "억"; };
+// 해외 통화 표시 (일본 ¥, 홍콩 HK$, 유럽 € …) — GBp·ZAc·ILA는 1/100 단위
+const CCY = {USD: ["$", 2], JPY: ["¥", 0], CNY: ["CN¥", 2], HKD: ["HK$", 2], TWD: ["NT$", 1], EUR: ["€", 2], GBP: ["£", 2], GBp: ["", 1, "p"],
+  CHF: ["CHF ", 2], CAD: ["C$", 2], AUD: ["A$", 2], NZD: ["NZ$", 2], SGD: ["S$", 2], INR: ["₹", 1], IDR: ["Rp", 0], THB: ["฿", 2], MYR: ["RM", 2],
+  VND: ["₫", 0], BRL: ["R$", 2], MXN: ["MX$", 2], SEK: ["", 2, " kr"], DKK: ["", 1, " kr"], NOK: ["", 2, " kr"], ZAc: ["", 0, "c"], ILA: ["", 0, " ag"], SAR: ["SAR ", 2], KRW: ["", 0, "원"]};
+const cur = (v, c) => { if (v == null) return "-"; const [p, d, sfx] = CCY[c] || [(c || "") + " ", 2];
+  return p + Number(v).toLocaleString("en-US", {minimumFractionDigits: d, maximumFractionDigits: d}) + (sfx || ""); };
+const curBig = (v, c) => { if (v == null) return "-"; const [p, , sfx] = CCY[c] || [(c || "") + " "];
+  const t = v >= 1e12 ? (v / 1e12).toFixed(2) + "T" : v >= 1e9 ? (v / 1e9).toFixed(1) + "B" : (v / 1e6).toFixed(0) + "M"; return (sfx ? "" : p) + t + (sfx ? " " + c : ""); };
 const usdBig = v => v == null ? "-" : v >= 1e12 ? "$" + (v / 1e12).toFixed(2) + "T" : v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : "$" + (v / 1e6).toFixed(0) + "M";
 const sEok = v => v == null ? "-" : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? fmtN(v) : fmtN(v, 1)) + "억";
 
@@ -536,7 +553,7 @@ async function openStock(q, opt = {}) {
   try {
     const a = await (await fetch("api/stock?q=" + encodeURIComponent(q) + (opt.us ? "&us=1" : ""))).json();
     if (a.error) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">${esc(a.error)}</div></div>`; return; }
-    cq.value = a.name; cSaveRecent(a.us ? a.code : a.name);
+    cq.value = a.name; cSaveRecent(a.name, a.us ? a.code : a.name, a.us);
     SD.last = a; sdRender(a);
   } catch (e) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
@@ -544,12 +561,12 @@ const TABN = {pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "�
 const backBtn = () => SD.prev && SD.prev !== "chart" ? `<button class="back" onclick="goTab('${SD.prev}')">‹ ${TABN[SD.prev] || "뒤로"}</button>` : "";
 
 function sdRender(a) {
-  const P = a.profile || {}, T = a.tech || {}, money = v => a.us ? usd(v) : won(v);
+  const P = a.profile || {}, T = a.tech || {}, CC = a.ccy || "USD", money = v => a.us ? cur(v, CC) : won(v);
   const kv = (k, v) => `<div><small>${k}</small><b>${v}</b></div>`;
   const tagCls = t => t.includes("급등") ? "r" : t.includes("가치") ? "g" : t.includes("애크먼") ? "b" : "y";
-  const kvs = a.us ? [kv("시가총액", usdBig(P.mcap_usd)), kv("PER", P.per ? P.per.toFixed(1) + "배" : "-"), kv("선행 PER", P.fper ? P.fper.toFixed(1) + "배" : "-"),
+  const kvs = a.us ? [kv("시가총액", curBig(P.mcap_usd, CC)), kv("PER", P.per ? P.per.toFixed(1) + "배" : "-"), kv("선행 PER", P.fper ? P.fper.toFixed(1) + "배" : "-"),
       kv("PBR", P.pbr ? P.pbr.toFixed(1) + "배" : "-"), kv("배당", P.div_yield != null ? P.div_yield.toFixed(2) + "%" : "-"), kv("기관 보유", P.inst_pct != null ? (P.inst_pct * 100).toFixed(0) + "%" : "-"),
-      kv("52주", `${fmtN(T.lo52, 0)}~${fmtN(T.hi52, 0)}`), kv("목표가", P.target ? usd(P.target) : "-"), kv("업종", esc(P.sector || "-"))]
+      kv("52주", `${fmtN(T.lo52, 0)}~${fmtN(T.hi52, 0)}`), kv("목표가", P.target ? cur(P.target, CC) : "-"), kv("업종", esc(P.sector || "-"))]
     : [kv("시가총액", eokFmt(P.mcap_eok)), kv("PER", P.per ? P.per.toFixed(1) + "배" : "적자/-"), kv("추정 PER", P.fper ? P.fper.toFixed(1) + "배" : "-"),
       kv("PBR", P.pbr != null ? P.pbr.toFixed(2) + "배" : "-"), kv("배당수익률", P.div_yield != null ? P.div_yield.toFixed(2) + "%" : "-"), kv("외국인 보유", P.foreign_rate != null ? P.foreign_rate.toFixed(1) + "%" : "-"),
       kv("52주", `${fmtN(T.lo52)}~${fmtN(T.hi52)}`), kv("목표가", P.target ? fmtN(P.target) + "원" : "-"), kv("EPS·BPS", `${fmtN(P.eps)} · ${fmtN(P.bps)}`)];
@@ -563,7 +580,7 @@ function sdRender(a) {
   $("c-out").innerHTML = `
   ${backBtn()}
   <div class="card">
-    <div class="row"><div><div class="mid">${esc(a.name)}</div><div class="tiny mut">${esc(a.code)} · ${a.asof} · ${esc(a.src)} · ${a.took}초</div></div>
+    <div class="row"><div><div class="mid">${esc(a.name)}</div><div class="tiny mut">${a.mkt ? esc(a.mkt) + " · " : ""}${esc(a.code)} · ${a.asof} · ${esc(a.src)} · ${a.took}초</div></div>
       <div style="text-align:right"><div class="mid">${money(T.close)}</div><div class="small ${cls(T.chg)}">${pct(T.chg, 2)}</div></div></div>
     ${(a.tags || []).length ? `<div style="margin-top:8px">${a.tags.map(t => `<span class="tag ${tagCls(t)}">${esc(t)}</span>`).join("")}</div>` : ""}
     <div class="kv">${kvs.join("")}</div>${err}
@@ -635,7 +652,7 @@ function usHolders(a) {
   return `<div class="card"><h2>🏦 보유 구조</h2>
     <div class="kv">${[["기관", P.inst_pct], ["내부자", P.insider_pct], ["공매도", P.short_pct]].map(([l, v]) => `<div><small>${l}</small><b>${v != null ? (v * 100).toFixed(1) + "%" : "-"}</b></div>`).join("")}</div>
     ${h.length ? `<div style="margin-top:12px">${h.map(x => `<div class="srow small"><span>${esc(x.name)}</span><span>${x.pct.toFixed(2)}%${x.chg != null ? ` <span class="${cls(x.chg)} tiny">${x.chg >= 0 ? "+" : ""}${x.chg.toFixed(1)}%</span>` : ""}</span></div>`).join("")}</div>` : ""}
-    <div class="tiny mut" style="margin-top:8px">미국 종목은 일별 외국인·기관 순매수가 공개되지 않아 13F 기관 보유로 대신 표시</div></div>`;
+    <div class="tiny mut" style="margin-top:8px">해외 종목은 일별 외국인·기관 순매수가 없어 기관 보유로 대신 표시</div></div>`;
 }
 
 const FIN_SHOW = ["매출액", "영업이익", "당기순이익", "영업이익률", "순이익률", "ROE", "부채비율", "EPS", "PER", "PBR", "주당배당금"];
@@ -682,7 +699,7 @@ function sdCharts(a) {
     const S = a.series || {}; raw = {d: (S.dates || []).map(x => x.replace(/-/g, "")), o: S.open, h: S.high, l: S.low, c: S.close, v: S.volume};
   }
   const markers = (a.filings || []).filter(f => f.tag && f.tag !== "정기보고서").map(f => ({date: f.date, tag: f.tag, title: f.title}));
-  KC = new KChart(el, raw, {us: a.us, markers, state: SD.kc, onState: st => { SD.kc = {...st}; try { localStorage.setItem("kc-state", JSON.stringify(SD.kc)); } catch (e) {} }});
+  KC = new KChart(el, raw, {us: a.us ? ((CCY[a.ccy] || [])[1] ?? 2) || false : false, markers, state: SD.kc, onState: st => { SD.kc = {...st}; try { localStorage.setItem("kc-state", JSON.stringify(SD.kc)); } catch (e) {} }});
 }
 function flowChart(a) {
   if (!a.flows || !a.flows.length || !$("sd-fl")) return;

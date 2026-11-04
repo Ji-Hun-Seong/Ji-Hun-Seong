@@ -259,7 +259,8 @@ def mix(mode, pos, kr_eq, us_eq, us_qty, us_px):
 # ── 차트 탭: 종목 검색 → 볼린저(책 기법) + 자사주 공시 + 외국인 수급 AND 판정 ─────────────
 def chart_search(q):
     import data_sources as ds
-    return [{"name": c["name"], "code": c["code"], "us": bool(c.get("us"))} for c in ds.search(q, 8)]
+    return [{"name": c["name"], "code": c["code"], "us": bool(c.get("us")), "mkt": c.get("mkt") or ("🇰🇷 한국" if not c.get("us") else None),
+             "exch": c.get("exch")} for c in ds.search(q, 8)]
 
 
 def chart_ohlcv(code, us):
@@ -587,7 +588,7 @@ def fin_long(q):
         return {"error": f"'{q}' 종목을 찾지 못했습니다"}
     it = hits[0]
     if it.get("us"):
-        return {"error": "미국 종목은 DART 공시가 없어 장기 재무를 지원하지 않음 (연간·분기 표는 야후 기준)"}
+        return {"error": "해외 종목은 DART 공시가 없어 장기 재무를 지원하지 않음 (연간·분기 표는 야후 기준)"}
     if not it.get("corp_code"):
         return {"error": "DART 고유번호를 찾지 못함"}
 
