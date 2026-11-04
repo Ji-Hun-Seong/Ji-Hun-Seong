@@ -8,7 +8,15 @@
  *  new KChart(el, {d, o, h, l, c, v}, {markers: [{date: "2026-10-02", tag: "자사주", title: "..."}], us: false})
  */
 (function () {
-  const UP = "#f0465a", DN = "#3d7bf5", BG = "#0b0b0d", GRID = "#1b1b1f", SEP = "#2a2a30", AXT = "#c9c9ce", MUT = "#8a8a92", BAND = "#17171a";
+  const UP = "#f0465a", DN = "#3d7bf5";
+  let BG, GRID, SEP, AXT, MUT, BAND, CROSS, CTAG;
+  function palette() {                               // 낮/밤 테마 (html data-theme)
+    const light = document.documentElement.dataset.theme === "light";
+    [BG, GRID, SEP, AXT, MUT, BAND, CROSS, CTAG] = light
+      ? ["#ffffff", "#f0f2f5", "#e5e8eb", "#4e5968", "#8b95a1", "#f5f6f8", "rgba(40,48,60,.55)", "#4e5968"]
+      : ["#0b0b0d", "#1b1b1f", "#2a2a30", "#c9c9ce", "#8a8a92", "#17171a", "rgba(220,220,228,.6)", CTAG];
+  }
+  palette();
   const MA = [[5, "#ff8a00"], [20, "#3d7bf5"], [60, "#5aa03c"], [120, "#22b58c"]];
   const BBC = {up: "#4a86ff", mid: "#ff9a1f", lo: "#5aa03c"}, RSIC = "#ff8a00", SIGC = "#5aa03c";
   const AXW = 76, DATEH = 24, FONT = "-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif";
@@ -224,6 +232,7 @@
     // ── 그리기 ─────────────────────────────────────
     draw() {
       if (!this.W || !this.B || !this.B.N) return;
+      palette();
       const C = this.ctx, B = this.B, S = this.state, us = this.us, bw = this.bw, pw = this.pw, W = this.W, H = this.H, PN = this.panes();
       C.fillStyle = BG; C.fillRect(0, 0, W, H);
       const i0 = Math.max(0, Math.floor(this.end - this.n)), i1 = Math.min(B.N - 1, Math.ceil(this.end));
@@ -331,18 +340,18 @@
       const cI = Math.max(0, Math.min(B.N - 1, this.cross ? Math.round(this.cross.x / bw + (this.end - this.n) + 0.5) : L));
       if (this.cross) {
         const x = Math.round(X(cI)) + .5, y = this.cross.y;
-        C.strokeStyle = "rgba(220,220,228,.6)"; line(C, x, pt, x, rb);
-        if (y >= pt && y <= pb) { line(C, 0, Math.round(y) + .5, pw, Math.round(y) + .5); ptag(C, pw, y, [fmt(yHi - (y - pt) / (pb - pt) * (yHi - yLo), us)], "#3c3c44", W - pw, 20); }
-        else if (y >= vt && y <= vb) { line(C, 0, Math.round(y) + .5, pw, Math.round(y) + .5); ptag(C, pw, y, [fvol((vb - y) / (vb - vt) * vmax)], "#3c3c44", W - pw, 20); }
-        else if (y >= rt && y <= rb) { line(C, 0, Math.round(y) + .5, pw, Math.round(y) + .5); ptag(C, pw, y, [((rb - y) / (rb - rt) * 100).toFixed(2)], "#3c3c44", W - pw, 20); }
+        C.strokeStyle = CROSS; line(C, x, pt, x, rb);
+        if (y >= pt && y <= pb) { line(C, 0, Math.round(y) + .5, pw, Math.round(y) + .5); ptag(C, pw, y, [fmt(yHi - (y - pt) / (pb - pt) * (yHi - yLo), us)], CTAG, W - pw, 20); }
+        else if (y >= vt && y <= vb) { line(C, 0, Math.round(y) + .5, pw, Math.round(y) + .5); ptag(C, pw, y, [fvol((vb - y) / (vb - vt) * vmax)], CTAG, W - pw, 20); }
+        else if (y >= rt && y <= rb) { line(C, 0, Math.round(y) + .5, pw, Math.round(y) + .5); ptag(C, pw, y, [((rb - y) / (rb - rt) * 100).toFixed(2)], CTAG, W - pw, 20); }
         const ds = dstr(B.d[cI]); f(11, "bold"); const w = C.measureText(ds).width + 14, bx = Math.max(0, Math.min(pw - w, x - w / 2));
-        C.fillStyle = "#3c3c44"; rr(C, bx, PN.dband[0] + 3, w, DATEH - 6, 4); C.fill(); C.fillStyle = "#fff"; C.textAlign = "center"; C.fillText(ds, bx + w / 2, PN.dband[0] + DATEH / 2);
+        C.fillStyle = CTAG; rr(C, bx, PN.dband[0] + 3, w, DATEH - 6, 4); C.fill(); C.fillStyle = "#fff"; C.textAlign = "center"; C.fillText(ds, bx + w / 2, PN.dband[0] + DATEH / 2);
       }
       this.drawInfo(cI);
     }
     drawInfo(i) {
       const B = this.B, us = this.us, p = i > 0 ? B.c[i - 1] : B.o[i], ch = p ? B.c[i] / p - 1 : 0, col = ch > 0 ? UP : ch < 0 ? DN : AXT;
-      const cc = v => `style="color:${v > p ? UP : v < p ? DN : "#e8e8ec"}"`;
+      const cc = v => `style="color:${v > p ? UP : v < p ? DN : "var(--kc-txt)"}"`;
       const tfn = {D: "", W: " 주", M: " 월", Y: " 년"}[this.state.tf];
       const ma = this.state.ma ? MA.map(([n, c], k) => B.ma[k][i] != null ? `<span style="color:${c}">${n} ${fmt(B.ma[k][i], us)}</span>` : "").join("") : "";
       const mk = (B.mk[i] || []).map(m => `<div class="kc-mk">📢 ${m.tag ? `[${esc(m.tag)}] ` : ""}${esc(m.title || "")}</div>`).join("");
