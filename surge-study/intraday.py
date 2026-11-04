@@ -31,7 +31,7 @@ def kr() -> tuple[str, pd.DataFrame]:
         return "", pd.DataFrame()
     rows = []
     for mkt in ("KOSPI", "KOSDAQ"):
-        for page in (1, 2):
+        for page in ((1, 2, 3) if mkt == "KOSPI" else (1, 2)):     # 코스피는 300위까지 (대형주 +3~5%도 잡히게)
             j = requests.get(f"https://m.stock.naver.com/api/stocks/up/{mkt}", params={"page": page, "pageSize": 100},
                              headers=UA, timeout=20).json()
             for it in j.get("stocks", []):
@@ -47,7 +47,8 @@ def kr() -> tuple[str, pd.DataFrame]:
     df = pd.DataFrame(rows)
     if df.empty:
         return "", df
-    df = df[df["chg"] >= 5].sort_values("chg", ascending=False)       # +5% 이상만 (급등 '진행 중' 포착)
+    big = df["mcap_eok"] >= 50000                                       # 시총 5조↑ 대형주는 +3%부터 기록 (대형주의 호재성 움직임)
+    df = df[(df["chg"] >= 5) | (big & (df["chg"] >= 3))].sort_values("chg", ascending=False)   # 급등 '진행 중' 포착
     return now.strftime("%Y-%m-%d"), df
 
 

@@ -946,9 +946,14 @@ function pRender(d) {
       <div class="row tiny mut" style="margin-top:3px"><span>${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억${x.ret5 != null ? ` · 5일 <span class="${cls(x.ret5)}">${pct(x.ret5, 0)}</span>` : ""}${x.ret20 != null ? ` · 20일 <span class="${cls(x.ret20)}">${pct(x.ret20, 0)}</span>` : ""}</span></div>
       <div>${x.why.slice(0, 4).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.warn.map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div></div>`).join("");
     if (d.more && d.more.length) rows += `<div class="tiny mut" style="padding-top:12px">11~20위: ${d.more.map((x, j) => `<a ${open(d.items.length + j)} href="javascript:void 0">${esc(x.name)}</a>`).join(" · ")}</div>`;
+    const LV = d.live;
+    if (LV && LV.items && LV.items.length) head = `<div class="card"><h2>📡 지금 움직이는 종목 <span class="tiny mut">${LV.date.slice(5)} ${LV.time} 기준 · 20분마다</span></h2>
+      <div class="tiny mut" style="margin:-6px 0 8px">🏢 대형주(시총 5조↑) +4%↑ · 그 외 +10%↑ — 쫓아 사지 말고 '왜 오르는지' 공부용 🧘</div>
+      ${LV.items.map(x => `<div class="srow small" data-sc="${esc(x.code)}" style="cursor:pointer"><span>${x.big ? "🏢 " : ""}<b>${esc(x.name)}</b> <span class="tiny mut">${x.first} 첫 포착${x.max > x.chg + 2 ? ` · 장중 최고 +${x.max.toFixed(1)}%` : ""}</span></span>
+        <span><span class="up">+${x.chg.toFixed(1)}%</span>${x.limit_up ? " 🔒" : ""} <span class="tiny mut">${fmtN(x.tv_eok)}억</span></span></div>`).join("")}</div>` + head;
     const S = d.surgers || [];
-    if (S.length) rows += `</div><div class="card"><h2>🔥 ${d.date} 실제 급등주 ${d.context && d.context.n_surge != null ? d.context.n_surge + "개" : ""} <span class="tiny mut">(+15%↑ · 왜 올랐나)</span></h2>
-      ${S.slice(0, SD.sAll ? 30 : 10).map(x => `<div class="prow" data-sc="${esc(x.code)}"><div class="row"><span><span class="name">${esc(x.name)}</span> <span class="tiny mut">${esc(x.market || "")}</span>${x.picked ? ` <span class="tag b">🎯 전날 후보</span>` : ""}</span><span class="up name">+${x.chg}%</span></div>
+    if (S.length) rows += `</div><div class="card"><h2>🔥 ${d.date} 실제 급등주 ${d.context && d.context.n_surge != null ? d.context.n_surge + "개" : ""} <span class="tiny mut">(+10%↑ · 🏢 대형주는 +5%↑ · 왜 올랐나)</span></h2>
+      ${S.slice(0, SD.sAll ? 30 : 10).map(x => `<div class="prow" data-sc="${esc(x.code)}"><div class="row"><span>${x.big ? "🏢 " : ""}<span class="name">${esc(x.name)}</span> <span class="tiny mut">${esc(x.market || "")}</span>${x.picked ? ` <span class="tag b">🎯 전날 후보</span>` : ""}</span><span class="up name">+${x.chg}%</span></div>
         <div>${x.catalysts.map(c => `<span class="tag y">${esc(c)}</span>`).join("")}${x.themes.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
         ${x.news.length ? `<div class="why">📰 ${esc(x.news[0])}</div>` : ""}</div>`).join("")}
       ${S.length > 10 ? `<button class="more" id="s-all">${SD.sAll ? "접기 ▲" : `${S.length - 10}개 더 보기 ▼`}</button>` : ""}`;

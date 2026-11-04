@@ -43,6 +43,8 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
 REPO_URL = "https://github.com/Ji-Hun-Seong/Ji-Hun-Seong/blob/main/surge-study"
 
 SURGE_PCT = 10.0          # 급등 기준: 전일 종가 대비 +10% 이상
+BIG_TV, BIG_PCT = 300e8, 5.0   # 대형주(평소 거래대금 300억↑)는 +5%만 올라도 급등으로 기록 — 삼성SDI 같은 대형주 호재를 놓치지 않게
+                               # (research/largecap_backtest.md: 대형주 '다음 날 +5%'는 전날 지표로 예측이 안 돼서, 예측 대신 '기록·공부'용)
 MIN_TV = 10e8             # 리포트 상위 정렬 시 '의미 있는' 거래대금 기준 10억 (그 아래도 저장은 함)
 FOLLOW = (1, 3, 5, 10)    # 이후 수익률 추적 거래일
 
@@ -346,7 +348,9 @@ def main():
         tb = today_bar(df)
         row = {"date": tstr, "code": c, "name": names.at[c, "name"], "market": names.at[c, "market"],
                "pref": bool(names.at[c, "pref"]), **{k: tb[k] for k in ("chg", "gap", "tv", "vol_ratio", "close")}, **f}
-        row["surge"] = bool(tb["chg"] >= SURGE_PCT)
+        big = bool((f.get("tv20_avg") or 0) >= BIG_TV)
+        row["big"] = big
+        row["surge"] = bool(tb["chg"] >= SURGE_PCT or (big and tb["chg"] >= BIG_PCT))
         uni.append(row)
         if row["surge"] and not row["pref"]:
             surgers.append({**row, **tb})

@@ -419,13 +419,75 @@ def picks_surge(date=None):
         for x in sorted(dj.get("surgers", []), key=lambda x: -x.get("chg", 0))[:30]:
             surgers.append({"code": x["code"], "name": x["name"], "market": x.get("market"), "chg": round(x.get("chg", 0), 1),
                             "catalysts": x.get("catalysts") or [], "themes": x.get("themes") or [],
-                            "news": [n.get("title") for n in (x.get("news") or [])[:1]], "picked": x["code"] in cand})
+                            "news": [n.get("title") for n in (x.get("news") or [])[:1]], "picked": x["code"] in cand,
+                            "big": bool(x.get("big"))})
         ctx = dj.get("context") or {}
     except Exception:
         ctx = {}
     return {"kind": "surge", "date": j["date"], "method": j.get("method"), "n_scored": j.get("n_scored"),
             "items": items, "more": j["candidates"][10:20], "prev": j.get("prev"), "graded": g,
-            "dates": idx, "surgers": surgers, "context": ctx}
+            "dates": idx, "surgers": surgers, "context": ctx, "live": None if date else _try(intraday_now, None)}
+
+
+def intraday_loop():
+    """서버가 직접 장중 10분마다 상승 종목 스냅샷 (GitHub 예약 실행은 지연이 잦아서) → state/intraday/kr-날짜.csv"""
+    sp = os.path.join(REPO, "surge-study")
+    if sp not in sys.path:
+        sys.path.insert(0, sp)
+    while True:
+        try:
+            n = bot.now()
+            if n.weekday() < 5 and (9, 0) <= (n.hour, n.minute) <= (15, 40):
+                import intraday
+                day, df = intraday.kr()
+                if day and not df.empty:
+                    d = os.path.join(bot.STATE_DIR, "intraday")
+                    os.makedirs(d, exist_ok=True)
+                    p = os.path.join(d, f"kr-{day}.csv")
+                    df.to_csv(p, mode="a", header=not os.path.exists(p), index=False)
+                    with _lock:
+                        _cache.pop("picks:surge", None)       # 다음 요청에 새 스냅샷 반영
+        except Exception as e:
+            print("장중 스냅샷 실패:", e, flush=True)
+        time.sleep(600)
+
+
+def intraday_now():
+    """📡 지금 움직이는 종목 — 장중 스냅샷(서버 10분마다 + GitHub surge-study/data/intraday/kr/오늘.csv)
+       대형주(시총 5조↑) +4%↑ · 그 외 +10%↑(거래대금 10억↑, 우선주 제외), 처음 포착 시각과 지금 상승률"""
+    today = bot.now().strftime("%Y-%m-%d")
+    rows = []
+    local = os.path.join(bot.STATE_DIR, "intraday", f"kr-{today}.csv")
+    if os.path.exists(local):
+        rows += list(csv.DictReader(open(local, encoding="utf-8")))
+    try:
+        rows += list(csv.DictReader(io.StringIO(gh_text(f"surge-study/data/intraday/kr/{today}.csv", ttl=300))))
+    except Exception:
+        pass
+    if not rows:
+        return None
+    last_t = max(r["time"] for r in rows)
+    by = {}
+    for r in rows:
+        try:
+            chg, mc, tv = float(r["chg"]), float(r.get("mcap_eok") or 0), float(r.get("tv_eok") or 0)
+        except ValueError:
+            continue
+        x = by.setdefault(r["code"], {"code": r["code"], "name": r["name"], "market": r["market"], "first": r["time"], "max": chg, "mcap_eok": mc})
+        x["max"] = max(x["max"], chg)
+        if r["time"] >= x.get("t", ""):
+            x.update(t=r["time"], chg=chg, tv_eok=tv, mcap_eok=mc, limit_up=r.get("limit_up") == "True")
+    out = []
+    for x in by.values():
+        big = x["mcap_eok"] >= 50000
+        if x.get("t") != last_t:                  # 최근 스냅샷에서 빠졌으면(상승폭 줄어듦) 제외
+            continue
+        if re.search(r"\d?우[A-C]?$", x["name"]) or (not big and x["tv_eok"] < 10):
+            continue
+        if (big and x["chg"] >= 4) or x["chg"] >= 10:
+            out.append({**x, "big": big})
+    out.sort(key=lambda x: (not x["big"], -x["chg"]))
+    return {"date": today, "time": last_t, "items": out[:25], "n": len(out)}
 
 
 def picks_value():
@@ -771,4 +833,5 @@ if __name__ == "__main__":
     host, port = os.environ.get("DASH_HOST", "0.0.0.0"), int(os.environ.get("DASH_PORT", "8080"))
     print(f"대시보드 http://{host}:{port}", flush=True)
     threading.Thread(target=warm_up, daemon=True).start()
+    threading.Thread(target=intraday_loop, daemon=True).start()
     ThreadingHTTPServer((host, port), H).serve_forever()
