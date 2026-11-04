@@ -139,7 +139,7 @@ canvas.c-big{max-height:none}
 .minis{display:flex;gap:6px;margin:0 0 10px;flex-wrap:wrap}.minis button{background:var(--bg);color:var(--sub);border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-size:12px;font-family:inherit}
 .minis button.act{color:var(--txt);border-color:var(--blue)}
 .fl{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:6px 10px;font-size:13px;font-variant-numeric:tabular-nums;margin-bottom:10px}.fl b{color:var(--sub);font-weight:400}
-/* 장기·단기 비율 · 영웅 */
+/* 장기·단기 비율 · 대가 */
 .mixbar{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--line);margin:12px 0 6px;position:relative}
 .mixbar i{display:block;height:100%}.mixbar .l{background:var(--ok)}.mixbar .s{background:var(--warn)}.mixbar.bad .s{background:var(--up)}
 .mixmk{position:relative;height:14px;font-size:10px;color:var(--sub)}.mixmk span{position:absolute;transform:translateX(-50%);white-space:nowrap}
@@ -237,7 +237,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 
 <section id="t-pick">
   <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
-  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 영웅</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 가치주</button><button data-k="ackman">🇺🇸 애크먼</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 가치주</button><button data-k="ackman">🇺🇸 애크먼</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -438,9 +438,9 @@ function mixRender(m) {
       <div><div class="tiny mut">⚡ 단기 (봇: 자사주 스윙+${esc(D.us.symbol)})</div><div class="mid">${won(m.short)}</div><div class="tiny mut">한국 ${won(m.short_kr)} · 미국 ${won(m.short_us)}${m.mode !== "live" ? " · 🧪가상" : ""}</div></div></div>
     <div class="small" style="margin-top:10px">${lab}. ${advise}</div>${limWarn}
     ${m.over15 && m.over15.length ? `<div class="small" style="margin-top:6px;color:var(--y-fg)">⚠︎ 한 종목 15% 초과: ${m.over15.map(esc).join(", ")} — 장기 자산 안에서도 분산</div>` : ""}
-    ${top ? `<div class="tiny mut" style="margin:12px 0 2px">장기 보유 비중 · 🏛️ 영웅 등급</div>${top}` : ""}
+    ${top ? `<div class="tiny mut" style="margin:12px 0 2px">장기 보유 비중 · 🏛️ 대가 등급</div>${top}` : ""}
     <div class="row" style="margin-top:8px"><span class="tiny mut">환율 ${fmtN(m.fx)}원 · ${esc(m.text)}</span></div>
-    <button class="more" onclick="openHero()">🏛️ 나의 투자 원칙 · 영웅 채점 보기 ›</button>`;
+    <button class="more" onclick="openHero()">🏛️ 나의 투자 원칙 · 대가 채점 보기 ›</button>`;
 }
 
 function principlesCard(P, heroes, open) {
@@ -457,8 +457,8 @@ const HKEYS = [["graham", "🛡️ 그레이엄"], ["buffett", "🏰 버핏"], [
 const hbars = h => `<div class="hbars">${HKEYS.map(([k, l]) => `<div>${l.split(" ")[1]}<i><b style="width:${h[k] == null ? 0 : h[k] * 5}%"></b></i></div>`).join("")}</div>`;
 function heroCard(a) {
   const H = a.heroes; if (!H) return "";
-  if (H.error) return `<div class="card"><h2>🏛️ 영웅 5인 체크</h2><div class="empty">${esc(H.error)}</div></div>`;
-  return `<div class="card"><div class="row"><h2 style="margin:0">🏛️ 영웅 5인 체크</h2><span><span class="score">${H.total ?? "-"}</span><span class="tiny mut">/100</span></span></div>
+  if (H.error) return `<div class="card"><h2>🏛️ 대가 5인 체크</h2><div class="empty">${esc(H.error)}</div></div>`;
+  return `<div class="card"><div class="row"><h2 style="margin:0">🏛️ 대가 5인 체크</h2><span><span class="score">${H.total ?? "-"}</span><span class="tiny mut">/100</span></span></div>
     <div class="grade" style="margin-top:12px"><b>${esc(H.grade.label)}</b><div class="small mut" style="margin-top:4px">${esc(H.grade.desc)}</div>
       ${H.note ? `<div class="small" style="margin-top:6px">${esc(H.note)}</div>` : ""}
       <div class="small" style="margin-top:6px">🔎 린치 분류: <b>${esc(H.lynch_cat)}</b> <span class="mut">· 매도 기준: ${esc(H.lynch_sell || "")}</span></div></div>
@@ -606,7 +606,7 @@ function fomoCard(a) {
   if (!why.length) return "";
   return `<div class="card fomo-alert"><h2>🧘 FOMO 경보 — ${why.join(" · ")}</h2>
     <div class="small">지금 사고 싶은 마음이 든다면 그게 FOMO일 수 있어요.<br>
-    ① 하루 기다리기 ② 왜 더 오를지 두 문장으로 써 보기 ③ 원칙에 맞는 가격(영웅 5인·밸류 기준)인지 확인하기 — 셋 다 통과 못 하면 사지 않기.<br>
+    ① 하루 기다리기 ② 왜 더 오를지 두 문장으로 써 보기 ③ 원칙에 맞는 가격(대가 5인·밸류 기준)인지 확인하기 — 셋 다 통과 못 하면 사지 않기.<br>
     <b>그리고 어떤 경우에도 대출로 사지 않기.</b></div></div>`;
 }
 
@@ -721,7 +721,7 @@ function ctxCard() {
     <div class="tally" style="margin:-4px 0 8px">${[["value", "밸류"], ["payout", "주주환원"], ["cash", "현금·재무"], ["fit", "내 성향"]].map(([k, l]) => `<span class="tag ${x.scores[k] >= 70 ? "g" : x.scores[k] < 40 ? "r" : ""}">${l} ${x.scores[k]}</span>`).join("")}</div>
     ${x.reasons.map(w => `<div class="small" style="padding:3px 0">✔︎ ${esc(w)}</div>`).join("")}${x.risks.map(w => `<div class="small" style="padding:3px 0;color:var(--r-fg)">⚠︎ ${esc(w)}</div>`).join("")}
     ${x.note ? `<div class="tiny mut" style="margin-top:6px">📝 ${esc(x.note)}</div>` : ""}</div>`;
-  if (c.kind === "hero") return "";                 // 영웅 목록에서 왔으면 아래 '영웅 5인 체크'가 같은 내용
+  if (c.kind === "hero") return "";                 // 대가 목록에서 왔으면 아래 '대가 5인 체크'가 같은 내용
   if (c.kind === "ackman" && x.total == null) return "";
   if (c.kind === "ackman") return `<div class="card"><h2>🇺🇸 애크먼 TOP ${x.rank} · ${x.total != null ? x.total + "점" : ""} ${x.status || ""}</h2>
     ${x.fv ? `<div class="small">적정가 <b>${usd(x.fv)}</b> · 매수가 ≤ <b>${usd(x.buy)}</b> · 현재 ${usd(x.price)} <span class="mut">(${esc(x.word || "")})</span></div>` : ""}
@@ -891,7 +891,7 @@ document.querySelectorAll("#p-seg button").forEach(b => {
 document.querySelector('nav button[data-t="pick"]').addEventListener("click", () => pLoad());
 function openHero() { pKind = "hero"; try { localStorage.setItem("p-kind", "hero"); } catch (e) {}
   document.querySelectorAll("#p-seg button").forEach(x => x.classList.toggle("act", x.dataset.k === "hero")); goTab("pick"); }
-// 영웅 탭 안의 국가 선택 (한국·미국·유럽·중국·일본)
+// 대가 탭 안의 국가 선택 (한국·미국·유럽·중국·일본)
 let hMkt = "kr";
 try { hMkt = localStorage.getItem("h-mkt") || "kr"; } catch (e) {}
 const HMKT = [["kr", "🇰🇷 한국"], ["us", "🇺🇸 미국"], ["eu", "🇪🇺 유럽"], ["cn", "🇨🇳 중국"], ["jp", "🇯🇵 일본"]];
@@ -901,7 +901,7 @@ const pKey = () => pKind === "hero" && hMkt !== "kr" ? "hero_" + hMkt : pKind ==
 async function pLoad(force) {
   const k = pKey();
   if (PK[k] && !force && Date.now() - PK[k].t < 300000) return pRender(PK[k].d);
-  if (!PK[k]) $("p-out").innerHTML = (pKind === "hero" ? hMktBar() : "") + `<div class="card"><div class="empty">불러오는 중…${k.startsWith("hero") ? `<br><span class="tiny">${k === "hero" ? "영웅 채점은 후보 약 90종목의 재무·공시를 모아서 처음엔 1분쯤 걸립니다 (이후 6시간 저장)" : "해외 대표 종목 30~40개의 재무를 모아서 처음엔 1~2분 걸립니다 (이후 12시간 저장)"}</span>` : ""}</div></div>`;
+  if (!PK[k]) $("p-out").innerHTML = (pKind === "hero" ? hMktBar() : "") + `<div class="card"><div class="empty">불러오는 중…${k.startsWith("hero") ? `<br><span class="tiny">${k === "hero" ? "대가 채점은 후보 약 90종목의 재무·공시를 모아서 처음엔 1분쯤 걸립니다 (이후 6시간 저장)" : "해외 대표 종목 30~40개의 재무를 모아서 처음엔 1~2분 걸립니다 (이후 12시간 저장)"}</span>` : ""}</div></div>`;
   if (pKind === "hero") hMktBind();
   const url = k.startsWith("surge:") ? "api/picks?k=surge&d=" + k.slice(6) : "api/picks?k=" + k;
   try { const d = await (await fetch(url, {cache: "no-store"})).json(); PK[k] = {t: Date.now(), d}; if (k === pKey()) pRender(d); }
@@ -918,7 +918,7 @@ function pRender(d) {
   if (d.kind === "hero") {
     const G = d.grades || {}, f = filt => d.items.filter(x => filt === "all" || x.grade.key === filt);
     const glob = d.market && d.market !== "kr";
-    head = hMktBar() + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 영웅 5인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
+    head = hMktBar() + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 5인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
       <div class="small" style="margin-top:6px;line-height:1.6">그레이엄(안전마진) · 버핏(해자·ROE) · 피셔(성장) · 린치(성장 대비 가격) · 애크먼(촉매·환원) 각 20점</div>
       <div class="tally"><span class="tag g">🟢 핵심 ${G.core || 0}</span><span class="tag y">🟡 위성 ${G.sat || 0}</span><span class="tag">⚪ 관찰 ${G.watch || 0}</span><span class="tag r">🔴 부적합 ${G.no || 0}</span></div>
       <div class="tiny mut" style="margin-top:8px">${glob ? "후보 = 그 나라 대표 우량주·배당주 (chartpage/heroes.py GLOBAL_POOL) · 야후 재무 기준 — 공시·수급 항목은 채점에서 제외" : "후보 = 내가 아는 회사(toss-bot/heroes_pool.txt) + 가치주 후보 + 📌 내 계좌"} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;

@@ -1,5 +1,5 @@
 """
-heroes.py — '내 주식 영웅 5인'의 기준으로 종목을 채점 (장기 투자 판단용)
+heroes.py — '내 투자 대가 5인'의 기준으로 종목을 채점 (장기 투자 판단용)
 
   벤저민 그레이엄  🛡️ 안전마진   : 흑자 지속 · 부채 · 당좌비율 · 그레이엄 넘버(PER×PBR ≤ 22.5)
   워런 버핏       🏰 해자·ROE   : ROE 수준과 꾸준함 · 영업이익률 수준과 안정성
@@ -99,7 +99,7 @@ def _chk(pts, mx, text, ok=None):
 
 # ── 5인 채점 ───────────────────────────────────────────
 def score(d: dict) -> dict:
-    """d = stock_info 상세(또는 board용 가벼운 dict). 반환: 영웅별 점수·체크·등급·린치 분류"""
+    """d = stock_info 상세(또는 board용 가벼운 dict). 반환: 대가별 점수·체크·등급·린치 분류"""
     us = bool(d.get("us"))
     P = d.get("profile") or {}
     fin = d.get("finance") or {}
@@ -349,7 +349,7 @@ def light(code: str, name: str | None = None, corp_code: str | None = None) -> d
             "finance": {"annual": fa}, "filings": filings, "filings_ok": fok, "close": close}
 
 
-# ── 해외 시장별 후보 (발굴 › 영웅 › 국가 탭) — 대표 우량주 + 가치·배당주 + 애크먼 계열 ─────────
+# ── 해외 시장별 후보 (발굴 › 대가 › 국가 탭) — 대표 우량주 + 가치·배당주 + 애크먼 계열 ─────────
 GLOBAL_POOL = {
     "us": [("AAPL", "애플"), ("MSFT", "마이크로소프트"), ("NVDA", "엔비디아"), ("GOOGL", "알파벳"), ("AMZN", "아마존"), ("META", "메타"),
            ("BRK-B", "버크셔해서웨이"), ("AVGO", "브로드컴"), ("LLY", "일라이릴리"), ("JPM", "JP모건"), ("V", "비자"), ("MA", "마스터카드"),

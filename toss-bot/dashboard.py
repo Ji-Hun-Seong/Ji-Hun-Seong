@@ -4,7 +4,7 @@
   차트 탭: 종목 검색 → 볼린저(책 기법)·자사주 공시·외국인 수급 판정 (chartpage/ 모듈, 별도 서버 없음)
   선택: .env 에 DASH_PASSWORD=... 를 넣으면 접속 시 비밀번호(아이디는 아무거나)를 물어봄
 
-투자 원칙: 장기 9 : 단기 1 (단기는 최대 2) — 홈 '장기·단기 비율' 카드, 발굴 '🏛️ 영웅' 목록, 종목 상세 '영웅 체크'
+투자 원칙: 장기 9 : 단기 1 (단기는 최대 2) — 홈 '장기·단기 비율' 카드, 발굴 '🏛️ 대가' 목록, 종목 상세 '대가 체크'
             (그레이엄·버핏·피셔·린치·애크먼 기준, chartpage/heroes.py)
 보여주는 것: 운용 모드·긴급정지, 한국/미국 전략 평가·수익 곡선, 보유 종목(토스 실시간가), 시가 예약·매도 예정,
             최근 자사주 공시 감지, 청산 내역, 나스닥 200일선·목표 레버리지, 실제 토스 계좌 잔고
@@ -244,7 +244,7 @@ def mix(mode, pos, kr_eq, us_eq, us_qty, us_px):
     longs.sort(key=lambda x: -x["value"])
     for x in longs:
         x["w"] = x["value"] / long_v if long_v else None
-    # 장기 보유 종목의 영웅 등급 (발굴 '영웅' 목록이 계산돼 있으면)
+    # 장기 보유 종목의 대가 등급 (발굴 '대가' 목록이 계산돼 있으면)
     hp = _cache.get("picks:hero")
     gmap = {x["code"]: x["grade"] for x in (hp[1].get("items", []) if hp and isinstance(hp[1], dict) else [])}
     for x in longs:
@@ -357,7 +357,7 @@ def warm_up():
         ds.load_corps()
     except Exception as e:
         print("종목 목록 준비 실패:", e, flush=True)
-    for k in ("surge", "value", "ackman", "hero"):  # 발굴 목록도 미리 (종목 상세의 '어느 목록' 표시에 씀) · 영웅은 1분쯤 걸려 마지막
+    for k in ("surge", "value", "ackman", "hero"):  # 발굴 목록도 미리 (종목 상세의 '어느 목록' 표시에 씀) · 대가은 1분쯤 걸려 마지막
         picks(k)
 
 
@@ -646,7 +646,7 @@ def picks_hero():
 
 
 def picks_hero_global(market):
-    """발굴 › 영웅 › 🇺🇸 미국 · 🇪🇺 유럽 · 🇨🇳 중국 · 🇯🇵 일본 — 시장별 대표 종목을 같은 6인 기준으로"""
+    """발굴 › 대가 › 🇺🇸 미국 · 🇪🇺 유럽 · 🇨🇳 중국 · 🇯🇵 일본 — 시장별 대표 종목을 같은 5인 기준으로"""
     import heroes
     t0 = time.time()
     pool = [{"code": c, "name": n, "src": ["대표 종목"]} for c, n in heroes.GLOBAL_POOL[market]]
@@ -687,7 +687,7 @@ def stock_detail(q, us_hint=None):
         with _lock:
             _cache.pop(key, None)
         return out
-    try:                                          # 🏛️ 영웅 5인 체크 (이미 받은 데이터로 계산 — 추가 요청 없음)
+    try:                                          # 🏛️ 대가 5인 체크 (이미 받은 데이터로 계산 — 추가 요청 없음)
         import heroes
         out = {**out, "heroes": heroes.score(out)}
     except Exception as e:
@@ -700,7 +700,7 @@ def stock_detail(q, us_hint=None):
             tags.append("🤖 봇 보유")
     except Exception:
         pass
-    for kind, label in (("hero", "🏛️ 영웅"), ("surge", "🚀 급등 후보"), ("value", "💎 가치주"), ("ackman", "🇺🇸 애크먼")):
+    for kind, label in (("hero", "🏛️ 대가"), ("surge", "🚀 급등 후보"), ("value", "💎 가치주"), ("ackman", "🇺🇸 애크먼")):
         p = _cache.get("picks:" + kind)
         if p and isinstance(p[1], dict):
             for x in p[1].get("items", []):
