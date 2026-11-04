@@ -87,7 +87,7 @@ def fetch_fs(corp: str, year: int, reprt: str = "11011") -> dict:
         return {"fs": None, "list": []}
     this_year = dt.date.today().year
     final = reprt == "11011" and year <= this_year - 2 or (reprt == "11011" and year == this_year - 1 and dt.date.today().month >= 5)
-    return _cached(f"{corp}_{year}_{reprt}", None if final else 86400, get)
+    return _cached(f"{corp}_{year}_{reprt}", None if final else 3 * 86400, get)   # 확정 안 된 해·분기도 3일은 저장
 
 
 def fetch_div(corp: str, year: int) -> list:
@@ -97,7 +97,7 @@ def fetch_div(corp: str, year: int) -> list:
         if j.get("status") not in ("000", "013"):
             raise RuntimeError(f"DART {j.get('status')}: {j.get('message')}")
         return j.get("list") or []
-    return _cached(f"{corp}_{year}_div", None if final else 86400, get)
+    return _cached(f"{corp}_{year}_div", None if final else 3 * 86400, get)
 
 
 # ── 계정 찾기 ─────────────────────────────────────────

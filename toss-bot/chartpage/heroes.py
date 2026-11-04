@@ -348,14 +348,37 @@ METHOD = ("📖 = 책·주주서한에 나온 숫자 그대로 · ⚖️ = 원�
 
 
 # ── 발굴 탭: 후보 묶음을 한꺼번에 채점 ─────────────────────
+_DISK = os.path.join(os.path.expanduser(os.environ.get("CHART_CACHE_DIR", "~/.cache/bbchart")), "heroes")
+
+
+def _disk(name: str, ttl: float, fn):
+    """한 번 받은 건 디스크에 저장 → 기한 안이면 다시 안 받음 (코스피 전체 채점을 빠르게).
+       자주 안 바뀌는 것만: 연간 재무 7일 · 분기 재무 3일 · 공시 목록 20시간. 시세·밸류(PER 등)는 매번 새로"""
+    import json
+    f = os.path.join(_DISK, name.replace("/", "_") + ".json")
+    try:
+        if time.time() - os.path.getmtime(f) < ttl:
+            return json.load(open(f, encoding="utf-8"))
+    except Exception:
+        pass
+    v = fn()
+    try:
+        os.makedirs(_DISK, exist_ok=True)
+        json.dump(v, open(f + ".tmp", "w", encoding="utf-8"), ensure_ascii=False)
+        os.replace(f + ".tmp", f)
+    except Exception:
+        pass
+    return v
+
+
 def light(code: str, name: str | None = None, corp_code: str | None = None) -> dict:
-    """목록용 가벼운 데이터 — 밸류(1회) + 연간 재무(1회) + 공시(1회). 시세 일봉은 받지 않음"""
+    """목록용 가벼운 데이터 — 밸류·종가·1년 일봉은 매번, 재무·공시는 디스크 저장본(기한 안이면)"""
     import stock_info as si
     prof = si.kr_profile(code)
-    fa = si.kr_finance(code, "annual")
+    fa = _disk(f"fa_{code}", 7 * 86400, lambda: si.kr_finance(code, "annual"))
     fq, oh = {}, None
     try:                                              # 드러켄밀러 이익 변곡(분기 이익 증가율)용
-        fq = si.kr_finance(code, "quarter")
+        fq = _disk(f"fq_{code}", 3 * 86400, lambda: si.kr_finance(code, "quarter"))
     except Exception:
         pass
     try:                                              # 1년 주가(드러켄밀러 추세·낙폭 · 템플턴 비관 · 린치 과열 · 클라만 소외) — 최근 약 14개월만
@@ -366,7 +389,7 @@ def light(code: str, name: str | None = None, corp_code: str | None = None) -> d
     filings, fok = [], False
     try:
         if corp_code and (os.environ.get("DART_API_KEY") or os.environ.get("DART_KEY")):
-            filings, fok = si.kr_filings(corp_code), True
+            filings, fok = _disk(f"fl_{corp_code}", 20 * 3600, lambda: si.kr_filings(corp_code)), True
     except Exception:
         pass
     dart = None
