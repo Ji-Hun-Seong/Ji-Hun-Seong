@@ -1189,15 +1189,33 @@ function obOpen() {                                       // ⚡ 실시간: 서�
   const code = OB.code, es = new EventSource("api/ob-stream?q=" + encodeURIComponent(code));
   OB.es = es;
   es.onmessage = e => { if (code !== OB.code) return; OB.errs = 0; let d; try { d = JSON.parse(e.data); } catch (_) { return; }
-    if (d.error) { if ($("ob-st")) $("ob-st").textContent = "⚠️ " + d.error.slice(0, 60); return; }
+    if (d.error) { OB.err = d.error; if (!OB.d) obErr(); else if ($("ob-st")) $("ob-st").textContent = "⚠️ " + d.error.slice(0, 60); return; }
+    OB.err = null;
     OB.d = d; if (!OB.raf) OB.raf = requestAnimationFrame(() => { OB.raf = 0; obRender(); }); };
-  es.onerror = () => { OB.errs++; if (OB.errs >= 4) { obStop(); obCheckOff(); } };
+  es.onerror = () => { OB.errs++; if (OB.errs === 1 || OB.errs >= 4) obCheckOff(OB.errs >= 4); };
+  clearTimeout(OB.slow); OB.slow = setTimeout(() => { if (!OB.d && code === OB.code) obCheckOff(false); }, 6000);   // 6초 안에 아무것도 안 오면 원인 확인
 }
-async function obCheckOff() {                             // 스트림이 계속 실패 → 서버 설정 문제인지 확인 후 1초 조회로
+async function obCheckOff(stop) {                         // 스트림이 안 될 때 — 서버에 원인을 물어봄
+  if (stop) obStop();
   try { const d = await (await fetch("api/orderbook?q=" + encodeURIComponent(OB.code), {cache: "no-store"})).json();
-    if (d.disabled) { OB.off = true; $("sd-ob").innerHTML = `<div class="card"><h2>📒 호가</h2><div class="empty small">${esc(d.error)}</div></div>`; tbarSync(); return; }
-  } catch (e) {}
-  obOpen();
+    if (d.disabled) { OB.off = true; obStop(); OB.err = d.error; obErr(); tbarSync(); return; }
+    if (d.error) { OB.err = d.error; obErr(); }
+    else if (!OB.d) { OB.d = {...d, mode: "poll"}; OB.err = null; obRender(); }
+  } catch (e) { OB.err = "서버 응답 없음: " + e.message; obErr(); }
+  if (stop) obOpen();
+}
+function obHint(m) {                                      // 흔한 원인을 사람 말로
+  m = String(m || "");
+  if (/403|허용 IP/.test(m)) return "토스증권 WTS → 설정 → Open API → 허용 IP 에 서버 IP(161.33.184.20)를 등록해 주세요";
+  if (/401|invalid_client|auth|토큰/.test(m)) return "토스 Open API 키(TOSS_CLIENT_ID·SECRET)가 맞는지 서버 .env 를 확인해 주세요";
+  if (/키가 없음/.test(m)) return "서버 .env 에 TOSS_CLIENT_ID · TOSS_CLIENT_SECRET 을 넣고 재시작해 주세요";
+  if (/Timeout|timed out|Connection/.test(m)) return "서버가 토스에 접속하지 못했어요 — 잠시 뒤 다시 시도";
+  return "";
+}
+function obErr() {
+  const m = OB.err, h = obHint(m), html = `<div class="empty small" style="line-height:1.6">⚠️ 호가를 못 받았어요<br><span class="tiny">${esc(m || "")}</span>${h ? `<br><b class="tiny">→ ${esc(h)}</b>` : ""}</div>`;
+  if ($("sd-ob")) $("sd-ob").innerHTML = `<div class="card"><h2>📒 호가</h2>${html}</div>`;
+  if (TV.open && $("tv-ob") && !OB.d) $("tv-ob").innerHTML = html;
 }
 async function obPoll() {
   const code = OB.code;
@@ -1303,7 +1321,7 @@ function tvRender() {
 function tvOb() {
   const el = $("tv-ob"); if (!el) return;
   const d = OB.d, us = tvUs(), prev = obBase();
-  if (!d) { el.innerHTML = `<div class="empty small">호가 연결 중…</div>`; return; }
+  if (!d) { if (OB.err) { obErr(); return; } el.innerHTML = `<div class="empty small">호가 연결 중…</div>`; return; }
   const dots = `<div class="tv-dots"><i class="${TV.page === "ob" ? "on" : ""}" data-pg="ob"></i><i class="${TV.page === "tk" ? "on" : ""}" data-pg="tk"></i></div>`;
   if (TV.page === "tk") {
     const tk = d.ticks || [];
@@ -1410,10 +1428,13 @@ function tvCalc() {
     <br>1회 한도 ${obMoney(I.max_order, us)}${I.stopped ? `<br><span class="up">⛔ 긴급 정지 — 매수 불가</span>` : ""}`; }
 }
 async function tvInfo() {
-  try { const I = await (await fetch("api/trade?q=" + encodeURIComponent(OB.a.code), {cache: "no-store"})).json(); if (I.error) throw new Error(I.error);
+  if ($("tv-inf") && !TV.info) $("tv-inf").textContent = "계좌 정보 불러오는 중…";
+  try { const ctl = new AbortController(), tmo = setTimeout(() => ctl.abort(), 15000);
+    const I = await (await fetch("api/trade?q=" + encodeURIComponent(OB.a.code), {cache: "no-store", signal: ctl.signal})).json(); clearTimeout(tmo);
+    if (I.error) throw new Error(I.error);
     TV.info = I; I.open.forEach(o => o.status_ko = {PENDING: "접수", PARTIAL_FILLED: "부분 체결", PENDING_CANCEL: "취소 중", PENDING_REPLACE: "정정 중"}[o.status] || o.status);
     if (TV.open && ["BUY", "SELL"].includes(TV.tab)) tvCalc(); if (TV.open && TV.tab === "EDIT") tvRight();
-  } catch (e) { if ($("tv-inf")) $("tv-inf").textContent = "계좌 정보 실패: " + e.message; }
+  } catch (e) { TV.infoErr = e.message; if ($("tv-inf")) $("tv-inf").innerHTML = `<span class="up">계좌 정보 실패: ${esc(e.message)}</span>${obHint(e.message) ? `<br>→ ${esc(obHint(e.message))}` : ""}`; }
 }
 function tvConfirm() {
   const us = tvUs(), a = OB.a, qty = +$("tv-qty").value || 0, px = +$("tv-px").value || 0, why = $("tv-why").value.trim(), sd = TV.tab === "BUY" ? "매수" : "매도";

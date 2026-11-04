@@ -16,6 +16,7 @@ import json
 import os
 import threading
 import time
+import sys
 import uuid
 
 import bot
@@ -34,6 +35,7 @@ def api():
     with _lock:
         if _api is None:
             _api = bot.api()
+            _api.timeout = 8                               # 대시보드에서 누르는 요청은 오래 기다리지 않게
         return _api
 
 
@@ -321,3 +323,32 @@ def cancel(order_id: str) -> dict:
     r = api().cancel(order_id)
     _log({"cancel": order_id, "ok": True})
     return {"ok": True, "order_id": (r or {}).get("orderId") or order_id}
+
+
+if __name__ == "__main__" and sys.argv[1:2] == ["check"]:
+    # 서버에서 점검:  .venv/bin/python manual_trade.py check [종목코드]
+    code = (sys.argv[2:3] or ["005930"])[0]
+    def step(name, fn):
+        try:
+            r = fn()
+            print(f"✅ {name}: {str(r)[:160]}")
+            return True
+        except Exception as e:
+            m = str(e)
+            hint = (" → 토스 WTS 설정 > Open API > 허용 IP 에 이 서버 IP 등록" if "403" in m or "허용 IP" in m
+                    else " → .env 의 TOSS_CLIENT_ID/SECRET 확인" if "401" in m or "invalid_client" in m else "")
+            print(f"❌ {name}: {type(e).__name__}: {m[:200]}{hint}")
+            return False
+    ok, why = enabled()
+    print(("✅" if ok else "❌") + " 설정: " + (why or "토스 키 있음"))
+    if ok and step("토큰 발급", lambda: api().token()[:12] + "…"):
+        step("계좌", lambda: api().account)
+        step("호가", lambda: {k: v for k, v in orderbook(code).items() if k in ("last", "upper", "lower", "sum_ask", "sum_bid")})
+        step("현금 매수 가능", lambda: api().buying_power())
+        step("미체결", lambda: len(api().open_orders()))
+        try:
+            import ob_stream, ws_min
+            from ws_min import WS
+            step("실시간(웹소켓) 연결", lambda: (WS(ob_stream.WS_URL, {"Authorization": f"Bearer {api().token()}"}, timeout=8).close(), "OK")[1])
+        except Exception as e:
+            print("❌ 웹소켓 모듈:", e)

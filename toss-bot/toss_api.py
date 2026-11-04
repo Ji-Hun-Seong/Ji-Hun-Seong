@@ -22,6 +22,7 @@ class Toss:
     def __init__(self, client_id, client_secret, token_file, account_seq=None):
         self.cid, self.secret, self.token_file = client_id, client_secret, token_file
         self.account = account_seq
+        self.timeout = 20
         self.s = requests.Session()
         self._last = {}
         self._lock = threading.Lock()
@@ -58,7 +59,7 @@ class Toss:
 
     def _issue(self):
         self._throttle("AUTH")
-        r = self.s.post(f"{BASE}/oauth2/token", timeout=20,
+        r = self.s.post(f"{BASE}/oauth2/token", timeout=self.timeout,
                         data={"grant_type": "client_credentials", "client_id": self.cid, "client_secret": self.secret})
         if r.status_code != 200:
             try:
@@ -82,7 +83,7 @@ class Toss:
             if account:
                 h["X-Tossinvest-Account"] = str(self.account)
             try:
-                r = self.s.request(method, BASE + path, params=params, json=body, headers=h, timeout=20)
+                r = self.s.request(method, BASE + path, params=params, json=body, headers=h, timeout=self.timeout)
             except requests.RequestException as e:
                 if method != "GET" and body is not None and not (body or {}).get("clientOrderId"):
                     raise                                   # 멱등키 없는 주문은 재시도 안 함
