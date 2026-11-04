@@ -500,7 +500,7 @@ def news_radar():
             "bad": bad[:15], "early": early, "today": today, "yday": yday}
 
 
-# ── 발굴 탭: 급등 후보 · 가치주 20선 · 애크먼 TOP10 ─────────────────────────────
+# ── 발굴 탭: 급등 후보 · 👨 아빠 매매일지 DNA 20선(가치주) · 애크먼 TOP10 ─────────────────────────────
 #   데이터는 GitHub(Actions가 매일·매주 갱신)에서 직접 받아 옴 → 서버에서 git pull 안 해도 최신.
 #   GitHub에 못 가면 서버에 있는 저장소 파일을 씀.
 REPO = os.path.dirname(HERE)
@@ -903,7 +903,7 @@ def stock_detail(q, us_hint=None):
             tags.append("🤖 봇 보유")
     except Exception:
         pass
-    for kind, label in (("hero", "🏛️ 대가"), ("surge", "🚀 급등 후보"), ("value", "💎 가치주"), ("ackman", "🇺🇸 애크먼")):
+    for kind, label in (("hero", "🏛️ 대가"), ("surge", "🚀 급등 후보"), ("value", "👨 아빠 20선"), ("ackman", "🇺🇸 애크먼")):
         p = _cache.get("picks:" + kind)
         if p and isinstance(p[1], dict):
             for x in p[1].get("items", []):
