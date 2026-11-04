@@ -152,7 +152,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
   </div>
   <div class="card"><h2>오늘 할 일</h2><div id="h-todo"></div></div>
   <div class="card"><div class="row"><h2>최근 자사주 공시</h2><button class="more" style="padding:0 0 12px" onclick="goTab('det')">전체 기록 ›</button></div><div id="h-det"></div></div>
-  <div class="card">
+  <div class="card" id="stopCard">
     <div class="row" style="margin-bottom:10px"><h2 style="margin:0">긴급 정지</h2><span class="tiny mut">켜면 새 주문 전부 중지</span></div>
     <button id="stopBtn" class="stopbtn">…</button>
   </div>
@@ -333,8 +333,15 @@ function render(d) {
   $("u-hist").innerHTML = u.history.length ? u.history.map(h => `<div class="item small row"><span>${h.date} ${h.side === "BUY" ? "🔺 매수" : "🔻 매도"}</span>
     <span>${Number(h.qty).toFixed(4)}주 @ ${usd(h.px)} <span class="mut">목표 ${(h.target * 100).toFixed(0)}%</span></span></div>`).join("") : `<div class="empty">아직 조정 없음 (매주 화요일 00:10)</div>`;
 
+  // 보기 전용(아빠 등): 계좌 금액·장기/단기 비율·긴급 정지 숨김
+  const V = !!d.viewer;
+  $("stopCard").style.display = V ? "none" : "";
+  $("h-mix").style.display = V ? "none" : "";
+  const accBtn = document.querySelector('nav button[data-t="acct"]'); if (accBtn) accBtn.style.display = V ? "none" : "";
+  if (V) { $("mode").textContent = "👀 조회 전용"; if (document.querySelector("#t-acct.act, #t-acct.on")) goTab("home"); }
   // 계좌
   const a = d.account || {};
+  if (a.hidden) { $("a-val").textContent = "-"; $("a-sub").textContent = "조회 전용 화면에서는 계좌 금액을 보여 주지 않음"; $("a-items").innerHTML = ""; } else
   if (a.error && !a.items) { $("a-val").textContent = "-"; $("a-sub").textContent = a.error; }
   else {
     $("a-val").textContent = won(a.value_krw) + (a.value_usd ? " + " + usd(a.value_usd) : "");
@@ -354,7 +361,7 @@ function render(d) {
 // ── 장기 9 : 단기 1 ──────────────────────────────────
 const GCLS = {core: "g", sat: "y", watch: "", no: "r", na: ""};
 function mixRender(m) {
-  const el = $("h-mix"); if (!m) return;
+  const el = $("h-mix"); if (!m || m.hidden) return;
   const T = Math.round(m.target * 100), M = Math.round(m.max * 100);
   if (m.error || m.share == null) {
     el.innerHTML = `<div class="row"><h2 style="margin:0">⚖️ 장기 9 : 단기 1</h2><span class="st warn">확인 불가</span></div>

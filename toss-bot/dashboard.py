@@ -24,6 +24,49 @@ _cache, _lock = {}, threading.Lock()
 _api = {"a": None}
 
 
+# ── 보기 전용(조회만) — Tailscale '기기 공유'로 들어온 다른 사람(예: 아빠)은 자동으로 보기 전용 ─────
+#   서버 주인과 같은 Tailscale 계정의 기기 = 주인(전부), 다른 계정 = 보기 전용(계좌 금액·긴급 정지 숨김)
+#   .env  DASH_OWNERS=내메일@gmail.com   (서버가 태그로 등록돼 주인 판별이 안 될 때만)
+#         DASH_VIEWERS=아빠메일@gmail.com (같은 계정이라도 보기 전용으로 둘 사람)
+_roles = {}
+
+
+def _ts_json(*args):
+    import subprocess
+    r = subprocess.run(["tailscale", *args, "--json"], capture_output=True, text=True, timeout=4)
+    return json.loads(r.stdout)
+
+
+def role_of(ip: str) -> str:
+    if not ip.startswith("100."):                 # 서버 자신(localhost) 등 → 주인
+        return "owner"
+    hit = _roles.get(ip)
+    if hit and time.time() - hit[0] < 600:
+        return hit[1]
+    lst = lambda k: {x.strip().lower() for x in os.environ.get(k, "").split(",") if x.strip()}
+    try:
+        w = _ts_json("whois", ip)
+        prof = w.get("UserProfile") or {}
+        login = (prof.get("LoginName") or "").lower()
+        if login in lst("DASH_VIEWERS"):
+            role = "viewer"
+        elif login in lst("DASH_OWNERS"):
+            role = "owner"
+        else:
+            me = (_ts_json("status").get("Self") or {}).get("UserID")
+            role = "owner" if me is not None and prof.get("ID") == me else "viewer"
+    except Exception as e:                        # 판별 실패 → 안전하게 보기 전용
+        print("tailscale whois 실패:", e, flush=True)
+        role = "viewer"
+    _roles[ip] = (time.time(), role)
+    return role
+
+
+def for_viewer(d: dict) -> dict:
+    """보기 전용: 실제 계좌 금액·장기/단기 금액 비율을 빼고 긴급 정지는 못 쓰게"""
+    return {**d, "account": {"hidden": True}, "mix": {"hidden": True}, "viewer": True}
+
+
 def cached(key, ttl, fn):
     with _lock:
         hit = _cache.get(key)
@@ -601,7 +644,9 @@ class H(BaseHTTPRequestHandler):
             return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/data":
             try:
-                return self._send(200, json.dumps(data(), ensure_ascii=False, default=str), "application/json; charset=utf-8")
+                d = data()
+                d = for_viewer(d) if role_of(self.client_address[0]) == "viewer" else {**d, "viewer": False}
+                return self._send(200, json.dumps(d, ensure_ascii=False, default=str), "application/json; charset=utf-8")
             except Exception as e:
                 return self._send(500, json.dumps({"error": str(e)}), "application/json")
         name = {"/": "index.html"}.get(path, path.lstrip("/"))
@@ -615,6 +660,8 @@ class H(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self._auth():
             return
+        if role_of(self.client_address[0]) == "viewer":   # 보기 전용은 아무것도 바꿀 수 없음
+            return self._send(403, json.dumps({"error": "보기 전용"}, ensure_ascii=False), "application/json; charset=utf-8")
         if self.path == "/api/stop":
             n = int(self.headers.get("Content-Length") or 0)
             on = json.loads(self.rfile.read(n) or b"{}").get("on")
