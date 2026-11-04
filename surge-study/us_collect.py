@@ -40,7 +40,7 @@ CATALYST_US = [
     ("M&A", r"acquire|acquisition|merger|buyout|takeover|to be acquired|deal to buy|tender offer"),
     ("Contract·Partnership", r"contract|partnership|agreement|collaborat|award|order"),
     ("Analyst", r"upgrade|price target|initiat|outperform|overweight|buy rating"),
-    ("Product·Tech", r"launch|unveil|AI|chip|breakthrough|patent"),
+    ("Product·Tech", r"launch|unveil|\bAI\b|chip|breakthrough|patent"),
     ("Guidance·Buyback", r"buyback|repurchase|raises outlook|raises guidance|dividend"),
     ("Policy·Macro", r"tariff|government|Trump|White House|regulat|Fed|subsid"),
     ("Short squeeze·Meme", r"short squeeze|meme|retail traders|Reddit"),

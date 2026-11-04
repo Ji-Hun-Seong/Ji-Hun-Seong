@@ -28,6 +28,11 @@ jobs:
       - run: |
           python surge-study/intraday.py kr || echo "::warning::한국 스냅샷 실패"
           python surge-study/intraday.py us || echo "::warning::미국 스냅샷 실패"
+          python surge-study/intraday_news.py kr || echo "::warning::한국 뉴스 실패"
+          python surge-study/intraday_news.py us || echo "::warning::미국 뉴스 실패"
+        env:
+          SEC_UA: ${{ secrets.SEC_UA }}
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
       - name: Save
         run: |
           git config user.name "surge-intraday-bot"

@@ -10,6 +10,7 @@ surge.db 는 이 CSV들로 언제든 다시 만드는 사본이라 git에 올리
   python surge-study/db/surgedb.py build                       # DB 다시 만들기
   python surge-study/db/surgedb.py now us [날짜]               # 최신 스냅샷: 신규 +10%·진행 상황·캐시된 재료
   python surge-study/db/surgedb.py day us [날짜]               # 그날 종목별 요약(첫 +10% 시각·최고·반납)
+  python surge-study/db/surgedb.py news us 종목 [날짜]           # 미리 모은 뉴스 제목·공시 전체
   python surge-study/db/surgedb.py sql "SELECT ..."            # 아무 SQL
   python surge-study/db/surgedb.py cat us 날짜 종목 재료 "설명" [출처URL]   # 재료 판정 저장(같은 날·종목이면 덮어씀)
 날짜를 빼면 DB에 있는 그 시장의 마지막 날짜.
@@ -26,6 +27,7 @@ DB = os.path.join(HERE, "surge.db")
 CAT = os.path.join(HERE, "catalysts.csv")
 HYP = os.path.join(HERE, "hypotheses.csv")
 CAT_COLS = ["market", "date", "symbol", "catalyst", "detail", "source"]
+NEWS_COLS = ["symbol", "fetched_at", "auto_cat", "themes", "headlines", "filings", "link"]
 HYP_COLS = ["market", "date", "made_at", "text", "result", "graded_at", "note"]
 
 SCHEMA = """
@@ -40,6 +42,8 @@ CREATE TABLE snapshots(
 CREATE INDEX ix_snap_sym ON snapshots(market, symbol, date);
 CREATE TABLE catalysts(market TEXT, date TEXT, symbol TEXT, catalyst TEXT, detail TEXT, source TEXT,
   PRIMARY KEY(market, date, symbol));
+CREATE TABLE news(market TEXT, date TEXT, symbol TEXT, fetched_at TEXT, auto_cat TEXT, themes TEXT,
+  headlines TEXT, filings TEXT, link TEXT, PRIMARY KEY(market, date, symbol));   -- 수집 봇이 미리 모은 뉴스·공시
 CREATE TABLE hypotheses(market TEXT, date TEXT, made_at TEXT, text TEXT, result TEXT, graded_at TEXT, note TEXT);
 
 -- 종목·날짜별 하루 요약 (필터 통과 종목만)
@@ -88,7 +92,7 @@ def build(quiet=False):
     con.executescript(SCHEMA)
     n = 0
     for mkt in ("us", "kr"):
-        for p in sorted(glob.glob(os.path.join(ROOT, "data", "intraday", mkt, "*.csv"))):
+        for p in sorted(glob.glob(os.path.join(ROOT, "data", "intraday", mkt, "20??-??-??.csv"))):
             date = os.path.basename(p)[:10]
             rows = []
             with open(p, newline="", encoding="utf-8") as fh:
@@ -105,6 +109,11 @@ def build(quiet=False):
                                      None, None, None, f(r.get("tv_eok")), int(r.get("limit_up") == "True"), mcap, 1))
             con.executemany("INSERT OR REPLACE INTO snapshots VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
             n += len(rows)
+    for mkt in ("us", "kr"):
+        for p in sorted(glob.glob(os.path.join(ROOT, "data", "intraday", mkt, "news-*.csv"))):
+            date = os.path.basename(p)[5:15]
+            rows = [[mkt, date] + r for r in read_csv(p, NEWS_COLS)]
+            con.executemany("INSERT OR REPLACE INTO news VALUES (?,?,?,?,?,?,?,?,?)", rows)
     con.executemany("INSERT OR REPLACE INTO catalysts VALUES (?,?,?,?,?,?)", read_csv(CAT, CAT_COLS))
     con.executemany("INSERT INTO hypotheses VALUES (?,?,?,?,?,?,?)", read_csv(HYP, HYP_COLS))
     con.commit()
@@ -169,8 +178,10 @@ def now(mkt, date=None):
           LEFT JOIN catalysts c ON c.market=d.market AND c.date=d.date AND c.symbol=d.symbol
           WHERE d.market=? AND d.date=? AND d.first_10 IS NOT NULL AND d.first_10 < ?
           ORDER BY delta""", (prev, t, mkt, date, t))
-    print("\n## 재료 캐시 없는 +10% 종목 (검색 필요)")
-    show(cur, """SELECT s.symbol, s.name FROM snapshots s
+    print("\n## 재료 판정 안 된 +10% 종목 — 수집 봇이 미리 모은 뉴스·공시 (이걸로 판정, 비었거나 애매할 때만 웹 검색)")
+    show(cur, """SELECT s.symbol, s.name, ROUND(s.chg,1) AS chg, n.auto_cat, n.themes, n.filings,
+             substr(n.headlines, 1, 400) AS headlines
+      FROM snapshots s LEFT JOIN news n ON n.market=s.market AND n.date=s.date AND n.symbol=s.symbol
       WHERE s.market=? AND s.date=? AND s.time=? AND s.ok=1 AND s.chg>=10
         AND NOT EXISTS (SELECT 1 FROM catalysts c WHERE c.market=s.market AND c.date=s.date AND c.symbol=s.symbol)
       ORDER BY s.chg DESC""", (mkt, date, t))
@@ -191,6 +202,20 @@ def day(mkt, date=None):
     show(cur, """SELECT COUNT(*) AS n_10, SUM(in_last_snap AND last_chg>=10) AS still_10,
                         SUM(giveback>=5) AS giveback_5p FROM daily_full
                  WHERE market=? AND date=? AND first_10 IS NOT NULL""", (mkt, date))
+
+
+def news_of(mkt, sym, date=None):
+    con = connect()
+    cur = con.cursor()
+    date = date or last_date(cur, mkt)
+    for r in cur.execute("SELECT * FROM news WHERE market=? AND date=? AND symbol=?", (mkt, date, sym)):
+        print(f"# {sym} {date} (수집 {r[3]}) 자동분류: {r[4] or '-'} · 테마: {r[5] or '-'}")
+        print("공시:", r[7] or "-")
+        for h in (r[6] or "").split(" || "):
+            print(" -", h)
+        print("링크:", r[8] or "-")
+        return
+    print(f"{sym} {date}: 미리 모은 뉴스 없음 → 웹 검색")
 
 
 def add_catalyst(mkt, date, sym, catalyst, detail="", source=""):
@@ -218,6 +243,8 @@ if __name__ == "__main__":
         day(a[1], a[2] if len(a) > 2 else None)
     elif cmd == "sql":
         show(connect().cursor(), a[1])
+    elif cmd == "news":
+        news_of(a[1], a[2], a[3] if len(a) > 3 else None)
     elif cmd == "cat":
         add_catalyst(*a[1:7])
     else:
