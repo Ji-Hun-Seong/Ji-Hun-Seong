@@ -503,7 +503,15 @@ def _quote(code):
             pass
         return out
     q = cached("q:" + code, 600, f)
-    return q if isinstance(q, dict) and not q.get("error") else {}
+    q = dict(q) if isinstance(q, dict) and not q.get("error") else {}
+    def tv():                                            # 20일 평균 거래대금(억) — 하루 한 번이면 충분
+        import stock_info as si
+        d = si.kr_ohlcv(code, 45).tail(20)
+        return {"tv20": float((d["close"] * d["volume"]).mean() / 1e8)}
+    t = cached("tv20:" + code, 6 * 3600, tv)
+    if isinstance(t, dict) and t.get("tv20") is not None:
+        q["tv20"] = t["tv20"]
+    return q
 
 
 def _rank(g, today):
@@ -518,10 +526,15 @@ def _rank(g, today):
     if g["main"].get("fix"):
         fresh -= 20; note += " · 정정공시(재탕일 수 있음)"
     add("신선도", fresh, note)
-    mc = g.get("mcap_eok")
+    # 덩치: 대형주는 재료에 덜 움직임(감점). 소형주 가산점은 없음 — 크기 점수(매출·시총 대비)가 이미
+    #       '회사 덩치 대비 재료 크기'를 반영하므로 또 주면 이중 계산. 대신 너무 작거나 거래가 적으면 감점
+    #       (사고팔 때 호가가 비어 손해, 작전·테마성 공시가 많음). → 시총 1천억~1조가 가장 유리
+    mc, tv = g.get("mcap_eok"), g.get("tv20")
     if mc:
-        add("덩치", -15 if mc >= 30000 else -8 if mc >= 10000 else 0 if mc >= 2000 else 5,
-            f"시총 {mc / 10000:.1f}조" if mc >= 10000 else f"시총 {mc:,.0f}억")
+        add("덩치", -15 if mc >= 30000 else -8 if mc >= 10000 else 0 if mc >= 1000 else -5 if mc >= 500 else -10,
+            f"시총 {mc / 10000:.1f}조" if mc >= 10000 else f"시총 {mc:,.0f}억" + (" (초소형)" if mc < 500 else " (소형)" if mc < 1000 else ""))
+    if tv is not None and tv < 10:
+        add("거래", -10 if tv < 3 else -5, f"하루 평균 {tv:.1f}억 — 사고팔기 어려움")
     c = g.get("chg")
     if c is not None:
         add("덜 오름", 10 if c < 2 else 5 if c < 5 else 0, f"{c:+.1f}%")
@@ -600,6 +613,7 @@ def news_radar():
         if q.get("chg") is not None:
             g["chg"] = q["chg"]
         g["mcap_eok"] = q.get("mcap_eok") or g["mcap_eok"]
+        g["tv20"] = q.get("tv20")
         try:
             g["size_pts"], g["size_note"] = _filing_size(g["main_tag"], g["main"]["rcept_no"], g["mcap_eok"])
         except Exception:
