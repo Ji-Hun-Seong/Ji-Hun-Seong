@@ -476,6 +476,38 @@ US_ROWS = {"매출액": ["Total Revenue", "Operating Revenue"], "영업이익": 
            "당기순이익": ["Net Income", "Net Income Common Stockholders"], "EPS": ["Diluted EPS", "Basic EPS"]}
 
 
+def yf_annual(tk) -> dict:
+    """yfinance 연간 손익 + 재무상태 → 매출·영업이익·순이익·EPS + 영업이익률·ROE·부채비율(4년치)"""
+    ps, rows = _yf_rows(tk.income_stmt, US_ROWS)
+    if not ps:
+        return {"periods": [], "rows": {}}
+    rev, op, ni = rows.get("매출액"), rows.get("영업이익"), rows.get("당기순이익")
+    if rev and op:
+        rows["영업이익률"] = [o / r * 100 if o is not None and r else None for o, r in zip(op, rev)]
+    try:
+        bs = tk.balance_sheet
+        cols = sorted(tk.income_stmt.columns)
+        eq_k = next((k for k in ("Stockholders Equity", "Common Stock Equity", "Total Equity Gross Minority Interest") if k in bs.index), None)
+        li_k = next((k for k in ("Total Liabilities Net Minority Interest", "Total Liabilities") if k in bs.index), None)
+        def at(k, c):
+            if not k:
+                return None
+            m = [x for x in bs.columns if abs((x - c).days) <= 40]
+            v = bs.at[k, m[0]] if m else None
+            return None if v is None or pd.isna(v) else float(v)
+        eq = [at(eq_k, c) for c in cols]
+        if ni and any(eq):
+            rows["ROE"] = [n / e * 100 if n is not None and e and e > 0 else None for n, e in zip(ni, eq)]
+        if li_k and any(eq):
+            rows["부채비율"] = [at(li_k, c) / e * 100 if at(li_k, c) is not None and e and e > 0 else None for c, e in zip(cols, eq)]
+    except Exception:
+        pass
+    for k in ("매출액", "영업이익", "당기순이익"):
+        if k in rows:
+            rows[k] = [None if v is None else v / 1e6 for v in rows[k]]
+    return {"periods": ps, "rows": rows}
+
+
 def us_ohlcv(sym: str) -> pd.DataFrame:
     import data_sources as ds
     try:
@@ -519,7 +551,11 @@ def us_detail(sym: str, ohlcv=None) -> dict:
         px_now = float(df["close"].iloc[-1])
         rate = g("dividendRate") or g("trailingAnnualDividendRate")
         prof["div_yield"] = rate / px_now * 100 if rate and px_now else 0.0   # yfinance 버전마다 dividendYield 단위가 달라 직접 계산
-        for kind, src in (("annual", "income_stmt"), ("quarter", "quarterly_income_stmt")):
+        try:
+            fin["annual"] = yf_annual(tk)
+        except Exception as e:
+            errs["annual"] = str(e)[:120]
+        for kind, src in (("quarter", "quarterly_income_stmt"),):
             try:
                 ps, rows = _yf_rows(getattr(tk, src), US_ROWS)
                 for k in ("매출액", "영업이익", "당기순이익"):

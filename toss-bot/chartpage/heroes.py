@@ -92,9 +92,10 @@ def _cagr(first, last, years):
     return (last / first) ** (1 / years) - 1
 
 
-def _chk(pts, mx, text, ok=None):
-    """ok=None → 데이터 없음(점수 계산에서 뺌)"""
-    return {"pts": pts if ok is not None else 0, "max": mx, "ok": ok, "text": text}
+def _chk(pts, mx, text, ok=None, na=False):
+    """ok=None → 데이터 없음: 반만 준 것으로 계산(없는 정보로 만점이 되지 않게)
+       na=True → 이 종목엔 해당 없는 기준(금융업 부채비율·해외 종목 DART 공시): 계산에서 아예 뺌"""
+    return {"pts": pts if ok is not None else 0, "max": mx, "ok": ok, "text": text, "na": na}
 
 
 # ── 5인 채점 ───────────────────────────────────────────
@@ -140,7 +141,7 @@ def score(d: dict) -> dict:
         pts = 5 if dv < 100 else 2 if dv < 200 else 0
         g.append(_chk(pts, 5, f"{'부채/자본' if us else '부채비율'} {dv:.0f}% " + ("(낮음)" if dv < 100 else "(보통)" if dv < 200 else "(높음)"), ok=dv < 100))
     elif fin_co:
-        g.append(_chk(0, 5, "금융업 — 부채비율 기준 제외"))
+        g.append(_chk(0, 5, "금융업 — 부채비율 기준 제외", na=True))
     else:
         g.append(_chk(0, 5, "부채 데이터 없음"))
     if quick and not fin_co:
@@ -157,28 +158,36 @@ def score(d: dict) -> dict:
     H["graham"] = g
     graham_fail = (ni and any(v <= 0 for v in ni)) or (debt and not fin_co and debt[-1] >= 200)
 
-    # 🏰 버핏
+    # 🏰 버핏 — 높고 꾸준한 ROE · 높고 안정적인 이익률 · 그리고 '적당한 가격' (ROE 6 · ROE 꾸준함 4 · 이익률 3 · 이익률 안정 3 · 가격 4)
     b = []
     if roe:
-        b.append(_chk(8 if roe_avg >= 15 else 4 if roe_avg >= 10 else 0, 8, f"ROE 평균 {roe_avg:.1f}% (최근 {len(roe[-4:])}년, 15%↑ 목표)", ok=roe_avg >= 15))
+        b.append(_chk(6 if roe_avg >= 15 else 3 if roe_avg >= 10 else 0, 6, f"ROE 평균 {roe_avg:.1f}% (최근 {len(roe[-4:])}년, 15%↑ 목표)", ok=roe_avg >= 15))
         mn = min(roe[-4:])
-        if len(roe) >= 2:
-            b.append(_chk(4 if mn >= 10 else 2 if mn >= 5 else 0, 4, f"가장 나빴던 해 ROE {mn:.1f}% (10%↑면 꾸준함)", ok=mn >= 10))
+        if len(roe) >= 3:
+            b.append(_chk(4 if mn >= 12 else 2 if mn >= 7 else 0, 4, f"가장 나빴던 해 ROE {mn:.1f}% ({len(roe[-4:])}년 중, 12%↑면 꾸준함)", ok=mn >= 12))
         else:
-            b.append(_chk(0, 4, "ROE 1년치뿐 — 꾸준함 판단 불가"))
+            b.append(_chk(0, 4, f"ROE {len(roe)}년치뿐 — 꾸준함 판단 불가(반만 인정)"))
     else:
-        b += [_chk(0, 8, "ROE 데이터 없음"), _chk(0, 4, "ROE 데이터 없음")]
-    if opm and not fin_co:
+        b += [_chk(0, 6, "ROE 데이터 없음"), _chk(0, 4, "ROE 데이터 없음")]
+    if fin_co:
+        b += [_chk(0, 3, "금융업 — 이익률 기준 제외", na=True), _chk(0, 3, "금융업 — 이익률 기준 제외", na=True)]
+    elif opm:
         oa = sum(opm[-4:]) / len(opm[-4:])
-        b.append(_chk(4 if oa >= 15 else 2 if oa >= 8 else 0, 4, f"영업이익률 평균 {oa:.1f}% (15%↑면 가격 결정력)", ok=oa >= 15))
+        b.append(_chk(3 if oa >= 15 else 1.5 if oa >= 8 else 0, 3, f"영업이익률 평균 {oa:.1f}% (15%↑면 가격 결정력)", ok=oa >= 15))
         if len(opm) >= 3:
             rg = max(opm[-4:]) - min(opm[-4:])
-            b.append(_chk(4 if rg <= 5 else 2 if rg <= 10 else 0, 4, f"영업이익률 변동 폭 {rg:.1f}%p (좁을수록 해자)", ok=rg <= 5))
+            b.append(_chk(3 if rg <= 5 else 1.5 if rg <= 10 else 0, 3, f"영업이익률 변동 폭 {rg:.1f}%p (좁을수록 해자)", ok=rg <= 5))
         else:
-            b.append(_chk(0, 4, "이익률 3년치 미만"))
+            b.append(_chk(0, 3, "이익률 3년치 미만 — 안정성 판단 불가(반만 인정)"))
     else:
-        b += [_chk(0, 4, "영업이익률 데이터 없음" if not fin_co else "금융업 — 이익률 기준 제외"),
-              _chk(0, 4, "영업이익률 데이터 없음" if not fin_co else "금융업 — 이익률 기준 제외")]
+        b += [_chk(0, 3, "영업이익률 데이터 없음"), _chk(0, 3, "영업이익률 데이터 없음")]
+    if per is not None and per > 0:                   # 버핏: 훌륭한 기업이라도 '적당한 가격'에 — 이익수익률(1/PER)로 판단
+        ey = 100 / per
+        b.append(_chk(4 if per <= 15 else 2 if per <= 22 else 0, 4, f"PER {per:.1f}배 = 이익수익률 {ey:.1f}% (PER 15배↓ 적당 · 22배↑ 비쌈)", ok=per <= 22))
+    elif per is not None:
+        b.append(_chk(0, 4, "적자(PER 음수) — 버핏은 사지 않음", ok=False))
+    else:
+        b.append(_chk(0, 4, "PER 없음"))
     H["buffett"] = b
 
     # 🌱 피셔
@@ -189,9 +198,10 @@ def score(d: dict) -> dict:
                       f"매출 연평균 성장 {sg * 100:+.1f}% ({len(sales) - 1}년, 10%↑ 목표)", ok=sg >= 0.10))
     else:
         f.append(_chk(0, 7, "매출 성장 계산 불가(3년치 미만·적자)"))
+    og = _cagr(op[0], op[-1], len(op) - 1) if len(op) >= 3 else None
     if len(op) >= 3:
-        good = op[-1] > 0 and op[-1] > op[0]
-        f.append(_chk(5 if good else 0, 5, f"영업이익 {op[0]:,.0f} → {op[-1]:,.0f}{'' if us else '억'}", ok=good))
+        pts = 5 if (og or 0) >= 0.12 else 3 if (og or 0) >= 0.05 else 1 if op[-1] > op[0] > 0 else 0
+        f.append(_chk(pts, 5, f"영업이익 {op[0]:,.0f} → {op[-1]:,.0f}{'' if us else '억'}" + (f" (연 {og * 100:+.0f}%, 12%↑ 목표)" if og is not None else " (적자 구간 포함)"), ok=(og or 0) >= 0.12))
     else:
         f.append(_chk(0, 5, "영업이익 3년치 미만"))
     if len(opm) >= 3 and not fin_co:
@@ -248,7 +258,7 @@ def score(d: dict) -> dict:
         a.append(_chk(4 if not dil else 0, 4, "최근 120일 증자·CB(희석) 공시 없음" if not dil else f"증자·CB 공시 {dil}건 — 희석 위험", ok=not dil))
     else:
         reason = "해외 종목 — DART 공시 기준 제외" if us else "공시 데이터 없음(DART 키 확인)"
-        a += [_chk(0, 6, reason), _chk(0, 4, reason)]
+        a += [_chk(0, 6, reason, na=us), _chk(0, 4, reason, na=us)]
     if pbr and roe_avg is not None:
         if pbr < 1 and roe_avg >= 8:
             a.append(_chk(5, 5, f"PBR {pbr:.2f} < 1인데 ROE {roe_avg:.0f}% — 재평가 여지 큼", ok=True))
@@ -271,16 +281,22 @@ def score(d: dict) -> dict:
     H["ackman"] = a
 
     # 합계
-    heroes, got, mx_all = [], 0, 0
+    heroes, got, mx_all, av_all = [], 0, 0, 0
     for key, name, icon, theme, motto in HEROES:
         cs = H[key]
         ev = [c for c in cs if c["ok"] is not None]
+        miss = [c for c in cs if c["ok"] is None and not c.get("na")]
         p, m = sum(c["pts"] for c in ev), sum(c["max"] for c in ev)
-        got, mx_all = got + p, mx_all + m
+        mm = sum(c["max"] for c in miss)
+        if m == 0:                                    # 판단할 데이터가 하나도 없으면 점수 없음
+            heroes.append({"key": key, "name": name, "icon": icon, "theme": theme, "motto": motto, "score": None, "coverage": 0, "checks": cs})
+            continue
+        p2, m2 = p + 0.5 * mm, m + mm                 # 데이터 없는 항목은 반만 인정
+        got, mx_all, av_all = got + p2, mx_all + m2, av_all + m
         heroes.append({"key": key, "name": name, "icon": icon, "theme": theme, "motto": motto,
-                       "score": round(p / m * 20, 1) if m else None, "coverage": m / 20, "checks": cs})
+                       "score": round(p2 / m2 * 20, 1), "coverage": round(m / m2, 2), "checks": cs})
     total = round(got / mx_all * 100, 1) if mx_all else None
-    coverage = mx_all / 100
+    coverage = av_all / mx_all if mx_all else 0        # 해당 기준 중 실제 데이터가 있는 비율
     if graham_fail and (total is None or coverage < 0.5):
         grade = {"key": "no", "label": GRADES[3][2], "desc": "적자 연도·부채 과다(그레이엄 거름망 탈락) — " + GRADES[3][3]}
     elif total is None or coverage < 0.5:
@@ -424,8 +440,7 @@ def light_global(sym: str, name: str | None = None) -> dict:
             "mcap_eok": mcap * fx / 1e8 if mcap and fx else None}
     fin = {}
     try:
-        ps, rows = si._yf_rows(tk.income_stmt, si.US_ROWS)
-        fin["annual"] = {"periods": ps, "rows": rows}
+        fin["annual"] = si.yf_annual(tk)                 # 4년치 영업이익률·ROE·부채비율까지 (꾸준함 판단용)
     except Exception:
         pass
     return {"us": True, "code": sym, "name": prof["name"], "profile": prof, "finance": fin, "filings": None, "close": price}
