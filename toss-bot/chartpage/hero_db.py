@@ -46,7 +46,7 @@ PRIO = {"내 계좌": 0, "아는 회사": 1, "가치주 후보": 2, "대표 종�
 
 PATH = None
 _local = threading.local()
-status = {"running": False, "now": None, "last_error": None, "loops": 0}
+status = {"running": False}
 
 
 def init(path: str):
@@ -206,12 +206,17 @@ def refresh(market: str, extras_fn, force=False):
 
 
 # ── 채점 일꾼 ─────────────────────────────────────────
-def stale(limit=40):
+#   스레드 3개: ① 종목 목록(느린 해외 스크리너가 채점을 막지 않게 따로) ② 한국 채점 ③ 해외 채점(야후 제한에 걸려도 한국은 계속)
+def stale(markets, limit=40):
+    """아직 안 했거나 오래된 것부터 — 시장마다 번갈아(시장 안에서는 내 계좌·아는 회사 → 시총 큰 순)"""
     cut = time.time() - STALE
-    return db().execute("""SELECT s.market, s.code, s.name, s.corp_code, s.src, s.held FROM stocks s
-        LEFT JOIN scores c ON c.market=s.market AND c.code=s.code
-        WHERE s.active=1 AND (c.scored IS NULL OR c.scored < ?)
-        ORDER BY (c.scored IS NOT NULL), s.prio, s.mcap_eok DESC LIMIT ?""", (cut, limit)).fetchall()
+    ph = ",".join("?" * len(markets))
+    return db().execute(f"""SELECT market, code, name, corp_code, src, held FROM (
+        SELECT s.market, s.code, s.name, s.corp_code, s.src, s.held, (c.scored IS NOT NULL) AS done,
+               ROW_NUMBER() OVER (PARTITION BY s.market, (c.scored IS NOT NULL) ORDER BY s.prio, s.mcap_eok DESC) AS rn
+        FROM stocks s LEFT JOIN scores c ON c.market=s.market AND c.code=s.code
+        WHERE s.active=1 AND s.market IN ({ph}) AND (c.scored IS NULL OR c.scored < ?))
+        ORDER BY done, rn LIMIT ?""", (*markets, cut, limit)).fetchall()
 
 
 def _score_one(r):
@@ -221,23 +226,27 @@ def _score_one(r):
     return market, code, heroes.board_row(p, market)
 
 
-def worker(extras_fn, workers: int = 3):
-    """서버가 켜져 있는 동안 계속 돎 — 목록 갱신 → 오래된 점수부터 다시 채점 → 할 게 없으면 10분 쉼"""
-    status["running"] = True
+def universe_loop(extras_fn):
+    while True:
+        for m in MARKETS:                                   # 한국 먼저
+            try:
+                refresh(m, extras_fn)
+                status.pop("uni_error:" + m, None)
+            except Exception as e:
+                status["uni_error:" + m] = f"{m} 목록: {type(e).__name__}: {str(e)[:120]}"
+                meta_set("uni:" + m, time.time() - UNI_EVERY + 3600)         # 1시간 뒤 다시 시도
+        time.sleep(600)
+
+
+def score_loop(group, markets, workers):
     while True:
         try:
-            for m in MARKETS:
-                try:
-                    refresh(m, extras_fn)
-                except Exception as e:
-                    status["last_error"] = f"{m} 목록: {type(e).__name__}: {str(e)[:120]}"
-                    meta_set("uni:" + m, time.time() - UNI_EVERY + 3600)     # 1시간 뒤 다시 시도
-            batch = stale(40)
+            batch = stale(markets, 30)
             if not batch:
-                status["now"] = "쉬는 중(다 최신)"
-                time.sleep(600)
+                status[group] = "다 최신 — 쉬는 중"
+                time.sleep(300)
                 continue
-            status["now"] = f"채점 중 ({batch[0][0]} {batch[0][2]} …)"
+            status[group] = f"채점 중 ({batch[0][2]} …)"
             throttled = False
             with ThreadPoolExecutor(workers) as ex:
                 for market, code, row in ex.map(_score_one, batch):
@@ -246,22 +255,24 @@ def worker(extras_fn, workers: int = 3):
                         throttled = True
                         continue
                     ok = int(not err and row.get("total") is not None)
-                    # 실패는 3시간 뒤 다시 시도
-                    t = time.time() if ok else time.time() - STALE + 3 * 3600
+                    t = time.time() if ok else time.time() - STALE + 3 * 3600   # 실패는 3시간 뒤 다시
                     db().execute("INSERT OR REPLACE INTO scores(market, code, scored, ok, row) VALUES(?,?,?,?,?)",
                                  (market, code, t, ok, json.dumps(row, ensure_ascii=False, default=str)))
-            db().commit()
-            status["loops"] += 1
+                    db().commit()                                               # 한 종목씩 바로 화면에 보이게
+            status.pop(group + "_error", None)
             if throttled:
-                status["now"] = "야후 요청 제한 — 2분 쉼"
+                status[group] = "야후 요청 제한 — 2분 쉼"
                 time.sleep(120)
         except Exception as e:
-            status["last_error"] = f"{type(e).__name__}: {str(e)[:160]}"
+            status[group + "_error"] = f"{type(e).__name__}: {str(e)[:160]}"
             time.sleep(60)
 
 
 def start(extras_fn):
-    threading.Thread(target=worker, args=(extras_fn,), daemon=True).start()
+    status["running"] = True
+    threading.Thread(target=universe_loop, args=(extras_fn,), daemon=True).start()
+    threading.Thread(target=score_loop, args=("kr", ["kr"], 4), daemon=True).start()
+    threading.Thread(target=score_loop, args=("gl", ["us", "eu", "cn", "jp"], 3), daemon=True).start()
 
 
 # ── 화면용 읽기 (바로 응답) ─────────────────────────────
@@ -285,7 +296,8 @@ def board(market: str) -> dict:
     uni = float(meta_get("uni:" + market, 0) or 0)
     out.update({"kind": "hero", "principles": heroes.PRINCIPLES, "heroes": heroes.hero_meta(),
                 "asof": time.strftime("%m-%d %H:%M", time.localtime(last)) if last else "채점 전",
-                "progress": {"scored": len(items), "fresh": fresh[0], "pool": n_pool, "worker": status.get("now"),
-                             "error": status.get("last_error"), "universe_at": time.strftime("%m-%d", time.localtime(uni)) if uni else None},
+                "progress": {"scored": len(items), "fresh": fresh[0], "pool": n_pool,
+                             "worker": status.get("kr" if market == "kr" else "gl") or "시작 중",
+                             "error": status.get("uni_error:" + market) or status.get(("kr" if market == "kr" else "gl") + "_error"), "universe_at": time.strftime("%m-%d", time.localtime(uni)) if uni else None},
                 "min_eok": MIN_KR_EOK if market == "kr" else MIN_GL_EOK})
     return out

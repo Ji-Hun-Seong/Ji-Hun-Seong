@@ -1038,7 +1038,7 @@ function pRender(d) {
   let head = "", rows = "";
   if (d.kind === "hero") {
     const G = d.grades || {}, S = d.styles, glob = d.market && d.market !== "kr";
-    const two = d.items.length && d.items[0].value !== undefined;
+    const two = !d.items.length || d.items[0].value !== undefined;     // 아직 채점 전이어도 💎/🚀 탭은 보이게
     const sk = two ? hSort : "all", key = x => sk === "value" ? (x.value ?? -1) : sk === "growth" ? (x.growth ?? -1) : x.total;
     // 💎 가치주 / 🚀 성장주 탭 — 가치 점수가 높으면 가치주, 성장 점수가 높으면 성장주 (둘 다 위성 이상이면 양쪽에)
     const isV = x => x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1), isG = x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1);
@@ -1137,7 +1137,7 @@ function pRender(d) {
   $("p-out").innerHTML = head + `<div class="card">${rows || `<div class="empty">목록 없음</div>`}</div>
     <div class="tiny mut" style="text-align:center;margin:4px 0 12px">종목을 누르면 차트·수급·재무·공시를 한 화면에 · 투자 권유 아님</div>`;
   if (d.kind === "hero") { hMktBind(); document.querySelectorAll("#h-sort button").forEach(b => b.onclick = () => { hSort = b.dataset.s; try { localStorage.setItem("h-sort", hSort); } catch (e) {} pRender(d); });
-    document.querySelectorAll("#h-size button").forEach(b => b.onclick = () => { const two = d.items.length && d.items[0].value !== undefined; hSize[two ? hSort : "all"] = b.dataset.z; try { localStorage.setItem("h-size", JSON.stringify(hSize)); } catch (e) {} pRender(d); }); }
+    document.querySelectorAll("#h-size button").forEach(b => b.onclick = () => { const two = !d.items.length || d.items[0].value !== undefined; hSize[two ? hSort : "all"] = b.dataset.z; try { localStorage.setItem("h-size", JSON.stringify(hSize)); } catch (e) {} pRender(d); }); }
   if (d.kind === "surge") {
     const D = d.dates || [], i = D.findIndex(x => x.date === d.date);
     const go = dt => { sDate = dt && D.length && dt !== D[0].date ? dt : null; pLoad(); };
