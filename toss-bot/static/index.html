@@ -291,13 +291,18 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 </section>
 
 <section id="t-scan">
-  <div class="seg" id="s-seg"><button data-m="kr" class="act">🇰🇷 한국</button><button data-m="us">🇺🇸 미국</button></div>
+  <div class="card"><h2 style="margin-bottom:6px">📰 뉴스·공시 레이더</h2>
+    <div class="tiny mut" style="line-height:1.6">급등은 대부분 '재료'(공시·뉴스)에서 시작해요. 오늘·어제 나온 호재 공시와 뉴스를 3분마다 모아서, <b>재료는 나왔는데 주가는 아직 덜 움직인 종목</b>을 맨 위에 보여 줘요. 매수 신호가 아니라 '먼저 알아 두기'용이에요 🧘</div></div>
+  <div id="r-out"><div class="card"><div class="empty small">불러오는 중…</div></div></div>
+  <details class="card" id="s-box"><summary class="small" style="font-weight:700">📈 실시간 급등 기록 <span class="tiny mut">(서버 toss-scan — 장중 30초마다 +10% 돌파·상한가 기록)</span></summary>
+  <div class="seg" id="s-seg" style="margin-top:10px"><button data-m="kr" class="act">🇰🇷 한국</button><button data-m="us">🇺🇸 미국</button></div>
   <div class="card"><div class="row"><div><span class="live" id="s-live"></span><b id="s-title">급등 감시</b></div><span class="tiny mut" id="s-upd">-</span></div>
     <div class="grid2" style="margin-top:12px"><div><div class="tiny mut">오늘 +10% 도달</div><div class="mid" id="s-n10">-</div></div>
       <div><div class="tiny mut" id="s-limit-l">상한가</div><div class="mid" id="s-nlim">-</div></div></div></div>
   <div class="card"><h2>신호 기록</h2><div id="s-ev"></div></div>
   <div class="card"><h2>지금 +5% 이상</h2><div id="s-rows"></div></div>
   <div class="tiny mut" style="text-align:center;margin:4px 0 12px">한국 30초 · 미국 60초마다 확인 · 화면은 10초마다 새로고침</div>
+  </details>
 </section>
 
 <div class="foot" id="upd">불러오는 중…</div>
@@ -1005,7 +1010,7 @@ function pRender(d) {
         <select class="kc-rng" id="s-date" style="flex:1;text-align:center">${(D.length ? D : [{date: d.date}]).map(x => `<option value="${x.date}" ${x.date === d.date ? "selected" : ""}>${x.date}${x.graded && x.graded.avg != null ? `  (다음 날 ${sg(x.graded.avg)})` : ""}</option>`).join("")}</select>
         <button class="kc-ic" id="s-newer" ${latest ? "disabled style='opacity:.3'" : ""}>›</button></div>
       <div class="label" style="margin-top:10px">${d.date} 장 마감 기준 → 다음 거래일 급등 후보 ${latest ? "· 최신" : ""}</div>
-      <div class="small" style="margin-top:6px;line-height:1.6">재료(오늘 공시) 35 · 거래량 선행 20 · 차트 에너지 25 · 종가 강도 10 · 유동성 10 − 감점 − 추격(이미 오른 만큼). ${fmtN(d.n_scored)}종목 채점 · <span class="tiny mut">${esc(d.method || "")}</span></div>
+      <div class="small" style="margin-top:6px;line-height:1.6">재료(오늘 공시) 35 · 📰 뉴스 25(호재 기사·기사 급증·오늘 급등 테마 동반) · 거래량 선행 20 · 차트 에너지 25 · 종가 강도 10 · 유동성 10 − 감점 − 추격(이미 오른 만큼).${(d.hot_themes || []).length ? ` · 오늘 급등 테마: <b>${d.hot_themes.map(esc).join(", ")}</b>` : ""} ${fmtN(d.n_scored)}종목 채점 · <span class="tiny mut">${esc(d.method || "")}</span></div>
       ${g ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 이 후보들의 다음 날 성적: 평균 <b class="${cls(g.avg)}">${sg(g.avg)}</b> (시장 평균 ${sg(g.market_avg)}) · 오른 종목 ${g.up}/${g.n} · +10%↑ ${g.hit10}개</div>`
         : d.today_live ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📡 오늘 장중 대조(${d.today_live.time} 기준): 상위 ${d.today_live.n}개 중 +10%↑ <b>${d.today_live.hit10}개</b> · 정식 채점은 장 마감 후(18:45쯤)</div>`
         : `<div class="small mut" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 다음 거래일 장 마감 후(18:45쯤) 채점돼요</div>`}
@@ -1014,7 +1019,8 @@ function pRender(d) {
         <span class="tiny mut"> ${esc(x.market)}</span></div><div style="text-align:right">${x.next_chg != null ? `<span class="tag ${x.next_chg >= 10 ? "g" : x.next_chg < 0 ? "r" : ""}" style="margin-right:6px">다음 날 ${sg(x.next_chg)}</span>`
           : d.today_live ? (x.today != null ? `<span class="tag ${x.today_max >= 10 ? "g" : ""}" style="margin-right:6px">오늘 ${sg(x.today)}${x.today_max >= 10 ? " ✅" : ""}</span>` : `<span class="tag" style="margin-right:6px">오늘 +${d.today_live.floor}% 미만</span>`) : ""}<span class="score">${x.score}</span><span class="tiny mut">점</span></div></div>
       <div class="row tiny mut" style="margin-top:3px"><span>${d.date.slice(5)} 종가 ${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억${x.ret5 != null ? ` · 5일 <span class="${cls(x.ret5)}">${pct(x.ret5, 0)}</span>` : ""}${x.ret20 != null ? ` · 20일 <span class="${cls(x.ret20)}">${pct(x.ret20, 0)}</span>` : ""}</span></div>
-      <div>${x.why.slice(0, 4).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.warn.map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div></div>`).join("");
+      <div>${x.why.slice(0, 4).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.warn.map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div>
+      ${(x.news || []).length ? `<div class="why">📰 ${esc(x.news[0].title)} <span class="tiny mut">${esc(x.news[0].source || "")}${x.n_news ? " · 이틀 새 " + x.n_news + "건" : ""}</span></div>` : ""}</div>`).join("");
     if (d.more && d.more.length) rows += `<div class="tiny mut" style="padding-top:12px">11~20위: ${d.more.map((x, j) => `<a ${open(d.items.length + j)} href="javascript:void 0">${esc(x.name)}</a>`).join(" · ")}</div>`;
     const MO = d.morning;
     if (MO && !MO.error && (MO.up.length || MO.down.length)) {
@@ -1114,6 +1120,35 @@ async function sLoad() {
   $("s-rows").querySelectorAll(".srow").forEach(el => el.onclick = () => openStock(el.dataset.c, {us: us}));
 }
 document.querySelector('nav button[data-t="scan"]').addEventListener("click", sLoad);
+// ── 📰 뉴스·공시 레이더 ─────────
+const RD = {t: 0};
+async function rLoad(force) {
+  if (!$("t-scan").classList.contains("act")) return;
+  if (!force && Date.now() - RD.t < 55000) return; RD.t = Date.now();
+  let R; try { R = await (await fetch("api/radar", {cache: "no-store"})).json(); } catch (e) { return; }
+  if (R.error) { $("r-out").innerHTML = `<div class="card"><div class="empty small">${esc(R.error)}</div></div>`; return; }
+  const dl = d => d === R.today ? "오늘" : "어제";
+  const chgT = x => x.chg != null ? `<span class="${cls(x.chg)} name">${x.chg >= 0 ? "+" : ""}${x.chg.toFixed(1)}%</span>` : `<span class="tiny mut">${R.market_open ? "+3% 미만" : "-"}</span>`;
+  const nws = x => (x.news || []).length ? `<div class="why">📰 ${esc(x.news[0].title)}${x.news_why && x.news_why.length ? ` <span class="tag g">${esc(x.news_why[0].replace("뉴스: ", ""))}</span>` : ""}${(x.news_warn || []).map(w => ` <span class="tag r">${esc(w)}</span>`).join("")}</div>` : "";
+  const fil = x => `<div class="tiny" style="margin-top:3px">${x.items.slice(0, 2).map(i => `<a href="javascript:void 0" data-doc="${esc(i.rcept_no)}" data-dt="${esc(i.title)}">📄 ${dl(i.day)} · ${esc(i.title)}</a>`).join("<br>")}</div>`;
+  const row = x => `<div class="prow"><div class="row"><span><b data-sc="${esc(x.code)}" style="cursor:pointer">${esc(x.name)}</b> ${x.tags.map(t => `<span class="tag y">${esc(t)}</span>`).join("")}${x.neg.map(t => `<span class="tag r">${esc(t)}</span>`).join("")}</span>${chgT(x)}</div>${fil(x)}${nws(x)}</div>`;
+  const E = R.early || [];
+  $("r-out").innerHTML = `
+    <div class="card"><h2>🎯 재료 나왔는데 아직 덜 오른 종목 <span class="tiny mut">${R.time} · 공시 ${fmtN(R.n_filings)}건 확인</span></h2>
+      ${R.dart_error ? `<div class="tiny up">DART: ${esc(R.dart_error)}</div>` : ""}
+      ${R.fresh.map(row).join("") || `<div class="empty small">아직 없음</div>`}
+      <div class="tiny mut" style="margin-top:8px">재료 점수 순 · 오늘 공시가 어제 공시보다 위 · 등락은 장중 기록 기준(+3%↑만 기록)</div></div>
+    ${E.length ? `<div class="card"><h2>🌱 지금 움직이기 시작한 종목 — 이유는?</h2>${E.map(x => `<div class="prow"><div class="row"><span>${x.big ? "🏢 " : ""}<b data-sc="${esc(x.code)}" style="cursor:pointer">${esc(x.name)}</b>
+        ${(x.filing_tags || []).map(t => `<span class="tag y">공시 ${esc(t)}</span>`).join("")}</span>${chgT(x)}</div>${nws(x)}
+        ${x.explained ? "" : `<div class="tiny up" style="margin-top:3px">⚠️ 공시·뉴스 없음 — 소문·테마 수급일 수 있어요</div>`}</div>`).join("")}</div>` : ""}
+    ${R.moved.length ? `<details class="card"><summary class="small" style="font-weight:700">🚫 이미 반영된 재료 ${R.moved.length}개 (+5%↑ — 쫓지 말 것)</summary>${R.moved.map(row).join("")}</details>` : ""}
+    ${R.bad.length ? `<details class="card"><summary class="small" style="font-weight:700">⚠️ 악재 공시 ${R.bad.length}개 (유상증자·CB·거래소 경고)</summary>${R.bad.map(row).join("")}</details>` : ""}`;
+  $("r-out").querySelectorAll("[data-sc]").forEach(el => el.onclick = () => openStock(el.dataset.sc));
+  $("r-out").querySelectorAll("[data-doc]").forEach(el => el.onclick = () => openDoc("filing", el.dataset.doc, el.dataset.dt));
+}
+document.querySelector('nav button[data-t="scan"]').addEventListener("click", () => rLoad(true));
+setInterval(rLoad, 60000);
+
 setInterval(sLoad, 10000); sLoad();
 window.themeChanged = () => {                          // 테마가 바뀌면 그래프·차트를 새 색으로 다시 그림
   Object.assign(AX.ticks, {color: TC.axt}); AX.grid.color = TC.grid; Object.assign(XAX.ticks, {color: TC.axt});

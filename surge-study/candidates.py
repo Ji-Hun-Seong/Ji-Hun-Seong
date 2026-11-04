@@ -28,7 +28,7 @@ import pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "data", "candidates")
-METHOD = "v1-rules-2026-11-03"
+METHOD = "v2-rules-news-2026-11-04"
 N_SHOW, N_KEEP = 10, 30
 
 CAT_RULES = [   # (태그, 정규식, 점수)
@@ -172,7 +172,7 @@ def build(frames: dict, names: pd.DataFrame, filings: dict, today: pd.Timestamp,
                      "ret5": f.get("ret5"), "ret20": f.get("ret20"),
                      "filings": [{"title": x["title"], "rcept_no": x["rcept_no"]} for x in fl[:5]]})
     rows.sort(key=lambda r: (-r["score"], -r["tv"]))
-    return {"date": tstr, "for": "다음 거래일", "method": METHOD, "n_scored": len(rows), "candidates": rows[:N_KEEP]}
+    return {"date": tstr, "for": "다음 거래일", "method": METHOD, "n_scored": len(rows), "candidates_all": rows}
 
 
 def grade_prev(today: pd.Timestamp, chg_today: dict[str, float]) -> dict | None:
@@ -237,13 +237,97 @@ def save(out: dict, prev: dict | None):
     return path
 
 
-def run(frames, names, filings, today, features, today_bar):
+# ── 뉴스 재료 (v2) — 구글 뉴스 최근 2일 제목 ─────────────────────
+NEWS_POS = [   # (태그, 정규식, 점수) — 한 종목은 가장 큰 재료 점수 + 재료 종류가 2개 이상이면 +5
+    ("임상·허가", r"FDA|품목 ?허가|허가 ?획득|임상 ?(성공|3상|결과|승인)|기술 ?이전|라이선스 ?아웃", 18),
+    ("수주·계약", r"수주|공급 ?계약|계약 ?체결|납품 ?계약|단일판매", 15),
+    ("실적", r"흑자 ?전환|사상 ?최대|역대 ?최대|어닝 ?서프라이즈|최대 ?실적|영업이익.{0,8}(급증|증가|껑충)", 15),
+    ("M&A·지배구조", r"인수|합병|M&A|경영권|공개매수|지분 ?인수", 15),
+    ("신기술·신제품", r"세계 ?최초|국내 ?최초|국산화|개발 ?성공|신제품|출시|특허", 8),
+    ("정책·수혜", r"정부|정책|국책|지원책|수혜|규제 ?완화|법안 ?통과", 8),
+]
+NEWS_NEG = [
+    ("악재 뉴스", r"유상증자|전환사채|횡령|배임|소송|하한가|급락|적자 ?(전환|확대)|감사의견|상장폐지|불성실|압수수색|리콜", -15),
+]
+NEWS_PRICED = r"상한가|급등|신고가|불기둥|폭등"
+THEMES = ["AI", "반도체", "HBM", "2차전지", "배터리", "로봇", "원전", "방산", "조선", "바이오", "제약", "우주", "항공",
+          "자율주행", "전기차", "수소", "태양광", "풍력", "게임", "엔터", "화장품", "식품", "건설", "철강", "금융", "보안",
+          "양자", "초전도", "스테이블코인", "가상자산", "비트코인", "남북", "광통신", "데이터센터", "전력", "변압기", "의료기기"]
+NEWS_TOP = 120          # 공시·거래량·차트 점수 상위 몇 종목만 뉴스를 받아 다시 채점 (요청 수 제한)
+
+
+def news_score(titles: list[str], filing_tags: list[str], chg: float, hot: list[str]) -> tuple[float, list[str], list[str], list[str]]:
+    """→ (뉴스 점수, 이유, 경고, 테마)"""
+    why, warn = [], []
+    hit = [(tag, pts) for tag, pat, pts in NEWS_POS if any(re.search(pat, t) for t in titles)]
+    pts = 0
+    if hit:
+        tags = [t for t, _ in hit]
+        pts = max(p for _, p in hit) + (5 if len(hit) >= 2 else 0)
+        same = {"수주·계약": "공급계약", "실적": "실적", "M&A·지배구조": "공개매수·합병", "임상·허가": "임상·허가", "신기술·신제품": "특허"}
+        ft = " ".join(filing_tags)
+        dup = any(same.get(t) and same[t] in ft for t in tags)            # 같은 재료를 공시로 이미 셌으면 뉴스는 덜 줌
+        tags_new = [t for t in tags if not (same.get(t) and same[t] in ft)]
+        if dup and tags_new:                                               # 공시에 없던 새 재료가 뉴스에 있으면 그건 인정
+            pts = max(p for t, p in hit if t in tags_new)
+            dup = False
+        if dup:
+            pts = min(pts, 6)
+        why.append("뉴스: " + "·".join(tags) + (" (공시와 같은 재료)" if dup else ""))
+    for tag, pat, p in NEWS_NEG:
+        if any(re.search(pat, t) for t in titles):
+            pts += p; warn.append(tag)
+    if len(titles) >= 8:
+        pts += 5; why.append(f"이틀 새 기사 {len(titles)}건(관심 급증)")
+    if any(re.search(NEWS_PRICED, t) for t in titles):
+        pts *= 0.5; warn.append("뉴스에 이미 '급등·상한가' 기사")
+    if chg >= 8:
+        pts *= 0.3
+    elif chg >= 5:
+        pts *= 0.6
+    th = [t for t in THEMES if any(t in x for x in titles)]
+    hot_hit = [t for t in th if t in hot]
+    if hot_hit:
+        pts += 8; why.append("오늘 급등 테마 동반: " + "·".join(hot_hit[:2]))
+    return round(min(25, pts), 1), why, warn, th
+
+
+def add_news(out: dict, news_fn, hot: list[str]):
+    """상위 NEWS_TOP 종목만 뉴스 제목을 받아 '뉴스' 점수를 더하고 다시 정렬"""
+    from concurrent.futures import ThreadPoolExecutor
+    rows = out["candidates_all"]
+    top = rows[:NEWS_TOP]
+    def one(r):
+        try:
+            return r, news_fn(r["name"], 15)
+        except Exception:
+            return r, []
+    with ThreadPoolExecutor(6) as ex:
+        got = list(ex.map(one, top))
+    for r, nw in got:
+        titles = [x["title"] for x in nw]
+        pts, why, warn, th = news_score(titles, [w for w in r["why"] if w.startswith("오늘 공시")], r["chg"], hot)
+        r["parts"]["뉴스"] = pts
+        r["score"] = round(r["score"] + pts, 1)
+        r["why"] = why + r["why"] if pts > 0 else r["why"] + why
+        r["warn"] += warn
+        r["themes"] = th
+        r["news"] = [{"title": x["title"], "source": x.get("source"), "link": x.get("link"), "date": x.get("date")} for x in nw[:3]]
+        r["n_news"] = len(nw)
+    rows.sort(key=lambda r: (-r["score"], -r["tv"]))
+    out["hot_themes"] = hot
+
+
+def run(frames, names, filings, today, features, today_bar, news_fn=None, hot_themes=None):
     chg = {}
     for c, df in frames.items():
         if df.index[-1] == today and len(df) > 1:
             chg[c] = float(df["close"].iloc[-1] / df["close"].iloc[-2] - 1) * 100
     prev = grade_prev(today, chg)
     out = build(frames, names, filings, today, features, today_bar)
+    if news_fn:
+        add_news(out, news_fn, hot_themes or [])
+    out["candidates"] = out.pop("candidates_all")[:N_KEEP]
     return save(out, prev), out
 
 

@@ -364,14 +364,6 @@ def main():
     prev_day = f"{prev_day[prev_day < today][-1]:%Y%m%d}" if (prev_day < today).any() else None
     filings = dart_filings(key, [d for d in (prev_day, f"{today:%Y%m%d}") if d]) if key else {}
 
-    # 내일 급등 후보 10선 (규칙 점수 v0) + 어제 후보 채점 → data/candidates/
-    try:
-        import candidates
-        cpath, cand = candidates.run(frames, names, filings, today, features, today_bar)
-        print(f"급등 후보 {len(cand['candidates'])}개 저장: {cpath}", flush=True)
-    except Exception as e:
-        print("급등 후보 계산 실패:", type(e).__name__, e, flush=True)
-
     for s in surgers:
         fl = filings.get(s["code"], [])
         nw = news(s["name"])
@@ -385,6 +377,17 @@ def main():
         s["themes"] = themes_of([x["title"] for x in nw] + [x["title"] for x in fl])
         time.sleep(0.3)
     surgers.sort(key=lambda s: (-(s["tv"] >= MIN_TV), -s["chg"]))
+
+    # 내일 급등 후보 (규칙 점수 v2 — 공시·거래량·차트 + 뉴스·오늘 급등 테마) + 어제 후보 채점 → data/candidates/
+    try:
+        import candidates
+        from collections import Counter
+        tc = Counter(t for s in surgers if s["tv"] >= MIN_TV for t in s.get("themes") or [])
+        hot = [t for t, n in tc.most_common() if n >= 2]              # 오늘 급등주 2개 이상이 같이 묶인 테마
+        cpath, cand = candidates.run(frames, names, filings, today, features, today_bar, news_fn=news, hot_themes=hot)
+        print(f"급등 후보 {len(cand['candidates'])}개 저장: {cpath} · 오늘 급등 테마 {hot}", flush=True)
+    except Exception as e:
+        print("급등 후보 계산 실패:", type(e).__name__, e, flush=True)
 
     # 시장 맥락
     ctx = {"n_stocks": int(len(U)), "n_up": int((U["chg"] > 0).sum()), "n_down": int((U["chg"] < 0).sum()),

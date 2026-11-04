@@ -379,6 +379,127 @@ def scan_data(mkt):
                        "limit": sum(1 for v in s["stocks"].values() if v.get("limit_up_at") and not v.get("pref"))}}
 
 
+# ── 감시 탭: 📰 뉴스·공시 레이더 — 재료는 나왔는데 주가는 아직 덜 움직인 종목 ─────────────
+_news_cache = {}
+
+
+def _news(name, n=8):
+    """구글 뉴스 최근 2일 제목 (종목명 기준) — 15분 캐시"""
+    hit = _news_cache.get(name)
+    if hit and time.time() - hit[0] < 900:
+        return hit[1]
+    sp = os.path.join(REPO, "surge-study")
+    if sp not in sys.path:
+        sys.path.insert(0, sp)
+    import collect
+    nw = collect.news(name, n)
+    _news_cache[name] = (time.time(), nw)
+    return nw
+
+
+def _dart_list(day):
+    """그날 전체 공시 목록(코스피·코스닥만) — OpenDART list.json"""
+    key = os.environ.get("DART_API_KEY") or os.environ.get("DART_KEY")
+    if not key:
+        raise RuntimeError("서버 .env 에 DART_API_KEY 가 없음")
+    import requests
+    out, page = [], 1
+    while page <= 20:
+        j = requests.get("https://opendart.fss.or.kr/api/list.json", timeout=20,
+                         params={"crtfc_key": key, "bgn_de": day, "end_de": day, "page_no": page, "page_count": 100}).json()
+        if j.get("status") not in ("000",):
+            if j.get("status") == "013":                  # 조회된 데이터 없음
+                break
+            raise RuntimeError(f"DART {j.get('status')}: {j.get('message')}")
+        out += [x for x in j.get("list") or [] if x.get("corp_cls") in ("Y", "K") and x.get("stock_code")]
+        if page >= int(j.get("total_page") or 1):
+            break
+        page += 1
+    return out
+
+
+def news_radar():
+    sp = os.path.join(REPO, "surge-study")
+    if sp not in sys.path:
+        sys.path.insert(0, sp)
+    import candidates as C
+    from concurrent.futures import ThreadPoolExecutor
+    now = bot.now()
+    today = now.strftime("%Y%m%d")
+    yday = (now - __import__("datetime").timedelta(days=1 if now.weekday() else 3)).strftime("%Y%m%d")
+    fl, dart_err = [], None
+    for d in (today, yday):
+        got = cached("dart-list:" + d, 180 if d == today else 3600, lambda d=d: _dart_list(d))
+        if isinstance(got, dict):                         # 실패 → {"error": ...}
+            dart_err = got.get("error")
+            with _lock:
+                _cache.pop("dart-list:" + d, None)
+            continue
+        fl += [{**x, "day": d} for x in got]
+    # 오늘 장중 기록(+3%↑만 기록됨)으로 지금 등락
+    rows = _intraday_rows(now.strftime("%Y-%m-%d"))
+    chg, mc = {}, {}
+    for r in sorted(rows, key=lambda r: r["time"]):
+        try:
+            chg[r["code"]] = float(r["chg"]); mc[r["code"]] = float(r.get("mcap_eok") or 0)
+        except ValueError:
+            pass
+    market_open = now.weekday() < 5 and (9, 0) <= (now.hour, now.minute) <= (15, 30)
+    by = {}
+    for x in fl:
+        t = re.sub(r"\s", "", x.get("report_nm") or "")
+        pos = [(tag, pts) for tag, pat, pts in C.CAT_RULES if re.search(pat, t)]
+        neg = [(tag, pts) for tag, pat, pts in C.NEG_RULES if re.search(pat, t)]
+        if not pos and not neg:
+            continue
+        code = x["stock_code"]
+        g = by.setdefault(code, {"code": code, "name": x["corp_name"], "items": [], "pts": 0, "neg": [], "tags": []})
+        g["items"].append({"title": x.get("report_nm", "").strip(), "rcept_no": x["rcept_no"], "day": x["day"]})
+        for tag, pts in pos:
+            if tag not in g["tags"]:
+                g["tags"].append(tag)
+            g["pts"] = max(g["pts"], pts if x["day"] == today else pts * 0.7)
+        g["neg"] += [tag for tag, _ in neg if tag not in g["neg"]]
+    for g in by.values():
+        g["chg"] = chg.get(g["code"])
+        g["mcap_eok"] = mc.get(g["code"])
+        g["moved"] = g["chg"] is not None and g["chg"] >= 5
+        g["latest"] = max(i["rcept_no"] for i in g["items"])
+    good = [g for g in by.values() if g["pts"] > 0 and "거래소 경고" not in g["neg"]]
+    good.sort(key=lambda g: (g["moved"], -g["pts"], -int(g["latest"])))
+    bad = sorted([g for g in by.values() if g["neg"]], key=lambda g: -int(g["latest"]))
+    # 장중 '막 시작' 종목 — 왜 움직이는지(공시·뉴스)
+    early = []
+    try:
+        e, _, _, _ = _intraday_scan(rows)
+        early = [{"code": x["code"], "name": x["name"], "chg": x["chg"], "big": x["big"]} for x in e[:12]]
+    except Exception:
+        pass
+    # 뉴스: 덜 움직인 재료 종목 상위 15 + 막 시작 종목
+    want = [g for g in good if not g["moved"]][:15] + early
+    def one(x):
+        try:
+            nw = _news(x["name"], 8)
+        except Exception:
+            nw = []
+        titles = [n["title"] for n in nw]
+        pts, why, warn, th = C.news_score(titles, ["오늘 공시: " + "·".join(x.get("tags") or [])], x.get("chg") or 0, [])
+        return x["code"], {"news": [{"title": n["title"], "source": n.get("source"), "link": n.get("link"), "date": n.get("date")} for n in nw[:3]],
+                           "news_pts": pts, "news_why": why, "news_warn": warn, "themes": th}
+    with ThreadPoolExecutor(6) as ex:
+        nmap = dict(ex.map(one, want))
+    for x in good + early:
+        x.update(nmap.get(x["code"], {}))
+    gcodes = {g["code"]: g for g in good}
+    for x in early:
+        g = gcodes.get(x["code"])
+        x["filing_tags"] = g["tags"] if g else []
+        x["explained"] = bool(g) or bool(x.get("news_why"))
+    return {"time": now.strftime("%H:%M"), "market_open": market_open, "n_filings": len(fl), "dart_error": dart_err,
+            "fresh": [g for g in good if not g["moved"]][:25], "moved": [g for g in good if g["moved"]][:15],
+            "bad": bad[:15], "early": early, "today": today, "yday": yday}
+
+
 # ── 발굴 탭: 급등 후보 · 가치주 20선 · 애크먼 TOP10 ─────────────────────────────
 #   데이터는 GitHub(Actions가 매일·매주 갱신)에서 직접 받아 옴 → 서버에서 git pull 안 해도 최신.
 #   GitHub에 못 가면 서버에 있는 저장소 파일을 씀.
@@ -446,7 +567,7 @@ def picks_surge(date=None):
     except Exception:
         ctx = {}
     return {"kind": "surge", "date": j["date"], "method": j.get("method"), "n_scored": j.get("n_scored"),
-            "items": items, "more": j["candidates"][10:20], "prev": j.get("prev"), "graded": g, "today_live": today_live,
+            "items": items, "more": j["candidates"][10:20], "prev": j.get("prev"), "graded": g, "today_live": today_live, "hot_themes": j.get("hot_themes") or [],
             "dates": idx, "surgers": surgers, "context": ctx, "live": None if date else _try(intraday_now, None),
             "morning": None if date else _try(lambda: cached("us_overnight", 3600, us_overnight), None)}
 
@@ -916,6 +1037,12 @@ class H(BaseHTTPRequestHandler):
         if not self._auth():
             return
         path = self.path.split("?")[0]
+        if path == "/api/radar":
+            try:
+                out = cached("radar", 120, news_radar)
+            except Exception as e:
+                out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/scan":
             m = (parse_qs(urlparse(self.path).query).get("m") or ["kr"])[0]
             try:
