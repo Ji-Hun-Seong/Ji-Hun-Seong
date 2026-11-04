@@ -988,8 +988,8 @@ document.querySelector('nav button[data-t="pick"]').addEventListener("click", ()
 function openHero() { pKind = "hero"; try { localStorage.setItem("p-kind", "hero"); } catch (e) {}
   document.querySelectorAll("#p-seg button").forEach(x => x.classList.toggle("act", x.dataset.k === "hero")); goTab("pick"); }
 // 대가 탭 안의 국가 선택 (한국·미국·유럽·중국·일본)
-let hMkt = "kr", hSort = "all";
-try { hSort = localStorage.getItem("h-sort") || "all"; } catch (e) {}
+let hMkt = "kr", hSort = "value";
+try { hSort = localStorage.getItem("h-sort") || "value"; } catch (e) {}
 try { hMkt = localStorage.getItem("h-mkt") || "kr"; } catch (e) {}
 const HMKT = [["kr", "🇰🇷 한국"], ["us", "🇺🇸 미국"], ["eu", "🇪🇺 유럽"], ["cn", "🇨🇳 중국"], ["jp", "🇯🇵 일본"]];
 function hSetMkt(m) { hMkt = m; try { localStorage.setItem("h-mkt", m); } catch (e) {} pLoad(); }
@@ -1016,18 +1016,26 @@ function pRender(d) {
     const G = d.grades || {}, S = d.styles, glob = d.market && d.market !== "kr";
     const two = d.items.length && d.items[0].value !== undefined;
     const sk = two ? hSort : "all", key = x => sk === "value" ? (x.value ?? -1) : sk === "growth" ? (x.growth ?? -1) : x.total;
-    const hs = d.items.slice().sort((a, b) => key(b) - key(a));
+    // 💎 가치주 / 🚀 성장주 탭 — 가치 점수가 높으면 가치주, 성장 점수가 높으면 성장주 (둘 다 위성 이상이면 양쪽에)
+    const isV = x => x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1), isG = x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1);
+    const inTab = x => sk === "value" ? isV(x) : sk === "growth" ? isG(x) : true;
+    const GL = {core: "🟢 장기 핵심", sat: "🟡 장기 위성", watch: "⚪ 관찰", no: "🔴 장기 부적합", na: "⚪ 데이터 부족"};
+    const gk = x => sk === "value" ? x.vgrade : sk === "growth" ? x.ggrade : x.grade.key;
+    const tabItems = d.items.filter(inTab);
+    const TG = {}; tabItems.forEach(x => { const k = gk(x); TG[k] = (TG[k] || 0) + 1; });
+    const hs = tabItems.slice().sort((a, b) => key(b) - key(a));
     pItems = hs.concat(d.more || []);
-    head = hMktBar() + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 8인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
+    const styBar = two ? `<div class="seg" id="h-sort" style="margin-top:8px">${[["value", `💎 가치주 ${d.items.filter(isV).length}`], ["growth", `🚀 성장주 ${d.items.filter(isG).length}`], ["all", "전체"]].map(([k, l]) => `<button data-s="${k}" class="${sk === k ? "act" : ""}">${l}</button>`).join("")}</div>` : "";
+    head = hMktBar() + styBar + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 8인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
       <div class="small" style="margin-top:6px;line-height:1.6">💎 <b>가치</b> 그레이엄·버핏·그린블랫·애크먼 · 🚀 <b>성장</b> 피셔·린치·로 프라이스·오닐 — 각 100점, 등급은 높은 쪽</div>
-      <div class="tally"><span class="tag g">🟢 핵심 ${G.core || 0}</span><span class="tag y">🟡 위성 ${G.sat || 0}</span><span class="tag">⚪ 관찰 ${G.watch || 0}</span><span class="tag r">🔴 부적합 ${G.no || 0}</span></div>
+      ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 그레이엄·버핏·그린블랫·애크먼 점수 순" : "🚀 성장주 — 피셔·린치·로 프라이스·오닐 점수 순"}</b> <span class="tiny mut">${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다"}</span></div>` : ""}
+      <div class="tally"><span class="tag g">🟢 핵심 ${(sk === "all" ? G : TG).core || 0}</span><span class="tag y">🟡 위성 ${(sk === "all" ? G : TG).sat || 0}</span><span class="tag">⚪ 관찰 ${(sk === "all" ? G : TG).watch || 0}</span><span class="tag r">🔴 부적합 ${(sk === "all" ? G : TG).no || 0}</span></div>
       ${S ? `<div class="tiny mut" style="margin-top:6px">위성 이상: 💎 가치형 ${S.value} · 🚀 성장형 ${S.growth} · 둘 다 ${S.both}</div>` : ""}
-      ${two ? `<div class="seg sm" id="h-sort" style="margin-top:10px">${[["all", "종합"], ["value", "💎 가치순"], ["growth", "🚀 성장순"]].map(([k, l]) => `<button data-s="${k}" class="${sk === k ? "act" : ""}">${l}</button>`).join("")}</div>` : ""}
       <div class="tiny mut" style="margin-top:8px">${glob ? "후보 = 그 나라 대표 우량주·배당주 (chartpage/heroes.py GLOBAL_POOL) · 야후 재무 기준 — 공시·수급 항목은 채점에서 제외" : "후보 = 내가 아는 회사(toss-bot/heroes_pool.txt) + 가치주 후보 + 📌 내 계좌"} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
-    rows = hs.slice(0, 30).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>${x.held ? " 📌" : ""}
-        <span class="tag ${GCLS[x.grade.key]}">${esc(x.grade.label)}</span></div><div style="text-align:right"><span class="score">${Math.round(key(x) < 0 ? 0 : key(x))}</span><span class="tiny mut">점</span></div></div>
+    rows = hs.slice(0, 30).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${sk === "all" ? x.rank : i + 1}</span><span class="name">${esc(x.name)}</span>${x.held ? " 📌" : ""}
+        <span class="tag ${GCLS[gk(x)]}">${esc(sk === "all" ? x.grade.label : GL[gk(x)] || "")}</span>${sk === "all" && x.style ? ` <span class="tiny">${x.style === "both" ? "💎🚀" : x.style === "value" ? "💎" : "🚀"}</span>` : ""}</div><div style="text-align:right"><span class="score">${Math.round(key(x) < 0 ? 0 : key(x))}</span><span class="tiny mut">점</span></div></div>
       <div class="tiny mut" style="margin-top:3px">${esc(x.lynch_cat)} · PER ${x.per != null ? x.per.toFixed(1) : "-"} · PBR ${x.pbr != null ? x.pbr.toFixed(2) : "-"} · 배당 ${x.yield != null ? x.yield.toFixed(1) + "%" : "-"} · ${eokFmt(x.mcap_eok)}</div>
-      ${hbars(x.heroes, x)}
+      ${sk === "value" ? hbar1(x.heroes, HSTY.value, "", `💎 ${Math.round(x.value ?? 0)}`) : sk === "growth" ? hbar1(x.heroes, HSTY.growth, "gr", `🚀 ${Math.round(x.growth ?? 0)}`) : hbars(x.heroes, x)}
       <div>${x.best.slice(0, 2).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.worst.slice(0, 1).map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div>
       ${x.note ? `<div class="why">${esc(x.note)}</div>` : ""}</div>`).join("");
     if (d.failed && d.failed.length) rows += `<div class="tiny mut" style="padding-top:12px">데이터 부족·실패 ${d.failed.length}종목: ${d.failed.slice(0, 12).map(x => esc(x.name)).join(" · ")}</div>`;
