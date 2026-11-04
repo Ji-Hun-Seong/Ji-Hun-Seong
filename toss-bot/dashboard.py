@@ -358,7 +358,7 @@ def picks_value():
     import recommend
     from value_dna import load_profile
     tmp = tempfile.mkdtemp(prefix="vb-")
-    for fn in ("universe.csv", "profile.json", "holdings.txt", "recent_buys.txt", "DATA_ASOF"):
+    for fn in ("universe.csv", "profile.json", "holdings.txt", "recent_buys.txt", "DATA_ASOF", "pinned.txt"):
         try:
             open(os.path.join(tmp, fn), "w", encoding="utf-8").write(gh_text(f"value-bot/{fn}", ttl=3600))
         except Exception:
@@ -373,6 +373,8 @@ def picks_value():
     with contextlib.redirect_stdout(io.StringIO()):
         recommend.apply_recent_buys(dna, os.path.join(tmp, "recent_buys.txt"))
         picked, _ = recommend.rank(dna, recommend.load_universe(os.path.join(tmp, "universe.csv")))
+        if hasattr(recommend, "apply_pinned"):
+            picked = recommend.apply_pinned(picked, 20, os.path.join(tmp, "pinned.txt"))
     asof = open(os.path.join(tmp, "DATA_ASOF")).read().strip() if os.path.exists(os.path.join(tmp, "DATA_ASOF")) else ""
     held = set(dna.holdings)
     items = []

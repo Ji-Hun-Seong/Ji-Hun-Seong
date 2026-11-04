@@ -261,6 +261,25 @@ def rank(dna: DNA, universe: list[Candidate], include_kosdaq=False, include_hold
 # ---------------------------------------------------------------------------
 # 출력
 # ---------------------------------------------------------------------------
+def apply_pinned(picked: list[Candidate], top: int, path: str) -> list[Candidate]:
+    """pinned.txt 종목은 점수가 낮아도 상위 top 안에 넣는다(가장 낮은 종목을 밀어냄). 순서는 점수순 유지."""
+    if not os.path.exists(path):
+        return picked
+    names = [l.strip() for l in open(path, encoding="utf-8") if l.strip() and not l.startswith("#")]
+    pins = [c for c in picked if c.name in names]
+    for c in pins:
+        c.reasons = c.reasons + ["📌 지분이 커서 예외로 항상 포함"]
+    head = [c for c in picked[:top]]
+    for c in pins:
+        if c not in head:
+            drop = next((x for x in reversed(head) if x not in pins), None)
+            if drop is not None:
+                head.remove(drop)
+            head.append(c)
+    head.sort(key=lambda c: -c.total)
+    return head + [c for c in picked if c not in head]
+
+
 def console(picked, top):
     print(f"\n{'순위':>3}  {'종목':<12}{'총점':>6}  밸류 환원 현금 적합  감점")
     for i, c in enumerate(picked[:top], 1):
@@ -456,6 +475,7 @@ def main(argv=None):
     if dna.unknown:
         print("⚠ value_dna.TAXONOMY 에 없는 종목(분류 후 다시 실행):", dna.unknown)
     picked, excluded = rank(dna, load_universe(a.universe), a.include_kosdaq, not a.exclude_holdings)
+    picked = apply_pinned(picked, a.top, os.path.join(os.path.dirname(os.path.abspath(a.universe)), "pinned.txt"))
     console(picked, a.top)
 
     if not a.no_html:
