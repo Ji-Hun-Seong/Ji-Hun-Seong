@@ -139,6 +139,15 @@ canvas.c-big{max-height:none}
 .grade{border-radius:12px;padding:12px;margin:4px 0 12px;background:var(--bg)}.grade b{font-size:16px}
 .prin{font-size:13px;line-height:1.6}.prin div{padding:6px 0;border-top:1px solid var(--line)}.prin div:first-child{border-top:0}.prin em{font-style:normal;color:var(--sub);font-size:12px}
 details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}details summary::-webkit-details-marker{display:none}
+.iron{background:linear-gradient(135deg,#1c2533,#17212b);border:1px solid #2b3a4d}
+.iron .ir{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}.iron .ir:first-of-type{border-top:0;padding-top:4px}
+.iron .ir .ic{font-size:20px;line-height:1.2}.iron .ir b{font-size:14.5px}.iron .ir .q{font-size:12.5px;color:#c4d0de;margin-top:2px;line-height:1.5}
+.iron .keep{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed #33445a}
+.iron .keep button{background:var(--blue);color:#fff;border:0;border-radius:99px;padding:7px 14px;font-size:13px;font-weight:700;font-family:inherit}
+.iron .keep button.done{background:#173826;color:#6fe3a2}
+.ironbar{border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-bottom:12px}
+.ironbar.debt{background:#3a1f24;color:#ffc0c6}.ironbar.fomo{background:#3a2a12;color:#f9d79a}
+.fomo-alert{background:#3a2a12;border:1px solid #6b4a17}.fomo-alert h2{color:#f9c46b}.fomo-alert .small{line-height:1.6;color:#f3dfb8}
 .more{background:none;border:0;color:var(--blue);font-size:13px;padding:8px 0 0;font-family:inherit}
 </style>
 </head>
@@ -148,6 +157,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 <div id="errBanner" class="banner"></div>
 
 <section id="t-home" class="act">
+  <div class="card iron" id="h-iron"></div>
   <div class="card" id="h-mix"><div class="row"><h2 style="margin:0">⚖️ 장기 9 : 단기 1</h2><span class="tiny mut">불러오는 중…</span></div></div>
   <div class="card">
     <div class="label">전략 평가 합계 (원화 환산 전)</div>
@@ -192,6 +202,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 </section>
 
 <section id="t-acct">
+  <div class="ironbar debt" id="a-iron">🚫 <b>빚투 금지</b> · 신용·미수·주식담보대출·마이너스통장으로 산 주식 0원 유지</div>
   <div class="card">
     <div class="label">실제 토스증권 계좌</div>
     <div class="big" id="a-val">-</div>
@@ -212,6 +223,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 </section>
 
 <section id="t-pick">
+  <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
   <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 영웅</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 가치주</button><button data-k="ackman">🇺🇸 애크먼</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
@@ -347,6 +359,9 @@ function render(d) {
   if (V) { $("mode").textContent = "👀 조회 전용"; $("mode").title = d.role_why || ""; if (document.querySelector("#t-acct.act, #t-acct.on")) goTab("home"); }
   // 계좌
   const a = d.account || {};
+  $("a-iron").innerHTML = a.cash_krw != null && a.cash_krw < 0
+    ? `🚨 <b>매수 가능 금액이 마이너스(${won(a.cash_krw)})</b> — 미수·신용이 생겼을 수 있어요. 바로 확인하고 갚기. <b>철칙 1: 절대 대출해서 투자하지 않는다</b>`
+    : `🚫 <b>빚투 금지</b> · 신용·미수·주식담보대출·마이너스통장으로 산 주식 0원 유지`;
   if (a.hidden) { $("a-val").textContent = "-"; $("a-sub").textContent = "조회 전용 화면에서는 계좌 금액을 보여 주지 않음"; $("a-items").innerHTML = ""; } else
   if (a.error && !a.items) { $("a-val").textContent = "-"; $("a-sub").textContent = a.error; }
   else {
@@ -398,6 +413,7 @@ function mixRender(m) {
 function principlesCard(P, heroes, open) {
   if (!P) return "";
   return `<div class="card"><details ${open ? "open" : ""}><summary><div class="row"><h2 style="margin:0">🏛️ 나의 투자 원칙</h2><span class="tiny" style="color:var(--blue)">펼치기/접기</span></div></summary>
+    ${(P.iron || []).map((x, i) => `<div class="ironbar ${i ? "fomo" : "debt"}" style="margin:12px 0 0">${i ? "🧘" : "🚫"} <b>철칙 ${i + 1}</b> · ${esc(x)}</div>`).join("")}
     <div class="small" style="margin:12px 0;padding:10px;background:var(--bg);border-radius:10px">⚖️ <b>${esc(P.mix.text)}</b></div>
     <div class="prin">${P.rules.map(([who, step, txt], i) => `<div><b>${i + 1}. ${esc(step)}</b> <em>${esc(who)}</em><br>${esc(txt)}</div>`).join("")}</div>
     <div class="tiny mut" style="margin:12px 0 4px">포트폴리오 규칙</div><div class="prin">${P.portfolio.map(x => `<div>${esc(x)}</div>`).join("")}</div>
@@ -514,6 +530,53 @@ function cRender(a) {
 }
 cDrawRecent();
 
+// ── 철칙 2개 (어떤 상황에서도) — 홈 맨 위 · 계좌 · 발굴 · 급등한 종목 화면에 ─────────────
+const IRON = [
+  {ic: "🚫", t: "절대 대출해서 투자하지 않는다", qs: [
+    "대출로 산 주식은 떨어질 때 버틸 수 없다 — 버틸 수 있는 내 돈으로만.",
+    "신용·미수·주식담보대출·마이너스통장 0원. '이번엔 확실하다'는 생각이 들 때가 가장 위험하다.",
+    "시장은 내 대출 만기와 이자를 기다려 주지 않는다.",
+    "잃어도 생활이 흔들리지 않는 돈만 투자한다. 그래야 좋은 주식을 오래 들고 있을 수 있다.",
+    "급할수록 빚을 떠올리게 된다. 급하면 쉬고, 빚은 쳐다보지 않는다."]},
+  {ic: "🧘", t: "FOMO에 흔들리지 않는다", qs: [
+    "이미 많이 오른 주식의 수익은 남의 것이다. 다음 기회는 반드시 또 온다.",
+    "사고 싶어 조급해지면 하루 기다린다. 왜 오를지 두 문장으로 못 쓰면 사지 않는다.",
+    "놓친 상승보다 쫓아가서 산 고점이 훨씬 아프다.",
+    "원칙에 맞는 가격이 올 때까지 기다리는 것도 투자다.",
+    "남들이 다 번다는 말이 들릴 때가 내 원칙을 다시 읽을 때다."]}];
+function ironRender() {
+  const day = Math.floor((Date.now() + 9 * 3600e3) / 864e5);          // 한국 날짜 기준으로 매일 다른 문장
+  const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+  let st = {}; try { st = JSON.parse(localStorage.getItem("iron-keep") || "{}"); } catch (e) {}
+  const done = st.last === today;
+  $("h-iron").innerHTML = `<div class="label" style="margin-bottom:6px">📌 어떤 상황이 와도 — 나의 철칙</div>
+    ${IRON.map((r, i) => `<div class="ir"><span class="ic">${r.ic}</span><div><b>${i + 1}. ${r.t}</b><div class="q">${esc(r.qs[(day + i * 2) % r.qs.length])}</div></div></div>`).join("")}
+    <div class="keep"><span class="tiny mut">${st.streak ? `연속 ${st.streak}일 지킴 ${st.streak >= 30 ? "🏆" : st.streak >= 7 ? "🔥" : "✨"}` : "매일 한 번 읽고 다짐하기"}</span>
+      <button class="${done ? "done" : ""}" id="iron-btn">${done ? "✓ 오늘도 지킴" : "오늘도 지킨다 ✓"}</button></div>`;
+  $("iron-btn").onclick = () => {
+    if (done) return;
+    const y = new Date(Date.now() + 9 * 3600e3 - 864e5).toISOString().slice(0, 10);
+    const ns = {last: today, streak: st.last === y ? (st.streak || 0) + 1 : 1};
+    try { localStorage.setItem("iron-keep", JSON.stringify(ns)); } catch (e) {}
+    ironRender();
+  };
+}
+ironRender();
+// 종목 화면: 이미 급등한 종목이면 FOMO 경보 카드
+function fomoCard(a) {
+  const T = a.tech || {}, why = [];
+  if (T.chg != null && T.chg >= 0.08) why.push(`오늘 ${pct(T.chg)}`);
+  if (T.ret5 != null && T.ret5 >= 0.15) why.push(`최근 1주 ${pct(T.ret5)}`);
+  if (T.ret20 != null && T.ret20 >= 0.30) why.push(`최근 1개월 ${pct(T.ret20)}`);
+  if (T.rsi != null && T.rsi >= 75) why.push(`RSI ${T.rsi.toFixed(0)} 과열`);
+  if (T.pos52 != null && T.pos52 >= 0.97 && T.ret60 != null && T.ret60 >= 0.4) why.push(`3개월 ${pct(T.ret60)} · 52주 꼭대기`);
+  if (!why.length) return "";
+  return `<div class="card fomo-alert"><h2>🧘 FOMO 경보 — ${why.join(" · ")}</h2>
+    <div class="small">지금 사고 싶은 마음이 든다면 그게 FOMO일 수 있어요.<br>
+    ① 하루 기다리기 ② 왜 더 오를지 두 문장으로 써 보기 ③ 원칙에 맞는 가격(영웅 5인·밸류 기준)인지 확인하기 — 셋 다 통과 못 하면 사지 않기.<br>
+    <b>그리고 어떤 경우에도 대출로 사지 않기.</b></div></div>`;
+}
+
 // ── 공통: 탭 이동 · 종목 열기 ────────────────────────
 function goTab(t) {
   document.querySelectorAll("nav button").forEach(x => x.classList.toggle("act", x.dataset.t === t));
@@ -585,6 +648,7 @@ function sdRender(a) {
     ${(a.tags || []).length ? `<div style="margin-top:8px">${a.tags.map(t => `<span class="tag ${tagCls(t)}">${esc(t)}</span>`).join("")}</div>` : ""}
     <div class="kv">${kvs.join("")}</div>${err}
   </div>
+  ${fomoCard(a)}
   ${ctxCard()}
   ${heroCard(a)}
   <div class="card"><h2>👀 한눈에 보기</h2><div class="tally" style="margin:-4px 0 10px">${tally}</div>${sigs}
