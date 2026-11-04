@@ -225,7 +225,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 </style>
 </head>
 <body>
-<header><h1>내 자동매매</h1><span><button class="thbtn" id="thBtn" title="화면 테마">🌓 자동</button><span id="mode" class="badge">…</span></span></header>
+<header><h1>내 자동매매</h1><span><button class="thbtn" id="mktBtn" title="한국·미국 바꾸기" style="display:none">🇰🇷 한국</button><button class="thbtn" id="thBtn" title="화면 테마">🌓 자동</button><span id="mode" class="badge">…</span></span></header>
 <div id="stopBanner" class="banner">⛔ 긴급 정지 중 — 새 주문을 내지 않습니다</div>
 <div id="errBanner" class="banner"></div>
 
@@ -334,8 +334,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
   <button data-t="pick"><b>💡</b>발굴</button>
   <button data-t="chart"><b>📈</b>종목</button>
   <button data-t="scan"><b>🔔</b>감시</button>
-  <button data-t="kr"><b>🇰🇷</b>한국</button>
-  <button data-t="us"><b>🇺🇸</b>미국</button>
+  <button data-t="mkt"><b id="mktIco">🇰🇷</b>전략</button>
   <button data-t="acct"><b>◎</b>계좌</button>
 </div></nav>
 
@@ -369,13 +368,30 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&
 const charts = {};
 let D = null;
 
+// 한국·미국 전략은 탭 하나(전략) — 오른쪽 위 🇰🇷/🇺🇸 버튼으로 바꿈 (테마 버튼처럼)
+let MKT = "kr"; try { MKT = localStorage.getItem("mkt") === "us" ? "us" : "kr"; } catch (e) {}
+function mktSync() {
+  const on = document.querySelector('nav button[data-t="mkt"]').classList.contains("act");
+  $("mktBtn").style.display = on ? "" : "none";
+  $("mktBtn").textContent = MKT === "us" ? "🇺🇸 미국" : "🇰🇷 한국";
+  $("mktIco").textContent = MKT === "us" ? "🇺🇸" : "🇰🇷";
+  if (on) document.querySelectorAll("section").forEach(s => s.classList.toggle("act", s.id === "t-" + MKT));
+}
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
   document.querySelectorAll("nav button").forEach(x => x.classList.toggle("act", x === b));
-  document.querySelectorAll("section").forEach(s => s.classList.toggle("act", s.id === "t-" + b.dataset.t));
+  const t = b.dataset.t === "mkt" ? MKT : b.dataset.t;
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("act", s.id === "t-" + t));
   try { localStorage.setItem("tab", b.dataset.t); } catch (e) {}
+  mktSync();
   window.scrollTo(0, 0);
 });
-try { const t = localStorage.getItem("tab"); if (t) document.querySelector(`nav button[data-t="${t}"]`)?.click(); } catch (e) {}
+$("mktBtn").onclick = () => {
+  MKT = MKT === "kr" ? "us" : "kr";
+  try { localStorage.setItem("mkt", MKT); } catch (e) {}
+  mktSync(); window.scrollTo(0, 0);
+};
+try { let t = localStorage.getItem("tab"); if (t === "kr" || t === "us") { MKT = t; t = "mkt"; } if (t) document.querySelector(`nav button[data-t="${t}"]`)?.click(); } catch (e) {}
+mktSync();
 
 function line(id, labels, sets) {
   const c = $(id);
@@ -705,8 +721,11 @@ function fomoCard(a) {
 
 // ── 공통: 탭 이동 · 종목 열기 ────────────────────────
 function goTab(t) {
-  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("act", x.dataset.t === t));
+  if (t === "kr" || t === "us") MKT = t;                  // 한국·미국은 '전략' 탭 하나
+  const nt = t === "kr" || t === "us" ? "mkt" : t;
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("act", x.dataset.t === nt));
   document.querySelectorAll("section").forEach(s => s.classList.toggle("act", s.id === "t-" + t));
+  mktSync();
   window.scrollTo(0, 0);
   if (t === "pick") pLoad();
   if (t === "chart") obOpen(); else obStop();
