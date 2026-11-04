@@ -5,7 +5,7 @@
   선택: .env 에 DASH_PASSWORD=... 를 넣으면 접속 시 비밀번호(아이디는 아무거나)를 물어봄
 
 투자 원칙: 장기 9 : 단기 1 (단기는 최대 2) — 홈 '장기·단기 비율' 카드, 발굴 '🏛️ 영웅' 목록, 종목 상세 '영웅 체크'
-            (그레이엄·버핏·피셔·린치·애크먼 기준, chartpage/heroes.py)
+            (아빠·그레이엄·버핏·피셔·린치·애크먼 기준, chartpage/heroes.py)
 보여주는 것: 운용 모드·긴급정지, 한국/미국 전략 평가·수익 곡선, 보유 종목(토스 실시간가), 시가 예약·매도 예정,
             최근 자사주 공시 감지, 청산 내역, 나스닥 200일선·목표 레버리지, 실제 토스 계좌 잔고
 할 수 있는 것: 긴급 정지 켜기/끄기 (실전 전환은 안전을 위해 서버 명령으로만)
@@ -555,7 +555,7 @@ def stock_detail(q, us_hint=None):
         with _lock:
             _cache.pop(key, None)
         return out
-    try:                                          # 🏛️ 영웅 5인 체크 (이미 받은 데이터로 계산 — 추가 요청 없음)
+    try:                                          # 🏛️ 영웅 6인 체크 (이미 받은 데이터로 계산 — 추가 요청 없음)
         import heroes
         out = {**out, "heroes": heroes.score(out)}
     except Exception as e:
