@@ -87,7 +87,8 @@ canvas.c-big{max-height:none}
 .srow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.srow:first-child{border-top:0}
 /* 발굴 · 종목 상세 */
 .prow{padding:13px 0;border-top:1px solid var(--line);cursor:pointer}.prow:first-child{border-top:0;padding-top:2px}
-.prow .rk{display:inline-block;min-width:22px;color:var(--sub);font-weight:700;font-variant-numeric:tabular-nums}
+.prow .tkr{font-size:12px;color:var(--sub);font-weight:600;margin-left:6px;font-variant-numeric:tabular-nums;letter-spacing:.2px}
+.prow .rk{display:inline-block;min-width:22px;margin-right:6px;color:var(--sub);font-weight:700;font-variant-numeric:tabular-nums}
 .prow .why{font-size:12px;color:var(--sub);margin-top:5px;line-height:1.5}
 .score{font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
 .tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:6px;background:var(--line);color:var(--sub);margin:2px 4px 0 0}
@@ -1061,7 +1062,7 @@ function pRender(d) {
       <div class="tally"><span class="tag g">🟢 핵심 ${(sk === "all" ? G : TG).core || 0}</span><span class="tag y">🟡 위성 ${(sk === "all" ? G : TG).sat || 0}</span><span class="tag">⚪ 관찰 ${(sk === "all" ? G : TG).watch || 0}</span><span class="tag r">🔴 부적합 ${(sk === "all" ? G : TG).no || 0}</span></div>
       ${S ? `<div class="tiny mut" style="margin-top:6px">위성 이상: 💎 가치형 ${S.value} · 🚀 성장형 ${S.growth} · 둘 다 ${S.both}</div>` : ""}
       <div class="tiny mut" style="margin-top:8px">${glob ? "야후 재무 기준 — 공시·수급 항목은 채점에서 제외 · " : ""}${`후보 = ${glob ? "그 나라 시총 2조원(약 14억 달러)↑ 전 종목" : "코스피 시총 2,000억↑ 전 종목(스팩·우선주 제외)"} + 가치주 후보·대표 종목 + 📌 내 계좌 · 서버가 매일 한 바퀴 다시 채점해 DB에 저장`} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
-    rows = hs.slice(0, 50).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${sk === "all" ? x.rank : i + 1}</span><span class="name">${esc(x.name)}</span>${x.held ? " 📌" : ""}
+    rows = hs.slice(0, 50).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${sk === "all" ? x.rank : i + 1}</span><span class="name">${esc(x.name)}</span>${x.code ? `<span class="tkr">${esc(x.code)}</span>` : ""}${x.held ? " 📌" : ""}
         <span class="tag ${GCLS[gk(x)]}">${esc(sk === "all" ? x.grade.label : GL[gk(x)] || "")}</span>${sk === "all" && x.style ? ` <span class="tiny">${x.style === "both" ? "💎🚀" : x.style === "value" ? "💎" : "🚀"}</span>` : ""}</div><div style="text-align:right"><span class="score">${Math.round(key(x) < 0 ? 0 : key(x))}</span><span class="tiny mut">점</span></div></div>
       <div class="tiny mut" style="margin-top:3px">${esc(x.lynch_cat)} · PER ${x.per != null ? x.per.toFixed(1) : "-"} · PBR ${x.pbr != null ? x.pbr.toFixed(2) : "-"} · 배당 ${x.yield != null ? x.yield.toFixed(1) + "%" : "-"} · ${eokFmt(x.mcap_eok)}</div>
       ${sk === "value" ? hbar1(x.heroes, HSTY.value, "", `💎 ${Math.round(x.value ?? 0)}`) : sk === "growth" ? hbar1(x.heroes, HSTY.growth, "gr", `🚀 ${Math.round(x.growth ?? 0)}`) : hbars(x.heroes, x)}
@@ -1081,7 +1082,7 @@ function pRender(d) {
         : d.today_live ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📡 오늘 장중 대조(${d.today_live.time} 기준): 상위 ${d.today_live.n}개 중 +10%↑ <b>${d.today_live.hit10}개</b> · 정식 채점은 장 마감 후(18:45쯤)</div>`
         : `<div class="small mut" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 다음 거래일 장 마감 후(18:45쯤) 채점돼요</div>`}
       <div class="tiny mut" style="margin-top:8px">규칙 점수 — 매일 채점하면서 데이터가 쌓이면 학습 모형으로 바꿉니다. 매수 추천 아님</div></div>`;
-    rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>
+    rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>${x.code ? `<span class="tkr">${esc(x.code)}</span>` : ""}
         <span class="tiny mut"> ${esc(x.market)}</span></div><div style="text-align:right">${x.next_chg != null ? `<span class="tag ${x.next_chg >= 10 ? "g" : x.next_chg < 0 ? "r" : ""}" style="margin-right:6px">다음 날 ${sg(x.next_chg)}</span>`
           : d.today_live ? (x.today != null ? `<span class="tag ${x.today_max >= 10 ? "g" : ""}" style="margin-right:6px">오늘 ${sg(x.today)}${x.today_max >= 10 ? " ✅" : ""}</span>` : `<span class="tag" style="margin-right:6px">오늘 +${d.today_live.floor}% 미만</span>`) : ""}<span class="score">${x.score}</span><span class="tiny mut">점</span></div></div>
       <div class="row tiny mut" style="margin-top:3px"><span>${d.date.slice(5)} 종가 ${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억${x.ret5 != null ? ` · 5일 <span class="${cls(x.ret5)}">${pct(x.ret5, 0)}</span>` : ""}${x.ret20 != null ? ` · 20일 <span class="${cls(x.ret20)}">${pct(x.ret20, 0)}</span>` : ""}</span></div>
@@ -1113,7 +1114,7 @@ function pRender(d) {
     }
     const S = d.surgers || [];
     if (S.length) rows += `</div><div class="card"><h2>🔥 ${d.date} 실제 급등주 ${d.context && d.context.n_surge != null ? d.context.n_surge + "개" : ""} <span class="tiny mut">(+10%↑ · 🏢 대형주는 +5%↑ · 왜 올랐나)</span></h2>
-      ${S.slice(0, SD.sAll ? 30 : 10).map(x => `<div class="prow" data-sc="${esc(x.code)}"><div class="row"><span>${x.big ? "🏢 " : ""}<span class="name">${esc(x.name)}</span> <span class="tiny mut">${esc(x.market || "")}</span>${x.picked ? ` <span class="tag b">🎯 전날 후보</span>` : ""}</span><span class="up name">+${x.chg}%</span></div>
+      ${S.slice(0, SD.sAll ? 30 : 10).map(x => `<div class="prow" data-sc="${esc(x.code)}"><div class="row"><span>${x.big ? "🏢 " : ""}<span class="name">${esc(x.name)}</span>${x.code ? `<span class="tkr">${esc(x.code)}</span>` : ""} <span class="tiny mut">${esc(x.market || "")}</span>${x.picked ? ` <span class="tag b">🎯 전날 후보</span>` : ""}</span><span class="up name">+${x.chg}%</span></div>
         <div>${x.catalysts.map(c => `<span class="tag y">${esc(c)}</span>`).join("")}${x.themes.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
         ${x.news.length ? `<div class="why">📰 ${esc(x.news[0])}</div>` : ""}</div>`).join("")}
       ${S.length > 10 ? `<button class="more" id="s-all">${SD.sAll ? "접기 ▲" : `${S.length - 10}개 더 보기 ▼`}</button>` : ""}`;
@@ -1121,7 +1122,7 @@ function pRender(d) {
     head = `<div class="card"><div class="label">💎 아빠 매매일지 DNA 20선 (코스피) · 데이터 ${esc(d.asof)}</div>
       <div class="small" style="margin-top:6px;line-height:1.6">아빠가 실제로 사고판 매매일지에서 뽑은 성향(좋아하는 업종·가격대·배당·재무)에 가장 잘 맞는 종목 순서</div>
       <div class="small" style="margin-top:6px;line-height:1.6">밸류 25 · 주주환원 25 · 현금·재무 25 · 내 성향 적합도 25 − 리스크 감점 · 📌 = 지금 계좌에 있음</div></div>`;
-    rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>${x.held ? " 📌" : ""}
+    rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>${x.code ? `<span class="tkr">${esc(x.code)}</span>` : ""}${x.held ? " 📌" : ""}
         <span class="tiny mut"> ${esc(x.sector || "")}</span></div><div style="text-align:right"><span class="score">${x.total}</span><span class="tiny mut">점</span></div></div>
       <div class="tiny mut" style="margin-top:3px">PBR ${x.pbr ?? "-"} · PER ${x.per ?? "-"} · 배당 ${x.yield ?? "-"}% · 밸류 ${x.scores.value} 환원 ${x.scores.payout} 현금 ${x.scores.cash} 적합 ${x.scores.fit}</div>
       <div>${x.reasons.slice(0, 3).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.risks.slice(0, 2).map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div></div>`).join("");
@@ -1129,7 +1130,7 @@ function pRender(d) {
     head = `<div class="card"><div class="label">애크먼 매매 행태 TOP10 · ${esc(d.week || "")}${d.asof ? " · " + d.asof + " 종가" : ""}</div>
       <div class="small" style="margin-top:6px;line-height:1.6">애크먼이 2013년 이후 의미 있게 보유한 종목 중 '그가 사던 때와 비슷한 상태'인 순서. 🟢 매수 구간 · 🟡 적정가 이하 · 🔴 적정가 초과</div>
       ${d.partial ? `<div class="tiny mut" style="margin-top:6px">상세(적정가·투자 포인트)는 다음 주간 실행부터 표시됩니다</div>` : ""}</div>`;
-    rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span>${x.status || ""} <span class="name">${esc(x.name)}</span>
+    rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span>${x.status || ""} <span class="name">${esc(x.name)}</span>${x.code ? `<span class="tkr">${esc(x.code)}</span>` : ""}
         <span class="tiny mut"> ${esc(x.t)}</span></div><div style="text-align:right">${x.total != null ? `<span class="score">${Math.round(x.total)}</span><span class="tiny mut">점</span>` : ""}</div></div>
       <div class="tiny mut" style="margin-top:3px">${usd(x.price)}${x.fv ? ` · 적정 ${usd(x.fv)} · 매수 ≤${usd(x.buy)}` : ""}${x.fpe ? ` · PER ${x.fpe.toFixed(0)}배${x.ph ? `(과거 ${x.ph.toFixed(0)})` : ""}` : ""}${x.since ? ` · 편입 ${x.since}` : ""}</div>
       ${x.thesis ? `<div class="why">${esc(x.thesis)}</div>` : ""}</div>`).join("");

@@ -42,6 +42,9 @@ REGIONS = {
     "cn": [("cn", r"\.(SS|SZ)$"), ("hk", r"\.HK$")],
     "jp": [("jp", r"\.T$")],
 }
+# 미국은 정식 거래소만 (장외 OTC·핑크시트에 올라온 외국 회사 GDR — 예: SK hynix — 제외)
+US_EXCH = {"NMS", "NGM", "NCM", "NYQ", "ASE", "PCX", "BTS", "NYS", "NAS"}
+UNI_VER = "2"                                                       # 목록 규칙이 바뀌면 올림 → 7일 안 기다리고 바로 다시 받음
 PRIO = {"내 계좌": 0, "아는 회사": 1, "가치주 후보": 2, "대표 종목": 3}
 
 PATH = None
@@ -157,6 +160,8 @@ def universe_global(market: str) -> list[dict]:
                     continue
                 if q.get("quoteType", "EQUITY") != "EQUITY" or not re.search(pat, sym) or sym in seen:
                     continue
+                if region == "us" and q.get("exchange") and q["exchange"] not in US_EXCH:
+                    continue
                 seen.add(sym)
                 out.append({"code": sym, "name": q.get("longName") or q.get("shortName") or sym, "mcap_eok": eok, "ccy": ccy})
             if low >= len(qs) * 0.9:                       # 거의 다 기준 미달 → 이 나라 끝
@@ -165,6 +170,22 @@ def universe_global(market: str) -> list[dict]:
     if len(out) < 20:
         raise RuntimeError(f"{market} 목록이 {len(out)}개뿐 — 야후 스크리너 응답 이상")
     return out
+
+
+_SUFFIX = re.compile(r"[,\s]+(the\s+)?(company\s+limited|co\.?,?\s*ltd\.?|corporation|corp\.?|incorporated|inc\.?|limited|ltd\.?|"
+                     r"holdings?|group|plc|p\.l\.c\.|s\.?a\.?|n\.?v\.?|a\.?g\.?|se|ag|ab(\s*\(publ\))?|asa|oyj|spa|s\.p\.a\.|"
+                     r"kabushiki kaisha|k\.k\.|class [a-c]|a/s|soci[ée]t[ée] europ[ée]enne)\.?$", re.I)
+
+
+def short_name(n: str) -> str:
+    """'Taiwan Semiconductor Manufacturing Company Limited' → 'Taiwan Semiconductor Manufacturing' (꼬리 법인명 떼기)"""
+    n = (n or "").strip()
+    for _ in range(3):
+        m = _SUFFIX.sub("", n).strip(" ,.")
+        if m == n or len(m) < 2:
+            break
+        n = m
+    return n
 
 
 def _upsert(market, x, src, active=1):
@@ -188,7 +209,7 @@ def refresh(market: str, extras_fn, force=False):
     """목록 갱신: 7일마다 전체(기준 미달·상폐는 비활성), 6시간마다 내 계좌·아는 회사만"""
     now = time.time()
     c = db()
-    if force or now - float(meta_get("uni:" + market, 0)) > UNI_EVERY:
+    if force or now - float(meta_get("uni:" + market, 0)) > UNI_EVERY or meta_get("uni_ver:" + market) != UNI_VER:
         status["now"] = f"{market} 종목 목록 받는 중"
         base = universe_kr() if market == "kr" else universe_global(market)   # 실패하면 예외 → 기존 목록 유지
         c.execute("UPDATE stocks SET active=0, src='[]', prio=5 WHERE market=?", (market,))
@@ -196,6 +217,7 @@ def refresh(market: str, extras_fn, force=False):
             _upsert(market, x, {"kr": "코스피"}.get(market, "시총 상위"))
         c.commit()
         meta_set("uni:" + market, now)
+        meta_set("uni_ver:" + market, UNI_VER)
         meta_set("extra:" + market, 0)
     if now - float(meta_get("extra:" + market, 0)) > EXTRA_EVERY:
         c.execute("UPDATE stocks SET held=0 WHERE market=?", (market,))
@@ -285,6 +307,8 @@ def board(market: str) -> dict:
     for row, src, held, mc, ok in rows:
         x = json.loads(row)
         x["src"], x["held"] = json.loads(src or "[]"), bool(held)
+        if market != "kr":
+            x["name"] = short_name(x.get("name"))
         if x.get("mcap_eok") is None:
             x["mcap_eok"] = mc
         items.append(x)
