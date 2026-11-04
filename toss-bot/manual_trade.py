@@ -325,6 +325,9 @@ def cancel(order_id: str) -> dict:
     return {"ok": True, "order_id": (r or {}).get("orderId") or order_id}
 
 
+if __name__ == "__main__" and sys.argv[1:2] == ["speed"]:
+    speed((sys.argv[2:3] or ["005930"])[0])
+
 if __name__ == "__main__" and sys.argv[1:2] == ["check"]:
     # 서버에서 점검:  .venv/bin/python manual_trade.py check [종목코드]
     code = (sys.argv[2:3] or ["005930"])[0]
@@ -352,3 +355,45 @@ if __name__ == "__main__" and sys.argv[1:2] == ["check"]:
             step("실시간(웹소켓) 연결", lambda: (WS(ob_stream.WS_URL, {"Authorization": f"Bearer {api().token()}"}, timeout=8).close(), "OK")[1])
         except Exception as e:
             print("❌ 웹소켓 모듈:", e)
+        speed(code)
+
+
+def speed(code="005930"):
+    """속도 측정 — REST 왕복 시간, 웹소켓 체결이 거래소 시각보다 얼마나 늦게 도착하는지"""
+    import datetime as dt
+    import json as _j
+    import socket as _s
+    import statistics as st
+    a = api()
+    ts = []
+    for _ in range(6):
+        t0 = time.perf_counter()
+        a.req("GET", "/api/v1/prices", "MARKET_DATA", {"symbols": code})
+        ts.append((time.perf_counter() - t0) * 1000)
+    print(f"⏱️ REST 왕복(현재가 조회): 중간값 {st.median(ts):.0f}ms · 최소 {min(ts):.0f}ms · 최대 {max(ts):.0f}ms (호출 한도 대기 포함)")
+    try:
+        import ob_stream
+        from ws_min import WS
+        w = WS(ob_stream.WS_URL, {"Authorization": f"Bearer {a.token()}"}, timeout=8)
+        w.settimeout(1.0)
+        w.send_text(_j.dumps([{"type": "trade:kr" if code.isdigit() else "trade:us", "codes": [code]}]))
+        lags, end = [], time.time() + 15
+        while time.time() < end and len(lags) < 30:
+            try:
+                m = w.recv()
+            except _s.timeout:
+                continue
+            try:
+                j = _j.loads(m or "{}")
+            except ValueError:
+                continue
+            if j.get("type") == "message" and (j.get("data") or {}).get("timestamp"):
+                t = dt.datetime.fromisoformat(j["data"]["timestamp"])
+                lags.append((dt.datetime.now(t.tzinfo) - t).total_seconds() * 1000)
+        w.close()
+        if lags:
+            print(f"⏱️ 웹소켓 체결 지연(거래소 체결 시각 → 서버 도착): 중간값 {st.median(lags):.0f}ms · 최소 {min(lags):.0f}ms ({len(lags)}건, 서버 시계 기준)")
+        else:
+            print("⏱️ 웹소켓: 15초 동안 체결 없음 — 장 시간(국내 08:00~20:00, NXT 포함)에 다시 측정")
+    except Exception as e:
+        print("❌ 웹소켓 속도 측정:", e)
