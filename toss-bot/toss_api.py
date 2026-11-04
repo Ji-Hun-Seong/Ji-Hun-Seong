@@ -9,7 +9,7 @@ BASE = "https://openapi.tossinvest.com"
 # API 그룹별 초당 한도(공식 문서) — 여유 있게 80%만 사용
 TPS = {"AUTH": 5, "ACCOUNT": 1, "ASSET": 5, "STOCK": 5, "STOCK_ALL": 1, "MARKET_INFO": 3, "MARKET_DATA": 15,
        "MARKET_DATA_CHART": 20, "RANKING": 5, "MARKET_INDICATOR_CHART": 5, "ORDER": 10, "ORDER_HISTORY": 5,
-       "ORDER_INFO": 3}
+       "ORDER_INFO": 3, "CONDITIONAL_ORDER": 5, "CONDITIONAL_ORDER_HISTORY": 10}
 
 
 class TossError(Exception):
@@ -131,6 +131,9 @@ class Toss:
     def price_limits(self, symbol):
         return self.req("GET", "/api/v1/price-limits", "MARKET_DATA", {"symbol": symbol})
 
+    def trades(self, symbol, count=50):
+        return self.req("GET", "/api/v1/trades", "MARKET_DATA", {"symbol": symbol, "count": count}) or []
+
     def prices(self, symbols):
         out = []
         for i in range(0, len(symbols), 200):
@@ -197,3 +200,19 @@ class Toss:
 
     def cancel(self, order_id):
         return self.req("POST", f"/api/v1/orders/{order_id}/cancel", "ORDER", body={}, account=True)
+
+    def orders(self, status="CLOSED", symbol=None, date_from=None, date_to=None, limit=100, cursor=None):
+        p = {"status": status, "limit": limit}
+        for k, v in (("symbol", symbol), ("from", date_from), ("to", date_to), ("cursor", cursor)):
+            if v:
+                p[k] = v
+        return self.req("GET", "/api/v1/orders", "ORDER_HISTORY", p, account=True) or {}
+
+    def conditional_orders(self, status="OPEN", symbol=None):
+        p = {"status": status, "limit": 100}
+        if symbol:
+            p["symbol"] = symbol
+        return (self.req("GET", "/api/v1/conditional-orders", "CONDITIONAL_ORDER_HISTORY", p, account=True) or {}).get("conditionalOrders", [])
+
+    def cancel_conditional(self, cid):
+        return self.req("DELETE", f"/api/v1/conditional-orders/{cid}", "CONDITIONAL_ORDER", account=True)

@@ -138,9 +138,12 @@ class Hub:
                         self._put(sym, ob=mt.norm_ob(d), src="ws")
                     elif ch == "trade":
                         try:
-                            self._put(sym, last=float(d.get("price")), ts=d.get("timestamp"), src="ws")
+                            tk = {"p": float(d.get("price")), "v": float(d.get("volume") or 0), "t": d.get("timestamp")}
                         except (TypeError, ValueError):
-                            pass
+                            continue
+                        with self.cv:
+                            ticks = (self.data.get(sym) or {}).get("ticks") or []
+                        self._put(sym, last=tk["p"], ts=tk["t"], ticks=([tk] + ticks)[:40], src="ws")
             except (WSError, OSError, Exception) as e:
                 fails += 1
                 self.mode, self.err = "reconnect", f"{type(e).__name__}: {str(e)[:120]}"

@@ -412,6 +412,27 @@ def picks_surge(date=None):
     g = j.get("graded")
     nxt = {r["code"]: r.get("next_chg") for r in (g or {}).get("results", [])}
     items = [{"rank": i, **c, "next_chg": nxt.get(c["code"])} for i, c in enumerate(j["candidates"][:10], 1)]
+    today_live = None
+    if not date and not g and j["date"] < bot.now().strftime("%Y-%m-%d"):   # 채점 전(오늘 장중·마감 직후) → 장중 기록으로 미리 대조
+        try:
+            rows = _intraday_rows(bot.now().strftime("%Y-%m-%d"))
+            if rows:
+                last, mx = {}, {}
+                for r in sorted(rows, key=lambda r: r["time"]):
+                    try:
+                        c_ = float(r["chg"])
+                    except ValueError:
+                        continue
+                    last[r["code"]] = c_
+                    mx[r["code"]] = max(mx.get(r["code"], -99), c_)
+                floor = min(last.values()) if last else None
+                for x in items + [{"code": c["code"]} for c in j["candidates"][10:20]]:
+                    if x["code"] in last:
+                        x["today"], x["today_max"] = last[x["code"]], mx[x["code"]]
+                hit = sum(1 for x in items if (x.get("today_max") or 0) >= 10)
+                today_live = {"time": max(r["time"] for r in rows), "floor": round(floor or 0), "hit10": hit, "n": len(items)}
+        except Exception:
+            today_live = None
     surgers = []
     try:                                          # 그날 실제로 급등한 종목(+15%↑) — 왜 올랐나
         dj = json.loads(gh_text(f"surge-study/data/daily/{j['date']}.json", ttl=900 if not date else 86400))
@@ -425,7 +446,7 @@ def picks_surge(date=None):
     except Exception:
         ctx = {}
     return {"kind": "surge", "date": j["date"], "method": j.get("method"), "n_scored": j.get("n_scored"),
-            "items": items, "more": j["candidates"][10:20], "prev": j.get("prev"), "graded": g,
+            "items": items, "more": j["candidates"][10:20], "prev": j.get("prev"), "graded": g, "today_live": today_live,
             "dates": idx, "surgers": surgers, "context": ctx, "live": None if date else _try(intraday_now, None),
             "morning": None if date else _try(lambda: cached("us_overnight", 3600, us_overnight), None)}
 
@@ -851,7 +872,14 @@ class H(BaseHTTPRequestHandler):
             self.wfile.write(("data: " + json.dumps(o, ensure_ascii=False, default=str) + "\n\n").encode())
             self.wfile.flush()
         try:
-            snap = mt.orderbook(code)                  # 처음 한 번은 REST 로 전체(상·하한가·현재가 포함)
+            snap = mt.orderbook(code)                  # 처음 한 번은 REST 로 전체(상·하한가·현재가·최근 체결 포함)
+            try:
+                snap["ticks"] = [{"p": mt._f(t.get("price")), "v": mt._f(t.get("volume")), "t": t.get("timestamp")}
+                                 for t in (mt.api().trades(code, 30) or [])]
+                with HUB.cv:
+                    HUB.data.setdefault(code, {"v": 0}).setdefault("ticks", snap["ticks"])
+            except Exception:
+                pass
             up, lo = snap.get("upper"), snap.get("lower")
             cur = {**snap, "mode": "rest"}
             emit(cur)
@@ -869,6 +897,8 @@ class H(BaseHTTPRequestHandler):
                         cur.update(x["ob"])
                     if x.get("last") is not None:
                         cur["last"], cur["tts"] = x["last"], x.get("ts")
+                    if x.get("ticks"):
+                        cur["ticks"] = x["ticks"][:30]
                     cur.update(upper=up, lower=lo, mode=HUB.mode, err=HUB.err)
                     emit(cur); last_emit = last_beat = time.time()
                 elif time.time() - last_beat > 15:        # 조용한 동안에도 연결 유지
@@ -947,6 +977,24 @@ class H(BaseHTTPRequestHandler):
             if not mt.enabled()[0]:
                 return self._send(503, "disabled", "text/plain")
             return self._sse(code)
+        if path in ("/api/fills", "/api/reserve"):  # 🧾 체결내역 · ⏰ 예약(조건)주문 — 주인만
+            qs = parse_qs(urlparse(self.path).query)
+            code = (qs.get("q") or [""])[0].strip().upper() or None
+            J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False, default=str), "application/json; charset=utf-8")
+            if code and not re.fullmatch(r"[0-9A-Z.\-]{1,12}", code):
+                return J(400, {"error": "종목 코드가 올바르지 않습니다"})
+            if role_of(self.client_address[0]) == "viewer":
+                return J(403, {"error": "보기 전용"})
+            import manual_trade as mt
+            if not mt.enabled()[0]:
+                return J(200, {"error": mt.enabled()[1], "disabled": True})
+            try:
+                if path == "/api/fills":
+                    days = max(1, min(90, int((qs.get("days") or ["7"])[0] or 7)))
+                    return J(200, mt.history(code, days))
+                return J(200, {"items": mt.reservations(code)})
+            except Exception as e:
+                return J(200, {"error": f"{type(e).__name__}: {str(e)[:200]}"})
         if path in ("/api/orderbook", "/api/trade"):   # 📒 호가창(누구나) · 주문 화면 정보(주인만)
             code = (parse_qs(urlparse(self.path).query).get("q") or [""])[0].strip().upper()
             J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False, default=str), "application/json; charset=utf-8")
@@ -983,7 +1031,7 @@ class H(BaseHTTPRequestHandler):
             return
         if role_of(self.client_address[0]) == "viewer":   # 보기 전용은 아무것도 바꿀 수 없음
             return self._send(403, json.dumps({"error": "보기 전용"}, ensure_ascii=False), "application/json; charset=utf-8")
-        if self.path in ("/api/order", "/api/order/cancel"):   # 💸 실제 주문 — 주인만(위에서 보기 전용 차단)
+        if self.path in ("/api/order", "/api/order/cancel", "/api/order/modify", "/api/reserve/cancel"):   # 💸 실제 주문 — 주인만(위에서 보기 전용 차단)
             J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False, default=str), "application/json; charset=utf-8")
             org, host = self.headers.get("Origin"), self.headers.get("Host") or ""
             if (self.headers.get("X-Toss-Dash") != "1" or "application/json" not in (self.headers.get("Content-Type") or "")
@@ -1004,6 +1052,10 @@ class H(BaseHTTPRequestHandler):
                     except Exception:
                         mc = None
                     out = mt.place(body, mcap_eok=mc)       # 텔레그램 알림 없음(아빠가 있는 방으로 갈 수 있어서) — 기록은 state/manual_orders.jsonl
+                elif self.path == "/api/order/modify":
+                    out = mt.modify(str(body.get("order_id") or ""), body.get("price"), body.get("qty"))
+                elif self.path == "/api/reserve/cancel":
+                    out = mt.cancel_reservation(str(body.get("id") or ""))
                 else:
                     out = mt.cancel(str(body.get("order_id") or ""))
                 return J(200, out)

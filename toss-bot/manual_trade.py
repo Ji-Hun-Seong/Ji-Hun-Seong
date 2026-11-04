@@ -139,9 +139,104 @@ def info(code: str) -> dict:
 
 def _order_row(o: dict) -> dict:
     ex = o.get("execution") or {}
-    return {"id": o.get("orderId"), "side": o.get("side"), "type": o.get("orderType"), "status": o.get("status"),
-            "price": _f(o.get("price")), "qty": _f(o.get("quantity")), "filled": _f(ex.get("filledQuantity")) or 0,
-            "avg": _f(ex.get("averagePrice") or ex.get("executionAveragePrice")), "at": o.get("orderedAt")}
+    return {"id": o.get("orderId"), "code": o.get("symbol"), "side": o.get("side"), "type": o.get("orderType"), "tif": o.get("timeInForce"),
+            "status": o.get("status"), "price": _f(o.get("price")), "qty": _f(o.get("quantity")), "amount_order": _f(o.get("orderAmount")),
+            "filled": _f(ex.get("filledQuantity")) or 0, "avg": _f(ex.get("averageFilledPrice")), "amount": _f(ex.get("filledAmount")),
+            "fee": _f(ex.get("commission")), "tax": _f(ex.get("tax")), "filled_at": ex.get("filledAt"), "settle": ex.get("settlementDate"),
+            "at": o.get("orderedAt"), "canceled_at": o.get("canceledAt"), "ccy": o.get("currency")}
+
+
+STATUS_KO = {"PENDING": "접수", "PENDING_CANCEL": "취소 중", "PENDING_REPLACE": "정정 중", "PARTIAL_FILLED": "부분 체결", "FILLED": "체결",
+             "CANCELED": "취소", "REJECTED": "거부", "CANCEL_REJECTED": "취소 거부", "REPLACE_REJECTED": "정정 거부", "REPLACED": "정정됨"}
+
+
+def history(code: str | None = None, days: int = 7) -> dict:
+    """체결내역 — 기간 안의 끝난 주문(체결·취소·거부)과 진행 중 주문, 최신 순. 체결 합계(수수료·세금 포함)"""
+    import datetime as dt
+    a = api()
+    to = bot.now().date()
+    fr = to - dt.timedelta(days=max(0, days - 1))
+    rows, cur = [], None
+    for _ in range(5):                                       # 최대 500건
+        r = a.orders("CLOSED", code, fr.isoformat(), to.isoformat(), 100, cur)
+        rows += [_order_row(o) for o in r.get("orders") or []]
+        cur = r.get("nextCursor")
+        if not r.get("hasNext") or not cur:
+            break
+    try:
+        rows += [_order_row(o) for o in a.open_orders(code)]
+    except Exception:
+        pass
+    seen, out = set(), []
+    for x in rows:
+        if x["id"] in seen:
+            continue
+        seen.add(x["id"])
+        x["status_ko"] = STATUS_KO.get(x["status"], x["status"])
+        out.append(x)
+    out.sort(key=lambda x: x.get("filled_at") or x.get("at") or "", reverse=True)
+    fills = [x for x in out if x["filled"]]
+    sm = lambda side, k: sum((x.get(k) or 0) for x in fills if x["side"] == side)
+    return {"from": fr.isoformat(), "to": to.isoformat(), "code": code, "items": out,
+            "sum": {"buy": sm("BUY", "amount"), "sell": sm("SELL", "amount"), "fee": sum((x["fee"] or 0) + (x["tax"] or 0) for x in fills),
+                    "n_fill": len(fills)}}
+
+
+def reservations(code: str | None = None) -> list:
+    """예약(조건)주문 — 토스 앱에서 건 감시 주문 포함"""
+    out = []
+    for o in api().conditional_orders("OPEN", code):
+        legs = [l for l in (o.get("first"), o.get("second")) if l]
+        out.append({"id": o.get("conditionalOrderId"), "type": o.get("type"), "status": o.get("status"), "code": o.get("symbol"),
+                    "qty": _f(o.get("quantity")), "order_type": o.get("orderType"), "side": o.get("side"), "expire": o.get("expireDate"),
+                    "legs": [{"type": l.get("type"), "trigger": _f(l.get("triggerPrice")), "price": _f(l.get("orderPrice")),
+                              "rate": _f(l.get("targetProfitRate")), "status": l.get("status")} for l in legs]})
+    return out
+
+
+def cancel_reservation(cid: str) -> dict:
+    if not cid or len(cid) > 128 or not all(c.isalnum() or c in "-_" for c in cid):
+        raise Reject("예약 번호가 올바르지 않습니다")
+    api().cancel_conditional(cid)
+    _log({"cancel_reservation": cid, "ok": True})
+    return {"ok": True}
+
+
+def modify(order_id: str, price, qty) -> dict:
+    """정정 — 국내: 가격·수량 / 미국: 가격만. 매수 정정은 늘어나는 금액이 현금·한도 안인지 확인"""
+    ok, why = enabled()
+    if not ok:
+        raise Reject(why)
+    a = api()
+    o = _order_row(a.get_order(order_id) or {})
+    if not o["id"]:
+        raise Reject("주문을 찾지 못했어요")
+    if o["status"] not in ("PENDING", "PARTIAL_FILLED"):
+        raise Reject(f"정정할 수 없는 상태예요 ({STATUS_KO.get(o['status'], o['status'])})")
+    us = is_us(o["code"])
+    price = _f(price)
+    qty = None if us else _f(qty)
+    if not price or price <= 0:
+        raise Reject("정정 가격을 입력하세요")
+    if not us and price % tick_kr(price):
+        raise Reject(f"호가 단위가 맞지 않음 — {tick_kr(price):,}원 단위로")
+    if qty is not None and (qty <= 0 or qty != int(qty)):
+        raise Reject("수량을 확인하세요")
+    up, lo = limits(o["code"])
+    if up and lo and not (lo <= price <= up):
+        raise Reject(f"가격이 상·하한가({lo:,.0f}~{up:,.0f}) 밖입니다")
+    if o["side"] == "BUY":
+        remain_old = (o["qty"] or 0) - (o["filled"] or 0)
+        new_q = (qty if qty is not None else o["qty"]) - (o["filled"] or 0)
+        extra = new_q * price - remain_old * (o["price"] or 0)
+        cash = a.buying_power_usd() if us else a.buying_power()
+        if extra > cash:
+            raise Reject(f"늘어나는 금액({extra:,.0f})이 현금 매수 가능 금액({cash:,.0f})을 넘어요 — 🚫 철칙 1")
+        if new_q * price > (MAX_USD if us else MAX_KRW):
+            raise Reject("1회 주문 한도 초과")
+    r = a.modify(order_id, price=(int(price) if not us else price), qty=(int(qty) if qty else None))
+    _log({"modify": order_id, "price": price, "qty": qty, "ok": True, "new_id": (r or {}).get("orderId")})
+    return {"ok": True, "order_id": (r or {}).get("orderId")}
 
 
 def _log(rec: dict):

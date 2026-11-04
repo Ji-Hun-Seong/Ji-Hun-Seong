@@ -147,6 +147,30 @@ body.tb-on section#t-chart{padding-bottom:80px}
 .fomo{margin-top:10px;background:color-mix(in srgb,var(--warn) 16%,transparent);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55}
 .oconf{text-align:center;padding:18px 10px;border-radius:16px;background:var(--bg)}.oconf.buy{border:2px solid var(--up)}.oconf.sell{border:2px solid var(--dn)}
 #ot-info .row{padding:3px 0}.xbtn{border:1px solid var(--line);background:none;color:var(--txt);border-radius:9px;padding:5px 10px;font-family:inherit}
+#tv{position:fixed;inset:0;z-index:95;background:var(--card);display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}#tv.on{display:flex}
+.tv-hd{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}.tv-x{background:none;border:0;color:var(--txt);font-size:30px;line-height:1;padding:0 6px 0 0}
+.tv-tabs{display:flex;border-bottom:1px solid var(--line);padding:0 6px}.tv-tabs button{flex:1;background:none;border:0;color:var(--sub);font-size:15px;font-weight:700;padding:12px 0 10px;border-bottom:3px solid transparent;font-family:inherit}
+.tv-tabs button.act{color:var(--txt);border-bottom-color:var(--txt)}
+.tv-body{flex:1;min-height:0;display:flex}.tv-l{width:44%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-right:1px solid var(--line);font-variant-numeric:tabular-nums;position:relative}
+.tv-r{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px calc(16px + env(safe-area-inset-bottom))}
+.tv-full{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px calc(16px + env(safe-area-inset-bottom))}
+.tv-oh{display:flex;justify-content:space-between;padding:7px 10px;color:var(--sub);font-size:12px;position:sticky;top:0;background:var(--card);z-index:1;border-bottom:1px solid var(--line)}
+.tv-r1{display:flex;justify-content:space-between;align-items:center;padding:6px 8px 6px 10px;cursor:pointer;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.tv-r1.ask{background:color-mix(in srgb,var(--dn) 9%,transparent)}.tv-r1.bid{background:color-mix(in srgb,var(--up) 9%,transparent)}
+.tv-r1 b{display:block;font-size:15px}.tv-r1 small{font-size:11px}.tv-r1.cur{outline:2px solid var(--txt);outline-offset:-2px}
+.tv-r1 .vv{position:relative;font-size:13px;color:var(--sub2);min-width:48px;text-align:right}.tv-r1 .vv i{position:absolute;right:-8px;top:-6px;bottom:-6px;opacity:.25}
+.tv-r1.ask .vv i{background:var(--dn)}.tv-r1.bid .vv i{background:var(--up)}.tv-r1:active{opacity:.6}
+.tv-tk{display:grid;grid-template-columns:1.1fr .7fr 1fr;column-gap:8px;padding:6px 10px;font-size:13px;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}.tv-tk span:nth-child(2){text-align:right}.tv-tk span:last-child{text-align:right}
+.tv-dots{display:flex;justify-content:center;gap:8px;padding:10px 0}.tv-dots i{width:9px;height:9px;border-radius:9px;background:var(--line);cursor:pointer}.tv-dots i.on{width:24px;background:var(--warn)}
+.seg.sm button{padding:8px 0;font-size:14px}.seg button:disabled{opacity:.45}.stp.sm input{font-size:16px;padding:9px 4px}.stp.sm button{width:38px}
+.qk.sm button{padding:5px 0;font-size:12px}.tv-can{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:10px;padding:8px 14px;font-family:inherit;font-size:14px}
+.tv-oc,.tv-fr{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}.tv-oc .btnrow a,.tv-fr .btnrow a{padding:8px;font-size:13px}
+.tv-fs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}.tv-fs div{background:var(--bg);border-radius:10px;padding:8px 10px}.tv-fs small{display:block;color:var(--sub);font-size:11px}.tv-fs b{font-size:14px}
+.tv-day{font-size:12px;color:var(--sub);margin:12px 2px 6px;font-weight:700}.tv-fr .row{padding:2px 0}
+#tv-modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end}#tv-modal.on{display:flex}
+.tv-mbox{background:var(--card);width:100%;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+#tv-r textarea{width:100%;box-sizing:border-box;margin-top:8px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--txt);padding:8px;font-size:13px;font-family:inherit;resize:none}#tv-r textarea.need{border-color:var(--up)}
+.ok{color:var(--ok)}
 #sheet{position:fixed;inset:0;z-index:100;display:none}#sheet.on{display:block}
 #sheet .bd{position:absolute;inset:0;background:rgba(0,0,0,.55)}
 #sheet .pn{position:absolute;left:0;right:0;bottom:0;max-height:90vh;background:var(--card);border-radius:20px 20px 0 0;display:flex;flex-direction:column;animation:up .22s ease-out}
@@ -282,7 +306,12 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
   <div class="hd"><div class="grab"></div><div class="row"><div style="flex:1;min-width:0"><div class="tiny mut" id="sh-meta"></div><div style="font-weight:700;font-size:16px;margin-top:3px;line-height:1.4" id="sh-title"></div></div><button class="x" onclick="closeDoc()">✕</button></div></div>
   <div class="bdy" id="sh-body"></div></div></div>
 
-<div id="tbar"><button class="sell" onclick="openTrade('SELL')">매도</button><button class="buy" onclick="openTrade('BUY')">매수</button></div>
+<div id="tv"><div class="tv-hd" id="tv-hd"></div>
+  <div class="tv-tabs" id="tv-tabs"><button data-k="BUY">매수</button><button data-k="SELL">매도</button><button data-k="EDIT">정정/취소</button><button data-k="FILL">체결</button><button data-k="RSV">예약</button></div>
+  <div class="tv-body" id="tv-body"><div class="tv-l" id="tv-ob"></div><div class="tv-r" id="tv-r"></div></div>
+  <div class="tv-full" id="tv-full"></div><div id="tv-modal"></div></div>
+
+<div id="tbar"><button class="sell" onclick="tvOpen('SELL')">매도</button><button class="buy" onclick="tvOpen('BUY')">매수</button></div>
 
 <nav><div>
   <button data-t="home" class="act"><b>⌂</b>홈</button>
@@ -978,11 +1007,13 @@ function pRender(d) {
       <div class="label" style="margin-top:10px">${d.date} 장 마감 기준 → 다음 거래일 급등 후보 ${latest ? "· 최신" : ""}</div>
       <div class="small" style="margin-top:6px;line-height:1.6">재료(오늘 공시) 35 · 거래량 선행 20 · 차트 에너지 25 · 종가 강도 10 · 유동성 10 − 감점 − 추격(이미 오른 만큼). ${fmtN(d.n_scored)}종목 채점 · <span class="tiny mut">${esc(d.method || "")}</span></div>
       ${g ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 이 후보들의 다음 날 성적: 평균 <b class="${cls(g.avg)}">${sg(g.avg)}</b> (시장 평균 ${sg(g.market_avg)}) · 오른 종목 ${g.up}/${g.n} · +10%↑ ${g.hit10}개</div>`
+        : d.today_live ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📡 오늘 장중 대조(${d.today_live.time} 기준): 상위 ${d.today_live.n}개 중 +10%↑ <b>${d.today_live.hit10}개</b> · 정식 채점은 장 마감 후(18:45쯤)</div>`
         : `<div class="small mut" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 다음 거래일 장 마감 후(18:45쯤) 채점돼요</div>`}
       <div class="tiny mut" style="margin-top:8px">규칙 점수 — 매일 채점하면서 데이터가 쌓이면 학습 모형으로 바꿉니다. 매수 추천 아님</div></div>`;
     rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>
-        <span class="tiny mut"> ${esc(x.market)}</span></div><div style="text-align:right">${x.next_chg != null ? `<span class="tag ${x.next_chg >= 10 ? "g" : x.next_chg < 0 ? "r" : ""}" style="margin-right:6px">다음 날 ${sg(x.next_chg)}</span>` : ""}<span class="score">${x.score}</span><span class="tiny mut">점</span></div></div>
-      <div class="row tiny mut" style="margin-top:3px"><span>${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억${x.ret5 != null ? ` · 5일 <span class="${cls(x.ret5)}">${pct(x.ret5, 0)}</span>` : ""}${x.ret20 != null ? ` · 20일 <span class="${cls(x.ret20)}">${pct(x.ret20, 0)}</span>` : ""}</span></div>
+        <span class="tiny mut"> ${esc(x.market)}</span></div><div style="text-align:right">${x.next_chg != null ? `<span class="tag ${x.next_chg >= 10 ? "g" : x.next_chg < 0 ? "r" : ""}" style="margin-right:6px">다음 날 ${sg(x.next_chg)}</span>`
+          : d.today_live ? (x.today != null ? `<span class="tag ${x.today_max >= 10 ? "g" : ""}" style="margin-right:6px">오늘 ${sg(x.today)}${x.today_max >= 10 ? " ✅" : ""}</span>` : `<span class="tag" style="margin-right:6px">오늘 +${d.today_live.floor}% 미만</span>`) : ""}<span class="score">${x.score}</span><span class="tiny mut">점</span></div></div>
+      <div class="row tiny mut" style="margin-top:3px"><span>${d.date.slice(5)} 종가 ${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억${x.ret5 != null ? ` · 5일 <span class="${cls(x.ret5)}">${pct(x.ret5, 0)}</span>` : ""}${x.ret20 != null ? ` · 20일 <span class="${cls(x.ret20)}">${pct(x.ret20, 0)}</span>` : ""}</span></div>
       <div>${x.why.slice(0, 4).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.warn.map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div></div>`).join("");
     if (d.more && d.more.length) rows += `<div class="tiny mut" style="padding-top:12px">11~20위: ${d.more.map((x, j) => `<a ${open(d.items.length + j)} href="javascript:void 0">${esc(x.name)}</a>`).join(" · ")}</div>`;
     const MO = d.morning;
@@ -1154,122 +1185,255 @@ function obRender() {
     <div class="obsum"><span class="dn">매도 잔량 ${fmtN(sa)}</span><span class="mut tiny">${d.upper ? `상한 ${obMoney(d.upper, us)} · 하한 ${obMoney(d.lower, us)}` : ""}</span><span class="up">매수 잔량 ${fmtN(sb)}</span></div>
     <div class="mixbar" style="margin-top:6px;height:6px"><i style="width:${sa + sb ? sa / (sa + sb) * 100 : 50}%;background:var(--dn)"></i><i style="width:${sa + sb ? sb / (sa + sb) * 100 : 50}%;background:var(--up)"></i></div>
     ${window.VIEWER ? "" : `<div class="tiny mut" style="margin-top:6px">가격을 누르면 그 가격으로 주문창이 열려요</div>`}</div>`;
-  if (!window.VIEWER) $("sd-ob").querySelectorAll("[data-px]").forEach(el => el.onclick = () => openTrade(OB.side, +el.dataset.px));
-  if (shOpen && shKey === "trade" && $("ot-sum")) otCalc();
+  if (!window.VIEWER) $("sd-ob").querySelectorAll("[data-px]").forEach(el => el.onclick = () => tvOpen(TV.tab === "SELL" ? "SELL" : "BUY", +el.dataset.px));
+  tvLive();
 }
 function openSheet(key, title, meta, html) {
   $("sh-title").textContent = title; $("sh-meta").textContent = meta; $("sh-body").innerHTML = html; $("sh-body").scrollTop = 0;
   $("sheet").classList.add("on"); document.body.style.overflow = "hidden"; shKey = key;
   if (!shOpen) { shOpen = true; history.pushState({sheet: 1}, ""); }
 }
-async function openTrade(side, px) {
+// ── 💸 주문 화면 (증권사 앱식) — 매수 · 매도 · 정정/취소 · 체결 · 예약 ─────────
+const TV = {open: false, tab: "BUY", type: "LIMIT", page: "ob", info: null, fills: {scope: "code", days: 1}, scrolled: false, edit: null};
+const tvUs = () => !!(OB.a && OB.a.us);
+const tvPx = v => v == null ? "-" : tvUs() ? Number(v).toFixed(2) : fmtN(v);
+const tvPrev = () => { const T = (OB.a || {}).tech || {}; return T.close != null && T.chg != null ? T.close / (1 + T.chg) : null; };
+const openTrade = (side, px) => tvOpen(side, px);
+function tvOpen(side, px) {
   if (window.VIEWER || !OB.a) return;
-  const a = OB.a, us = !!a.us, d = OB.d || {};
-  OB.side = side;
-  const best = side === "BUY" ? (d.asks && d.asks.length ? d.asks[d.asks.length - 1].p : d.last) : (d.bids && d.bids.length ? d.bids[0].p : d.last);
-  const p0 = px || best || (a.tech || {}).close || 0;
-  openSheet("trade", `${a.name} ${side === "BUY" ? "매수" : "매도"}`, `${a.code} · 토스증권 실제 주문`, `
-    <div class="seg" id="ot-side"><button data-s="BUY" class="${side === "BUY" ? "act buy" : ""}">매수</button><button data-s="SELL" class="${side === "SELL" ? "act sell" : ""}">매도</button></div>
-    <div class="seg" id="ot-type" style="margin-top:8px"><button data-t="LIMIT" class="act">지정가</button><button data-t="MARKET">시장가</button></div>
-    <div class="ofld" id="ot-pw"><small>가격</small><div class="stp"><button data-d="-1">−</button><input id="ot-px" inputmode="decimal" value="${us ? Number(p0).toFixed(2) : p0}"><button data-d="1">＋</button></div></div>
-    <div class="ofld"><small>수량</small><div class="stp"><button data-q="-1">−</button><input id="ot-qty" inputmode="${us ? "decimal" : "numeric"}" value="1"><button data-q="1">＋</button></div>
-      <div class="qk" id="ot-qk"></div></div>
-    <div id="ot-sum" class="osum"></div>
-    <div id="ot-fomo"></div>
-    <textarea id="ot-why" rows="2" placeholder="왜 사는지/파는지 한 줄 (매매일지로 기록 · 급등주 매수는 필수)"></textarea>
-    <button class="obtn ${side === "BUY" ? "buy" : "sell"}" id="ot-go">주문 확인</button>
-    <div class="tiny mut" style="margin:8px 0 2px;line-height:1.6">🚫 철칙 1: 현금 안에서만 주문돼요(미수·신용 불가) · 🧘 철칙 2: 급등을 쫓지 않기</div>
-    <div id="ot-info" class="small mut" style="margin-top:10px">계좌 정보 불러오는 중…</div>`);
-  const S = $("sh-body");
-  S.querySelectorAll("#ot-side button").forEach(b => b.onclick = () => openTrade(b.dataset.s, +$("ot-px").value || null));
-  S.querySelectorAll("#ot-type button").forEach(b => b.onclick = () => { S.querySelectorAll("#ot-type button").forEach(x => x.classList.toggle("act", x === b));
-    $("ot-pw").style.opacity = b.dataset.t === "MARKET" ? .4 : 1; $("ot-px").disabled = b.dataset.t === "MARKET"; otCalc(); });
-  S.querySelectorAll("[data-d]").forEach(b => b.onclick = () => { const p = +$("ot-px").value || 0, t = us ? 0.01 : obTick(p);
-    $("ot-px").value = us ? Math.max(0.01, p + t * +b.dataset.d).toFixed(2) : Math.max(t, Math.round(p / t) * t + t * +b.dataset.d); otCalc(); });
-  S.querySelectorAll("[data-q]").forEach(b => b.onclick = () => { $("ot-qty").value = Math.max(us ? 0.01 : 1, (+$("ot-qty").value || 0) + +b.dataset.q); otCalc(); });
-  $("ot-px").oninput = $("ot-qty").oninput = otCalc;
-  $("ot-go").onclick = otConfirm;
-  otCalc();
-  await otInfo();
+  TV.open = true; TV.tab = side || "BUY"; TV.scrolled = false; TV.edit = null;
+  if (px) TV.px = px; else TV.px = null;
+  TV.qty = null;
+  $("tv").classList.add("on"); document.body.style.overflow = "hidden";
+  history.pushState({tv: 1}, "");
+  tvRender(); tvInfo();
 }
-async function otInfo() {
-  const a = OB.a, us = !!a.us;
-  try {
-    const I = await (await fetch("api/trade?q=" + encodeURIComponent(a.code), {cache: "no-store"})).json();
-    if (I.error) throw new Error(I.error);
-    OB.info = I;
-    const h = I.hold;
-    $("ot-info").innerHTML = `<div class="row"><span>현금 매수 가능</span><b>${obMoney(I.cash, us)}</b></div>
-      <div class="row"><span>팔 수 있는 수량</span><b>${fmtN(I.sellable, us ? 4 : 0)}주</b></div>
-      ${h ? `<div class="row"><span>보유</span><b>${fmtN(h.qty, us ? 4 : 0)}주 · 평균 ${obMoney(h.avg, us)} <span class="${cls(h.last / h.avg - 1)}">${pct(h.last / h.avg - 1, 1)}</span></b></div>` : ""}
-      <div class="row"><span>1회 주문 한도</span><b>${obMoney(I.max_order, us)}</b></div>
-      ${I.stopped ? `<div class="up" style="margin-top:6px">⛔ 긴급 정지 중 — 매수는 막히고 매도·취소만 돼요</div>` : ""}
-      <div class="dh">미체결 주문 ${I.open.length}건</div>
-      ${I.open.map(o => `<div class="row item"><span>${o.side === "BUY" ? "🔺 매수" : "🔻 매도"} ${fmtN(o.qty, us ? 4 : 0)}주 ${o.price ? "@" + obMoney(o.price, us) : "시장가"} <span class="tiny mut">${esc(o.status)} · 체결 ${fmtN(o.filled, us ? 4 : 0)}</span></span>
-        <button class="xbtn" data-cx="${esc(o.id)}">취소</button></div>`).join("") || `<div class="tiny">없음</div>`}`;
-    $("ot-info").querySelectorAll("[data-cx]").forEach(b => b.onclick = () => otCancel(b.dataset.cx));
-    otCalc();
-  } catch (e) { $("ot-info").textContent = "계좌 정보 실패: " + e.message; }
+function tvClose(fromPop) {
+  if (!TV.open) return; TV.open = false; $("tv").classList.remove("on"); document.body.style.overflow = "";
+  if (!fromPop && history.state && history.state.tv) history.back();
 }
-function otVals() {
-  const S = $("sh-body"), type = S.querySelector("#ot-type .act").dataset.t, us = !!OB.a.us, d = OB.d || {};
-  const qty = +$("ot-qty").value || 0, px = +$("ot-px").value || 0;
-  const ref = type === "MARKET" ? (OB.side === "BUY" ? (d.asks && d.asks.length ? d.asks[d.asks.length - 1].p : d.last) : (d.bids && d.bids[0] ? d.bids[0].p : d.last)) : px;
-  return {type, qty, px, us, est: qty * (ref || 0) * (type === "MARKET" && OB.side === "BUY" ? 1.02 : 1)};
+window.addEventListener("popstate", () => { if (TV.open) tvClose(true); });
+function tvRender() {
+  const a = OB.a, d = OB.d || {}, T = a.tech || {}, last = d.last ?? T.close, prev = tvPrev(), ch = prev && last ? last / prev - 1 : T.chg;
+  $("tv-hd").innerHTML = `<button class="tv-x" onclick="tvClose()">‹</button>
+    <div style="flex:1;min-width:0"><div class="tiny mut">${esc(a.code)}${a.mkt ? " · " + esc(a.mkt) : ""}</div><div class="name" style="font-size:17px">${esc(a.name)}</div></div>
+    <div style="text-align:right"><div class="mid ${cls(ch)}" id="tv-last">${tvPx(last)}</div><div class="tiny ${cls(ch)}" id="tv-chg">${pct(ch, 2)}</div></div>`;
+  document.querySelectorAll("#tv-tabs button").forEach(b => b.classList.toggle("act", b.dataset.k === TV.tab));
+  const split = ["BUY", "SELL", "EDIT"].includes(TV.tab);
+  $("tv-body").style.display = split ? "" : "none"; $("tv-full").style.display = split ? "none" : "";
+  if (split) { tvOb(); tvRight(); } else if (TV.tab === "FILL") tvFills(); else tvReserve();
 }
-function otCalc() {
-  if (!$("ot-sum")) return;
-  const v = otVals(), I = OB.info, a = OB.a, T = a.tech || {}, P = a.profile || {};
-  const lim = (P.mcap_eok || 0) >= 50000 ? 5 : 10, chg = T.chg != null ? T.chg * 100 : null;
-  const capCash = I ? Math.min(I.cash || 0, I.max_order || Infinity) : null;
-  $("ot-qk").innerHTML = I ? (OB.side === "BUY" ? [10, 25, 50, 100] : [25, 50, 100]).map(p => `<button data-pc="${p}">${p === 100 ? (OB.side === "BUY" ? "최대" : "전부") : p + "%"}</button>`).join("") : "";
-  $("ot-qk").querySelectorAll("[data-pc]").forEach(b => b.onclick = () => {
-    const ref = v.type === "MARKET" ? (otVals().est / Math.max(v.qty, 1e-9)) || v.px : v.px;
-    let q = OB.side === "BUY" ? capCash * +b.dataset.pc / 100 / (ref * (v.type === "MARKET" ? 1.02 : 1)) : I.sellable * +b.dataset.pc / 100;
-    q = v.us ? Math.floor(q * 100) / 100 : Math.floor(q); $("ot-qty").value = Math.max(0, q); otCalc(); });
-  const over = OB.side === "BUY" && I && (v.est > (I.cash || 0) || v.est > I.max_order);
-  $("ot-sum").innerHTML = `<div class="row"><span>${v.type === "MARKET" ? "예상 금액(시장가 +2% 여유)" : "주문 금액"}</span><b class="${over ? "up" : ""}">${obMoney(v.est, v.us)}</b></div>
-    ${over ? `<div class="tiny up">${v.est > (I.cash || 0) ? "현금 매수 가능 금액을 넘어요 — 빚으로는 안 사요" : "1회 주문 한도를 넘어요"}</div>` : ""}`;
-  const fomo = OB.side === "BUY" && chg != null && chg >= lim;
-  $("ot-fomo").innerHTML = fomo ? `<div class="fomo">🧘 오늘 <b>${pct(chg / 100, 1)}</b> 오른 종목이에요 (FOMO 기준 +${lim}%). 지금 사고 싶은 게 '원칙' 때문인지 '조급함' 때문인지 — 이유를 한 줄 적어야 주문돼요.</div>` : "";
-  $("ot-go").disabled = !!over || v.qty <= 0;
+// 왼쪽: 호가 / 실시간 체결
+function tvOb() {
+  const el = $("tv-ob"); if (!el) return;
+  const d = OB.d, us = tvUs(), prev = tvPrev();
+  if (!d) { el.innerHTML = `<div class="empty small">호가 연결 중…</div>`; return; }
+  const dots = `<div class="tv-dots"><i class="${TV.page === "ob" ? "on" : ""}" data-pg="ob"></i><i class="${TV.page === "tk" ? "on" : ""}" data-pg="tk"></i></div>`;
+  if (TV.page === "tk") {
+    const tk = d.ticks || [];
+    el.innerHTML = `<div class="tv-oh"><span>체결가</span><span>체결량</span></div>` + (tk.map((t, i) => {
+      const up = i < tk.length - 1 ? (t.p > tk[i + 1].p ? "up" : t.p < tk[i + 1].p ? "dn" : "") : "";
+      return `<div class="tv-tk"><span class="${prev ? cls(t.p - prev) : ""}">${tvPx(t.p)}</span><span class="${up}">${fmtN(t.v, us ? 2 : 0)}</span><span class="tiny mut">${(t.t || "").slice(11, 19)}</span></div>`;
+    }).join("") || `<div class="empty small">체결 대기</div>`) + dots;
+  } else {
+    const asks = d.asks.slice(-10), bids = d.bids.slice(0, 10), mx = Math.max(1, ...asks.map(x => x.v || 0), ...bids.map(x => x.v || 0));
+    const row = (x, k) => `<div class="tv-r1 ${k} ${d.last === x.p ? "cur" : ""}" data-px="${x.p}"><span><b class="${prev ? cls(x.p - prev) : ""}">${tvPx(x.p)}</b>
+        <small class="${prev ? cls(x.p - prev) : ""}">${prev ? pct(x.p / prev - 1, 2) : ""}</small></span><span class="vv"><i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v, us ? 0 : 0)}</span></div>`;
+    el.innerHTML = `<div class="tv-oh"><span>호가</span><span>잔량</span></div>${asks.map(x => row(x, "ask")).join("")}${bids.map(x => row(x, "bid")).join("")}
+      <div class="tv-oh" style="font-size:11px"><span class="dn">${fmtN(d.sum_ask)}</span><span class="up">${fmtN(d.sum_bid)}</span></div>${dots}`;
+    el.querySelectorAll("[data-px]").forEach(r => r.onclick = () => { TV.px = +r.dataset.px; if ($("tv-px")) { $("tv-px").value = us ? TV.px.toFixed(2) : TV.px; tvCalc(); } });
+    if (!TV.scrolled) { const c = el.querySelector(".tv-r1.bid"); if (c) { el.scrollTop = c.offsetTop - el.clientHeight / 2; TV.scrolled = true; } }
+  }
+  el.querySelectorAll("[data-pg]").forEach(x => x.onclick = () => { TV.page = x.dataset.pg; TV.scrolled = false; tvOb(); });
 }
-function otConfirm() {
-  const v = otVals(), a = OB.a, why = $("ot-why").value.trim(), sd = OB.side === "BUY" ? "매수" : "매도";
+function tvLive() {                                       // 스트림이 들어올 때마다(초당 최대 8번)
+  if (!TV.open) return;
+  const d = OB.d || {}, prev = tvPrev(), last = d.last;
+  if ($("tv-last") && last != null) { const ch = prev ? last / prev - 1 : null; $("tv-last").textContent = tvPx(last); $("tv-last").className = "mid " + cls(ch);
+    $("tv-chg").textContent = pct(ch, 2); $("tv-chg").className = "tiny " + cls(ch); }
+  if (["BUY", "SELL", "EDIT"].includes(TV.tab)) { tvOb(); if (TV.type === "MARKET" && $("tv-sum")) tvCalc(); }
+}
+// 오른쪽: 매수·매도 입력 / 정정·취소
+function tvRight() {
+  const el = $("tv-r"), us = tvUs(), I = TV.info, d = OB.d || {};
+  if (TV.tab === "EDIT") {
+    const os = I ? I.open : null;
+    el.innerHTML = `<div class="small" style="font-weight:700;margin-bottom:8px">미체결 ${os ? os.length : "…"}건</div>` + (os ? os.map(o => `<div class="tv-oc">
+        <div class="row"><b class="${o.side === "BUY" ? "up" : "dn"}">${o.side === "BUY" ? "매수" : "매도"}</b><span class="tiny mut">${esc(o.status_ko || o.status)}</span></div>
+        <div class="small">${fmtN(o.qty, us ? 4 : 0)}주 ${o.price ? "@" + tvPx(o.price) : "시장가"} · 체결 ${fmtN(o.filled, us ? 4 : 0)}</div>
+        ${TV.edit === o.id ? `<div class="stp sm" style="margin-top:6px"><button data-ed="-1">−</button><input id="tv-epx" inputmode="decimal" value="${o.price || ""}"><button data-ed="1">＋</button></div>
+          ${us ? "" : `<div class="stp sm" style="margin-top:4px"><button data-eq="-1">−</button><input id="tv-eqty" inputmode="numeric" value="${o.qty}"><button data-eq="1">＋</button></div>`}
+          <div class="btnrow"><a class="pri" data-mod="${esc(o.id)}">정정 보내기</a><a data-ec="1">닫기</a></div>`
+        : `<div class="btnrow"><a data-edit="${esc(o.id)}">정정</a><a data-cx="${esc(o.id)}">취소</a></div>`}</div>`).join("") || `<div class="empty small">미체결 주문 없음</div>` : "")
+      + `<div id="tv-er" class="small" style="margin-top:8px"></div>`;
+    el.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => { TV.edit = b.dataset.edit; tvRight(); });
+    el.querySelectorAll("[data-ec]").forEach(b => b.onclick = () => { TV.edit = null; tvRight(); });
+    el.querySelectorAll("[data-ed]").forEach(b => b.onclick = () => { const p = +$("tv-epx").value || 0, t = us ? 0.01 : obTick(p); $("tv-epx").value = us ? (p + t * +b.dataset.ed).toFixed(2) : Math.round(p / t) * t + t * +b.dataset.ed; });
+    el.querySelectorAll("[data-eq]").forEach(b => b.onclick = () => { $("tv-eqty").value = Math.max(1, (+$("tv-eqty").value || 0) + +b.dataset.eq); });
+    el.querySelectorAll("[data-mod]").forEach(b => b.onclick = () => tvPost("api/order/modify", {order_id: b.dataset.mod, price: +$("tv-epx").value, qty: $("tv-eqty") ? +$("tv-eqty").value : null}, "정정"));
+    el.querySelectorAll("[data-cx]").forEach(b => b.onclick = () => { if (confirm("이 주문을 취소할까요?")) tvPost("api/order/cancel", {order_id: b.dataset.cx}, "취소"); });
+    return;
+  }
+  const side = TV.tab, best = side === "BUY" ? (d.asks && d.asks.length ? d.asks[d.asks.length - 1].p : d.last) : (d.bids && d.bids.length ? d.bids[0].p : d.last);
+  const p0 = TV.px || best || (OB.a.tech || {}).close || 0;
+  el.innerHTML = `<div class="seg sm"><button class="act">일반</button><button disabled title="철칙 1">대출 🚫</button></div>
+    <div class="seg sm" id="tv-type" style="margin-top:8px"><button data-t="LIMIT" class="${TV.type === "LIMIT" ? "act" : ""}">지정가</button><button data-t="MARKET" class="${TV.type === "MARKET" ? "act" : ""}">시장가</button></div>
+    <div class="stp sm" style="margin-top:10px"><button data-q="-1">−</button><input id="tv-qty" inputmode="${us ? "decimal" : "numeric"}" placeholder="수량" value="${TV.qty ?? ""}"><button data-q="1">＋</button></div>
+    <div class="stp sm" id="tv-pw" style="margin-top:6px;${TV.type === "MARKET" ? "opacity:.35" : ""}"><button data-d="-1">−</button><input id="tv-px" inputmode="decimal" value="${us ? Number(p0).toFixed(2) : p0}" ${TV.type === "MARKET" ? "disabled" : ""}><button data-d="1">＋</button></div>
+    <div class="row" style="margin-top:6px;gap:6px"><button class="tv-can" id="tv-can">가능</button><span class="tiny ${side === "BUY" ? "up" : "dn"}" id="tv-canq" style="flex:1;text-align:center"></span></div>
+    <div class="qk sm" id="tv-qk"></div>
+    <div id="tv-sum" class="osum"></div><div id="tv-fomo"></div>
+    <textarea id="tv-why" rows="2" placeholder="왜 ${side === "BUY" ? "사는지" : "파는지"} 한 줄 (매매일지)"></textarea>
+    <button class="obtn ${side === "BUY" ? "buy" : "sell"}" id="tv-go">${side === "BUY" ? "매수" : "매도"}</button>
+    <div id="tv-inf" class="tiny mut" style="margin-top:8px;line-height:1.6"></div>`;
+  el.querySelectorAll("#tv-type button").forEach(b => b.onclick = () => { TV.type = b.dataset.t; TV.qty = $("tv-qty").value; TV.px = +$("tv-px").value; tvRight(); });
+  el.querySelectorAll("[data-d]").forEach(b => b.onclick = () => { const p = +$("tv-px").value || 0, t = us ? 0.01 : obTick(p);
+    $("tv-px").value = us ? Math.max(0.01, p + t * +b.dataset.d).toFixed(2) : Math.max(t, Math.round(p / t) * t + t * +b.dataset.d); TV.px = +$("tv-px").value; tvCalc(); });
+  el.querySelectorAll("[data-q]").forEach(b => b.onclick = () => { $("tv-qty").value = Math.max(0, (+$("tv-qty").value || 0) + +b.dataset.q); tvCalc(); });
+  $("tv-qty").oninput = () => { TV.qty = $("tv-qty").value; tvCalc(); };
+  $("tv-px").oninput = () => { TV.px = +$("tv-px").value; tvCalc(); };
+  $("tv-can").onclick = () => { const m = tvMax(); if (m != null) { $("tv-qty").value = m; TV.qty = m; tvCalc(); } };
+  $("tv-go").onclick = tvConfirm;
+  tvCalc();
+}
+function tvRef() {
+  const d = OB.d || {};
+  return TV.type === "MARKET" ? (TV.tab === "BUY" ? (d.asks && d.asks.length ? d.asks[d.asks.length - 1].p : d.last) : (d.bids && d.bids[0] ? d.bids[0].p : d.last)) * (TV.tab === "BUY" ? 1.02 : 1)
+    : +($("tv-px") || {}).value || 0;
+}
+function tvMax() {
+  const I = TV.info, us = tvUs(); if (!I) return null;
+  if (TV.tab === "SELL") return I.sellable;
+  const ref = tvRef(); if (!ref) return null;
+  const q = Math.min(I.cash || 0, I.max_order || Infinity) / ref; return us ? Math.floor(q * 100) / 100 : Math.floor(q);
+}
+function tvCalc() {
+  if (!$("tv-sum")) return;
+  const I = TV.info, us = tvUs(), qty = +$("tv-qty").value || 0, est = qty * (tvRef() || 0), m = tvMax();
+  $("tv-canq").textContent = m != null ? `${fmtN(m, us ? 2 : 0)}주` : "";
+  $("tv-qk").innerHTML = I ? [10, 25, 50, 100].map(p => `<button data-pc="${p}">${p}%</button>`).join("") : "";
+  $("tv-qk").querySelectorAll("[data-pc]").forEach(b => b.onclick = () => { const q = (m || 0) * +b.dataset.pc / 100; $("tv-qty").value = us ? Math.floor(q * 100) / 100 : Math.floor(q); TV.qty = $("tv-qty").value; tvCalc(); });
+  const over = TV.tab === "BUY" && I && (est > (I.cash || 0) || est > I.max_order);
+  $("tv-sum").innerHTML = `<div class="tiny mut" style="text-align:right">주문금액${TV.type === "MARKET" ? " (시장가 +2% 여유)" : ""}</div><div style="text-align:right;font-size:20px;font-weight:800" class="${over ? "up" : ""}">${obMoney(est, us)}</div>
+    ${over ? `<div class="tiny up" style="text-align:right">${est > (I.cash || 0) ? "현금을 넘어요 — 빚으로는 안 사요" : "1회 한도를 넘어요"}</div>` : ""}`;
+  const T = OB.a.tech || {}, lim = ((OB.a.profile || {}).mcap_eok || 0) >= 50000 ? 5 : 10, chg = T.chg != null ? T.chg * 100 : null;
+  $("tv-fomo").innerHTML = TV.tab === "BUY" && chg != null && chg >= lim ? `<div class="fomo">🧘 오늘 <b>${pct(chg / 100, 1)}</b> — 이유를 한 줄 적어야 주문돼요</div>` : "";
+  $("tv-go").disabled = !!over || qty <= 0;
+  if (I) { const h = I.hold; $("tv-inf").innerHTML = `현금 ${obMoney(I.cash, us)} · 팔 수 있는 ${fmtN(I.sellable, us ? 4 : 0)}주${h ? `<br>보유 ${fmtN(h.qty, us ? 4 : 0)}주 · 평균 ${tvPx(h.avg)} <span class="${cls(h.last / h.avg - 1)}">${pct(h.last / h.avg - 1, 1)}</span>` : ""}
+    <br>1회 한도 ${obMoney(I.max_order, us)}${I.stopped ? `<br><span class="up">⛔ 긴급 정지 — 매수 불가</span>` : ""}`; }
+}
+async function tvInfo() {
+  try { const I = await (await fetch("api/trade?q=" + encodeURIComponent(OB.a.code), {cache: "no-store"})).json(); if (I.error) throw new Error(I.error);
+    TV.info = I; I.open.forEach(o => o.status_ko = {PENDING: "접수", PARTIAL_FILLED: "부분 체결", PENDING_CANCEL: "취소 중", PENDING_REPLACE: "정정 중"}[o.status] || o.status);
+    if (TV.open && ["BUY", "SELL"].includes(TV.tab)) tvCalc(); if (TV.open && TV.tab === "EDIT") tvRight();
+  } catch (e) { if ($("tv-inf")) $("tv-inf").textContent = "계좌 정보 실패: " + e.message; }
+}
+function tvConfirm() {
+  const us = tvUs(), a = OB.a, qty = +$("tv-qty").value || 0, px = +$("tv-px").value || 0, why = $("tv-why").value.trim(), sd = TV.tab === "BUY" ? "매수" : "매도";
   const T = a.tech || {}, lim = ((a.profile || {}).mcap_eok || 0) >= 50000 ? 5 : 10;
-  if (OB.side === "BUY" && T.chg != null && T.chg * 100 >= lim && why.length < 8) { $("ot-why").focus(); $("ot-why").classList.add("need"); return; }
-  const cid = "m-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
-  $("sh-body").innerHTML = `<div class="oconf ${OB.side === "BUY" ? "buy" : "sell"}">
-      <div class="mid">${esc(a.name)}</div>
-      <div style="font-size:22px;font-weight:800;margin:10px 0">${fmtN(v.qty, v.us ? 4 : 0)}주 ${v.type === "LIMIT" ? obMoney(v.px, v.us) + " 지정가" : "시장가"} ${sd}</div>
-      <div class="small">${v.type === "MARKET" ? "예상 " : ""}${obMoney(v.est, v.us)}</div>
-      ${why ? `<div class="tiny mut" style="margin-top:8px">📝 ${esc(why)}</div>` : ""}
-      <div class="tiny" style="margin-top:12px">⚠️ 누르면 <b>토스증권에 실제 주문</b>이 나갑니다</div></div>
-    <button class="obtn ${OB.side === "BUY" ? "buy" : "sell"}" id="oc-go">${sd} 주문 보내기</button>
-    <button class="obtn ghost" id="oc-back">돌아가기</button><div id="oc-res" class="small" style="margin-top:10px"></div>`;
-  $("oc-back").onclick = () => openTrade(OB.side, v.px);
-  $("oc-go").onclick = async () => {
-    if (OB.busy) return; OB.busy = true; $("oc-go").disabled = true; $("oc-go").textContent = "보내는 중…";
+  if (TV.tab === "BUY" && T.chg != null && T.chg * 100 >= lim && why.length < 8) { $("tv-why").classList.add("need"); $("tv-why").focus(); return; }
+  const est = qty * (tvRef() || 0), cid = "m-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10), side = TV.tab, type = TV.type;
+  $("tv-modal").innerHTML = `<div class="tv-mbox"><div class="oconf ${side === "BUY" ? "buy" : "sell"}"><div class="mid">${esc(a.name)}</div>
+      <div style="font-size:21px;font-weight:800;margin:8px 0">${fmtN(qty, us ? 4 : 0)}주 ${type === "LIMIT" ? tvPx(px) + " 지정가" : "시장가"} ${sd}</div>
+      <div class="small">${type === "MARKET" ? "예상 " : ""}${obMoney(est, us)}</div>${why ? `<div class="tiny mut" style="margin-top:6px">📝 ${esc(why)}</div>` : ""}
+      <div class="tiny" style="margin-top:10px">⚠️ 토스증권에 <b>실제 주문</b>이 나갑니다</div></div>
+    <button class="obtn ${side === "BUY" ? "buy" : "sell"}" id="tm-go">${sd} 주문 보내기</button><button class="obtn ghost" id="tm-no">취소</button><div id="tm-res" class="small" style="margin-top:8px"></div></div>`;
+  $("tv-modal").classList.add("on");
+  $("tm-no").onclick = () => $("tv-modal").classList.remove("on");
+  $("tm-go").onclick = async () => {
+    if (OB.busy) return; OB.busy = true; $("tm-go").disabled = true; $("tm-go").textContent = "보내는 중…";
     try {
       const r = await (await fetch("api/order", {method: "POST", headers: {"Content-Type": "application/json", "X-Toss-Dash": "1"},
-        body: JSON.stringify({code: a.code, side: OB.side, type: v.type, qty: v.qty, price: v.type === "LIMIT" ? v.px : null, reason: why, confirm: true, cid})})).json();
+        body: JSON.stringify({code: a.code, side, type, qty, price: type === "LIMIT" ? px : null, reason: why, confirm: true, cid})})).json();
       if (!r.ok) throw new Error(r.error || "실패");
-      $("oc-res").innerHTML = `<div class="ok">✅ 주문 접수 — 체결 여부는 아래 미체결/보유에서 확인</div><div class="tiny mut">주문번호 ${esc(r.order_id || "")}</div>`;
-      $("oc-go").style.display = "none"; $("oc-back").textContent = "주문창으로";
-    } catch (e) { $("oc-res").innerHTML = `<div class="up">❌ ${esc(e.message)}</div>`; $("oc-go").disabled = false; $("oc-go").textContent = sd + " 주문 보내기"; }
+      $("tm-res").innerHTML = `<div class="ok">✅ 주문 접수 — 정정/취소·체결 탭에서 확인</div>`; $("tm-go").style.display = "none"; $("tm-no").textContent = "닫기";
+      $("tv-why").value = ""; tvInfo();
+    } catch (e) { $("tm-res").innerHTML = `<div class="up">❌ ${esc(e.message)}</div>`; $("tm-go").disabled = false; $("tm-go").textContent = sd + " 주문 보내기"; }
     OB.busy = false;
   };
 }
-async function otCancel(id) {
-  if (!confirm("이 주문을 취소할까요?")) return;
-  try {
-    const r = await (await fetch("api/order/cancel", {method: "POST", headers: {"Content-Type": "application/json", "X-Toss-Dash": "1"}, body: JSON.stringify({order_id: id})})).json();
-    if (!r.ok) throw new Error(r.error || "실패");
-  } catch (e) { alert("취소 실패: " + e.message); }
-  otInfo();
+async function tvPost(url, body, what) {
+  try { const r = await (await fetch(url, {method: "POST", headers: {"Content-Type": "application/json", "X-Toss-Dash": "1"}, body: JSON.stringify(body)})).json();
+    if (!r.ok) throw new Error(r.error || "실패"); TV.edit = null; if ($("tv-er")) $("tv-er").innerHTML = `<span class="ok">✅ ${what} 접수</span>`;
+  } catch (e) { if ($("tv-er")) $("tv-er").innerHTML = `<span class="up">❌ ${what} 실패: ${esc(e.message)}</span>`; else alert(e.message); }
+  setTimeout(tvInfo, 500);
 }
-document.addEventListener("visibilitychange", () => { if (document.hidden) obStop(); else obOpen(); });   // 화면 꺼지면 끊고, 켜지면 다시
+// 체결내역
+async function tvFills() {
+  const F = TV.fills, el = $("tv-full"), us = tvUs();
+  const tg = (k, v, l) => `<button data-${k}="${v}" class="${String(F[k === "fs" ? "scope" : "days"]) === String(v) ? "act" : ""}">${l}</button>`;
+  el.innerHTML = `<div class="seg sm">${tg("fs", "code", esc(OB.a.name))}${tg("fs", "all", "전체 종목")}</div>
+    <div class="seg sm" style="margin-top:6px">${tg("fd", 1, "오늘")}${tg("fd", 7, "1주")}${tg("fd", 30, "1달")}${tg("fd", 90, "3달")}</div><div id="tv-fl"><div class="empty small">불러오는 중…</div></div>`;
+  el.querySelectorAll("[data-fs]").forEach(b => b.onclick = () => { F.scope = b.dataset.fs; tvFills(); });
+  el.querySelectorAll("[data-fd]").forEach(b => b.onclick = () => { F.days = +b.dataset.fd; tvFills(); });
+  try {
+    const D = await (await fetch(`api/fills?days=${F.days}${F.scope === "code" ? "&q=" + encodeURIComponent(OB.a.code) : ""}`, {cache: "no-store"})).json();
+    if (D.error) throw new Error(D.error);
+    const S = D.sum, m = (v, c) => c === "USD" ? "$" + Number(v || 0).toLocaleString("en-US", {maximumFractionDigits: 2}) : fmtN(v) + "원";
+    const cc = D.items.find(x => x.ccy) ? D.items.find(x => x.ccy).ccy : (us ? "USD" : "KRW");
+    let lastDay = "";
+    $("tv-fl").innerHTML = `<div class="tv-fs"><div><small>매수 체결</small><b class="up">${m(S.buy, cc)}</b></div><div><small>매도 체결</small><b class="dn">${m(S.sell, cc)}</b></div>
+        <div><small>수수료+세금</small><b>${m(S.fee, cc)}</b></div><div><small>체결</small><b>${S.n_fill}건</b></div></div>
+      ${D.items.map(x => { const day = (x.filled_at || x.at || "").slice(0, 10), hd = day !== lastDay ? `<div class="tv-day">${day}</div>` : ""; lastDay = day;
+        const done = x.filled > 0, c = x.ccy || cc, nm = x.code === OB.a.code ? OB.a.name : x.code;
+        return hd + `<div class="tv-fr"><div class="row"><span><b class="${x.side === "BUY" ? "up" : "dn"}">${x.side === "BUY" ? "매수" : "매도"}</b> ${esc(nm)}</span>
+            <span class="tiny ${x.status === "FILLED" ? "ok" : x.status === "CANCELED" || x.status === "REJECTED" ? "mut" : ""}">${esc(x.status_ko)}</span></div>
+          <div class="row tiny mut"><span>${(x.filled_at || x.at || "").slice(11, 19)} · ${x.type === "MARKET" ? "시장가" : "지정가 " + m(x.price, c)}</span><span>${fmtN(x.filled, c === "USD" ? 4 : 0)} / ${fmtN(x.qty, c === "USD" ? 4 : 0)}주</span></div>
+          ${done ? `<div class="row small"><span>체결가 <b>${c === "USD" ? "$" + Number(x.avg).toFixed(2) : fmtN(x.avg) + "원"}</b></span><span><b>${m(x.amount, c)}</b>${x.fee || x.tax ? ` <span class="tiny mut">수수료·세금 ${m((x.fee || 0) + (x.tax || 0), c)}</span>` : ""}</span></div>` : ""}</div>`; }).join("")
+        || `<div class="empty small">${D.from === D.to ? "오늘" : D.from + " ~ " + D.to} 체결 내역 없음</div>`}`;
+  } catch (e) { $("tv-fl").innerHTML = `<div class="empty small">불러오기 실패: ${esc(e.message)}</div>`; }
+}
+// 예약(조건) 주문
+async function tvReserve() {
+  const el = $("tv-full"), us = tvUs();
+  el.innerHTML = `<div class="tiny mut" style="margin-bottom:8px;line-height:1.55">토스증권 조건주문(감시·OCO·OTO) 중 진행 중인 것 — 만들기는 토스 앱에서, 여기선 확인·취소</div><div id="tv-rl"><div class="empty small">불러오는 중…</div></div>`;
+  try {
+    const D = await (await fetch("api/reserve", {cache: "no-store"})).json(); if (D.error) throw new Error(D.error);
+    $("tv-rl").innerHTML = D.items.map(x => `<div class="tv-fr"><div class="row"><span><b>${esc(x.code)}</b> <span class="tag">${esc(x.type || "")}</span></span><span class="tiny mut">${esc(x.status || "")} · ~${esc(x.expire || "")}</span></div>
+        <div class="small">${fmtN(x.qty, x.code && !/^\d+$/.test(x.code) ? 4 : 0)}주 · ${x.order_type === "MARKET" ? "시장가" : "지정가"}</div>
+        ${x.legs.map(l => `<div class="tiny mut">${esc(l.type)} · 감시가 ${l.trigger ?? "-"}${l.price ? " → 주문가 " + l.price : ""}${l.rate != null ? " · 목표 수익률 " + l.rate + "%" : ""} (${esc(l.status || "")})</div>`).join("")}
+        <div class="btnrow"><a data-rc="${esc(x.id)}">예약 취소</a></div></div>`).join("") || `<div class="empty small">진행 중인 예약 주문 없음</div>`;
+    $("tv-rl").querySelectorAll("[data-rc]").forEach(b => b.onclick = async () => { if (!confirm("이 예약 주문을 취소할까요?")) return;
+      await tvPost("api/reserve/cancel", {id: b.dataset.rc}, "예약 취소"); tvReserve(); });
+  } catch (e) { $("tv-rl").innerHTML = `<div class="empty small">불러오기 실패: ${esc(e.message)}</div>`; }
+}
+document.addEventListener("visibilitychange", () => { if (document.hidden) obStop(); else obOpen(); });
+document.querySelectorAll("#tv-tabs button").forEach(b => b.onclick = () => { TV.tab = b.dataset.k; TV.edit = null; TV.scrolled = false; tvRender(); if (["BUY", "SELL", "EDIT"].includes(TV.tab)) tvInfo(); });   // 화면 꺼지면 끊고, 켜지면 다시
 
+
+// ── 👆 손가락으로 쓸어서 탭 이동 — 오른쪽으로 쓸면 오른쪽 탭, 왼쪽으로 쓸면 왼쪽 탭 ─────────
+(function () {
+  let sx = 0, sy = 0, st = 0, ok = false;
+  const blocked = el => {
+    for (let n = el; n && n !== document.body; n = n.parentElement) {
+      if (n.matches && n.matches("input,textarea,select,.kc-wrap,.kc-full,#sheet,#tv-modal,[data-noswipe],canvas")) return true;
+      const cs = getComputedStyle(n);
+      if ((cs.overflowX === "auto" || cs.overflowX === "scroll") && n.scrollWidth > n.clientWidth + 4) return true;   // 가로 스크롤 영역
+    }
+    return false;
+  };
+  document.addEventListener("touchstart", e => {
+    if (e.touches.length !== 1) { ok = false; return; }
+    const t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); ok = !blocked(e.target);
+  }, {passive: true});
+  document.addEventListener("touchend", e => {
+    if (!ok) return; ok = false;
+    const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.6 || Date.now() - st > 700) return;
+    const step = dx > 0 ? 1 : -1;                         // 오른쪽으로 쓸기 → 오른쪽(다음) 탭
+    if (TV.open) {
+      const K = ["BUY", "SELL", "EDIT", "FILL", "RSV"], i = K.indexOf(TV.tab), j = i + step;
+      if (j < 0 || j >= K.length) return;
+      TV.tab = K[j]; TV.edit = null; TV.scrolled = false; tvRender(); if (["BUY", "SELL", "EDIT"].includes(TV.tab)) tvInfo();
+      return;
+    }
+    if (document.body.style.overflow === "hidden") return;  // 시트가 열려 있으면 무시
+    const B = [...document.querySelectorAll("nav button")].filter(b => b.offsetParent !== null);
+    const i = B.findIndex(b => b.classList.contains("act")), j = i + step;
+    if (i < 0 || j < 0 || j >= B.length) return;
+    B[j].click();
+  }, {passive: true});
+})();
 // ── 공시·리포트 상세 시트 (누르면 앱 안에서 바로 보기) ─────────
 function docId(u) { const m = String(u || "").match(/rcpNo=(\d{14})/) || String(u || "").match(/research\/company\/(\d+)/); return m ? m[1] : ""; }
 function docKind(u) { return /rcpNo=/.test(u) ? "filing" : /research\/company\//.test(u) ? "research" : null; }
