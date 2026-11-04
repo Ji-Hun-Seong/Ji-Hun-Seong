@@ -47,8 +47,8 @@ def kr() -> tuple[str, pd.DataFrame]:
     df = pd.DataFrame(rows)
     if df.empty:
         return "", df
-    big = df["mcap_eok"] >= 50000                                       # 시총 5조↑ 대형주는 +3%부터 기록 (대형주의 호재성 움직임)
-    df = df[(df["chg"] >= 5) | (big & (df["chg"] >= 3))].sort_values("chg", ascending=False)   # 급등 '진행 중' 포착
+    big = df["mcap_eok"] >= 50000                                       # 시총 5조↑ 대형주는 +2%부터, 그 외 +3%부터 기록
+    df = df[(df["chg"] >= 3) | (big & (df["chg"] >= 2))].sort_values("chg", ascending=False)   # '막 움직이기 시작'까지 잡으려고 낮춤
     return now.strftime("%Y-%m-%d"), df
 
 

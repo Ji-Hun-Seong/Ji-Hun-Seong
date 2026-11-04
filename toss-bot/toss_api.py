@@ -2,7 +2,7 @@
 - 토큰: client 당 1개만 유효 → 파일 캐시로 재사용 (재발급하면 이전 토큰 즉시 무효)
 - 허용 IP 에서만 호출 가능 (WTS 설정 > Open API > 허용 IP 관리)
 """
-import json, os, time, threading
+import fcntl, json, os, time, threading
 import requests
 
 BASE = "https://openapi.tossinvest.com"
@@ -35,11 +35,28 @@ class Toss:
                 time.sleep(wait)
             self._last[group] = time.time()
 
-    def token(self, force=False):
-        if not force and os.path.exists(self.token_file):
+    def _cached_token(self):
+        try:
             t = json.load(open(self.token_file))
-            if t.get("exp", 0) > time.time() + 300:
-                return t["access_token"]
+            return t["access_token"] if t.get("exp", 0) > time.time() + 300 else None
+        except Exception:
+            return None
+
+    def token(self, force=False):
+        if not force:
+            t = self._cached_token()
+            if t:
+                return t
+        # 봇·대시보드 두 프로세스가 같은 토큰을 씀 → 발급은 한 곳에서만 (재발급하면 이전 토큰이 바로 무효라서)
+        with open(self.token_file + ".lock", "w") as lk:
+            fcntl.flock(lk, fcntl.LOCK_EX)
+            if not force or (os.path.exists(self.token_file) and time.time() - os.path.getmtime(self.token_file) < 10):
+                t = self._cached_token()
+                if t:
+                    return t
+            return self._issue()
+
+    def _issue(self):
         self._throttle("AUTH")
         r = self.s.post(f"{BASE}/oauth2/token", timeout=20,
                         data={"grant_type": "client_credentials", "client_id": self.cid, "client_secret": self.secret})
@@ -107,6 +124,13 @@ class Toss:
         return self.req("GET", "/api/v1/stocks/all", "STOCK_ALL",
                         {"market": market, "status": "ACTIVE", "securityType": "STOCK", "commonShare": "true"})
 
+    def orderbook(self, symbol):
+        """호가 — {timestamp, currency, asks:[{price, volume}], bids:[...]} (asks 는 위쪽=비싼 가격부터)"""
+        return self.req("GET", "/api/v1/orderbook", "MARKET_DATA", {"symbol": symbol})
+
+    def price_limits(self, symbol):
+        return self.req("GET", "/api/v1/price-limits", "MARKET_DATA", {"symbol": symbol})
+
     def prices(self, symbols):
         out = []
         for i in range(0, len(symbols), 200):
@@ -157,8 +181,19 @@ class Toss:
     def get_order(self, order_id):
         return self.req("GET", f"/api/v1/orders/{order_id}", "ORDER_HISTORY", account=True)
 
-    def open_orders(self):
-        return (self.req("GET", "/api/v1/orders", "ORDER_HISTORY", {"status": "OPEN"}, account=True) or {}).get("orders", [])
+    def open_orders(self, symbol=None):
+        p = {"status": "OPEN", "limit": 100}
+        if symbol:
+            p["symbol"] = symbol
+        return (self.req("GET", "/api/v1/orders", "ORDER_HISTORY", p, account=True) or {}).get("orders", [])
+
+    def modify(self, order_id, price=None, qty=None, order_type="LIMIT"):
+        body = {"orderType": order_type}
+        if price is not None:
+            body["price"] = str(price)
+        if qty is not None:
+            body["quantity"] = str(qty)
+        return self.req("POST", f"/api/v1/orders/{order_id}/modify", "ORDER", body=body, account=True)
 
     def cancel(self, order_id):
         return self.req("POST", f"/api/v1/orders/{order_id}/cancel", "ORDER", body={}, account=True)

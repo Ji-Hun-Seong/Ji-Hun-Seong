@@ -489,42 +489,94 @@ def intraday_loop():
         time.sleep(600)
 
 
-def intraday_now():
-    """📡 지금 움직이는 종목 — 장중 스냅샷(서버 10분마다 + GitHub surge-study/data/intraday/kr/오늘.csv)
-       대형주(시총 5조↑) +4%↑ · 그 외 +10%↑(거래대금 10억↑, 우선주 제외), 처음 포착 시각과 지금 상승률"""
-    today = bot.now().strftime("%Y-%m-%d")
+EARLY = {"small": (3, 8, 5), "big": (2, 4, 30)}   # (상승률 하한, 상한, 10분 거래대금 증가 최소 억원)
+
+
+def _intraday_rows(day):
     rows = []
-    local = os.path.join(bot.STATE_DIR, "intraday", f"kr-{today}.csv")
+    local = os.path.join(bot.STATE_DIR, "intraday", f"kr-{day}.csv")
     if os.path.exists(local):
         rows += list(csv.DictReader(open(local, encoding="utf-8")))
-    try:
-        rows += list(csv.DictReader(io.StringIO(gh_text(f"surge-study/data/intraday/kr/{today}.csv", ttl=300))))
-    except Exception:
-        pass
-    if not rows:
-        return None
-    last_t = max(r["time"] for r in rows)
-    by = {}
+    if day == bot.now().strftime("%Y-%m-%d"):
+        try:
+            rows += list(csv.DictReader(io.StringIO(gh_text(f"surge-study/data/intraday/kr/{day}.csv", ttl=300))))
+        except Exception:
+            pass
+    return rows
+
+
+def _intraday_scan(rows):
+    """스냅샷 → 종목별 시계열 → (막 움직이기 시작한 종목 목록, 이미 오른 종목 목록, 마지막 시각)
+       막 시작 = 아직 덜 올랐는데(소형 +3~8% · 대형 +2~4%) 직전 스냅샷 이후 거래대금이 확 늘어남
+               (오늘 거래대금의 25%↑가 최근 한 구간에 몰림 & 소형 5억·대형 30억↑)"""
+    ser = {}
     for r in rows:
         try:
-            chg, mc, tv = float(r["chg"]), float(r.get("mcap_eok") or 0), float(r.get("tv_eok") or 0)
-        except ValueError:
+            x = {"t": r["time"], "chg": float(r["chg"]), "tv": float(r.get("tv_eok") or 0), "mc": float(r.get("mcap_eok") or 0),
+                 "lu": r.get("limit_up") == "True"}
+        except (ValueError, KeyError):
             continue
-        x = by.setdefault(r["code"], {"code": r["code"], "name": r["name"], "market": r["market"], "first": r["time"], "max": chg, "mcap_eok": mc})
-        x["max"] = max(x["max"], chg)
-        if r["time"] >= x.get("t", ""):
-            x.update(t=r["time"], chg=chg, tv_eok=tv, mcap_eok=mc, limit_up=r.get("limit_up") == "True")
-    out = []
-    for x in by.values():
-        big = x["mcap_eok"] >= 50000
-        if x.get("t") != last_t:                  # 최근 스냅샷에서 빠졌으면(상승폭 줄어듦) 제외
+        if re.search(r"\d?우[A-C]?$", r.get("name", "")):
             continue
-        if re.search(r"\d?우[A-C]?$", x["name"]) or (not big and x["tv_eok"] < 10):
+        s = ser.setdefault(r["code"], {"code": r["code"], "name": r["name"], "market": r.get("market"), "pts": {}})
+        s["pts"][x["t"]] = x                                  # 같은 시각 중복(서버+GitHub)은 하나로
+    if not ser:
+        return [], [], None, []
+    last_t = max(t for s in ser.values() for t in s["pts"])
+    early, ran = [], []
+    for s in ser.values():
+        ps = [s["pts"][t] for t in sorted(s["pts"])]
+        cur = ps[-1]
+        big = cur["mc"] >= 50000
+        lo, hi, need = EARLY["big" if big else "small"]
+        first_early = None
+        for i in range(1, len(ps)):                          # 그날 '막 시작' 조건을 처음 만족한 시각
+            d = ps[i]["tv"] - ps[i - 1]["tv"]
+            if lo <= ps[i]["chg"] < hi and d >= need and ps[i]["tv"] > 0 and d / ps[i]["tv"] >= 0.25:
+                first_early = {"t": ps[i]["t"], "chg": ps[i]["chg"], "dtv": round(d, 1), "share": round(d / ps[i]["tv"], 2)}
+                break
+        item = {"code": s["code"], "name": s["name"], "market": s["market"], "big": big, "chg": cur["chg"], "tv_eok": cur["tv"],
+                "mcap_eok": cur["mc"], "first": ps[0]["t"], "max": max(p["chg"] for p in ps), "limit_up": cur["lu"], "t": cur["t"]}
+        if first_early:
+            item["early"] = first_early
+        if cur["t"] == last_t and first_early and cur["chg"] < hi + 2:
+            early.append(item)
+        elif cur["t"] == last_t and ((big and cur["chg"] >= 4) or cur["chg"] >= 10) and (big or cur["tv"] >= 10):
+            ran.append(item)
+        s["item"] = item
+    early.sort(key=lambda x: -(x["early"]["share"] * x["early"]["dtv"]))
+    ran.sort(key=lambda x: (not x["big"], -x["chg"]))
+    return early, ran, last_t, [s["item"] for s in ser.values() if "early" in s.get("item", {})]
+
+
+def _early_grade(days=10):
+    """지난 장 '막 시작' 포착의 성적 — 포착 시점 상승률 → 그날 마지막 스냅샷 상승률 (마감까지 더 올랐나)"""
+    d = os.path.join(bot.STATE_DIR, "intraday")
+    today = bot.now().strftime("%Y-%m-%d")
+    fs = sorted(f[3:13] for f in os.listdir(d) if f.startswith("kr-") and f[3:13] < today) if os.path.isdir(d) else []
+    gains, n_days = [], 0
+    for day in fs[-days:]:
+        r = _intraday_scan(_intraday_rows(day))
+        if not r[0] and not r[3]:
             continue
-        if (big and x["chg"] >= 4) or x["chg"] >= 10:
-            out.append({**x, "big": big})
-    out.sort(key=lambda x: (not x["big"], -x["chg"]))
-    return {"date": today, "time": last_t, "items": out[:25], "n": len(out)}
+        n_days += 1
+        gains += [x["chg"] - x["early"]["chg"] for x in r[3]]   # 마지막에 스냅샷에서 빠진(상승폭 줄어든) 종목은 그 시점 값
+    if not gains:
+        return None
+    gains.sort()
+    return {"days": n_days, "n": len(gains), "avg": round(sum(gains) / len(gains), 2), "med": round(gains[len(gains) // 2], 2),
+            "up3": round(sum(1 for g in gains if g >= 3) / len(gains), 2), "down": round(sum(1 for g in gains if g < 0) / len(gains), 2)}
+
+
+def intraday_now():
+    """📡 장중 — 위: 막 움직이기 시작한 종목(관찰용) · 아래(접힘): 이미 오른 종목(쫓지 말 것) + 지난 포착 성적"""
+    today = bot.now().strftime("%Y-%m-%d")
+    rows = _intraday_rows(today)
+    if not rows:
+        return None
+    early, ran, last_t, _ = _intraday_scan(rows)
+    return {"date": today, "time": last_t, "early": early[:15], "items": ran[:25], "n": len(ran),
+            "grade": cached("early-grade", 3600, _early_grade), "rule": EARLY}
 
 
 def picks_value():
@@ -843,6 +895,21 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
             return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
+        if path in ("/api/orderbook", "/api/trade"):   # 📒 호가창(누구나) · 주문 화면 정보(주인만)
+            code = (parse_qs(urlparse(self.path).query).get("q") or [""])[0].strip().upper()
+            J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False, default=str), "application/json; charset=utf-8")
+            if not re.fullmatch(r"[0-9A-Z.\-]{1,12}", code):
+                return J(400, {"error": "종목 코드가 올바르지 않습니다"})
+            import manual_trade as mt
+            ok, why = mt.enabled()
+            if not ok:
+                return J(200, {"error": why, "disabled": True})
+            if path == "/api/trade" and role_of(self.client_address[0]) == "viewer":
+                return J(403, {"error": "보기 전용"})
+            try:
+                return J(200, mt.orderbook(code) if path == "/api/orderbook" else {**mt.info(code), "enabled": True})
+            except Exception as e:
+                return J(200, {"error": f"{type(e).__name__}: {str(e)[:200]}"})
         if path == "/api/data":
             try:
                 d = data()
@@ -864,6 +931,34 @@ class H(BaseHTTPRequestHandler):
             return
         if role_of(self.client_address[0]) == "viewer":   # 보기 전용은 아무것도 바꿀 수 없음
             return self._send(403, json.dumps({"error": "보기 전용"}, ensure_ascii=False), "application/json; charset=utf-8")
+        if self.path in ("/api/order", "/api/order/cancel"):   # 💸 실제 주문 — 주인만(위에서 보기 전용 차단)
+            J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False, default=str), "application/json; charset=utf-8")
+            org, host = self.headers.get("Origin"), self.headers.get("Host") or ""
+            if (self.headers.get("X-Toss-Dash") != "1" or "application/json" not in (self.headers.get("Content-Type") or "")
+                    or (org and urlparse(org).netloc != host)):
+                return J(403, {"error": "대시보드 화면에서만 주문할 수 있어요"})
+            n = int(self.headers.get("Content-Length") or 0)
+            if n > 4096:
+                return J(413, {"error": "too large"})
+            body = json.loads(self.rfile.read(n) or b"{}")
+            import manual_trade as mt
+            try:
+                if self.path == "/api/order":
+                    mc = None
+                    with _lock:
+                        hit = _cache.get("stock:" + str(body.get("code") or ""))
+                    try:
+                        mc = ((hit[1] if isinstance(hit, tuple) else hit or {}).get("profile") or {}).get("mcap_eok")
+                    except Exception:
+                        mc = None
+                    out = mt.place(body, mcap_eok=mc)       # 텔레그램 알림 없음(아빠가 있는 방으로 갈 수 있어서) — 기록은 state/manual_orders.jsonl
+                else:
+                    out = mt.cancel(str(body.get("order_id") or ""))
+                return J(200, out)
+            except mt.Reject as e:
+                return J(200, {"ok": False, "error": str(e)})
+            except Exception as e:
+                return J(200, {"ok": False, "error": f"주문 실패 — {type(e).__name__}: {str(e)[:220]}"})
         if self.path == "/api/stop":
             n = int(self.headers.get("Content-Length") or 0)
             on = json.loads(self.rfile.read(n) or b"{}").get("on")

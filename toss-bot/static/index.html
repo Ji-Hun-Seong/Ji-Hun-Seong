@@ -123,6 +123,30 @@ canvas.c-big{max-height:none}
 .kc-full{position:fixed;inset:0;z-index:90;margin:0;background:var(--kc-bg);border-radius:0;padding:calc(8px + env(safe-area-inset-top)) 0 calc(8px + env(safe-area-inset-bottom));display:flex;flex-direction:column;overflow:hidden}
 .kc-full .kc-wrap{flex:1;min-height:0}.kc-full .kc-wrap canvas{position:absolute;top:0;left:0}
 .tap{cursor:pointer;-webkit-tap-highlight-color:transparent}.tap:active{opacity:.6}.tap .chev{color:var(--sub);margin-left:6px;font-size:16px;flex:none}
+#tbar{position:fixed;left:0;right:0;bottom:calc(60px + env(safe-area-inset-bottom));display:none;gap:8px;padding:8px 14px;max-width:720px;margin:0 auto;z-index:20}
+#tbar button{flex:1;border:0;border-radius:14px;padding:15px 0;font-size:17px;font-weight:700;color:#fff;font-family:inherit;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+#tbar .buy,.obtn.buy,.seg .buy{background:var(--up);color:#fff}#tbar .sell,.obtn.sell,.seg .sell{background:var(--dn);color:#fff}
+body.tb-on section#t-chart{padding-bottom:80px}
+.ob{margin-top:8px;font-variant-numeric:tabular-nums}.obr{display:grid;grid-template-columns:1fr 1.1fr 1fr;align-items:center;font-size:13px;cursor:pointer}
+.obr>span{padding:5px 6px;position:relative}.obr.ask{background:color-mix(in srgb,var(--dn) 7%,transparent)}.obr.bid{background:color-mix(in srgb,var(--up) 7%,transparent)}
+.obr .ov{text-align:right;color:var(--sub2);overflow:hidden}.obr.bid .ov:last-child{text-align:left}
+.obr .ov i{position:absolute;top:3px;bottom:3px;opacity:.22;border-radius:3px}.obr.ask .ov i{right:0;background:var(--dn)}.obr.bid .ov i{left:0;background:var(--up)}
+.obr .op{text-align:center;font-weight:600}.obr .op.cur{outline:1.5px solid var(--txt);border-radius:6px}.obr:active{opacity:.6}
+.obsum{display:flex;justify-content:space-between;font-size:12px;margin-top:8px}
+.seg{display:flex;background:var(--bg);border-radius:12px;padding:4px}.seg button{flex:1;border:0;background:none;color:var(--sub);padding:10px 0;border-radius:9px;font-size:15px;font-family:inherit;font-weight:600}
+.seg button.act{background:var(--card);color:var(--txt)}.seg button.act.buy,.seg button.act.sell{color:#fff}
+.ofld{margin-top:12px}.ofld small{display:block;color:var(--sub);font-size:12px;margin-bottom:4px}
+.stp{display:flex;gap:6px}.stp input{flex:1;min-width:0;text-align:center;font-size:18px;font-weight:700;padding:11px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--txt);font-family:inherit}
+.stp button{width:48px;border:0;border-radius:12px;background:var(--line);color:var(--txt);font-size:20px}
+.qk{display:flex;gap:6px;margin-top:6px}.qk button{flex:1;border:1px solid var(--line);background:none;color:var(--sub2);border-radius:10px;padding:7px 0;font-size:13px;font-family:inherit}
+.osum{margin-top:12px;font-size:14px}.osum .row{padding:4px 0}
+#sh-body textarea{width:100%;box-sizing:border-box;margin-top:10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--txt);padding:10px;font-size:14px;font-family:inherit;resize:none}
+#sh-body textarea.need{border-color:var(--up)}
+.obtn{display:block;width:100%;border:0;border-radius:14px;padding:15px 0;font-size:16px;font-weight:700;margin-top:12px;font-family:inherit}.obtn:disabled{opacity:.4}
+.obtn.ghost{background:var(--line);color:var(--txt)}
+.fomo{margin-top:10px;background:color-mix(in srgb,var(--warn) 16%,transparent);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55}
+.oconf{text-align:center;padding:18px 10px;border-radius:16px;background:var(--bg)}.oconf.buy{border:2px solid var(--up)}.oconf.sell{border:2px solid var(--dn)}
+#ot-info .row{padding:3px 0}.xbtn{border:1px solid var(--line);background:none;color:var(--txt);border-radius:9px;padding:5px 10px;font-family:inherit}
 #sheet{position:fixed;inset:0;z-index:100;display:none}#sheet.on{display:block}
 #sheet .bd{position:absolute;inset:0;background:rgba(0,0,0,.55)}
 #sheet .pn{position:absolute;left:0;right:0;bottom:0;max-height:90vh;background:var(--card);border-radius:20px 20px 0 0;display:flex;flex-direction:column;animation:up .22s ease-out}
@@ -258,6 +282,8 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
   <div class="hd"><div class="grab"></div><div class="row"><div style="flex:1;min-width:0"><div class="tiny mut" id="sh-meta"></div><div style="font-weight:700;font-size:16px;margin-top:3px;line-height:1.4" id="sh-title"></div></div><button class="x" onclick="closeDoc()">✕</button></div></div>
   <div class="bdy" id="sh-body"></div></div></div>
 
+<div id="tbar"><button class="sell" onclick="openTrade('SELL')">매도</button><button class="buy" onclick="openTrade('BUY')">매수</button></div>
+
 <nav><div>
   <button data-t="home" class="act"><b>⌂</b>홈</button>
   <button data-t="pick"><b>💡</b>발굴</button>
@@ -387,6 +413,7 @@ function render(d) {
 
   // 보기 전용(아빠 등): 계좌 금액·장기/단기 비율·긴급 정지 숨김
   const V = !!d.viewer;
+  window.VIEWER = V; tbarSync();
   $("stopCard").style.display = V ? "none" : "";
   $("h-mix").style.display = V ? "none" : "";
   const accBtn = document.querySelector('nav button[data-t="acct"]'); if (accBtn) accBtn.style.display = V ? "none" : "";
@@ -624,6 +651,8 @@ function goTab(t) {
   document.querySelectorAll("section").forEach(s => s.classList.toggle("act", s.id === "t-" + t));
   window.scrollTo(0, 0);
   if (t === "pick") pLoad();
+  if (t === "chart" && OB.code && !OB.timer && !OB.off) { obPoll(); OB.timer = setInterval(obPoll, 2500); }
+  tbarSync();
 }
 document.addEventListener("click", e => {                 // data-stock 달린 줄은 누르면 종목 상세로
   const el = e.target.closest("[data-stock]");
@@ -689,6 +718,7 @@ function sdRender(a) {
     ${(a.tags || []).length ? `<div style="margin-top:8px">${a.tags.map(t => `<span class="tag ${tagCls(t)}">${esc(t)}</span>`).join("")}</div>` : ""}
     <div class="kv">${kvs.join("")}</div>${err}
   </div>
+  <div id="sd-ob"></div>
   ${fomoCard(a)}
   ${ctxCard()}
   ${heroCard(a)}
@@ -716,6 +746,7 @@ function sdRender(a) {
     catch (e) { $("sd-bb-btn").textContent = "실패: " + e.message; }
   };
   sdCharts(a); flowChart(a); finChart(a); finLong(a);
+  obStart(a);
 }
 
 function ctxCard() {
@@ -963,10 +994,20 @@ function pRender(d) {
         ${MO.down.length ? `<div class="tiny mut" style="margin-top:10px">⚠︎ 밤사이 약세: ${MO.down.map(x => `${esc(x.name)} ${x.avg.toFixed(1)}%`).join(" · ")}</div>` : ""}</div>` + head;
     }
     const LV = d.live;
-    if (LV && LV.items && LV.items.length) head = `<div class="card"><h2>📡 지금 움직이는 종목 <span class="tiny mut">${LV.date.slice(5)} ${LV.time} 기준 · 20분마다</span></h2>
-      <div class="tiny mut" style="margin:-6px 0 8px">🏢 대형주(시총 5조↑) +4%↑ · 그 외 +10%↑ — 쫓아 사지 말고 '왜 오르는지' 공부용 🧘</div>
-      ${LV.items.map(x => `<div class="srow small" data-sc="${esc(x.code)}" style="cursor:pointer"><span>${x.big ? "🏢 " : ""}<b>${esc(x.name)}</b> <span class="tiny mut">${x.first} 첫 포착${x.max > x.chg + 2 ? ` · 장중 최고 +${x.max.toFixed(1)}%` : ""}</span></span>
-        <span><span class="up">+${x.chg.toFixed(1)}%</span>${x.limit_up ? " 🔒" : ""} <span class="tiny mut">${fmtN(x.tv_eok)}억</span></span></div>`).join("")}</div>` + head;
+    if (LV && ((LV.early || []).length || (LV.items || []).length)) {
+      const G = LV.grade, R = LV.rule || {small: [3, 8, 5], big: [2, 4, 30]};
+      const er = x => `<div class="srow small" data-sc="${esc(x.code)}" style="cursor:pointer;align-items:flex-start"><span style="flex:1">${x.big ? "🏢 " : ""}<b>${esc(x.name)}</b>
+          <div class="tiny mut">${x.early.t}에 +${x.early.chg.toFixed(1)}%일 때 10분 새 거래대금 ${fmtN(x.early.dtv)}억 (오늘의 ${Math.round(x.early.share * 100)}%) 몰림</div></span>
+        <span style="text-align:right"><span class="${x.chg >= 0 ? "up" : "dn"} name">${x.chg >= 0 ? "+" : ""}${x.chg.toFixed(1)}%</span><div class="tiny mut">${fmtN(x.tv_eok)}억</div></span></div>`;
+      const rr = x => `<div class="srow small" data-sc="${esc(x.code)}" style="cursor:pointer"><span>${x.big ? "🏢 " : ""}<b>${esc(x.name)}</b> <span class="tiny mut">${x.first} 첫 기록${x.max > x.chg + 2 ? ` · 장중 최고 +${x.max.toFixed(1)}%` : ""}</span></span>
+        <span><span class="up">+${x.chg.toFixed(1)}%</span>${x.limit_up ? " 🔒" : ""} <span class="tiny mut">${fmtN(x.tv_eok)}억</span></span></div>`;
+      head = `<div class="card"><h2>🌱 막 움직이기 시작한 종목 <span class="tiny mut">${LV.date.slice(5)} ${LV.time} 기준 · 10분마다</span></h2>
+        <div class="tiny mut" style="margin:-6px 0 8px;line-height:1.55">아직 덜 올랐는데(소형 +${R.small[0]}~${R.small[1]}% · 🏢 대형 +${R.big[0]}~${R.big[1]}%) 최근 10분 사이 거래대금이 몰린 종목 — 이미 급등한 종목은 아래에 접어 뒀어요</div>
+        ${(LV.early || []).map(er).join("") || `<div class="empty small">지금은 조건에 맞는 종목 없음</div>`}
+        <div class="tiny" style="margin-top:10px;line-height:1.55">${G ? `📊 지난 ${G.days}거래일 성적: 포착 ${G.n}번 → 마감까지 평균 <b class="${G.avg >= 0 ? "up" : "dn"}">${G.avg >= 0 ? "+" : ""}${G.avg}%p</b> (중간값 ${G.med >= 0 ? "+" : ""}${G.med}%p) · +3%p 이상 더 오른 비율 ${Math.round(G.up3 * 100)}% · 오히려 내린 비율 ${Math.round(G.down * 100)}%`
+          : `📊 성적은 오늘부터 자동 채점돼요 — 며칠 쌓이면 '포착 후 마감까지 얼마나 더 올랐나'가 여기 표시돼요`}<span class="mut"> · 검증 전 신호라 매수 신호가 아니라 관찰용 🧘</span></div>
+        ${(LV.items || []).length ? `<details style="margin-top:10px"><summary class="small mut">🚫 이미 오른 종목 ${LV.n}개 — 쫓지 말 것 (펼쳐 보기)</summary>${LV.items.map(rr).join("")}</details>` : ""}</div>` + head;
+    }
     const S = d.surgers || [];
     if (S.length) rows += `</div><div class="card"><h2>🔥 ${d.date} 실제 급등주 ${d.context && d.context.n_surge != null ? d.context.n_surge + "개" : ""} <span class="tiny mut">(+10%↑ · 🏢 대형주는 +5%↑ · 왜 올랐나)</span></h2>
       ${S.slice(0, SD.sAll ? 30 : 10).map(x => `<div class="prow" data-sc="${esc(x.code)}"><div class="row"><span>${x.big ? "🏢 " : ""}<span class="name">${esc(x.name)}</span> <span class="tiny mut">${esc(x.market || "")}</span>${x.picked ? ` <span class="tag b">🎯 전날 후보</span>` : ""}</span><span class="up name">+${x.chg}%</span></div>
@@ -1052,6 +1093,166 @@ window.themeChanged = () => {                          // 테마가 바뀌면 �
 load(); setInterval(load, 30000);
 if ($("t-pick").classList.contains("act")) pLoad();
 document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+
+// ── 📒 호가창 · 💸 수동 매수/매도 (토스증권 Open API) ─────────
+// 서버(manual_trade.py)가 최종으로 막음: 주인만 · 현금 안에서만(대출 X) · 1회 한도 · 급등주는 이유 필수 · 긴급 정지 시 매수 X
+window.VIEWER = true;                                     // api/data 가 주인이라고 알려 주기 전까지는 숨김
+const OB = {code: null, a: null, timer: null, d: null, info: null, off: false, side: "BUY", busy: false};
+const obMoney = (v, us) => v == null ? "-" : us ? "$" + Number(v).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}) : fmtN(v) + "원";
+const obTick = p => p < 2000 ? 1 : p < 5000 ? 5 : p < 20000 ? 10 : p < 50000 ? 50 : p < 200000 ? 100 : p < 500000 ? 500 : 1000;
+function tbarSync() {
+  const on = !window.VIEWER && !OB.off && !!OB.code && document.querySelector("#t-chart.act");
+  $("tbar").style.display = on ? "flex" : "none"; document.body.classList.toggle("tb-on", !!on);
+}
+function obStart(a) {
+  OB.code = a.code; OB.a = a; OB.d = null; OB.off = false; OB.info = null;
+  if (OB.timer) clearInterval(OB.timer);
+  obPoll(); OB.timer = setInterval(obPoll, 2500); tbarSync();
+}
+async function obPoll() {
+  const code = OB.code;
+  if (!code || !document.querySelector("#t-chart.act") || document.hidden || !$("sd-ob")) {
+    if (!document.querySelector("#t-chart.act") && OB.timer) { clearInterval(OB.timer); OB.timer = null; tbarSync(); }
+    return;
+  }
+  try {
+    const d = await (await fetch("api/orderbook?q=" + encodeURIComponent(code), {cache: "no-store"})).json();
+    if (code !== OB.code) return;
+    if (d.disabled) { OB.off = true; clearInterval(OB.timer); OB.timer = null; $("sd-ob").innerHTML = `<div class="card"><h2>📒 호가</h2><div class="empty small">${esc(d.error)}</div></div>`; tbarSync(); return; }
+    if (d.error) throw new Error(d.error);
+    OB.d = d; obRender();
+  } catch (e) { if ($("ob-st")) $("ob-st").textContent = "⚠️ " + e.message.slice(0, 60); }
+}
+function obRender() {
+  const d = OB.d, a = OB.a; if (!d || !$("sd-ob")) return;
+  const us = !!a.us, T = a.tech || {}, prev = T.close != null && T.chg != null ? T.close / (1 + T.chg) : null;
+  const asks = d.asks.slice(-10), bids = d.bids.slice(0, 10), mx = Math.max(1, ...asks.map(x => x.v || 0), ...bids.map(x => x.v || 0));
+  const pc = p => prev ? (p > prev ? "up" : p < prev ? "dn" : "") : "";
+  const rt = p => prev ? `<span class="tiny">${((p / prev - 1) * 100).toFixed(2)}%</span>` : "";
+  const row = (x, sideCls) => `<div class="obr ${sideCls}" data-px="${x.p}"><span class="ov">${sideCls === "ask" ? `<i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}` : ""}</span>
+    <span class="op ${pc(x.p)} ${d.last === x.p ? "cur" : ""}">${us ? x.p.toFixed(2) : fmtN(x.p)} ${rt(x.p)}</span>
+    <span class="ov">${sideCls === "bid" ? `<i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}` : ""}</span></div>`;
+  const sa = d.sum_ask || 0, sb = d.sum_bid || 0;
+  $("sd-ob").innerHTML = `<div class="card"><div class="row"><h2 style="margin:0">📒 호가</h2><span class="tiny mut" id="ob-st">${(d.ts || "").slice(11, 19)} · 2.5초마다</span></div>
+    <div class="ob">${asks.map(x => row(x, "ask")).join("")}${bids.map(x => row(x, "bid")).join("")}</div>
+    <div class="obsum"><span class="dn">매도 잔량 ${fmtN(sa)}</span><span class="mut tiny">${d.upper ? `상한 ${obMoney(d.upper, us)} · 하한 ${obMoney(d.lower, us)}` : ""}</span><span class="up">매수 잔량 ${fmtN(sb)}</span></div>
+    <div class="mixbar" style="margin-top:6px;height:6px"><i style="width:${sa + sb ? sa / (sa + sb) * 100 : 50}%;background:var(--dn)"></i><i style="width:${sa + sb ? sb / (sa + sb) * 100 : 50}%;background:var(--up)"></i></div>
+    ${window.VIEWER ? "" : `<div class="tiny mut" style="margin-top:6px">가격을 누르면 그 가격으로 주문창이 열려요</div>`}</div>`;
+  if (!window.VIEWER) $("sd-ob").querySelectorAll("[data-px]").forEach(el => el.onclick = () => openTrade(OB.side, +el.dataset.px));
+  if (shOpen && shKey === "trade" && $("ot-sum")) otCalc();
+}
+function openSheet(key, title, meta, html) {
+  $("sh-title").textContent = title; $("sh-meta").textContent = meta; $("sh-body").innerHTML = html; $("sh-body").scrollTop = 0;
+  $("sheet").classList.add("on"); document.body.style.overflow = "hidden"; shKey = key;
+  if (!shOpen) { shOpen = true; history.pushState({sheet: 1}, ""); }
+}
+async function openTrade(side, px) {
+  if (window.VIEWER || !OB.a) return;
+  const a = OB.a, us = !!a.us, d = OB.d || {};
+  OB.side = side;
+  const best = side === "BUY" ? (d.asks && d.asks.length ? d.asks[d.asks.length - 1].p : d.last) : (d.bids && d.bids.length ? d.bids[0].p : d.last);
+  const p0 = px || best || (a.tech || {}).close || 0;
+  openSheet("trade", `${a.name} ${side === "BUY" ? "매수" : "매도"}`, `${a.code} · 토스증권 실제 주문`, `
+    <div class="seg" id="ot-side"><button data-s="BUY" class="${side === "BUY" ? "act buy" : ""}">매수</button><button data-s="SELL" class="${side === "SELL" ? "act sell" : ""}">매도</button></div>
+    <div class="seg" id="ot-type" style="margin-top:8px"><button data-t="LIMIT" class="act">지정가</button><button data-t="MARKET">시장가</button></div>
+    <div class="ofld" id="ot-pw"><small>가격</small><div class="stp"><button data-d="-1">−</button><input id="ot-px" inputmode="decimal" value="${us ? Number(p0).toFixed(2) : p0}"><button data-d="1">＋</button></div></div>
+    <div class="ofld"><small>수량</small><div class="stp"><button data-q="-1">−</button><input id="ot-qty" inputmode="${us ? "decimal" : "numeric"}" value="1"><button data-q="1">＋</button></div>
+      <div class="qk" id="ot-qk"></div></div>
+    <div id="ot-sum" class="osum"></div>
+    <div id="ot-fomo"></div>
+    <textarea id="ot-why" rows="2" placeholder="왜 사는지/파는지 한 줄 (매매일지로 기록 · 급등주 매수는 필수)"></textarea>
+    <button class="obtn ${side === "BUY" ? "buy" : "sell"}" id="ot-go">주문 확인</button>
+    <div class="tiny mut" style="margin:8px 0 2px;line-height:1.6">🚫 철칙 1: 현금 안에서만 주문돼요(미수·신용 불가) · 🧘 철칙 2: 급등을 쫓지 않기</div>
+    <div id="ot-info" class="small mut" style="margin-top:10px">계좌 정보 불러오는 중…</div>`);
+  const S = $("sh-body");
+  S.querySelectorAll("#ot-side button").forEach(b => b.onclick = () => openTrade(b.dataset.s, +$("ot-px").value || null));
+  S.querySelectorAll("#ot-type button").forEach(b => b.onclick = () => { S.querySelectorAll("#ot-type button").forEach(x => x.classList.toggle("act", x === b));
+    $("ot-pw").style.opacity = b.dataset.t === "MARKET" ? .4 : 1; $("ot-px").disabled = b.dataset.t === "MARKET"; otCalc(); });
+  S.querySelectorAll("[data-d]").forEach(b => b.onclick = () => { const p = +$("ot-px").value || 0, t = us ? 0.01 : obTick(p);
+    $("ot-px").value = us ? Math.max(0.01, p + t * +b.dataset.d).toFixed(2) : Math.max(t, Math.round(p / t) * t + t * +b.dataset.d); otCalc(); });
+  S.querySelectorAll("[data-q]").forEach(b => b.onclick = () => { $("ot-qty").value = Math.max(us ? 0.01 : 1, (+$("ot-qty").value || 0) + +b.dataset.q); otCalc(); });
+  $("ot-px").oninput = $("ot-qty").oninput = otCalc;
+  $("ot-go").onclick = otConfirm;
+  otCalc();
+  await otInfo();
+}
+async function otInfo() {
+  const a = OB.a, us = !!a.us;
+  try {
+    const I = await (await fetch("api/trade?q=" + encodeURIComponent(a.code), {cache: "no-store"})).json();
+    if (I.error) throw new Error(I.error);
+    OB.info = I;
+    const h = I.hold;
+    $("ot-info").innerHTML = `<div class="row"><span>현금 매수 가능</span><b>${obMoney(I.cash, us)}</b></div>
+      <div class="row"><span>팔 수 있는 수량</span><b>${fmtN(I.sellable, us ? 4 : 0)}주</b></div>
+      ${h ? `<div class="row"><span>보유</span><b>${fmtN(h.qty, us ? 4 : 0)}주 · 평균 ${obMoney(h.avg, us)} <span class="${cls(h.last / h.avg - 1)}">${pct(h.last / h.avg - 1, 1)}</span></b></div>` : ""}
+      <div class="row"><span>1회 주문 한도</span><b>${obMoney(I.max_order, us)}</b></div>
+      ${I.stopped ? `<div class="up" style="margin-top:6px">⛔ 긴급 정지 중 — 매수는 막히고 매도·취소만 돼요</div>` : ""}
+      <div class="dh">미체결 주문 ${I.open.length}건</div>
+      ${I.open.map(o => `<div class="row item"><span>${o.side === "BUY" ? "🔺 매수" : "🔻 매도"} ${fmtN(o.qty, us ? 4 : 0)}주 ${o.price ? "@" + obMoney(o.price, us) : "시장가"} <span class="tiny mut">${esc(o.status)} · 체결 ${fmtN(o.filled, us ? 4 : 0)}</span></span>
+        <button class="xbtn" data-cx="${esc(o.id)}">취소</button></div>`).join("") || `<div class="tiny">없음</div>`}`;
+    $("ot-info").querySelectorAll("[data-cx]").forEach(b => b.onclick = () => otCancel(b.dataset.cx));
+    otCalc();
+  } catch (e) { $("ot-info").textContent = "계좌 정보 실패: " + e.message; }
+}
+function otVals() {
+  const S = $("sh-body"), type = S.querySelector("#ot-type .act").dataset.t, us = !!OB.a.us, d = OB.d || {};
+  const qty = +$("ot-qty").value || 0, px = +$("ot-px").value || 0;
+  const ref = type === "MARKET" ? (OB.side === "BUY" ? (d.asks && d.asks.length ? d.asks[d.asks.length - 1].p : d.last) : (d.bids && d.bids[0] ? d.bids[0].p : d.last)) : px;
+  return {type, qty, px, us, est: qty * (ref || 0) * (type === "MARKET" && OB.side === "BUY" ? 1.02 : 1)};
+}
+function otCalc() {
+  if (!$("ot-sum")) return;
+  const v = otVals(), I = OB.info, a = OB.a, T = a.tech || {}, P = a.profile || {};
+  const lim = (P.mcap_eok || 0) >= 50000 ? 5 : 10, chg = T.chg != null ? T.chg * 100 : null;
+  const capCash = I ? Math.min(I.cash || 0, I.max_order || Infinity) : null;
+  $("ot-qk").innerHTML = I ? (OB.side === "BUY" ? [10, 25, 50, 100] : [25, 50, 100]).map(p => `<button data-pc="${p}">${p === 100 ? (OB.side === "BUY" ? "최대" : "전부") : p + "%"}</button>`).join("") : "";
+  $("ot-qk").querySelectorAll("[data-pc]").forEach(b => b.onclick = () => {
+    const ref = v.type === "MARKET" ? (otVals().est / Math.max(v.qty, 1e-9)) || v.px : v.px;
+    let q = OB.side === "BUY" ? capCash * +b.dataset.pc / 100 / (ref * (v.type === "MARKET" ? 1.02 : 1)) : I.sellable * +b.dataset.pc / 100;
+    q = v.us ? Math.floor(q * 100) / 100 : Math.floor(q); $("ot-qty").value = Math.max(0, q); otCalc(); });
+  const over = OB.side === "BUY" && I && (v.est > (I.cash || 0) || v.est > I.max_order);
+  $("ot-sum").innerHTML = `<div class="row"><span>${v.type === "MARKET" ? "예상 금액(시장가 +2% 여유)" : "주문 금액"}</span><b class="${over ? "up" : ""}">${obMoney(v.est, v.us)}</b></div>
+    ${over ? `<div class="tiny up">${v.est > (I.cash || 0) ? "현금 매수 가능 금액을 넘어요 — 빚으로는 안 사요" : "1회 주문 한도를 넘어요"}</div>` : ""}`;
+  const fomo = OB.side === "BUY" && chg != null && chg >= lim;
+  $("ot-fomo").innerHTML = fomo ? `<div class="fomo">🧘 오늘 <b>${pct(chg / 100, 1)}</b> 오른 종목이에요 (FOMO 기준 +${lim}%). 지금 사고 싶은 게 '원칙' 때문인지 '조급함' 때문인지 — 이유를 한 줄 적어야 주문돼요.</div>` : "";
+  $("ot-go").disabled = !!over || v.qty <= 0;
+}
+function otConfirm() {
+  const v = otVals(), a = OB.a, why = $("ot-why").value.trim(), sd = OB.side === "BUY" ? "매수" : "매도";
+  const T = a.tech || {}, lim = ((a.profile || {}).mcap_eok || 0) >= 50000 ? 5 : 10;
+  if (OB.side === "BUY" && T.chg != null && T.chg * 100 >= lim && why.length < 8) { $("ot-why").focus(); $("ot-why").classList.add("need"); return; }
+  const cid = "m-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+  $("sh-body").innerHTML = `<div class="oconf ${OB.side === "BUY" ? "buy" : "sell"}">
+      <div class="mid">${esc(a.name)}</div>
+      <div style="font-size:22px;font-weight:800;margin:10px 0">${fmtN(v.qty, v.us ? 4 : 0)}주 ${v.type === "LIMIT" ? obMoney(v.px, v.us) + " 지정가" : "시장가"} ${sd}</div>
+      <div class="small">${v.type === "MARKET" ? "예상 " : ""}${obMoney(v.est, v.us)}</div>
+      ${why ? `<div class="tiny mut" style="margin-top:8px">📝 ${esc(why)}</div>` : ""}
+      <div class="tiny" style="margin-top:12px">⚠️ 누르면 <b>토스증권에 실제 주문</b>이 나갑니다</div></div>
+    <button class="obtn ${OB.side === "BUY" ? "buy" : "sell"}" id="oc-go">${sd} 주문 보내기</button>
+    <button class="obtn ghost" id="oc-back">돌아가기</button><div id="oc-res" class="small" style="margin-top:10px"></div>`;
+  $("oc-back").onclick = () => openTrade(OB.side, v.px);
+  $("oc-go").onclick = async () => {
+    if (OB.busy) return; OB.busy = true; $("oc-go").disabled = true; $("oc-go").textContent = "보내는 중…";
+    try {
+      const r = await (await fetch("api/order", {method: "POST", headers: {"Content-Type": "application/json", "X-Toss-Dash": "1"},
+        body: JSON.stringify({code: a.code, side: OB.side, type: v.type, qty: v.qty, price: v.type === "LIMIT" ? v.px : null, reason: why, confirm: true, cid})})).json();
+      if (!r.ok) throw new Error(r.error || "실패");
+      $("oc-res").innerHTML = `<div class="ok">✅ 주문 접수 — 체결 여부는 아래 미체결/보유에서 확인</div><div class="tiny mut">주문번호 ${esc(r.order_id || "")}</div>`;
+      $("oc-go").style.display = "none"; $("oc-back").textContent = "주문창으로";
+    } catch (e) { $("oc-res").innerHTML = `<div class="up">❌ ${esc(e.message)}</div>`; $("oc-go").disabled = false; $("oc-go").textContent = sd + " 주문 보내기"; }
+    OB.busy = false;
+  };
+}
+async function otCancel(id) {
+  if (!confirm("이 주문을 취소할까요?")) return;
+  try {
+    const r = await (await fetch("api/order/cancel", {method: "POST", headers: {"Content-Type": "application/json", "X-Toss-Dash": "1"}, body: JSON.stringify({order_id: id})})).json();
+    if (!r.ok) throw new Error(r.error || "실패");
+  } catch (e) { alert("취소 실패: " + e.message); }
+  otInfo();
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden && OB.code && document.querySelector("#t-chart.act")) { if (!OB.timer && !OB.off) { obPoll(); OB.timer = setInterval(obPoll, 2500); } } });
 
 // ── 공시·리포트 상세 시트 (누르면 앱 안에서 바로 보기) ─────────
 function docId(u) { const m = String(u || "").match(/rcpNo=(\d{14})/) || String(u || "").match(/research\/company\/(\d+)/); return m ? m[1] : ""; }
