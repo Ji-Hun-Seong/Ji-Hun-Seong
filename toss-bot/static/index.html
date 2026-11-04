@@ -91,6 +91,7 @@ canvas.c-big{max-height:none}
 .prow .why{font-size:12px;color:var(--sub);margin-top:5px;line-height:1.5}
 .score{font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
 .tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:6px;background:var(--line);color:var(--sub);margin:2px 4px 0 0}
+.rk-g{font-weight:700;margin:0 6px 0 0}.rk-p{margin-top:2px}
 .tag.g{background:var(--g-bg);color:var(--g-fg)}.tag.r{background:var(--r-bg);color:var(--r-fg)}.tag.y{background:var(--y-bg);color:var(--y-fg)}.tag.b{background:var(--b-bg);color:var(--b-fg)}
 .back{background:none;border:0;color:var(--blue);font-size:15px;padding:4px 0 10px;font-family:inherit}
 .kv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.kv div{background:var(--bg);border-radius:10px;padding:8px 9px}
@@ -1170,13 +1171,18 @@ async function rLoad(force) {
   const chgT = x => x.chg != null ? `<span class="${cls(x.chg)} name">${x.chg >= 0 ? "+" : ""}${x.chg.toFixed(1)}%</span>` : `<span class="tiny mut">${R.market_open ? "+3% 미만" : "-"}</span>`;
   const nws = x => (x.news || []).length ? `<div class="why">📰 ${esc(x.news[0].title)}${x.news_why && x.news_why.length ? ` <span class="tag g">${esc(x.news_why[0].replace("뉴스: ", ""))}</span>` : ""}${(x.news_warn || []).map(w => ` <span class="tag r">${esc(w)}</span>`).join("")}</div>` : "";
   const fil = x => `<div class="tiny" style="margin-top:3px">${x.items.slice(0, 2).map(i => `<a href="javascript:void 0" data-doc="${esc(i.rcept_no)}" data-dt="${esc(i.title)}">📄 ${dl(i.day)} · ${esc(i.title)}</a>`).join("<br>")}</div>`;
-  const row = x => `<div class="prow"><div class="row"><span><b data-sc="${esc(x.code)}" style="cursor:pointer">${esc(x.name)}</b> ${x.tags.map(t => `<span class="tag y">${esc(t)}</span>`).join("")}${x.neg.map(t => `<span class="tag r">${esc(t)}</span>`).join("")}</span>${chgT(x)}</div>${fil(x)}${nws(x)}</div>`;
+  const GC = {S: "r", A: "y", B: "b", C: ""};
+  const grade = x => x.grade ? `<span class="rk-g tag ${GC[x.grade]}">${x.rank ? x.rank + "위 · " : ""}${x.grade} ${x.score}점</span>` : "";
+  const parts = x => (x.parts || []).length ? `<div class="rk-p">${x.parts.filter(p => p.v || p.note).map(p => `<span class="tag ${p.v > 0 ? "g" : p.v < 0 ? "r" : ""}">${esc(p.k)} ${p.v > 0 ? "+" : ""}${p.v}${p.note ? " · " + esc(p.note) : ""}</span>`).join("")}</div>` : "";
+  const row = x => `<div class="prow"><div class="row"><span>${grade(x)}<b data-sc="${esc(x.code)}" style="cursor:pointer">${esc(x.name)}</b> ${x.tags.map(t => `<span class="tag y">${esc(t)}</span>`).join("")}${x.neg.map(t => `<span class="tag r">${esc(t)}</span>`).join("")}</span>${chgT(x)}</div>${parts(x)}${fil(x)}${nws(x)}</div>`;
+  const F = R.fresh || [], top = F.filter(x => x.grade === "S" || x.grade === "A");
   const E = R.early || [];
   $("r-out").innerHTML = `
     <div class="card"><h2>🎯 재료 나왔는데 아직 덜 오른 종목 <span class="tiny mut">${R.time} · 공시 ${fmtN(R.n_filings)}건 확인</span></h2>
       ${R.dart_error ? `<div class="tiny up">DART: ${esc(R.dart_error)}</div>` : ""}
-      ${R.fresh.map(row).join("") || `<div class="empty small">아직 없음</div>`}
-      <div class="tiny mut" style="margin-top:8px">재료 점수 순 · 오늘 공시가 어제 공시보다 위 · 등락은 장중 기록 기준(+3%↑만 기록)</div></div>
+      ${top.map(row).join("") || `<div class="empty small">${F.length ? "S·A 등급 없음 — 오늘은 급한 재료가 없어요" : "아직 없음"}</div>`}
+      ${F.length > top.length ? `<details style="margin-top:6px"><summary class="small mut">B·C 등급 ${F.length - top.length}개 더 보기</summary>${F.filter(x => !top.includes(x)).map(row).join("")}</details>` : ""}
+      <div class="tiny mut" style="margin-top:8px">재료 점수(100점) 순 · 종류 + 크기(매출 대비·시총 대비) + 신선도(오늘·원공시) + 덩치 + 덜 오름 + 뉴스 관심 − 악재<br>S 70↑ 먼저 보기 · A 55↑ 오늘 확인 · B 40↑ · C 참고만</div></div>
     ${E.length ? `<div class="card"><h2>🌱 지금 움직이기 시작한 종목 — 이유는?</h2>${E.map(x => `<div class="prow"><div class="row"><span>${x.big ? "🏢 " : ""}<b data-sc="${esc(x.code)}" style="cursor:pointer">${esc(x.name)}</b>
         ${(x.filing_tags || []).map(t => `<span class="tag y">공시 ${esc(t)}</span>`).join("")}</span>${chgT(x)}</div>${nws(x)}
         ${x.explained ? "" : `<div class="tiny up" style="margin-top:3px">⚠️ 공시·뉴스 없음 — 소문·테마 수급일 수 있어요</div>`}</div>`).join("")}</div>` : ""}

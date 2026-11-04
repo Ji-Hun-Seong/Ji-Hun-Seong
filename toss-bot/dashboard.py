@@ -418,6 +418,125 @@ def _dart_list(day):
     return out
 
 
+# ── 재료 순위: 같은 '공급계약'이라도 크기·신선도·덩치·반영 정도가 다름 → 100점 만점으로 줄 세움 ──
+#   종류(0~30) + 크기(0~30) + 신선도(-20~+10) + 덩치(-15~+5) + 덜 오름(0~10) + 관심(0~15) − 악재
+GRADES = [(70, "S", "지금 먼저 보기"), (55, "A", "오늘 확인"), (40, "B", "시간 나면"), (-999, "C", "참고만")]
+
+
+def _num(s):
+    s = re.sub(r"[,\s원주%]", "", str(s or ""))
+    m = re.match(r"^-?\d+(\.\d+)?$", s)
+    return float(s) if m else None
+
+
+def _doc_val(blocks, pat):
+    """원문 표에서 라벨이 pat에 맞는 줄의 첫 숫자 값"""
+    rx = re.compile(pat)
+    for b in blocks or []:
+        if b.get("t") != "table":
+            continue
+        pending = 0
+        for r in b["rows"]:
+            cells = [c for c in r if c]
+            if not cells:
+                continue
+            if rx.search(re.sub(r"\s", "", " ".join(cells[:-1]) if len(cells) > 1 else cells[0])):
+                vals = [v for v in map(_num, cells[1:]) if v is not None]
+                if vals:
+                    return vals[0]
+                pending = 2                                  # 값이 바로 아래 줄(보통주식 등)에 있는 표
+                continue
+            if pending:
+                vals = [v for v in map(_num, cells) if v is not None]
+                if vals:
+                    return vals[-1]
+                pending -= 1
+    return None
+
+
+def _filing_size(tag, rcept_no, mcap_eok):
+    """재료 크기 점수(0~30)와 한 줄 설명 — 공시 원문에서 숫자를 읽음 (원문 6시간 캐시, 공시 상세와 같은 캐시)"""
+    import doc_detail
+    key = f"doc:filing:{rcept_no}"
+    d = cached(key, 6 * 3600, lambda: doc_detail.detail("filing", rcept_no))
+    if not isinstance(d, dict) or d.get("error"):
+        with _lock:
+            _cache.pop(key, None)
+        return 10, None
+    bl = d.get("blocks")
+    if tag == "공급계약":
+        r = _doc_val(bl, r"매출액대비")
+        if r is None:
+            amt, rev = _doc_val(bl, r"계약금액"), _doc_val(bl, r"최근매출액")
+            r = amt / rev * 100 if amt and rev else None
+        if r is None:
+            return 10, None
+        s = 30 if r >= 50 else 25 if r >= 30 else 18 if r >= 15 else 12 if r >= 10 else 6 if r >= 5 else 0
+        return s, f"매출 대비 {r:.0f}%"
+    if tag == "무상증자":
+        r = _doc_val(bl, r"1주당신주배정")
+        if r is None:
+            return 12, None
+        return (28 if r >= 1 else 18 if r >= 0.5 else 8), f"1주당 {r:g}주 배정"
+    if tag == "자사주":
+        amt = _doc_val(bl, r"취득예정금액|계약금액|소각예정금액|소각할주식의총액")
+        if amt and mcap_eok:
+            r = amt / 1e8 / mcap_eok * 100
+            return (28 if r >= 5 else 22 if r >= 3 else 15 if r >= 1.5 else 8 if r >= 0.5 else 2), f"시총 대비 {r:.1f}%"
+        return 10, (f"{amt / 1e8:,.0f}억" if amt else None)
+    return 10, None
+
+
+def _quote(code):
+    """네이버: 시가총액(억)·지금 등락률 — 10분 캐시 (장중 +3% 미만도 등락이 보이게)"""
+    def f():
+        import stock_info as si
+        out = {}
+        try:
+            b = si._get(f"{si.NAVER}/{code}/basic", timeout=6).json() or {}
+            out["chg"] = si.num(b.get("fluctuationsRatio"))
+        except Exception:
+            pass
+        try:
+            out["mcap_eok"] = si.kr_profile(code).get("mcap_eok")
+        except Exception:
+            pass
+        return out
+    q = cached("q:" + code, 600, f)
+    return q if isinstance(q, dict) and not q.get("error") else {}
+
+
+def _rank(g, today):
+    """g 에 score·grade·parts(왜 이 점수인지) 채움"""
+    parts = []
+    def add(k, v, note=None):
+        parts.append({"k": k, "v": round(v), "note": note})
+    add("종류", g["kind_pts"] * 30 / 35, "·".join(g["tags"][:2]))
+    add("크기", g.get("size_pts", 10), g.get("size_note"))
+    fresh = 10 if g["main"]["day"] == today else 0
+    note = "오늘" if fresh else "어제"
+    if g["main"].get("fix"):
+        fresh -= 20; note += " · 정정공시(재탕일 수 있음)"
+    add("신선도", fresh, note)
+    mc = g.get("mcap_eok")
+    if mc:
+        add("덩치", -15 if mc >= 30000 else -8 if mc >= 10000 else 0 if mc >= 2000 else 5,
+            f"시총 {mc / 10000:.1f}조" if mc >= 10000 else f"시총 {mc:,.0f}억")
+    c = g.get("chg")
+    if c is not None:
+        add("덜 오름", 10 if c < 2 else 5 if c < 5 else 0, f"{c:+.1f}%")
+    if g.get("news_pts"):
+        add("관심", min(15, g["news_pts"] * 0.6), f"기사 {len(g.get('news') or [])}건+")
+    if "유상증자·CB" in g["neg"]:
+        add("악재", -15, "유상증자·CB 같이 나옴")
+    g["score"] = max(0, min(100, round(sum(p["v"] for p in parts))))
+    g["parts"] = parts
+    for cut, gr, label in GRADES:
+        if g["score"] >= cut:
+            g["grade"], g["grade_label"] = gr, label
+            break
+
+
 def news_radar():
     sp = os.path.join(REPO, "surge-study")
     if sp not in sys.path:
@@ -454,20 +573,47 @@ def news_radar():
             continue
         code = x["stock_code"]
         g = by.setdefault(code, {"code": code, "name": x["corp_name"], "items": [], "pts": 0, "neg": [], "tags": []})
-        g["items"].append({"title": x.get("report_nm", "").strip(), "rcept_no": x["rcept_no"], "day": x["day"]})
+        fix = bool(re.search(r"기재정정|첨부정정|정정", t[:8]))
+        it = {"title": x.get("report_nm", "").strip(), "rcept_no": x["rcept_no"], "day": x["day"], "fix": fix}
+        g["items"].append(it)
         for tag, pts in pos:
             if tag not in g["tags"]:
                 g["tags"].append(tag)
+            # 대표 공시 = 점수 높은 것 → 원공시(정정 아님) → 오늘 → 최신 순
+            k = (pts, not fix, x["day"] == today, x["rcept_no"])
+            if not g.get("main_k") or k > g["main_k"]:
+                g["main_k"], g["main"], g["kind_pts"], g["main_tag"] = k, it, pts, tag
             g["pts"] = max(g["pts"], pts if x["day"] == today else pts * 0.7)
         g["neg"] += [tag for tag, _ in neg if tag not in g["neg"]]
     for g in by.values():
         g["chg"] = chg.get(g["code"])
         g["mcap_eok"] = mc.get(g["code"])
-        g["moved"] = g["chg"] is not None and g["chg"] >= 5
         g["latest"] = max(i["rcept_no"] for i in g["items"])
+        g["items"].sort(key=lambda i: (i is not g.get("main"), i["rcept_no"]))   # 대표 공시를 맨 위로
+        g.pop("main_k", None)
     good = [g for g in by.values() if g["pts"] > 0 and "거래소 경고" not in g["neg"]]
-    good.sort(key=lambda g: (g["moved"], -g["pts"], -int(g["latest"])))
+    good.sort(key=lambda g: (-g["pts"], -int(g["latest"])))
+    good = good[:45]
+    # 순위용 숫자: 지금 등락·시총(네이버) + 공시 원문의 크기(매출 대비 % 등)
+    def fill(g):
+        q = _quote(g["code"])
+        if q.get("chg") is not None:
+            g["chg"] = q["chg"]
+        g["mcap_eok"] = q.get("mcap_eok") or g["mcap_eok"]
+        try:
+            g["size_pts"], g["size_note"] = _filing_size(g["main_tag"], g["main"]["rcept_no"], g["mcap_eok"])
+        except Exception:
+            g["size_pts"], g["size_note"] = 10, None
+        return g
+    with ThreadPoolExecutor(8) as ex:
+        list(ex.map(fill, good))
+    for g in good:
+        g["moved"] = g["chg"] is not None and g["chg"] >= 5
+        _rank(g, today)
+    good.sort(key=lambda g: (g["moved"], -g["score"], -int(g["latest"])))
     bad = sorted([g for g in by.values() if g["neg"]], key=lambda g: -int(g["latest"]))
+    for g in bad:
+        g.setdefault("moved", False)
     # 장중 '막 시작' 종목 — 왜 움직이는지(공시·뉴스)
     early = []
     try:
@@ -490,6 +636,11 @@ def news_radar():
         nmap = dict(ex.map(one, want))
     for x in good + early:
         x.update(nmap.get(x["code"], {}))
+    for g in good:                                        # 뉴스 관심까지 넣어 최종 순위
+        _rank(g, today)
+    good.sort(key=lambda g: (g["moved"], -g["score"], -int(g["latest"])))
+    for i, g in enumerate([g for g in good if not g["moved"]], 1):
+        g["rank"] = i
     gcodes = {g["code"]: g for g in good}
     for x in early:
         g = gcodes.get(x["code"])
