@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-04",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 941,
+   "top": [
+    "현대위아",
+    "선도전기",
+    "오스테오닉"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-03",
    "method": "v1-rules-2026-11-03",
    "n_scored": 849,
@@ -10,7 +22,13 @@
     "파라다이스"
    ],
    "n_surge": 18,
-   "graded": null
+   "graded": {
+    "avg": 0.38,
+    "up": 5,
+    "n": 10,
+    "hit10": 1,
+    "market_avg": 0.62
+   }
   },
   {
    "date": "2026-11-02",

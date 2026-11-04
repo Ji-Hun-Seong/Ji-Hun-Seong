@@ -1237,5 +1237,74 @@
   "up": 3,
   "avg": -3.49,
   "market_avg": -1.75
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "020180",
+    "name": "대신정보통신",
+    "score": 65,
+    "next_chg": 0.95
+   },
+   {
+    "code": "171090",
+    "name": "선익시스템",
+    "score": 47,
+    "next_chg": -2.23
+   },
+   {
+    "code": "034230",
+    "name": "파라다이스",
+    "score": 47,
+    "next_chg": -1.52
+   },
+   {
+    "code": "089860",
+    "name": "롯데렌탈",
+    "score": 45,
+    "next_chg": 0.38
+   },
+   {
+    "code": "145020",
+    "name": "휴젤",
+    "score": 43,
+    "next_chg": -3.27
+   },
+   {
+    "code": "000210",
+    "name": "DL",
+    "score": 41,
+    "next_chg": 10.68
+   },
+   {
+    "code": "036460",
+    "name": "한국가스공사",
+    "score": 40,
+    "next_chg": 1.34
+   },
+   {
+    "code": "204620",
+    "name": "글로벌텍스프리",
+    "score": 38,
+    "next_chg": -1.53
+   },
+   {
+    "code": "005810",
+    "name": "풍산홀딩스",
+    "score": 38,
+    "next_chg": -1.59
+   },
+   {
+    "code": "029780",
+    "name": "삼성카드",
+    "score": 35,
+    "next_chg": 0.6
+   }
+  ],
+  "n": 10,
+  "hit10": 1,
+  "up": 5,
+  "avg": 0.38,
+  "market_avg": 0.62
  }
 }
