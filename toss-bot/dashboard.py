@@ -937,149 +937,79 @@ def picks_ackman():
     return {"kind": "ackman", "week": j.get("sent_week"), "asof": None, "items": items, "partial": True}
 
 
-def kospi_all():
-    """코스피 상장 보통주 전체 [(코드, 이름)] — 네이버 시가총액 순 목록 (스팩·우선주 제외), 하루 캐시"""
-    import requests
-    out, seen = [], set()
-    for page in range(1, 15):
-        j = requests.get("https://m.stock.naver.com/api/stocks/marketValue/KOSPI", params={"page": page, "pageSize": 100},
-                         headers={"User-Agent": "Mozilla/5.0"}, timeout=15).json()
-        items = j.get("stocks", []) if isinstance(j, dict) else j
-        if not items:
-            break
-        for it in items:
-            c, n = it.get("itemCode"), it.get("stockName") or ""
-            if it.get("stockEndType") != "stock" or c in seen or re.search(r"스팩|\d?우[A-C]?$|우\(전환\)$", n):
-                continue
-            seen.add(c); out.append((c, n))
-    if len(out) < 300:
-        raise RuntimeError(f"코스피 목록이 {len(out)}개뿐 — 네이버 응답 이상")
-    return out
-
-
-def hero_pool():
-    """채점 후보 = 코스피 전 종목 + toss-bot/heroes_pool.txt(내가 아는 회사) + value-bot 가치주 후보 + 내 계좌 보유 종목"""
+def hero_extras(market):
+    """대가 채점에 크기와 상관없이 늘 넣는 종목 — 내 계좌 · 아는 회사(heroes_pool.txt) · 가치주 후보 · (해외) 대표 종목"""
     import data_sources as ds
-    pool = {}
+    import heroes
+    out = []
 
     def add(code, name, src, held=False):
-        code = re.sub(r"\D", "", str(code or ""))[-6:]
-        if len(code) != 6:
-            return
-        p = pool.setdefault(code, {"code": code, "name": name, "src": [], "held": False})
-        if src not in p["src"]:
-            p["src"].append(src)
-        p["held"] = p["held"] or held
-    try:
-        for l in gh_text("toss-bot/heroes_pool.txt", ttl=3600).splitlines():
-            l = l.strip()
-            if l and not l.startswith("#"):
-                c, _, n = l.partition(",")
-                add(c, n.strip() or None, "아는 회사")
-    except Exception:
-        pass
-    ks = cached("kospi-all", 86400, kospi_all)
-    for c, n in ks if isinstance(ks, list) else []:
-        add(c, n, "코스피")
-    by_name = {}
-    try:
-        for r in csv.DictReader(io.StringIO(gh_text("value-bot/universe.csv", ttl=3600).lstrip("\ufeff"))):
-            add(r.get("ticker"), r.get("name"), "가치주 후보")
-            by_name[r.get("name")] = r.get("ticker")
-    except Exception:
-        pass
+        code = str(code or "").strip()
+        if market == "kr":
+            code = re.sub(r"\D", "", code)[-6:]
+            if len(code) != 6:
+                return
+        if code:
+            out.append({"code": code, "name": name, "src": src, "held": held})
     acct = _cache.get("account")
     acct = acct[1] if acct else None
     if not (isinstance(acct, dict) and acct.get("items")):
         acct = _try(account, {})
-    for i in (acct or {}).get("items") or []:
-        if i.get("currency") != "USD":
-            add(i.get("symbol"), i.get("name"), "내 계좌", True)
-    try:                                          # value-bot 보유 목록(이름) — 계좌 API가 안 될 때 대비
-        for l in gh_text("value-bot/holdings.txt", ttl=3600).splitlines():
-            l = l.strip()
-            if l and not l.startswith("#"):
-                if by_name.get(l):
-                    add(by_name[l], l, "내 계좌", True)
-                    continue
-                h = ds.search(l, 1)
-                if h and h[0].get("name") == l and not h[0].get("us"):
-                    add(h[0]["code"], l, "내 계좌", True)
-    except Exception:
-        pass
-    try:
-        cmap = {c["code"]: c for c in ds.load_corps()}
-    except Exception:
-        cmap = {}
-    for p in pool.values():
-        c = cmap.get(p["code"])
-        if c:
-            p["corp_code"] = c.get("corp_code")
-            p["name"] = p["name"] or c.get("name")
-    # 내 계좌 → 아는 회사 → 가치주 후보 → 코스피(시총 순) — DART 한도에 걸려도 중요한 것부터 10년 재무를 받게
-    order = {"내 계좌": 0, "아는 회사": 1, "가치주 후보": 2, "코스피": 3}
-    return sorted(pool.values(), key=lambda p: min(order.get(s, 9) for s in p["src"]))
-
-
-# 🏛️ 대가 10인 — 코스피 전체(900여 종목)라 한 번에 15~40분 걸림 → 서버 뒤에서 하루 한 번 채점해 파일로 저장,
-#    화면은 저장된 마지막 결과를 바로 보여 주고 진행률만 붙임
-HERO_FILE = os.path.join(bot.STATE_DIR, "heroes_kr.json")
-_hero_job = {"running": False, "done": 0, "total": 0, "started": None, "error": None}
-
-
-def _hero_build():
-    import heroes
-    t0 = time.time()
-    try:
-        pool = hero_pool()
-        b = heroes.board(pool, workers=4, prog=_hero_job)
-        out = {"kind": "hero", "asof": bot.now().strftime("%Y-%m-%d %H:%M"), "took": round(time.time() - t0, 1),
-               "principles": heroes.PRINCIPLES, "heroes": heroes.hero_meta(), **b}
-        os.makedirs(bot.STATE_DIR, exist_ok=True)
-        tmp = HERO_FILE + ".tmp"
-        json.dump(out, open(tmp, "w", encoding="utf-8"), ensure_ascii=False, default=str)
-        os.replace(tmp, HERO_FILE)
-        _hero_job["error"] = None
-        with _lock:
-            _cache.pop("picks:hero", None)
-    except Exception as e:
-        _hero_job["error"] = f"{type(e).__name__}: {str(e)[:160]}"
-    finally:
-        _hero_job["running"] = False
-
-
-def picks_hero():
-    old = None
-    if os.path.exists(HERO_FILE):
+    if market == "kr":
         try:
-            old = json.load(open(HERO_FILE, encoding="utf-8"))
+            for l in gh_text("toss-bot/heroes_pool.txt", ttl=3600).splitlines():
+                l = l.strip()
+                if l and not l.startswith("#"):
+                    c, _, n = l.partition(",")
+                    add(c, n.strip() or None, "아는 회사")
         except Exception:
-            old = None
-    age = time.time() - os.path.getmtime(HERO_FILE) if old else None
-    if (old is None or age > 20 * 3600) and not _hero_job["running"]:
-        _hero_job.update(running=True, done=0, total=0, started=bot.now().strftime("%H:%M"))
-        threading.Thread(target=_hero_build, daemon=True).start()
-    job = {k: _hero_job[k] for k in ("running", "done", "total", "started", "error")}
-    if old is None:
-        import heroes
-        return {"kind": "hero", "items": [], "building": job, "n_pool": job["total"], "asof": "채점 중",
-                "principles": heroes.PRINCIPLES, "heroes": heroes.hero_meta(), "grades": {}, "market": "kr", "market_name": "🇰🇷 한국"}
-    return {**old, "building": job}
+            pass
+        by_name = {}
+        try:
+            for r in csv.DictReader(io.StringIO(gh_text("value-bot/universe.csv", ttl=3600).lstrip("\ufeff"))):
+                add(r.get("ticker"), r.get("name"), "가치주 후보")
+                by_name[r.get("name")] = r.get("ticker")
+        except Exception:
+            pass
+        for i in (acct or {}).get("items") or []:
+            if i.get("currency") != "USD":
+                add(i.get("symbol"), i.get("name"), "내 계좌", True)
+        try:                                          # value-bot 보유 목록(이름) — 계좌 API가 안 될 때 대비
+            for l in gh_text("value-bot/holdings.txt", ttl=3600).splitlines():
+                l = l.strip()
+                if l and not l.startswith("#") and by_name.get(l):
+                    add(by_name[l], l, "내 계좌", True)
+        except Exception:
+            pass
+        try:
+            cmap = {c["code"]: c for c in ds.load_corps()}
+            for x in out:
+                c = cmap.get(x["code"])
+                if c:
+                    x["corp_code"] = c.get("corp_code")
+                    x["name"] = x["name"] or c.get("name")
+        except Exception:
+            pass
+    else:
+        for c, n in heroes.GLOBAL_POOL.get(market, []):
+            add(c, n, "대표 종목")
+        if market == "us":
+            for i in (acct or {}).get("items") or []:
+                if i.get("currency") == "USD":
+                    add(i.get("symbol"), i.get("name"), "내 계좌", True)
+    return out
 
 
-def picks_hero_global(market):
-    """발굴 › 대가 › 🇺🇸 미국 · 🇪🇺 유럽 · 🇨🇳 중국 · 🇯🇵 일본 — 시장별 대표 종목을 같은 10인 기준으로"""
-    import heroes
-    t0 = time.time()
-    pool = [{"code": c, "name": n, "src": ["대표 종목"]} for c, n in heroes.GLOBAL_POOL[market]]
-    b = heroes.board(pool, workers=6, market=market)
-    return {"kind": "hero", "asof": bot.now().strftime("%Y-%m-%d %H:%M"), "took": round(time.time() - t0, 1),
-            "principles": heroes.PRINCIPLES, "heroes": heroes.hero_meta(), **b}
+# 🏛️ 대가 10인 — 한국(코스피 시총 2천억↑) + 해외(나라별 시총 2조원↑) 수천 종목을 서버 뒤 일꾼이 계속 채점해
+#    state/heroes.db 에 저장 → 화면은 DB를 바로 읽음 (기다림 없음). chartpage/hero_db.py 참고
+def picks_hero_db(market):
+    import hero_db
+    return hero_db.board(market)
 
 
-PICKS = {"hero_us": (lambda: picks_hero_global("us"), 12 * 3600), "hero_eu": (lambda: picks_hero_global("eu"), 12 * 3600),
-         "hero_cn": (lambda: picks_hero_global("cn"), 12 * 3600), "hero_jp": (lambda: picks_hero_global("jp"), 12 * 3600),
-         "hero": (picks_hero, 60), "surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600)}
+PICKS = {"hero_us": (lambda: picks_hero_db("us"), 60), "hero_eu": (lambda: picks_hero_db("eu"), 60),
+         "hero_cn": (lambda: picks_hero_db("cn"), 60), "hero_jp": (lambda: picks_hero_db("jp"), 60),
+         "hero": (lambda: picks_hero_db("kr"), 60), "surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600)}
 
 
 def picks(kind):
@@ -1456,6 +1386,9 @@ class H(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     host, port = os.environ.get("DASH_HOST", "0.0.0.0"), int(os.environ.get("DASH_PORT", "8080"))
     print(f"대시보드 http://{host}:{port}", flush=True)
+    import hero_db
+    hero_db.init(os.path.join(bot.STATE_DIR, "heroes.db"))
+    hero_db.start(hero_extras)                   # 🏛️ 대가 채점 일꾼 (뒤에서 계속)
     threading.Thread(target=warm_up, daemon=True).start()
     threading.Thread(target=intraday_loop, daemon=True).start()
     ThreadingHTTPServer((host, port), H).serve_forever()

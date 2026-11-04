@@ -1009,7 +1009,8 @@ document.querySelector('nav button[data-t="pick"]').addEventListener("click", ()
 function openHero() { pKind = "hero"; try { localStorage.setItem("p-kind", "hero"); } catch (e) {}
   document.querySelectorAll("#p-seg button").forEach(x => x.classList.toggle("act", x.dataset.k === "hero")); goTab("pick"); }
 // 대가 탭 안의 국가 선택 (한국·미국·유럽·중국·일본)
-let hMkt = "kr", hSort = "value";
+let hMkt = "kr", hSort = "value", hSize = {};          // hSize: 탭별 크기 필터 (성장주는 기본 '중소형' — 대형주만 보이면 성장주가 아니라 대형주 목록이 됨)
+try { hSize = JSON.parse(localStorage.getItem("h-size") || "{}"); } catch (e) {}
 try { hSort = localStorage.getItem("h-sort") || "value"; } catch (e) {}
 try { hMkt = localStorage.getItem("h-mkt") || "kr"; } catch (e) {}
 const HMKT = [["kr", "🇰🇷 한국"], ["us", "🇺🇸 미국"], ["eu", "🇪🇺 유럽"], ["cn", "🇨🇳 중국"], ["jp", "🇯🇵 일본"]];
@@ -1018,13 +1019,13 @@ let sDate = null;                                       // 급등: 보고 있는
 const pKey = () => pKind === "hero" && hMkt !== "kr" ? "hero_" + hMkt : pKind === "surge" && sDate ? "surge:" + sDate : pKind;
 async function pLoad(force) {
   const k = pKey();
-  const bld = PK[k] && PK[k].d.building && PK[k].d.building.running;
+  const bld = PK[k] && PK[k].d.progress && PK[k].d.progress.fresh < PK[k].d.progress.pool;
   if (PK[k] && !force && Date.now() - PK[k].t < (bld ? 30000 : 300000)) return pRender(PK[k].d);
-  if (!PK[k]) $("p-out").innerHTML = (pKind === "hero" ? hMktBar() : "") + `<div class="card"><div class="empty">불러오는 중…${k.startsWith("hero") ? `<br><span class="tiny">${k === "hero" ? "대가 채점은 코스피 전 종목을 서버에서 하루 한 번 채점해 둔 결과를 보여 줘요" : "해외 대표 종목 30~40개의 재무를 모아서 처음엔 1~2분 걸립니다 (이후 12시간 저장)"}</span>` : ""}</div></div>`;
+  if (!PK[k]) $("p-out").innerHTML = (pKind === "hero" ? hMktBar() : "") + `<div class="card"><div class="empty">불러오는 중…${k.startsWith("hero") ? `<br><span class="tiny">서버 DB에 채점해 둔 결과를 바로 보여 줘요</span>` : ""}</div></div>`;
   if (pKind === "hero") hMktBind();
   const url = k.startsWith("surge:") ? "api/picks?k=surge&d=" + k.slice(6) : "api/picks?k=" + k;
   try { const d = await (await fetch(url, {cache: "no-store"})).json(); PK[k] = {t: Date.now(), d}; if (k === pKey()) pRender(d);
-    if (k === "hero" && d.building && d.building.running) setTimeout(() => { if (pKey() === "hero" && $("t-pick").classList.contains("act")) pLoad(true); }, 30000); }
+    if (k.startsWith("hero") && d.progress && d.progress.fresh < d.progress.pool) setTimeout(() => { if (pKey() === k && $("t-pick").classList.contains("act")) pLoad(true); }, 30000); }
   catch (e) { $("p-out").innerHTML = `<div class="card"><div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
 const hMktBar = () => `<div class="seg" id="h-mkt" style="margin-top:-4px">${HMKT.map(([k, l]) => `<button data-m="${k}" class="${hMkt === k ? "act" : ""}">${l}</button>`).join("")}</div>`;
@@ -1041,21 +1042,25 @@ function pRender(d) {
     const sk = two ? hSort : "all", key = x => sk === "value" ? (x.value ?? -1) : sk === "growth" ? (x.growth ?? -1) : x.total;
     // 💎 가치주 / 🚀 성장주 탭 — 가치 점수가 높으면 가치주, 성장 점수가 높으면 성장주 (둘 다 위성 이상이면 양쪽에)
     const isV = x => x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1), isG = x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1);
-    const inTab = x => sk === "value" ? isV(x) : sk === "growth" ? isG(x) : true;
+    const szk = hSize[sk] || (sk === "growth" ? "mid" : "all");
+    const inSize = x => szk === "all" || x.mcap_eok == null ? true : szk === "big" ? x.mcap_eok >= 100000 : x.mcap_eok < 100000;
+    const inTab = x => (sk === "value" ? isV(x) : sk === "growth" ? isG(x) : true) && inSize(x);
     const GL = {core: "🟢 장기 핵심", sat: "🟡 장기 위성", watch: "⚪ 관찰", no: "🔴 장기 부적합", na: "⚪ 데이터 부족"};
     const gk = x => sk === "value" ? x.vgrade : sk === "growth" ? x.ggrade : x.grade.key;
     const tabItems = d.items.filter(inTab);
     const TG = {}; tabItems.forEach(x => { const k = gk(x); TG[k] = (TG[k] || 0) + 1; });
     const hs = tabItems.slice().sort((a, b) => key(b) - key(a));
     pItems = hs.concat(d.more || []);
-    const styBar = two ? `<div class="seg" id="h-sort" style="margin-top:8px">${[["value", `💎 가치주 ${d.items.filter(isV).length}`], ["growth", `🚀 성장주 ${d.items.filter(isG).length}`], ["all", "전체"]].map(([k, l]) => `<button data-s="${k}" class="${sk === k ? "act" : ""}">${l}</button>`).join("")}</div>` : "";
+    const styBar = (two ? `<div class="seg" id="h-sort" style="margin-top:8px">${[["value", `💎 가치주 ${d.items.filter(isV).length}`], ["growth", `🚀 성장주 ${d.items.filter(isG).length}`], ["all", "전체"]].map(([k, l]) => `<button data-s="${k}" class="${sk === k ? "act" : ""}">${l}</button>`).join("")}</div>` : "")
+      + `<div class="seg sm" id="h-size" style="margin-top:6px">${[["all", "전체 크기"], ["big", "대형 10조↑"], ["mid", "중소형 10조↓"]].map(([k, l]) => `<button data-z="${k}" class="${szk === k ? "act" : ""}">${l}</button>`).join("")}</div>`;
     head = hMktBar() + styBar + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 10인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${fmtN(d.n_pool)}종목</div>
-      ${d.building && (d.building.running || d.building.error) ? `<div class="small" style="margin-top:8px;padding:8px 10px;background:var(--bg);border-radius:10px">${d.building.running ? `🔄 코스피 전체 다시 채점 중 ${fmtN(d.building.done)}/${fmtN(d.building.total || 0)} (${esc(d.building.started || "")} 시작 · 15~40분) — ${d.items.length ? "끝나면 새 결과로 바뀌어요. 지금은 지난 결과" : "처음이라 조금 기다려 주세요"}` : `⚠️ 채점 실패: ${esc(d.building.error)}`}</div>` : ""}
+      ${(() => { const P = d.progress; if (!P) return ""; const busy = P.fresh < P.pool;
+        return `<div class="small" style="margin-top:8px;padding:8px 10px;background:var(--bg);border-radius:10px">🗄️ DB: 채점 ${fmtN(P.scored)}/${fmtN(P.pool)}종목 · 오늘 최신 ${fmtN(P.fresh)}${busy ? ` · 🔄 ${esc(P.worker || "")}` : " · ✅ 전부 최신"}${!d.items.length ? "<br>아직 채점된 종목이 없어요 — 서버가 시총 큰 종목부터 채점 중이라 잠시 뒤 하나씩 늘어나요" : ""}${P.error ? `<br><span class="up">⚠️ ${esc(P.error)}</span>` : ""}</div>`; })()}
       <div class="small" style="margin-top:6px;line-height:1.6">💎 <b>가치</b> 버핏·그레이엄·멍거·애크먼·클라만 · 🚀 <b>성장</b> 린치·피셔·드러켄밀러·템플턴·로 프라이스 — 각 100점, 등급은 높은 쪽 · 핵심은 5명 중 3명↑ 동의</div>
       ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 버핏·그레이엄·멍거·애크먼·클라만 점수 순" : "🚀 성장주 — 린치·피셔·드러켄밀러·템플턴·로 프라이스 점수 순"}</b> <span class="tiny mut">${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다"}</span></div>` : ""}
       <div class="tally"><span class="tag g">🟢 핵심 ${(sk === "all" ? G : TG).core || 0}</span><span class="tag y">🟡 위성 ${(sk === "all" ? G : TG).sat || 0}</span><span class="tag">⚪ 관찰 ${(sk === "all" ? G : TG).watch || 0}</span><span class="tag r">🔴 부적합 ${(sk === "all" ? G : TG).no || 0}</span></div>
       ${S ? `<div class="tiny mut" style="margin-top:6px">위성 이상: 💎 가치형 ${S.value} · 🚀 성장형 ${S.growth} · 둘 다 ${S.both}</div>` : ""}
-      <div class="tiny mut" style="margin-top:8px">${glob ? "후보 = 그 나라 대표 우량주·배당주 (chartpage/heroes.py GLOBAL_POOL) · 야후 재무 기준 — 공시·수급 항목은 채점에서 제외" : "후보 = 코스피 전 종목(스팩·우선주 제외) + 가치주 후보 + 📌 내 계좌 · 하루 한 번 서버에서 채점"} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
+      <div class="tiny mut" style="margin-top:8px">${glob ? "야후 재무 기준 — 공시·수급 항목은 채점에서 제외 · " : ""}${`후보 = ${glob ? "그 나라 시총 2조원(약 14억 달러)↑ 전 종목" : "코스피 시총 2,000억↑ 전 종목(스팩·우선주 제외)"} + 가치주 후보·대표 종목 + 📌 내 계좌 · 서버가 매일 한 바퀴 다시 채점해 DB에 저장`} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
     rows = hs.slice(0, 50).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${sk === "all" ? x.rank : i + 1}</span><span class="name">${esc(x.name)}</span>${x.held ? " 📌" : ""}
         <span class="tag ${GCLS[gk(x)]}">${esc(sk === "all" ? x.grade.label : GL[gk(x)] || "")}</span>${sk === "all" && x.style ? ` <span class="tiny">${x.style === "both" ? "💎🚀" : x.style === "value" ? "💎" : "🚀"}</span>` : ""}</div><div style="text-align:right"><span class="score">${Math.round(key(x) < 0 ? 0 : key(x))}</span><span class="tiny mut">점</span></div></div>
       <div class="tiny mut" style="margin-top:3px">${esc(x.lynch_cat)} · PER ${x.per != null ? x.per.toFixed(1) : "-"} · PBR ${x.pbr != null ? x.pbr.toFixed(2) : "-"} · 배당 ${x.yield != null ? x.yield.toFixed(1) + "%" : "-"} · ${eokFmt(x.mcap_eok)}</div>
@@ -1131,7 +1136,8 @@ function pRender(d) {
   }
   $("p-out").innerHTML = head + `<div class="card">${rows || `<div class="empty">목록 없음</div>`}</div>
     <div class="tiny mut" style="text-align:center;margin:4px 0 12px">종목을 누르면 차트·수급·재무·공시를 한 화면에 · 투자 권유 아님</div>`;
-  if (d.kind === "hero") { hMktBind(); document.querySelectorAll("#h-sort button").forEach(b => b.onclick = () => { hSort = b.dataset.s; try { localStorage.setItem("h-sort", hSort); } catch (e) {} pRender(d); }); }
+  if (d.kind === "hero") { hMktBind(); document.querySelectorAll("#h-sort button").forEach(b => b.onclick = () => { hSort = b.dataset.s; try { localStorage.setItem("h-sort", hSort); } catch (e) {} pRender(d); });
+    document.querySelectorAll("#h-size button").forEach(b => b.onclick = () => { const two = d.items.length && d.items[0].value !== undefined; hSize[two ? hSort : "all"] = b.dataset.z; try { localStorage.setItem("h-size", JSON.stringify(hSize)); } catch (e) {} pRender(d); }); }
   if (d.kind === "surge") {
     const D = d.dates || [], i = D.findIndex(x => x.date === d.date);
     const go = dt => { sDate = dt && D.length && dt !== D[0].date ? dt : null; pLoad(); };

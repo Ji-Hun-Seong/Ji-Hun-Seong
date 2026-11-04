@@ -495,38 +495,34 @@ def light_global(sym: str, name: str | None = None) -> dict:
         pass
     fin = {}
     try:
-        fin["annual"] = si.yf_annual(tk)                 # 4년치 영업이익률·ROE·부채비율까지 (꾸준함 판단용)
+        fin["annual"] = _disk(f"yfa_{sym}", 7 * 86400, lambda: si.yf_annual(tk))   # 4년치 (꾸준함 판단용) — 7일 저장
     except Exception:
         pass
     return {"us": True, "code": sym, "name": prof["name"], "profile": prof, "finance": fin, "filings": None, "close": price}
 
 
-def board(pool: list[dict], workers: int = 8, market: str = "kr", prog: dict | None = None) -> dict:
-    """pool = [{code, name, corp_code, src:[...], held}] → 점수 순 목록 (market != kr 이면 해외 yfinance)"""
-    def one(p):
-        try:
-            d = light(p["code"], p.get("name"), p.get("corp_code")) if market == "kr" else light_global(p["code"], p.get("name"))
-            s = score(d)
-            P = d["profile"]
-            return {"code": p["code"], "name": d["name"], "src": p.get("src", []), "held": p.get("held", False),
-                    "us": market != "kr", "ccy": (d["profile"] or {}).get("currency"),
-                    "total": s["total"], "grade": s["grade"], "note": s["note"], "lynch_cat": s["lynch_cat"],
-                    "value": s["value"]["score"], "growth": s["growth"]["score"], "style": s["style"],
-                    "vgrade": s["value"]["grade"]["key"], "ggrade": s["growth"]["grade"]["key"],
-                    "heroes": {h["key"]: h["score"] for h in s["heroes"]},
-                    "agree": {"value": s["value"]["agree"], "growth": s["growth"]["agree"]},
-                    "best": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is True and not c.get("bonus")][:3],
-                    "worst": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is False][:2],
-                    "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok")}
-        except Exception as e:
-            return {"code": p["code"], "name": p.get("name") or p["code"], "error": f"{type(e).__name__}: {str(e)[:80]}"}
-        finally:
-            if prog is not None:
-                prog["done"] = prog.get("done", 0) + 1
-    if prog is not None:
-        prog.update(done=0, total=len(pool))
-    with ThreadPoolExecutor(workers) as ex:
-        rows = list(ex.map(one, pool))
+def board_row(p: dict, market: str = "kr") -> dict:
+    """종목 하나 채점 → 목록 한 줄 (실패하면 {"error": ...})"""
+    try:
+        d = light(p["code"], p.get("name"), p.get("corp_code")) if market == "kr" else light_global(p["code"], p.get("name"))
+        s = score(d)
+        P = d["profile"]
+        return {"code": p["code"], "name": d["name"], "src": p.get("src", []), "held": p.get("held", False),
+                "us": market != "kr", "ccy": (d["profile"] or {}).get("currency"),
+                "total": s["total"], "grade": s["grade"], "note": s["note"], "lynch_cat": s["lynch_cat"],
+                "value": s["value"]["score"], "growth": s["growth"]["score"], "style": s["style"],
+                "vgrade": s["value"]["grade"]["key"], "ggrade": s["growth"]["grade"]["key"],
+                "heroes": {h["key"]: h["score"] for h in s["heroes"]},
+                "agree": {"value": s["value"]["agree"], "growth": s["growth"]["agree"]},
+                "best": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is True and not c.get("bonus")][:3],
+                "worst": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is False][:2],
+                "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok")}
+    except Exception as e:
+        return {"code": p["code"], "name": p.get("name") or p["code"], "error": f"{type(e).__name__}: {str(e)[:80]}"}
+
+
+def aggregate(rows: list[dict], n_pool: int, market: str = "kr") -> dict:
+    """채점된 줄들 → 순위·등급 집계 (board 와 DB 목록이 같이 씀)"""
     ok = [r for r in rows if r.get("total") is not None and r["grade"]["key"] != "na"]
     styles = {"value": sum(1 for r in ok if r["vgrade"] in ("core", "sat")), "growth": sum(1 for r in ok if r["ggrade"] in ("core", "sat")),
               "both": sum(1 for r in ok if r["style"] == "both")}
@@ -536,8 +532,23 @@ def board(pool: list[dict], workers: int = 8, market: str = "kr", prog: dict | N
     cnt = {}
     for r in ok:
         cnt[r["grade"]["key"]] = cnt.get(r["grade"]["key"], 0) + 1
-    return {"items": ok, "failed": [r for r in rows if r not in ok], "n_pool": len(pool), "grades": cnt, "styles": styles, "market": market,
+    return {"items": ok, "failed": [r for r in rows if r not in ok], "n_pool": n_pool, "grades": cnt, "styles": styles, "market": market,
             "market_name": MARKET_NAME.get(market, market)}
+
+
+def board(pool: list[dict], workers: int = 8, market: str = "kr", prog: dict | None = None) -> dict:
+    """pool = [{code, name, corp_code, src:[...], held}] → 점수 순 목록 (market != kr 이면 해외 yfinance)"""
+    def one(p):
+        try:
+            return board_row(p, market)
+        finally:
+            if prog is not None:
+                prog["done"] = prog.get("done", 0) + 1
+    if prog is not None:
+        prog.update(done=0, total=len(pool))
+    with ThreadPoolExecutor(workers) as ex:
+        rows = list(ex.map(one, pool))
+    return aggregate(rows, len(pool), market)
 
 
 if __name__ == "__main__":
