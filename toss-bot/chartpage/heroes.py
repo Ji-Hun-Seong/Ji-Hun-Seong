@@ -25,12 +25,12 @@ import time
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
-HEROES = [
-    ("graham", "벤저민 그레이엄", "🛡️", "안전마진", "잃지 않는 것이 먼저 — 흑자·낮은 부채·싼 가격"),
-    ("buffett", "워런 버핏", "🏰", "해자·ROE", "훌륭한 기업을 적당한 가격에 — 높고 꾸준한 ROE"),
-    ("fisher", "필립 피셔", "🌱", "위대한 기업", "몇 년 더 클 회사를 사서 오래 들고 간다"),
-    ("lynch", "피터 린치", "🔎", "성장 대비 가격", "아는 회사를, 성장보다 싸게 (PEG ≤ 1)"),
-    ("ackman", "빌 애크먼", "🎯", "촉매·환원", "시장이 가치를 알아볼 계기가 있는가"),
+HEROES = [   # (키, 이름, 아이콘, 주제, 한 줄 원칙 — 출처)
+    ("graham", "벤저민 그레이엄", "🛡️", "안전마진", "『현명한 투자자』 방어적 투자자 7기준 — 규모·재무·10년 흑자·배당 이력·이익 성장·PER 15·PBR 1.5"),
+    ("buffett", "워런 버핏", "🏰", "해자·ROE", "버크셔 인수 기준 — 꾸준한 수익력, 빚 없이 높은 ROE, 단순한 사업, 그리고 적당한 가격"),
+    ("fisher", "필립 피셔", "🌱", "위대한 기업", "『위대한 기업에 투자하라』 15가지 — 매출을 키울 힘, 높고 나아지는 이익률, 희석 없는 성장"),
+    ("lynch", "피터 린치", "🔎", "성장 대비 가격", "『전설로 떠나는 월가의 영웅』 — PEG·(성장+배당)/PER·빚·재고·순현금, 아는 회사를"),
+    ("ackman", "빌 애크먼", "🎯", "촉매·환원", "퍼싱스퀘어 원칙 — 단순·예측 가능·FCF 창출, 진입장벽, 튼튼한 재무, 매력적 가격, 가치가 드러날 계기"),
 ]
 
 # 화면에 보여 줄 나의 원칙 (대시보드 홈·발굴 탭)
@@ -98,6 +98,58 @@ def _chk(pts, mx, text, ok=None, na=False):
     return {"pts": pts if ok is not None else 0, "max": mx, "ok": ok, "text": text, "na": na}
 
 
+def _last(x, n):
+    return [v for v in (x or []) if v is not None][-n:]
+
+
+def _lastv(x):
+    v = _last(x, 1)
+    return v[0] if v else None
+
+
+def _facts(d: dict) -> dict:
+    """채점용 숫자 모음 — 한국은 DART 10년(있으면) · 아니면 네이버/야후 연간 4년. 리스트는 오래된 → 최신"""
+    us = bool(d.get("us"))
+    P = d.get("profile") or {}
+    fin = d.get("finance") or {}
+    ok = lambda v: v if _ok(v) else None
+    F = {"us": us, "per": ok(P.get("per")), "pbr": ok(P.get("pbr")), "dy": ok(P.get("div_yield")),
+         "mcap_eok": ok(P.get("mcap_eok")) or (P["mcap_usd"] * 1400 / 1e8 if _ok(P.get("mcap_usd")) else None),
+         "close": ok((d.get("tech") or {}).get("close")) or ok(d.get("close")), "target": ok(P.get("target")),
+         "eps_est": _series(fin, "EPS", est=True), "src": "naver"}
+    dart = d.get("dart") or {}
+    K = {"rev": "매출액", "op": "영업이익", "ni": "당기순이익", "nio": "지배순이익", "eps": "EPS", "dps": "DPS", "eq": "자본총계",
+         "eqo": "지배자본", "liab": "부채총계", "ca": "유동자산", "cl": "유동부채", "inv": "재고자산", "ncl": "비유동부채", "cash": "현금성자산",
+         "netcash": "순현금", "ocf": "영업CF", "fcf": "FCF", "roe": "ROE", "opm": "영업이익률", "dr": "부채비율", "cr": "유동비율"}
+    if dart.get("labels") and dart.get("key") and not dart.get("error"):
+        labs = dart["labels"]
+        idx = sorted([i for i, l in enumerate(labs) if l.isdigit()], key=lambda i: labs[i])
+        for k, nm in K.items():
+            v = dart["key"].get(nm) or [None] * len(labs)
+            F[k] = [v[i] for i in idx]
+        F["years"], F["src"] = [labs[i] for i in idx], "dart"
+    else:
+        R = lambda nm: _series(fin, nm)
+        F.update({"rev": R("매출액"), "op": R("영업이익"), "ni": R("당기순이익"), "eps": R("EPS"), "dps": R("주당배당금"),
+                  "roe": R("ROE"), "opm": R("영업이익률"), "dr": R("부채비율"), "cr": R("유동비율"), "nio": [], "eq": [], "eqo": [],
+                  "liab": [], "ca": [], "cl": [], "inv": [], "ncl": [], "cash": [], "netcash": [], "ocf": [], "fcf": []})
+        if not F["roe"] and _ok(P.get("roe")):
+            F["roe"] = [P["roe"] * 100]
+        if not F["opm"] and _ok(P.get("opm")):
+            F["opm"] = [P["opm"] * 100]
+        if not F["dr"] and _ok(P.get("de")):
+            F["dr"] = [P["de"]]
+    # 지배주주 순이익 / EPS → 주식 수(희석 판단)
+    nio = F.get("nio") or []
+    F["shares"] = [(n * 1e8 / e) if (n and e and e > 0) else None for n, e in zip(nio, F["eps"])] if nio else []
+    dr = _last(F["dr"], 1)
+    ra = _last(F["roe"], 4)
+    F["fin_co"] = bool(dr) and dr[0] > 500 and bool(ra) and sum(ra) / len(ra) > 0
+    for k in ("rev", "op", "ni", "eps", "roe", "opm", "dr"):
+        F[k] = [v for v in F[k] if v is not None] if k in ("rev", "op", "ni", "eps", "roe", "opm", "dr") else F[k]
+    return F
+
+
 # ── 5인 채점 ───────────────────────────────────────────
 def score(d: dict) -> dict:
     """d = stock_info 상세(또는 board용 가벼운 dict). 반환: 대가별 점수·체크·등급·린치 분류"""
@@ -107,178 +159,282 @@ def score(d: dict) -> dict:
     filings = d.get("filings")
     has_filings = (not us) and filings is not None and d.get("filings_ok", True)
 
-    sales, op, ni = _series(fin, "매출액"), _series(fin, "영업이익"), _series(fin, "당기순이익")
-    opm, roe = _series(fin, "영업이익률"), _series(fin, "ROE")
-    debt, quick, eps = _series(fin, "부채비율"), _series(fin, "당좌비율"), _series(fin, "EPS")
-    eps_est = _series(fin, "EPS", est=True)
-    if not roe and _ok(P.get("roe")):                 # 미국: yfinance ROE(소수)
-        roe = [P["roe"] * 100]
-    if not opm and _ok(P.get("opm")):
-        opm = [P["opm"] * 100]
-    if not debt and _ok(P.get("de")):
-        debt = [P["de"]]                              # 미국: 부채/자본(%) — 국내 부채비율과 정의가 조금 다름
-    per, pbr = P.get("per"), P.get("pbr")
-    per = per if _ok(per) else None
-    pbr = pbr if _ok(pbr) else None
-    dy = P.get("div_yield") if _ok(P.get("div_yield")) else None
-    mcap_eok = P.get("mcap_eok") if _ok(P.get("mcap_eok")) else (P["mcap_usd"] * 1400 / 1e8 if _ok(P.get("mcap_usd")) else None)
-    roe_avg = sum(roe[-4:]) / len(roe[-4:]) if roe else None
-    fin_co = bool(debt) and debt[-1] > 500 and (roe_avg or 0) > 0     # 은행·보험·증권: 부채비율이 본업 구조라 평가 제외
-    years = max(len(sales), len(ni)) - 1
+    F = _facts(d)
+    sales, op, ni, eps = F["rev"], F["op"], F["ni"], F["eps"]
+    opm, roe, debt = F["opm"], F["roe"], F["dr"]
+    per, pbr, dy, mcap_eok, close = F["per"], F["pbr"], F["dy"], F["mcap_eok"], F["close"]
+    roe_avg = sum(_last(roe, 10)) / len(_last(roe, 10)) if _last(roe, 10) else None
+    fin_co = F["fin_co"]
+    H, T = {}, {}
+    N = len(_last(ni, 10))
 
-    H = {}
-    # 🛡️ 그레이엄
+    # 🛡️ 그레이엄 — 『현명한 투자자』 14장 방어적 투자자 7기준 (+15장 넷넷)
     g = []
-    if ni:
-        neg = sum(1 for v in ni if v <= 0)
-        g.append(_chk(6, 6, f"최근 {len(ni)}년 모두 흑자" if not neg else f"최근 {len(ni)}년 중 적자 {neg}번", ok=not neg))
-        if neg:
-            g[-1]["pts"] = 0
-    else:
-        g.append(_chk(0, 6, "순이익 데이터 없음"))
-    if debt and not fin_co:
-        dv = debt[-1]
-        pts = 5 if dv < 100 else 2 if dv < 200 else 0
-        g.append(_chk(pts, 5, f"{'부채/자본' if us else '부채비율'} {dv:.0f}% " + ("(낮음)" if dv < 100 else "(보통)" if dv < 200 else "(높음)"), ok=dv < 100))
-    elif fin_co:
-        g.append(_chk(0, 5, "금융업 — 부채비율 기준 제외", na=True))
-    else:
-        g.append(_chk(0, 5, "부채 데이터 없음"))
-    if quick and not fin_co:
-        g.append(_chk(3 if quick[-1] >= 100 else 0, 3, f"당좌비율 {quick[-1]:.0f}% (100%↑ 목표 · 단기 지급 여력)", ok=quick[-1] >= 100))
-    else:
-        g.append(_chk(0, 3, "당좌비율 데이터 없음"))
-    if per and pbr and per > 0:
-        gn = per * pbr
-        g.append(_chk(6 if gn <= 22.5 else 3 if gn <= 40 else 0, 6, f"그레이엄 넘버 PER×PBR = {gn:.1f} (22.5 이하면 싸다)", ok=gn <= 22.5))
-    elif per is None and pbr:
-        g.append(_chk(0, 6, "적자(PER 없음) — 그레이엄 넘버 계산 불가", ok=False))
-    else:
-        g.append(_chk(0, 6, "PER·PBR 데이터 없음"))
-    H["graham"] = g
-    graham_fail = (ni and any(v <= 0 for v in ni)) or (debt and not fin_co and debt[-1] >= 200)
-
-    # 🏰 버핏 — 높고 꾸준한 ROE · 높고 안정적인 이익률 · 그리고 '적당한 가격' (ROE 6 · ROE 꾸준함 4 · 이익률 3 · 이익률 안정 3 · 가격 4)
-    b = []
-    if roe:
-        b.append(_chk(6 if roe_avg >= 15 else 3 if roe_avg >= 10 else 0, 6, f"ROE 평균 {roe_avg:.1f}% (최근 {len(roe[-4:])}년, 15%↑ 목표)", ok=roe_avg >= 15))
-        mn = min(roe[-4:])
-        if len(roe) >= 3:
-            b.append(_chk(4 if mn >= 12 else 2 if mn >= 7 else 0, 4, f"가장 나빴던 해 ROE {mn:.1f}% ({len(roe[-4:])}년 중, 12%↑면 꾸준함)", ok=mn >= 12))
-        else:
-            b.append(_chk(0, 4, f"ROE {len(roe)}년치뿐 — 꾸준함 판단 불가(반만 인정)"))
-    else:
-        b += [_chk(0, 6, "ROE 데이터 없음"), _chk(0, 4, "ROE 데이터 없음")]
+    g.append(_chk(2 if (mcap_eok or 0) >= 2000 else 0, 2, f"① 충분한 규모: 시가총액 {(mcap_eok or 0) / 10000:.1f}조 (2,000억↑)", ok=(mcap_eok or 0) >= 2000)
+             if mcap_eok else _chk(0, 2, "① 규모: 시가총액 데이터 없음"))
+    cr, wc_ok = _lastv(F["cr"]), None
     if fin_co:
-        b += [_chk(0, 3, "금융업 — 이익률 기준 제외", na=True), _chk(0, 3, "금융업 — 이익률 기준 제외", na=True)]
-    elif opm:
-        oa = sum(opm[-4:]) / len(opm[-4:])
-        b.append(_chk(3 if oa >= 15 else 1.5 if oa >= 8 else 0, 3, f"영업이익률 평균 {oa:.1f}% (15%↑면 가격 결정력)", ok=oa >= 15))
-        if len(opm) >= 3:
-            rg = max(opm[-4:]) - min(opm[-4:])
-            b.append(_chk(3 if rg <= 5 else 1.5 if rg <= 10 else 0, 3, f"영업이익률 변동 폭 {rg:.1f}%p (좁을수록 해자)", ok=rg <= 5))
-        else:
-            b.append(_chk(0, 3, "이익률 3년치 미만 — 안정성 판단 불가(반만 인정)"))
+        g.append(_chk(0, 4, "② 재무 상태: 금융업 — 유동비율 기준 제외(그레이엄도 공익·금융은 따로 봄)", na=True))
+    elif cr is not None:
+        ca, cl, ncl = _lastv(F["ca"]), _lastv(F["cl"]), _lastv(F["ncl"])
+        wc_ok = (ca is not None and cl is not None and ncl is not None and ncl <= ca - cl)
+        pts = (2 if cr >= 200 else 1 if cr >= 150 else 0) + (2 if wc_ok else 0)
+        g.append(_chk(pts, 4, f"② 재무 상태: 유동비율 {cr:.0f}% (200%↑) · 장기부채 {'≤' if wc_ok else '>'} 순유동자산", ok=cr >= 200 and wc_ok))
     else:
-        b += [_chk(0, 3, "영업이익률 데이터 없음"), _chk(0, 3, "영업이익률 데이터 없음")]
-    if per is not None and per > 0:                   # 버핏: 훌륭한 기업이라도 '적당한 가격'에 — 이익수익률(1/PER)로 판단
-        ey = 100 / per
-        b.append(_chk(4 if per <= 15 else 2 if per <= 22 else 0, 4, f"PER {per:.1f}배 = 이익수익률 {ey:.1f}% (PER 15배↓ 적당 · 22배↑ 비쌈)", ok=per <= 22))
+        g.append(_chk(0, 4, "② 재무 상태: 유동비율 데이터 없음"))
+    if N:
+        neg = sum(1 for v in _last(ni, 10) if v <= 0)
+        pts = (4 if N >= 8 else 3 if N >= 5 else 2) if not neg else (1 if neg == 1 else 0)
+        g.append(_chk(pts, 4, f"③ 이익 안정: 최근 {N}년 " + ("모두 흑자" if not neg else f"중 적자 {neg}번") + " (10년 무적자 목표)", ok=not neg))
+    else:
+        g.append(_chk(0, 4, "③ 이익 안정: 순이익 데이터 없음"))
+    dps = _last(F["dps"], 12)
+    if dps:
+        run = 0
+        for v in reversed(dps):
+            if v and v > 0:
+                run += 1
+            else:
+                break
+        g.append(_chk(3 if run >= 10 else 2 if run >= 5 else 1 if run >= 1 else 0, 3, f"④ 배당 이력: {run}년 연속 배당 (원전 20년 — 데이터는 최대 12년)", ok=run >= 5))
+    elif dy is not None:
+        g.append(_chk(1 if dy > 0 else 0, 3, f"④ 배당 이력: 현재 배당 {'있음' if dy > 0 else '없음'} (연속 연수 데이터 없음)", ok=None if dy > 0 else False))
+    else:
+        g.append(_chk(0, 3, "④ 배당 이력: 데이터 없음"))
+    e = _last(eps, 10)
+    if len(e) >= 6:
+        a0, a1 = sum(e[:3]) / 3, sum(e[-3:]) / 3
+        gr = a1 / a0 - 1 if a0 > 0 else None
+        g.append(_chk(2 if gr is not None and gr >= 1 / 3 else 0, 2, f"⑤ 이익 성장: 3년 평균 EPS {a0:,.0f} → {a1:,.0f} ({'계산 불가' if gr is None else f'{gr * 100:+.0f}%'}, +33%↑)", ok=gr is not None and gr >= 1 / 3))
+    else:
+        g.append(_chk(0, 2, "⑤ 이익 성장: EPS 6년치 미만"))
+    e3 = _last(eps, 3)
+    if close and len(e3) == 3 and sum(e3) > 0:
+        pe3 = close / (sum(e3) / 3)
+        g.append(_chk(3 if pe3 <= 15 else 1 if pe3 <= 20 else 0, 3, f"⑥ 적당한 PER: 주가 / 3년 평균 EPS = {pe3:.1f}배 (15배↓)", ok=pe3 <= 15))
+    elif per:
+        g.append(_chk(3 if per <= 15 else 1 if per <= 20 else 0, 3, f"⑥ 적당한 PER: {per:.1f}배 (15배↓ · 3년 평균 EPS 없어 현재 PER로)", ok=per <= 15))
+    else:
+        g.append(_chk(0, 3, "⑥ PER: 적자이거나 데이터 없음", ok=False if pbr else None))
+    if pbr and per and per > 0:
+        gn = per * pbr
+        ok = pbr <= 1.5 or gn <= 22.5
+        g.append(_chk(2 if ok else 0, 2, f"⑦ 적당한 PBR: {pbr:.2f}배 · PER×PBR {gn:.1f} (PBR 1.5↓ 또는 22.5↓)", ok=ok))
+    elif pbr:
+        g.append(_chk(2 if pbr <= 1.5 else 0, 2, f"⑦ 적당한 PBR: {pbr:.2f}배 (1.5↓)", ok=pbr <= 1.5))
+    else:
+        g.append(_chk(0, 2, "⑦ PBR 데이터 없음"))
+    ca, li = _lastv(F["ca"]), _lastv(F["liab"])
+    if mcap_eok and ca is not None and li is not None and not fin_co and ca - li > 0 and mcap_eok < (ca - li) * 2 / 3:
+        g.append(_chk(0, 0, f"💎 넷넷(15장): 시총 {mcap_eok:,.0f}억 < 순유동자산(유동자산−부채) {ca - li:,.0f}억의 2/3 — 그레이엄의 '헐값' 종목", ok=True))
+    H["graham"] = g
+    T["graham"] = ["시장(미스터 마켓)의 기분에 휩쓸리지 않고 가격이 가치보다 충분히 쌀 때만 사는가(안전마진)",
+                   "한 종목에 몰지 않고 10~30종목으로 나눴는가(방어적 투자자)"]
+    graham_fail = bool(N and any(v <= 0 for v in _last(ni, 10))) or bool(debt and not fin_co and debt[-1] >= 200)
+
+    # 🏰 버핏 — 버크셔 인수 기준(연차보고서) · 주주서한의 '높은 ROE·적은 부채·현금 창출·적당한 가격'
+    b = []
+    nn = _last(ni, 10)
+    if len(nn) >= 3:
+        pos = all(v > 0 for v in nn)
+        drops = sum(1 for a_, b_ in zip(nn, nn[1:]) if a_ > 0 and b_ < a_ * 0.5)
+        pts = 4 if pos and not drops else 2 if pos else 0
+        b.append(_chk(pts, 4, f"꾸준한 수익력: 최근 {len(nn)}년 {'모두 흑자' if pos else '적자 있음'}" + (f" · 이익 반토막 {drops}번" if drops else " · 급감 없음") + " (턴어라운드 X)", ok=pos and not drops))
+    else:
+        b.append(_chk(0, 4, "꾸준한 수익력: 3년치 미만"))
+    rr = _last(roe, 10)
+    if rr:
+        b.append(_chk(5 if roe_avg >= 15 else 3 if roe_avg >= 12 else 1 if roe_avg >= 8 else 0, 5, f"높은 ROE: 평균 {roe_avg:.1f}% (최근 {len(rr)}년, 15%↑)", ok=roe_avg >= 15))
+        if len(rr) >= 3:
+            mn = min(rr)
+            b.append(_chk(3 if mn >= 12 else 1.5 if mn >= 7 else 0, 3, f"꾸준한 ROE: 가장 나빴던 해 {mn:.1f}% (12%↑)", ok=mn >= 12))
+        else:
+            b.append(_chk(0, 3, f"꾸준한 ROE: {len(rr)}년치뿐 — 판단 불가(반만 인정)"))
+    else:
+        b += [_chk(0, 5, "ROE 데이터 없음"), _chk(0, 3, "ROE 데이터 없음")]
+    if fin_co:
+        b.append(_chk(0, 3, "적은 부채: 금융업 — 기준 제외", na=True))
+    elif debt:
+        nc = _lastv(F["netcash"])
+        dv = debt[-1]
+        pts = 3 if dv <= 50 or (nc is not None and nc > 0) else 2 if dv <= 100 else 1 if dv <= 150 else 0
+        b.append(_chk(pts, 3, f"적은 부채: 부채비율 {dv:.0f}%" + (f" · 순현금 {nc:,.0f}{'' if F['us'] else '억'}" if nc is not None and nc > 0 else "") + " (빚 없이 높은 ROE)", ok=pts >= 2))
+    else:
+        b.append(_chk(0, 3, "적은 부채: 데이터 없음"))
+    fc, nq = _last(F["fcf"], 5), _last(ni, 5)
+    if len(fc) >= 3 and len(nq) >= 3 and sum(nq[-len(fc):]) > 0:
+        conv = sum(fc) / sum(nq[-len(fc):])
+        b.append(_chk(2 if conv >= 0.8 else 1 if conv >= 0.5 else 0, 2, f"주주 이익(현금 전환): {len(fc)}년 FCF/순이익 {conv * 100:.0f}% (80%↑면 이익이 진짜 현금)", ok=conv >= 0.8))
+    else:
+        b.append(_chk(0, 2, "주주 이익(FCF): 데이터 없음"))
+    if per is not None and per > 0:
+        b.append(_chk(3 if per <= 15 else 1.5 if per <= 22 else 0, 3, f"적당한 가격: PER {per:.1f}배 = 이익수익률 {100 / per:.1f}% (15배↓ 적당 · 22배↑ 비쌈)", ok=per <= 22))
     elif per is not None:
-        b.append(_chk(0, 4, "적자(PER 음수) — 버핏은 사지 않음", ok=False))
+        b.append(_chk(0, 3, "적당한 가격: 적자 — 버핏은 사지 않음", ok=False))
     else:
-        b.append(_chk(0, 4, "PER 없음"))
+        b.append(_chk(0, 3, "가격: PER 없음"))
     H["buffett"] = b
+    T["buffett"] = ["사업이 단순해서 10년 뒤 모습을 그릴 수 있는가(능력의 범위)", "가격을 올려도 고객이 떠나지 않는 해자가 있는가",
+                    "경영진이 정직하고 남는 돈을 주주에게 이롭게 쓰는가(자본 배분)", "10년 동안 주식시장이 문을 닫아도 들고 있을 수 있는가"]
 
-    # 🌱 피셔
+    # 🌱 피셔 — 『위대한 기업에 투자하라』 15가지 포인트 중 숫자로 볼 수 있는 것
     f = []
-    sg = _cagr(sales[0], sales[-1], len(sales) - 1) if len(sales) >= 3 else None
+    sv = _last(sales, 6)
+    sg = _cagr(sv[0], sv[-1], len(sv) - 1) if len(sv) >= 3 else None
     if sg is not None:
-        f.append(_chk(7 if sg >= 0.10 else 4 if sg >= 0.05 else 2 if sg > 0 else 0, 7,
-                      f"매출 연평균 성장 {sg * 100:+.1f}% ({len(sales) - 1}년, 10%↑ 목표)", ok=sg >= 0.10))
+        f.append(_chk(5 if sg >= 0.10 else 3 if sg >= 0.05 else 1 if sg > 0 else 0, 5, f"①② 매출 성장: 연평균 {sg * 100:+.1f}% ({len(sv) - 1}년, 10%↑)", ok=sg >= 0.10))
     else:
-        f.append(_chk(0, 7, "매출 성장 계산 불가(3년치 미만·적자)"))
-    og = _cagr(op[0], op[-1], len(op) - 1) if len(op) >= 3 else None
-    if len(op) >= 3:
-        pts = 5 if (og or 0) >= 0.12 else 3 if (og or 0) >= 0.05 else 1 if op[-1] > op[0] > 0 else 0
-        f.append(_chk(pts, 5, f"영업이익 {op[0]:,.0f} → {op[-1]:,.0f}{'' if us else '억'}" + (f" (연 {og * 100:+.0f}%, 12%↑ 목표)" if og is not None else " (적자 구간 포함)"), ok=(og or 0) >= 0.12))
+        f.append(_chk(0, 5, "①② 매출 성장: 3년치 미만"))
+    ov = _last(op, 6)
+    og = _cagr(ov[0], ov[-1], len(ov) - 1) if len(ov) >= 3 else None
+    if len(ov) >= 3:
+        pts = 4 if (og or 0) >= 0.12 else 2 if (og or 0) >= 0.05 else 0.5 if ov[-1] > ov[0] > 0 else 0
+        f.append(_chk(pts, 4, f"이익 성장: 영업이익 {ov[0]:,.0f} → {ov[-1]:,.0f}" + (f" (연 {og * 100:+.0f}%, 12%↑)" if og is not None else " (적자 구간 포함)"), ok=(og or 0) >= 0.12))
     else:
-        f.append(_chk(0, 5, "영업이익 3년치 미만"))
-    if len(opm) >= 3 and not fin_co:
-        imp = opm[-1] >= sum(opm[:-1]) / len(opm[:-1])
-        f.append(_chk(4 if imp else 0, 4, f"최근 영업이익률 {opm[-1]:.1f}% vs 이전 평균 {sum(opm[:-1]) / len(opm[:-1]):.1f}%", ok=imp))
-    else:
-        f.append(_chk(0, 4, "이익률 개선 판단 불가"))
-    if eps_est and eps and eps[-1] > 0:
-        up = eps_est[0] / eps[-1] - 1
-        f.append(_chk(4 if up >= 0.05 else 2 if up >= 0 else 0, 4, f"증권사 추정 다음 해 EPS {up * 100:+.0f}%", ok=up >= 0.05))
-    else:
-        f.append(_chk(0, 4, "EPS 추정치 없음"))
-    H["fisher"] = f
-
-    # 🔎 린치
-    l = []
-    gr = None
-    if len(eps) >= 3 and eps[0] > 0 and eps[-1] > 0:
-        gr = _cagr(eps[0], eps[-1], len(eps) - 1)
-    elif eps_est and eps and eps[-1] > 0:
-        gr = eps_est[0] / eps[-1] - 1
-    elif len(ni) >= 3 and ni[0] > 0 and ni[-1] > 0:
-        gr = _cagr(ni[0], ni[-1], len(ni) - 1)
-    if per and per > 0 and gr is not None:
-        if gr > 0:
-            peg = per / (gr * 100)
-            l.append(_chk(8 if peg <= 1 else 4 if peg <= 1.5 else 0, 8, f"PEG {peg:.2f} = PER {per:.1f} ÷ 이익성장 {gr * 100:.1f}% (1 이하면 싸다)", ok=peg <= 1))
+        f.append(_chk(0, 4, "이익 성장: 3년치 미만"))
+    om = _last(opm, 6)
+    if fin_co:
+        f += [_chk(0, 3, "⑤ 이익률: 금융업 — 제외", na=True), _chk(0, 3, "⑥ 이익률 개선: 금융업 — 제외", na=True)]
+    elif om:
+        oa = sum(om) / len(om)
+        f.append(_chk(3 if oa >= 15 else 1.5 if oa >= 8 else 0, 3, f"⑤ 높은 이익률: 영업이익률 평균 {oa:.1f}% (15%↑)", ok=oa >= 15))
+        if len(om) >= 3:
+            prev = sum(om[:-2]) / len(om[:-2]) if len(om) > 2 else om[0]
+            recent = sum(om[-2:]) / 2
+            imp = recent >= prev + 0.5
+            f.append(_chk(3 if imp else 1.5 if recent >= prev - 1 else 0, 3, f"⑥ 이익률 개선: 최근 2년 {recent:.1f}% vs 이전 {prev:.1f}%", ok=imp))
         else:
-            l.append(_chk(0, 8, f"이익 성장 {gr * 100:+.1f}% — PEG 의미 없음", ok=False))
-        lr = (max(gr, 0) * 100 + (dy or 0)) / per
-        l.append(_chk(6 if lr >= 2 else 3 if lr >= 1.5 else 0, 6, f"(성장률+배당수익률)/PER = {lr:.2f} (2 이상이면 매력, 1 미만 비쌈)", ok=lr >= 2))
+            f.append(_chk(0, 3, "⑥ 이익률 개선: 3년치 미만"))
     else:
-        loss = bool(ni) and ni[-1] <= 0
-        l += [_chk(0, 8, "적자 — PEG 계산 불가", ok=False) if loss else _chk(0, 8, "PER 또는 이익 성장 데이터 없음"),
-              _chk(0, 6, "적자 — 린치 비율 계산 불가", ok=False) if loss else _chk(0, 6, "린치 비율 계산 불가")]
-    if per and per > 0:
-        l.append(_chk(3 if per <= 20 else 1 if per <= 30 else 0, 3, f"PER {per:.1f}배 (20 이하 적당)", ok=per <= 20))
+        f += [_chk(0, 3, "⑤ 이익률 데이터 없음"), _chk(0, 3, "⑥ 이익률 데이터 없음")]
+    sh = [x for x in _last(F["shares"], 6) if x]
+    if len(sh) >= 3:
+        dil = sh[-1] / sh[0] - 1
+        f.append(_chk(3 if dil <= 0.02 else 1 if dil <= 0.10 else 0, 3, f"⑬ 희석 없음: 주식 수 {dil * 100:+.0f}% ({len(sh)}년, 2%↓)", ok=dil <= 0.02))
     else:
-        l.append(_chk(0, 3, "PER 없음"))
+        f.append(_chk(0, 3, "⑬ 희석: 주식 수 데이터 없음"))
+    ee = F["eps_est"]
+    if ee and eps and eps[-1] and eps[-1] > 0:
+        up = ee[0] / eps[-1] - 1
+        f.append(_chk(2 if up >= 0.05 else 1 if up >= 0 else 0, 2, f"①앞으로의 성장: 증권사 추정 다음 해 EPS {up * 100:+.0f}%", ok=up >= 0.05))
+    else:
+        f.append(_chk(0, 2, "앞으로의 성장: EPS 추정치 없음"))
+    H["fisher"] = f
+    T["fisher"] = ["③ 매출을 키울 연구개발·신제품이 계속 나오는가", "④ 영업 조직이 강한가", "⑦⑧ 노사·임원 관계가 좋은가",
+                   "⑪ 경쟁사보다 뛰어난 점이 분명한가", "⑫ 경영진이 단기 실적보다 장기를 보는가", "⑭ 나쁜 소식도 솔직하게 말하는가", "⑮ 경영진이 정직한가 (주변 취재 '사실 수집')"]
+
+    # 🔎 린치 — 『전설로 떠나는 월가의 영웅』 PEG · 배당 조정 · 재무 · 재고 · 순현금 · 자사주 · 크기
+    l = []
+    en = [x for x in _last(eps, 4) if x is not None]
+    ng = _cagr(en[0], en[-1], len(en) - 1) if len(en) >= 3 and en[0] > 0 and en[-1] > 0 else None
+    if ng is None:
+        nv = _last(ni, 4)
+        ng = _cagr(nv[0], nv[-1], len(nv) - 1) if len(nv) >= 3 else None
+    if per and per > 0 and ng and ng > 0:
+        peg = per / (ng * 100)
+        l.append(_chk(5 if peg <= 0.5 else 3.5 if peg <= 1 else 1.5 if peg <= 1.5 else 0, 5, f"PEG {peg:.2f} = PER {per:.1f} ÷ 이익성장 {ng * 100:.0f}% (1↓ 싸다 · 0.5↓ 아주 싸다)", ok=peg <= 1))
+        ad = (ng * 100 + (dy or 0)) / per
+        l.append(_chk(3 if ad >= 2 else 2 if ad >= 1.5 else 1 if ad >= 1 else 0, 3, f"(성장률+배당수익률)/PER = {ad:.2f} (2↑ 매력 · 1↓ 비쌈)", ok=ad >= 1.5))
+        gtxt = "적당(15~30%)" if 0.15 <= ng <= 0.30 else "너무 빠름 — 오래 못 감" if ng > 0.5 else "빠른 편" if ng > 0.30 else "느린 편"
+        l.append(_chk(2 if 0.15 <= ng <= 0.30 else 1 if 0.10 <= ng <= 0.50 else 0, 2, f"성장 속도: 연 {ng * 100:.0f}% {gtxt}", ok=0.15 <= ng <= 0.30))
+    elif per and per > 0:
+        l += [_chk(0, 5, f"PEG: 이익이 줄어 계산 불가 (PER {per:.1f})", ok=False), _chk(0, 3, "(성장+배당)/PER: 성장 없음", ok=(dy or 0) / per >= 1 if dy else False),
+              _chk(0, 2, "성장 속도: 감소", ok=False)]
+    else:
+        l += [_chk(0, 5, "PEG: 적자·데이터 없음", ok=False if per is not None else None), _chk(0, 3, "(성장+배당)/PER 계산 불가"), _chk(0, 2, "성장 속도 데이터 없음")]
+    if fin_co:
+        l.append(_chk(0, 3, "재무: 금융업 — 제외", na=True))
+    elif debt:
+        dv = debt[-1]
+        l.append(_chk(3 if dv <= 50 else 2 if dv <= 100 else 0, 3, f"재무: 부채비율 {dv:.0f}% (린치: 빚이 적어야 불황을 견딤)", ok=dv <= 100))
+    else:
+        l.append(_chk(0, 3, "재무 데이터 없음"))
+    nc = _lastv(F["netcash"])
+    if nc is not None and mcap_eok:
+        ncx = nc if not F["us"] else None
+        if ncx is not None:
+            r_ = ncx / mcap_eok
+            l.append(_chk(2 if r_ >= 0.3 else 1 if r_ >= 0.1 else 0, 2, f"순현금 = 시총의 {r_ * 100:.0f}% (많을수록 주가 바닥이 단단)", ok=r_ >= 0.1))
+        else:
+            l.append(_chk(0, 2, "순현금 비교: 해외 종목 단위 달라 제외", na=True))
+    else:
+        l.append(_chk(0, 2, "순현금 데이터 없음"))
+    iv, sv2 = _last(F["inv"], 2), _last(sales, 2)
+    if len(iv) == 2 and len(sv2) == 2 and iv[0] and sv2[0]:
+        ig, sg2 = iv[1] / iv[0] - 1, sv2[1] / sv2[0] - 1
+        ok = ig <= sg2 + 0.05
+        l.append(_chk(2 if ok else 0, 2, f"재고: 재고 {ig * 100:+.0f}% vs 매출 {sg2 * 100:+.0f}% (재고가 매출보다 빨리 쌓이면 경고)", ok=ok))
+    elif F["inv"] and not any(F["inv"]):
+        l.append(_chk(0, 2, "재고: 재고 없는 사업", na=True))
+    else:
+        l.append(_chk(0, 2, "재고 데이터 없음"))
     if mcap_eok:
         small = mcap_eok < 100000
-        l.append(_chk(3 if small else 1, 3, f"시가총액 {mcap_eok / 10000:.1f}조 " + ("(린치가 좋아한 중소형 — 더 클 여지)" if small else "(대형 — 큰 폭 상승은 어려움)"), ok=small))
+        l.append(_chk(3 if mcap_eok < 30000 else 2 if small else 0.5, 3, f"크기: 시총 {mcap_eok / 10000:.1f}조 " + ("(중소형 — 10루타 여지)" if small else "(대형 — 큰 폭 상승은 어려움)"), ok=small))
     else:
-        l.append(_chk(0, 3, "시가총액 데이터 없음"))
+        l.append(_chk(0, 3, "크기: 시총 데이터 없음"))
     H["lynch"] = l
+    T["lynch"] = ["이 회사가 왜 오를지 두 문장으로 말할 수 있는가(2분 연설)", "내가 일상·업무에서 직접 써 보고 아는 회사인가",
+                  "지루하거나 사람들이 꺼리는 업종이라 아직 덜 알려졌는가", "'다각화'라는 이름으로 엉뚱한 사업을 사들이고 있지 않은가", "내부자(임원)가 사고 있는가"]
 
-    # 🎯 애크먼
+    # 🎯 애크먼 — 퍼싱스퀘어 투자 원칙: 단순·예측 가능·FCF 창출 · 진입장벽 · 높은 자본수익 · 튼튼한 재무 · 매력적 가격 · 촉매
     a = []
-    if has_filings:
-        tags = [x.get("tag") for x in filings]
+    fc5 = _last(F["fcf"], 5)
+    if len(fc5) >= 3:
+        npos = sum(1 for v in fc5 if v > 0)
+        a.append(_chk(4 if npos == len(fc5) else 2 if npos >= len(fc5) - 1 else 0, 4, f"FCF 창출: 최근 {len(fc5)}년 중 {npos}년 플러스", ok=npos == len(fc5)))
+    else:
+        a.append(_chk(0, 4, "FCF: 데이터 없음"))
+    rv = _last(sales, 6)
+    if len(rv) >= 4:
+        falls = sum(1 for a_, b_ in zip(rv, rv[1:]) if a_ and b_ < a_ * 0.9)
+        a.append(_chk(3 if not falls else 1.5 if falls == 1 else 0, 3, f"예측 가능성: {len(rv)}년간 매출 10%↑ 감소 {falls}번 (경기 영향 적을수록)", ok=not falls))
+    else:
+        a.append(_chk(0, 3, "예측 가능성: 매출 4년치 미만"))
+    if fin_co:
+        a.append(_chk(0, 3, "진입장벽(이익률): 금융업 — 제외", na=True))
+    elif len(om) >= 3:
+        oa, rg = sum(om) / len(om), max(om) - min(om)
+        pts = 3 if oa >= 15 and rg <= 7 else 1.5 if oa >= 10 else 0
+        a.append(_chk(pts, 3, f"진입장벽·자본수익: 영업이익률 평균 {oa:.1f}%·변동 {rg:.1f}%p" + (f" · ROE {roe_avg:.0f}%" if roe_avg is not None else ""), ok=pts >= 3))
+    else:
+        a.append(_chk(0, 3, "진입장벽: 이익률 3년치 미만"))
+    nc, opl = _lastv(F["netcash"]), _lastv(op)
+    if fin_co:
+        a.append(_chk(0, 3, "재무(레버리지): 금융업 — 제외", na=True))
+    elif nc is not None and opl:
+        lev = -nc / opl if nc < 0 else 0
+        a.append(_chk(3 if nc >= 0 else 1.5 if lev <= 3 else 0, 3, "튼튼한 재무: " + ("순현금" if nc >= 0 else f"순차입 = 영업이익의 {lev:.1f}배") + " (빚 적게)", ok=nc >= 0 or lev <= 3))
+    elif debt:
+        a.append(_chk(3 if debt[-1] <= 80 else 1.5 if debt[-1] <= 150 else 0, 3, f"튼튼한 재무: 부채비율 {debt[-1]:.0f}%", ok=debt[-1] <= 150))
+    else:
+        a.append(_chk(0, 3, "재무 데이터 없음"))
+    fl = _lastv(F["fcf"])
+    if fl is not None and mcap_eok and not F["us"]:
+        fy = fl / mcap_eok * 100
+        a.append(_chk(4 if fy >= 6 else 2.5 if fy >= 4 else 1 if fy >= 2 else 0, 4, f"매력적 가격: FCF 수익률 {fy:.1f}% (6%↑)", ok=fy >= 4))
+    elif per and per > 0:
+        a.append(_chk(4 if per <= 15 else 2 if per <= 22 else 0, 4, f"매력적 가격: PER {per:.1f}배 (FCF 수익률 대신)", ok=per <= 22))
+    else:
+        a.append(_chk(0, 4, "가격: 데이터 없음"))
+    filings = d.get("filings")
+    has_f = (not F["us"]) and filings is not None and d.get("filings_ok", True)
+    if has_f:
         ret = [x for x in filings if x.get("tag") in ("자사주", "배당")]
-        a.append(_chk(6 if ret else 0, 6, f"최근 120일 주주환원 공시 {len(ret)}건" + (f" ({ret[0]['title'][:24]})" if ret else ""), ok=bool(ret)))
-        dil = sum(1 for t in tags if t == "증자·CB")
-        a.append(_chk(4 if not dil else 0, 4, "최근 120일 증자·CB(희석) 공시 없음" if not dil else f"증자·CB 공시 {dil}건 — 희석 위험", ok=not dil))
+        dil = sum(1 for x in filings if x.get("tag") == "증자·CB")
+        gap = bool(pbr and pbr < 1 and (roe_avg or 0) >= 8)
+        pts = (2 if ret else 0) + (1 if gap else 0) - (2 if dil else 0)
+        a.append(_chk(max(0, pts), 3, "촉매: " + (f"주주환원 공시 {len(ret)}건" if ret else "주주환원 공시 없음") + (" · PBR<1인데 ROE 8%↑(재평가 여지)" if gap else "") + (f" · 희석 공시 {dil}건" if dil else ""), ok=pts >= 2))
     else:
-        reason = "해외 종목 — DART 공시 기준 제외" if us else "공시 데이터 없음(DART 키 확인)"
-        a += [_chk(0, 6, reason, na=us), _chk(0, 4, reason, na=us)]
-    if pbr and roe_avg is not None:
-        if pbr < 1 and roe_avg >= 8:
-            a.append(_chk(5, 5, f"PBR {pbr:.2f} < 1인데 ROE {roe_avg:.0f}% — 재평가 여지 큼", ok=True))
-        elif pbr < 1.5 and roe_avg >= 12:
-            a.append(_chk(3, 5, f"PBR {pbr:.2f} · ROE {roe_avg:.0f}% — 재평가 여지 있음", ok=True))
+        tgt = F["target"]
+        if tgt and close:
+            upx = tgt / close - 1
+            a.append(_chk(3 if upx >= 0.2 else 1 if upx >= 0.05 else 0, 3, f"촉매(대신 목표가 여력): {upx * 100:+.0f}% — 해외는 공시 없음", ok=upx >= 0.2))
         else:
-            a.append(_chk(0, 5, f"PBR {pbr:.2f} · ROE {roe_avg:.0f}% — 할인 해소형 아님", ok=False))
-    else:
-        a.append(_chk(0, 5, "PBR·ROE 데이터 없음"))
-    if dy is not None:
-        a.append(_chk(2 if dy >= 2 else 0, 2, f"배당수익률 {dy:.2f}% (2%↑)", ok=dy >= 2))
-    else:
-        a.append(_chk(0, 2, "배당 데이터 없음"))
-    tgt, close = P.get("target"), (d.get("tech") or {}).get("close") or d.get("close")
-    if _ok(tgt) and _ok(close) and close:
-        upx = tgt / close - 1
-        a.append(_chk(3 if upx >= 0.2 else 1 if upx >= 0.05 else 0, 3, f"증권사 목표가 여력 {upx * 100:+.0f}%", ok=upx >= 0.2))
-    else:
-        a.append(_chk(0, 3, "목표가 없음"))
+            a.append(_chk(0, 3, "촉매: 공시·목표가 없음", na=F["us"]))
     H["ackman"] = a
+    T["ackman"] = ["시장 1등이라 가격을 정할 수 있는가(지배적 위치)", "금리·원자재·규제처럼 통제 못 하는 위험에 덜 노출됐는가",
+                   "가치가 드러날 계기(구조조정·분할·경영진 교체·자사주)가 보이는가", "경영진과 지배구조가 주주 편인가"]
 
     # 합계
     heroes, got, mx_all, av_all = [], 0, 0, 0
@@ -289,12 +445,12 @@ def score(d: dict) -> dict:
         p, m = sum(c["pts"] for c in ev), sum(c["max"] for c in ev)
         mm = sum(c["max"] for c in miss)
         if m == 0:                                    # 판단할 데이터가 하나도 없으면 점수 없음
-            heroes.append({"key": key, "name": name, "icon": icon, "theme": theme, "motto": motto, "score": None, "coverage": 0, "checks": cs})
+            heroes.append({"key": key, "name": name, "icon": icon, "theme": theme, "motto": motto, "score": None, "coverage": 0, "checks": cs, "todo": T.get(key, [])})
             continue
         p2, m2 = p + 0.5 * mm, m + mm                 # 데이터 없는 항목은 반만 인정
         got, mx_all, av_all = got + p2, mx_all + m2, av_all + m
         heroes.append({"key": key, "name": name, "icon": icon, "theme": theme, "motto": motto,
-                       "score": round(p2 / m2 * 20, 1), "coverage": round(m / m2, 2), "checks": cs})
+                       "score": round(p2 / m2 * 20, 1), "coverage": round(m / m2, 2), "checks": cs, "todo": T.get(key, [])})
     total = round(got / mx_all * 100, 1) if mx_all else None
     coverage = av_all / mx_all if mx_all else 0        # 해당 기준 중 실제 데이터가 있는 비율
     if graham_fail and (total is None or coverage < 0.5):
@@ -317,7 +473,7 @@ def score(d: dict) -> dict:
     elif pr >= 28 and q < 16:
         note = "🛡️ 싸지만 품질이 약함 → 핵심이 아닌 위성(자산주)으로만, 가치에 닿으면 매도"
     cat = lynch_category(sales, op, ni, pbr, dy, mcap_eok, roe_avg)
-    return {"total": total, "coverage": round(coverage, 2), "grade": grade, "note": note, "heroes": heroes,
+    return {"total": total, "coverage": round(coverage, 2), "grade": grade, "note": note, "heroes": heroes, "src": F["src"],
             "lynch_cat": cat, "lynch_sell": LYNCH_SELL.get(cat), "fin_co": fin_co}
 
 
@@ -356,13 +512,20 @@ def light(code: str, name: str | None = None, corp_code: str | None = None) -> d
             filings, fok = si.kr_filings(corp_code), True
     except Exception:
         pass
+    dart = None
+    try:                                              # DART 10년 재무(한 번 받으면 디스크에 저장돼서 다음부턴 빠름)
+        if corp_code and (os.environ.get("DART_API_KEY") or os.environ.get("DART_KEY")):
+            import dart_fin
+            dart = dart_fin.build(corp_code)
+    except Exception:
+        dart = None
     close = None
     try:                                              # 종가: 네이버 integration 에는 없어서 연간 재무 대신 목표가 여력용으로만 씀
         close = si.num((si._get(f"{si.NAVER}/{code}/basic").json() or {}).get("closePrice"))
     except Exception:
         pass
     return {"us": False, "code": code, "name": prof.get("name") or name or code, "profile": prof,
-            "finance": {"annual": fa}, "filings": filings, "filings_ok": fok, "close": close}
+            "finance": {"annual": fa}, "filings": filings, "filings_ok": fok, "close": close, "dart": dart}
 
 
 # ── 해외 시장별 후보 (발굴 › 대가 › 국가 탭) — 대표 우량주 + 가치·배당주 + 애크먼 계열 ─────────

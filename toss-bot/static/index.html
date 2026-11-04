@@ -465,8 +465,10 @@ function heroCard(a) {
       <div class="small" style="margin-top:6px">🔎 린치 분류: <b>${esc(H.lynch_cat)}</b> <span class="mut">· 매도 기준: ${esc(H.lynch_sell || "")}</span></div></div>
     ${H.heroes.map(h => `<div class="hero"><div class="hd"><span><b>${h.icon} ${esc(h.name)}</b> <span class="tiny mut">${esc(h.theme)}</span></span>
         <span class="name">${h.score == null ? "-" : h.score}<span class="tiny mut">/20</span></span></div>
-      ${h.checks.map(c => `<div class="ck ${c.ok == null ? "mut" : ""}">${c.ok === true ? "✅" : c.ok === false ? "❌" : "·"} ${esc(c.text)}</div>`).join("")}</div>`).join("")}
-    <div class="tiny mut" style="margin-top:10px">데이터 반영률 ${Math.round((H.coverage || 0) * 100)}% · 연간 재무(네이버)·공시(DART) 기준의 기계적 채점 — 산 이유는 직접 두 문장으로 적어 보세요</div></div>`;
+      <div class="tiny mut" style="margin:2px 0 4px">${esc(h.motto || "")}</div>
+      ${h.checks.filter(c => !c.na).map(c => `<div class="ck ${c.ok == null ? "mut" : ""}">${c.ok === true ? "✅" : c.ok === false ? "❌" : "·"} ${esc(c.text)}</div>`).join("")}
+      ${(h.todo || []).length ? `<details style="margin-top:4px"><summary class="tiny">📝 숫자로 못 보는 것 — 직접 확인 ${h.todo.length}가지</summary>${h.todo.map(t => `<div class="ck mut">☐ ${esc(t)}</div>`).join("")}</details>` : ""}</div>`).join("")}
+    <div class="tiny mut" style="margin-top:10px">데이터 반영률 ${Math.round((H.coverage || 0) * 100)}% · ${H.src === "dart" ? "DART 사업보고서 최대 10년" : "연간 재무 최근 4년(네이버·야후)"} 기준 · 데이터 없는 항목은 반만 인정 · 기계적 채점이라 산 이유는 직접 두 문장으로 적어 보세요</div></div>`;
 }
 
 function detRow(x) {

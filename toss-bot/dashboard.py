@@ -687,9 +687,20 @@ def stock_detail(q, us_hint=None):
         with _lock:
             _cache.pop(key, None)
         return out
-    try:                                          # 🏛️ 대가 5인 체크 (이미 받은 데이터로 계산 — 추가 요청 없음)
+    try:                                          # 🏛️ 대가 5인 체크 — 한국은 DART 10년 재무로 (처음엔 받는 데 시간이 걸려 8초까지만 기다림)
         import heroes
-        out = {**out, "heroes": heroes.score(out)}
+        dd = None
+        if not it.get("us") and it.get("corp_code"):
+            from concurrent.futures import ThreadPoolExecutor, TimeoutError as TE
+            import dart_fin
+            ex = ThreadPoolExecutor(1)
+            fut = ex.submit(dart_fin.build, it["corp_code"])
+            try:
+                dd = fut.result(timeout=8)
+            except TE:
+                dd = None                          # 백그라운드에서 계속 받음 → 다음에 열면 10년 기준
+            ex.shutdown(wait=False)
+        out = {**out, "heroes": heroes.score({**out, "dart": dd})}
     except Exception as e:
         out = {**out, "heroes": {"error": f"{type(e).__name__}: {str(e)[:120]}"}}
     # 어느 목록에 들어 있는지 표시 (보유·후보·20선·애크먼)
