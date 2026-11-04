@@ -5,7 +5,7 @@
   선택: .env 에 DASH_PASSWORD=... 를 넣으면 접속 시 비밀번호(아이디는 아무거나)를 물어봄
 
 투자 원칙: 장기 9 : 단기 1 (단기는 최대 2) — 홈 '장기·단기 비율' 카드, 발굴 '🏛️ 영웅' 목록, 종목 상세 '영웅 체크'
-            (아빠·그레이엄·버핏·피셔·린치·애크먼 기준, chartpage/heroes.py)
+            (그레이엄·버핏·피셔·린치·애크먼 기준, chartpage/heroes.py)
 보여주는 것: 운용 모드·긴급정지, 한국/미국 전략 평가·수익 곡선, 보유 종목(토스 실시간가), 시가 예약·매도 예정,
             최근 자사주 공시 감지, 청산 내역, 나스닥 200일선·목표 레버리지, 실제 토스 계좌 잔고
 할 수 있는 것: 긴급 정지 켜기/끄기 (실전 전환은 안전을 위해 서버 명령으로만)
@@ -426,7 +426,44 @@ def picks_surge(date=None):
         ctx = {}
     return {"kind": "surge", "date": j["date"], "method": j.get("method"), "n_scored": j.get("n_scored"),
             "items": items, "more": j["candidates"][10:20], "prev": j.get("prev"), "graded": g,
-            "dates": idx, "surgers": surgers, "context": ctx, "live": None if date else _try(intraday_now, None)}
+            "dates": idx, "surgers": surgers, "context": ctx, "live": None if date else _try(intraday_now, None),
+            "morning": None if date else _try(lambda: cached("us_overnight", 3600, us_overnight), None)}
+
+
+def us_overnight():
+    """🌅 밤사이 미국 동종 3사(us_peers.json) 수익률 → 오늘 크게 움직일 코스피 대형주
+       백테스트(2022~2026 검증): 동종 3사 평균 +3%↑면 그날 평균 +1.3%, +5%↑면 +2.2%(+5%↑ 확률 2.7배) — 대부분 시가 갭에 반영"""
+    import data_sources as ds
+    from concurrent.futures import ThreadPoolExecutor
+    P = json.loads(gh_text("surge-study/data/us_peers.json", ttl=86400))["stocks"]
+    syms = sorted({x for v in P.values() for x in v["peers"]})
+
+    def one(sym):
+        try:
+            df = ds._yahoo(sym, "5d")
+            c = df["close"]
+            return sym, (float(c.iloc[-1] / c.iloc[-2] * 100 - 100), f"{df.index[-1]:%Y-%m-%d}")
+        except Exception:
+            return sym, None
+    with ThreadPoolExecutor(8) as ex:
+        R = {k: v for k, v in ex.map(one, syms) if v}
+    if not R:
+        return {"error": "미국 시세를 못 받음"}
+    us_date = max(v[1] for v in R.values())
+    rows = []
+    for code, v in P.items():
+        rs = [(x, R[x][0]) for x in v["peers"] if x in R and R[x][1] == us_date]
+        if len(rs) < 2:
+            continue
+        avg = sum(r for _, r in rs) / len(rs)
+        cor = sum(v.get("corr") or [0]) / max(1, len(v.get("corr") or []))
+        if cor < 0.12:                             # 연동이 약한 짝은 뺌 (백테스트: 상관 클수록 효과 큼)
+            continue
+        rows.append({"code": code, "name": v["name"], "avg": round(avg, 2), "peers": [[x, round(r, 1)] for x, r in rs],
+                     "link": "강" if cor >= 0.25 else "중" if cor >= 0.17 else "약"})
+    rows.sort(key=lambda x: -x["avg"])
+    return {"us_date": us_date, "up": [x for x in rows if x["avg"] >= 2][:15], "down": [x for x in rows[::-1] if x["avg"] <= -3][:6],
+            "n": len(rows)}
 
 
 def intraday_loop():
@@ -650,7 +687,7 @@ def stock_detail(q, us_hint=None):
         with _lock:
             _cache.pop(key, None)
         return out
-    try:                                          # 🏛️ 영웅 6인 체크 (이미 받은 데이터로 계산 — 추가 요청 없음)
+    try:                                          # 🏛️ 영웅 5인 체크 (이미 받은 데이터로 계산 — 추가 요청 없음)
         import heroes
         out = {**out, "heroes": heroes.score(out)}
     except Exception as e:

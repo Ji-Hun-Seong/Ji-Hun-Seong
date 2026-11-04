@@ -145,7 +145,7 @@ canvas.c-big{max-height:none}
 .mixmk{position:relative;height:14px;font-size:10px;color:var(--sub)}.mixmk span{position:absolute;transform:translateX(-50%);white-space:nowrap}
 .mixmk span::before{content:"";position:absolute;left:50%;top:-22px;height:18px;border-left:1px dashed var(--sub)}
 .st{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px}.st.ok{background:var(--g-bg);color:var(--g-fg)}.st.warn{background:var(--y-bg);color:var(--y-fg)}.st.bad{background:var(--r-bg);color:var(--r-fg)}
-.hbars{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:7px}.hbars div{font-size:10.5px;color:var(--sub);text-align:center}
+.hbars{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:7px}.hbars div{font-size:10.5px;color:var(--sub);text-align:center}
 .hbars i{display:block;height:5px;border-radius:9px;background:var(--line);margin-top:3px;overflow:hidden}.hbars i b{display:block;height:100%;background:var(--blue)}
 .hero{padding:11px 0;border-top:1px solid var(--line)}.hero:first-of-type{border-top:0;padding-top:0}
 .hero .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.hero .ck{font-size:13px;padding:3px 0 0 4px;line-height:1.5}
@@ -453,12 +453,12 @@ function principlesCard(P, heroes, open) {
     ${heroes ? `<div class="tiny mut" style="margin:12px 0 4px">채점 기준 (각 20점)</div><div class="prin">${heroes.map(h => `<div>${h.icon} <b>${esc(h.name)}</b> <em>${esc(h.theme)}</em><br>${esc(h.motto)}</div>`).join("")}</div>` : ""}
   </details></div>`;
 }
-const HKEYS = [["dad", "👨 아빠"], ["graham", "🛡️ 그레이엄"], ["buffett", "🏰 버핏"], ["fisher", "🌱 피셔"], ["lynch", "🔎 린치"], ["ackman", "🎯 애크먼"]];
+const HKEYS = [["graham", "🛡️ 그레이엄"], ["buffett", "🏰 버핏"], ["fisher", "🌱 피셔"], ["lynch", "🔎 린치"], ["ackman", "🎯 애크먼"]];
 const hbars = h => `<div class="hbars">${HKEYS.map(([k, l]) => `<div>${l.split(" ")[1]}<i><b style="width:${h[k] == null ? 0 : h[k] * 5}%"></b></i></div>`).join("")}</div>`;
 function heroCard(a) {
   const H = a.heroes; if (!H) return "";
-  if (H.error) return `<div class="card"><h2>🏛️ 영웅 6인 체크</h2><div class="empty">${esc(H.error)}</div></div>`;
-  return `<div class="card"><div class="row"><h2 style="margin:0">🏛️ 영웅 6인 체크</h2><span><span class="score">${H.total ?? "-"}</span><span class="tiny mut">/100</span></span></div>
+  if (H.error) return `<div class="card"><h2>🏛️ 영웅 5인 체크</h2><div class="empty">${esc(H.error)}</div></div>`;
+  return `<div class="card"><div class="row"><h2 style="margin:0">🏛️ 영웅 5인 체크</h2><span><span class="score">${H.total ?? "-"}</span><span class="tiny mut">/100</span></span></div>
     <div class="grade" style="margin-top:12px"><b>${esc(H.grade.label)}</b><div class="small mut" style="margin-top:4px">${esc(H.grade.desc)}</div>
       ${H.note ? `<div class="small" style="margin-top:6px">${esc(H.note)}</div>` : ""}
       <div class="small" style="margin-top:6px">🔎 린치 분류: <b>${esc(H.lynch_cat)}</b> <span class="mut">· 매도 기준: ${esc(H.lynch_sell || "")}</span></div></div>
@@ -606,7 +606,7 @@ function fomoCard(a) {
   if (!why.length) return "";
   return `<div class="card fomo-alert"><h2>🧘 FOMO 경보 — ${why.join(" · ")}</h2>
     <div class="small">지금 사고 싶은 마음이 든다면 그게 FOMO일 수 있어요.<br>
-    ① 하루 기다리기 ② 왜 더 오를지 두 문장으로 써 보기 ③ 원칙에 맞는 가격(영웅 6인·밸류 기준)인지 확인하기 — 셋 다 통과 못 하면 사지 않기.<br>
+    ① 하루 기다리기 ② 왜 더 오를지 두 문장으로 써 보기 ③ 원칙에 맞는 가격(영웅 5인·밸류 기준)인지 확인하기 — 셋 다 통과 못 하면 사지 않기.<br>
     <b>그리고 어떤 경우에도 대출로 사지 않기.</b></div></div>`;
 }
 
@@ -721,7 +721,7 @@ function ctxCard() {
     <div class="tally" style="margin:-4px 0 8px">${[["value", "밸류"], ["payout", "주주환원"], ["cash", "현금·재무"], ["fit", "내 성향"]].map(([k, l]) => `<span class="tag ${x.scores[k] >= 70 ? "g" : x.scores[k] < 40 ? "r" : ""}">${l} ${x.scores[k]}</span>`).join("")}</div>
     ${x.reasons.map(w => `<div class="small" style="padding:3px 0">✔︎ ${esc(w)}</div>`).join("")}${x.risks.map(w => `<div class="small" style="padding:3px 0;color:var(--r-fg)">⚠︎ ${esc(w)}</div>`).join("")}
     ${x.note ? `<div class="tiny mut" style="margin-top:6px">📝 ${esc(x.note)}</div>` : ""}</div>`;
-  if (c.kind === "hero") return "";                 // 영웅 목록에서 왔으면 아래 '영웅 6인 체크'가 같은 내용
+  if (c.kind === "hero") return "";                 // 영웅 목록에서 왔으면 아래 '영웅 5인 체크'가 같은 내용
   if (c.kind === "ackman" && x.total == null) return "";
   if (c.kind === "ackman") return `<div class="card"><h2>🇺🇸 애크먼 TOP ${x.rank} · ${x.total != null ? x.total + "점" : ""} ${x.status || ""}</h2>
     ${x.fv ? `<div class="small">적정가 <b>${usd(x.fv)}</b> · 매수가 ≤ <b>${usd(x.buy)}</b> · 현재 ${usd(x.price)} <span class="mut">(${esc(x.word || "")})</span></div>` : ""}
@@ -918,8 +918,8 @@ function pRender(d) {
   if (d.kind === "hero") {
     const G = d.grades || {}, f = filt => d.items.filter(x => filt === "all" || x.grade.key === filt);
     const glob = d.market && d.market !== "kr";
-    head = hMktBar() + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 영웅 6인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
-      <div class="small" style="margin-top:6px;line-height:1.6">아빠(매매일지) · 그레이엄(안전마진) · 버핏(해자·ROE) · 피셔(성장) · 린치(성장 대비 가격) · 애크먼(촉매·환원) 각 20점</div>
+    head = hMktBar() + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 영웅 5인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
+      <div class="small" style="margin-top:6px;line-height:1.6">그레이엄(안전마진) · 버핏(해자·ROE) · 피셔(성장) · 린치(성장 대비 가격) · 애크먼(촉매·환원) 각 20점</div>
       <div class="tally"><span class="tag g">🟢 핵심 ${G.core || 0}</span><span class="tag y">🟡 위성 ${G.sat || 0}</span><span class="tag">⚪ 관찰 ${G.watch || 0}</span><span class="tag r">🔴 부적합 ${G.no || 0}</span></div>
       <div class="tiny mut" style="margin-top:8px">${glob ? "후보 = 그 나라 대표 우량주·배당주 (chartpage/heroes.py GLOBAL_POOL) · 야후 재무 기준 — 공시·수급 항목은 채점에서 제외" : "후보 = 내가 아는 회사(toss-bot/heroes_pool.txt) + 가치주 후보 + 📌 내 계좌"} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
     rows = d.items.slice(0, 30).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>${x.held ? " 📌" : ""}
@@ -946,6 +946,14 @@ function pRender(d) {
       <div class="row tiny mut" style="margin-top:3px"><span>${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억${x.ret5 != null ? ` · 5일 <span class="${cls(x.ret5)}">${pct(x.ret5, 0)}</span>` : ""}${x.ret20 != null ? ` · 20일 <span class="${cls(x.ret20)}">${pct(x.ret20, 0)}</span>` : ""}</span></div>
       <div>${x.why.slice(0, 4).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.warn.map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div></div>`).join("");
     if (d.more && d.more.length) rows += `<div class="tiny mut" style="padding-top:12px">11~20위: ${d.more.map((x, j) => `<a ${open(d.items.length + j)} href="javascript:void 0">${esc(x.name)}</a>`).join(" · ")}</div>`;
+    const MO = d.morning;
+    if (MO && !MO.error && (MO.up.length || MO.down.length)) {
+      const pr = x => x.peers.map(([s, r]) => `${s} ${r >= 0 ? "+" : ""}${r}%`).join(" · ");
+      head = `<div class="card"><h2>🌅 밤사이 미국 → 오늘 움직일 대형주 <span class="tiny mut">미국 ${MO.us_date.slice(5)} 마감 기준</span></h2>
+        <div class="tiny mut" style="margin:-6px 0 8px">종목마다 '같이 움직이던' 미국 동종 3사의 밤사이 평균 · 백테스트: +5%↑면 그날 평균 +2.2%(+5% 확률 2.7배) — 대부분 <b>장 시작 갭</b>에서 반영돼서 시가 추격 매수는 이득 없음 🧘</div>
+        ${MO.up.map(x => `<div class="srow small" data-sc="${esc(x.code)}" style="cursor:pointer;align-items:flex-start"><span style="flex:1"><b>${esc(x.name)}</b> <span class="tag ${x.link === "강" ? "b" : ""}">연동 ${x.link}</span><div class="tiny mut">${esc(pr(x))}</div></span><span class="up name">+${x.avg.toFixed(1)}%</span></div>`).join("") || `<div class="empty small">밤사이 +2%↑ 움직인 동종 없음</div>`}
+        ${MO.down.length ? `<div class="tiny mut" style="margin-top:10px">⚠︎ 밤사이 약세: ${MO.down.map(x => `${esc(x.name)} ${x.avg.toFixed(1)}%`).join(" · ")}</div>` : ""}</div>` + head;
+    }
     const LV = d.live;
     if (LV && LV.items && LV.items.length) head = `<div class="card"><h2>📡 지금 움직이는 종목 <span class="tiny mut">${LV.date.slice(5)} ${LV.time} 기준 · 20분마다</span></h2>
       <div class="tiny mut" style="margin:-6px 0 8px">🏢 대형주(시총 5조↑) +4%↑ · 그 외 +10%↑ — 쫓아 사지 말고 '왜 오르는지' 공부용 🧘</div>

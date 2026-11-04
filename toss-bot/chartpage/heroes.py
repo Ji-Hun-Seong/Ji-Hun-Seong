@@ -1,7 +1,6 @@
 """
-heroes.py — '내 주식 영웅 6인(아빠 포함)'의 기준으로 종목을 채점 (장기 투자 판단용)
+heroes.py — '내 주식 영웅 5인'의 기준으로 종목을 채점 (장기 투자 판단용)
 
-  아빠           👨 매매일지 DNA : 저PBR · 배당 · 아빠가 좋아한 유형·업종 · 직접 매매해 본 종목·계열 (value-bot/profile.json)
   벤저민 그레이엄  🛡️ 안전마진   : 흑자 지속 · 부채 · 당좌비율 · 그레이엄 넘버(PER×PBR ≤ 22.5)
   워런 버핏       🏰 해자·ROE   : ROE 수준과 꾸준함 · 영업이익률 수준과 안정성
   필립 피셔       🌱 위대한 기업 : 매출 성장 · 이익 성장 · 이익률 개선 · 앞으로의 성장(컨센서스)
@@ -27,7 +26,6 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 
 HEROES = [
-    ("dad", "아빠", "👨", "매매일지 DNA", "싸게 사서 배당 받으며, 잘 아는 회사를 오래 — 아빠 매매일지에서 배운 것"),
     ("graham", "벤저민 그레이엄", "🛡️", "안전마진", "잃지 않는 것이 먼저 — 흑자·낮은 부채·싼 가격"),
     ("buffett", "워런 버핏", "🏰", "해자·ROE", "훌륭한 기업을 적당한 가격에 — 높고 꾸준한 ROE"),
     ("fisher", "필립 피셔", "🌱", "위대한 기업", "몇 년 더 클 회사를 사서 오래 들고 간다"),
@@ -44,7 +42,6 @@ PRINCIPLES = {
         "FOMO에 흔들리지 않는다 — 이미 급등한 종목은 쫓지 않고 원칙에 맞는 가격까지 기다린다",
     ],
     "rules": [
-        ("아빠", "매매일지", "PBR 낮고 배당 주는 회사를, 아빠가 알고 매매해 본 업종·계열 안에서 고른다"),
         ("린치", "종목 찾기", "생활·업무에서 아는 회사에서 출발하고, 왜 오를지 두 문장으로 말할 수 있어야 산다"),
         ("그레이엄", "거름망", "적자 연도가 있거나 부채비율 200%↑면 장기 바구니에 넣지 않는다"),
         ("버핏·피셔", "품질", "ROE 15%↑를 꾸준히, 매출과 이익이 함께 크는 회사를 고른다"),
@@ -100,83 +97,6 @@ def _chk(pts, mx, text, ok=None):
     return {"pts": pts if ok is not None else 0, "max": mx, "ok": ok, "text": text}
 
 
-# ── 아빠 매매일지 DNA (value-bot/profile.json — 금액 없는 성향 프로필) ───────────
-_DAD = {}
-
-
-def _dad():
-    if "p" in _DAD:
-        return _DAD["p"]
-    import json
-    vb = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "value-bot")
-    p, tax = None, {}
-    try:
-        p = json.load(open(os.path.join(vb, "profile.json"), encoding="utf-8"))
-        sys.path.insert(0, vb)
-        from value_dna import TAXONOMY
-        tax = TAXONOMY
-    except Exception:
-        pass
-    try:                                          # 교훈 종목(가산점 없음): value-bot/dad_exclude.txt
-        ex = {l.strip() for l in open(os.path.join(vb, "dad_exclude.txt"), encoding="utf-8") if l.strip() and not l.startswith("#")}
-    except Exception:
-        ex = set()
-    _DAD["p"] = (p, tax, ex)
-    return _DAD["p"]
-
-
-def _kind_of(name: str) -> str:
-    if re.search(r"홀딩스|지주|인베스트$", name or ""):
-        return "holdco"
-    if re.search(r"(\d?우[A-Z]?|우B)$", name or ""):
-        return "pref"
-    return "operating"
-
-
-def dad_checks(d: dict, pbr, dy) -> list:
-    us = bool(d.get("us"))
-    name = d.get("name") or ""
-    prof, tax, excl = _dad()
-    c = []
-    if pbr is not None:                               # 아빠가 산 종목은 대부분 PBR 1배 미만, 0.5배 아래를 특히 좋아함
-        pts = 6 if pbr <= 0.5 else 4 if pbr <= 0.8 else 2 if pbr <= 1.0 else 0
-        c.append(_chk(pts, 6, f"PBR {pbr:.2f}배 " + ("(아빠가 제일 좋아한 0.5배 아래)" if pbr <= 0.5 else "(싼 편)" if pbr <= 0.8 else "(1배 아래지만 아빠 기준엔 조금 비쌈)" if pbr <= 1.0 else "(아빠 기준엔 비쌈)"), ok=pbr <= 0.8))
-    else:
-        c.append(_chk(0, 6, "PBR 없음"))
-    if dy is not None:
-        c.append(_chk(4 if dy >= 4 else 2 if dy >= 2.5 else 0, 4, f"배당수익률 {dy:.2f}% (아빠 기준 4%↑)", ok=dy >= 2.5))
-    else:
-        c.append(_chk(0, 4, "배당 데이터 없음"))
-    if us or not prof:
-        why = "해외 종목 — 아빠 매매일지 밖" if us else "아빠 성향 프로필(value-bot/profile.json) 없음"
-        return c + [_chk(0, 5, why), _chk(0, 5, why)]
-    t = tax.get(name) or {}
-    g = t.get("group")
-    if name in excl or (g and g in excl) or any(x and x in name for x in excl):
-        return c + [_chk(0, 5, f"{g or name} — 아빠가 시간과 돈을 크게 잃은 교훈 종목 (가산점 없음)", ok=False),
-                    _chk(0, 5, "좋아했던 회사여도 다시 들어가는 이유가 되지 않는다", ok=False)]
-    kind = t.get("kind") or _kind_of(name)
-    ka = (prof.get("kind_aff") or {}).get(kind, 0)
-    sa = (prof.get("sector_aff") or {}).get(t.get("sector")) if t.get("sector") else None
-    KO = {"holdco": "지주사", "pref": "우선주", "operating": "사업회사"}
-    if sa is not None:
-        pts = round(2 * ka + 3 * sa, 1)
-        c.append(_chk(pts, 5, f"{KO[kind]} · {t['sector']} — 아빠 선호도 {round((0.4 * ka + 0.6 * sa) * 100)}%", ok=pts >= 3))
-    else:
-        c.append(_chk(round(5 * ka, 1), 5, f"{KO[kind]} — 아빠가 {'자주' if ka >= 0.8 else '가끔'} 산 유형 (업종 분류 없음)", ok=ka >= 0.8))
-    traded, held = set(prof.get("traded") or []), set(prof.get("holdings") or [])
-    res = (prof.get("group_result") or {}).get(g) if g else None
-    if name in held:
-        c.append(_chk(5, 5, "아빠가 지금도 들고 있는 종목", ok=True))
-    elif name in traded:
-        c.append(_chk(4 if res != -1 else 2, 5, "아빠가 직접 매매해 본 종목" + (" (이 계열에선 손실도 있었음)" if res == -1 else ""), ok=res != -1))
-    elif g and ((prof.get("group_aff") or {}).get(g, 0) > 0.2 or res is not None):
-        c.append(_chk(3 if res != -1 else 1, 5, f"아빠가 매매해 본 {g} 계열" + (" — 손실 본 적 있음" if res == -1 else " — 수익 낸 계열" if res == 1 else ""), ok=res != -1))
-    else:
-        c.append(_chk(0, 5, "아빠 매매일지에 없는 회사·계열", ok=False))
-    return c
-
-
 # ── 5인 채점 ───────────────────────────────────────────
 def score(d: dict) -> dict:
     """d = stock_info 상세(또는 board용 가벼운 dict). 반환: 영웅별 점수·체크·등급·린치 분류"""
@@ -205,7 +125,7 @@ def score(d: dict) -> dict:
     fin_co = bool(debt) and debt[-1] > 500 and (roe_avg or 0) > 0     # 은행·보험·증권: 부채비율이 본업 구조라 평가 제외
     years = max(len(sales), len(ni)) - 1
 
-    H = {"dad": dad_checks(d, pbr, dy)}
+    H = {}
     # 🛡️ 그레이엄
     g = []
     if ni:
