@@ -116,7 +116,11 @@ def _dad():
         tax = TAXONOMY
     except Exception:
         pass
-    _DAD["p"] = (p, tax)
+    try:                                          # 교훈 종목(가산점 없음): value-bot/dad_exclude.txt
+        ex = {l.strip() for l in open(os.path.join(vb, "dad_exclude.txt"), encoding="utf-8") if l.strip() and not l.startswith("#")}
+    except Exception:
+        ex = set()
+    _DAD["p"] = (p, tax, ex)
     return _DAD["p"]
 
 
@@ -131,7 +135,7 @@ def _kind_of(name: str) -> str:
 def dad_checks(d: dict, pbr, dy) -> list:
     us = bool(d.get("us"))
     name = d.get("name") or ""
-    prof, tax = _dad()
+    prof, tax, excl = _dad()
     c = []
     if pbr is not None:                               # 아빠가 산 종목은 대부분 PBR 1배 미만, 0.5배 아래를 특히 좋아함
         pts = 6 if pbr <= 0.5 else 4 if pbr <= 0.8 else 2 if pbr <= 1.0 else 0
@@ -146,6 +150,10 @@ def dad_checks(d: dict, pbr, dy) -> list:
         why = "해외 종목 — 아빠 매매일지 밖" if us else "아빠 성향 프로필(value-bot/profile.json) 없음"
         return c + [_chk(0, 5, why), _chk(0, 5, why)]
     t = tax.get(name) or {}
+    g = t.get("group")
+    if name in excl or (g and g in excl) or any(x and x in name for x in excl):
+        return c + [_chk(0, 5, f"{g or name} — 아빠가 시간과 돈을 크게 잃은 교훈 종목 (가산점 없음)", ok=False),
+                    _chk(0, 5, "좋아했던 회사여도 다시 들어가는 이유가 되지 않는다", ok=False)]
     kind = t.get("kind") or _kind_of(name)
     ka = (prof.get("kind_aff") or {}).get(kind, 0)
     sa = (prof.get("sector_aff") or {}).get(t.get("sector")) if t.get("sector") else None
@@ -156,7 +164,6 @@ def dad_checks(d: dict, pbr, dy) -> list:
     else:
         c.append(_chk(round(5 * ka, 1), 5, f"{KO[kind]} — 아빠가 {'자주' if ka >= 0.8 else '가끔'} 산 유형 (업종 분류 없음)", ok=ka >= 0.8))
     traded, held = set(prof.get("traded") or []), set(prof.get("holdings") or [])
-    g = t.get("group")
     res = (prof.get("group_result") or {}).get(g) if g else None
     if name in held:
         c.append(_chk(5, 5, "아빠가 지금도 들고 있는 종목", ok=True))
