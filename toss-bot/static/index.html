@@ -454,7 +454,8 @@ function principlesCard(P, heroes, open) {
   </details></div>`;
 }
 const HKEYS = [["graham", "🛡️ 그레이엄"], ["buffett", "🏰 버핏"], ["fisher", "🌱 피셔"], ["lynch", "🔎 린치"], ["ackman", "🎯 애크먼"]];
-const hbars = h => `<div class="hbars">${HKEYS.map(([k, l]) => `<div>${l.split(" ")[1]}<i><b style="width:${h[k] == null ? 0 : h[k] * 5}%"></b></i></div>`).join("")}</div>`;
+const hbars = h => { const ks = HKEYS.filter(([k]) => h && h[k] != null);      // 점수 없는 대가(데이터 없음)는 칸째 빼기
+  return ks.length ? `<div class="hbars" style="grid-template-columns:repeat(${ks.length},1fr)">${ks.map(([k, l]) => `<div>${l.split(" ")[1]}<i><b style="width:${h[k] * 5}%"></b></i></div>`).join("")}</div>` : ""; };
 function heroCard(a) {
   const H = a.heroes; if (!H) return "";
   if (H.error) return `<div class="card"><h2>🏛️ 대가 5인 체크</h2><div class="empty">${esc(H.error)}</div></div>`;
