@@ -149,6 +149,7 @@ canvas.c-big{max-height:none}
 .hbars i{display:block;height:5px;border-radius:9px;background:var(--line);margin-top:3px;overflow:hidden}.hbars i b{display:block;height:100%;background:var(--blue)}
 .hero{padding:11px 0;border-top:1px solid var(--line)}.hero:first-of-type{border-top:0;padding-top:0}
 .hero .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.hero .ck{font-size:13px;padding:3px 0 0 4px;line-height:1.5}
+.hero details.ck>summary{list-style:none;cursor:pointer}.hero details.ck>summary::-webkit-details-marker{display:none}
 .grade{border-radius:12px;padding:12px;margin:4px 0 12px;background:var(--bg)}.grade b{font-size:16px}
 .prin{font-size:13px;line-height:1.6}.prin div{padding:6px 0;border-top:1px solid var(--line)}.prin div:first-child{border-top:0}.prin em{font-style:normal;color:var(--sub);font-size:12px}
 details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}details summary::-webkit-details-marker{display:none}
@@ -466,9 +467,13 @@ function heroCard(a) {
     ${H.heroes.map(h => `<div class="hero"><div class="hd"><span><b>${h.icon} ${esc(h.name)}</b> <span class="tiny mut">${esc(h.theme)}</span></span>
         <span class="name">${h.score == null ? "-" : h.score}<span class="tiny mut">/20</span></span></div>
       <div class="tiny mut" style="margin:2px 0 4px">${esc(h.motto || "")}</div>
-      ${h.checks.filter(c => !c.na).map(c => `<div class="ck ${c.ok == null ? "mut" : ""}">${c.ok === true ? "✅" : c.ok === false ? "❌" : "·"} ${esc(c.text)}</div>`).join("")}
+      ${h.checks.filter(c => !c.na).map(c => c.bonus ? `<div class="ck">${esc(c.text)} <span class="tiny mut">· ${esc(c.src || "")}</span></div>` :
+        `<details class="ck ${c.ok == null ? "mut" : ""}"><summary>${c.ok === true ? "✅" : c.ok === false ? "❌" : c.ok === "part" ? "🔸" : "·"} ${esc(c.text)}
+          ${c.ok != null ? `<span class="tiny mut">${Math.round((c.pts || 0) * 100)}%</span>` : ""}</summary>
+          <div class="tiny mut" style="margin:2px 0 4px 18px">${esc(c.src || "")}${c.line ? " · " + esc(c.line) : ""}${c.ok == null ? " · 데이터 없어 반만 인정" : ""}</div></details>`).join("")}
+      <div class="tiny mut">항목 ${h.n || 0}개 중 📖 원전 숫자 그대로 ${h.n_orig || 0}개 · 항목마다 같은 비중</div>
       ${(h.todo || []).length ? `<details style="margin-top:4px"><summary class="tiny">📝 숫자로 못 보는 것 — 직접 확인 ${h.todo.length}가지</summary>${h.todo.map(t => `<div class="ck mut">☐ ${esc(t)}</div>`).join("")}</details>` : ""}</div>`).join("")}
-    <div class="tiny mut" style="margin-top:10px">데이터 반영률 ${Math.round((H.coverage || 0) * 100)}% · ${H.src === "dart" ? "DART 사업보고서 최대 10년" : "연간 재무 최근 4년(네이버·야후)"} 기준 · 데이터 없는 항목은 반만 인정 · 기계적 채점이라 산 이유는 직접 두 문장으로 적어 보세요</div></div>`;
+    <div class="tiny mut" style="margin-top:10px">${H.method ? esc(H.method) + "<br>" : ""}데이터 반영률 ${Math.round((H.coverage || 0) * 100)}% · ${H.src === "dart" ? "DART 사업보고서 최대 10년" : "연간 재무 최근 4년(네이버·야후)"} 기준 · 데이터 없는 항목은 반만 인정 · 기계적 채점이라 산 이유는 직접 두 문장으로 적어 보세요</div></div>`;
 }
 
 function detRow(x) {
