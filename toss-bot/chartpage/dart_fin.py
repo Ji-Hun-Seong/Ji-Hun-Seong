@@ -57,7 +57,19 @@ def _cached(name: str, ttl: float | None, fn):
     return val
 
 
+# 하루 DART 호출 한도(OpenDART 개인 키 20,000건/일) 중 이 모듈이 쓸 몫 — 넘으면 새로 받지 않고 오류
+#   (코스피 전체 채점 첫날 10년 재무를 받느라 다 써 버려서 공시 감시가 멈추는 일 방지. 디스크에 받아 둔 건 계속 씀)
+BUDGET = int(os.environ.get("DART_FIN_BUDGET", "12000"))
+_used = {"day": None, "n": 0}
+
+
 def _api(path, **params):
+    today = dt.date.today().isoformat()
+    if _used["day"] != today:
+        _used.update(day=today, n=0)
+    if _used["n"] >= BUDGET:
+        raise RuntimeError(f"DART 오늘 한도({BUDGET}건) 다 씀 — 내일 이어서")
+    _used["n"] += 1
     r = requests.get(f"{DART}/{path}", params={"crtfc_key": _key(), **params}, timeout=25)
     r.raise_for_status()
     return r.json()

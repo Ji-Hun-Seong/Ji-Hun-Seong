@@ -478,7 +478,7 @@ def light_global(sym: str, name: str | None = None) -> dict:
     return {"us": True, "code": sym, "name": prof["name"], "profile": prof, "finance": fin, "filings": None, "close": price}
 
 
-def board(pool: list[dict], workers: int = 8, market: str = "kr") -> dict:
+def board(pool: list[dict], workers: int = 8, market: str = "kr", prog: dict | None = None) -> dict:
     """pool = [{code, name, corp_code, src:[...], held}] → 점수 순 목록 (market != kr 이면 해외 yfinance)"""
     def one(p):
         try:
@@ -497,6 +497,11 @@ def board(pool: list[dict], workers: int = 8, market: str = "kr") -> dict:
                     "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok")}
         except Exception as e:
             return {"code": p["code"], "name": p.get("name") or p["code"], "error": f"{type(e).__name__}: {str(e)[:80]}"}
+        finally:
+            if prog is not None:
+                prog["done"] = prog.get("done", 0) + 1
+    if prog is not None:
+        prog.update(done=0, total=len(pool))
     with ThreadPoolExecutor(workers) as ex:
         rows = list(ex.map(one, pool))
     ok = [r for r in rows if r.get("total") is not None and r["grade"]["key"] != "na"]
