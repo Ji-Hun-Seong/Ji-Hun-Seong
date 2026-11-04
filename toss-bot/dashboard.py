@@ -5,7 +5,7 @@
   선택: .env 에 DASH_PASSWORD=... 를 넣으면 접속 시 비밀번호(아이디는 아무거나)를 물어봄
 
 투자 원칙: 장기 9 : 단기 1 (단기는 최대 2) — 홈 '장기·단기 비율' 카드, 발굴 '🏛️ 대가' 목록, 종목 상세 '대가 체크'
-            (가치 4인 그레이엄·버핏·그린블랫·애크먼 + 성장 4인 피셔·린치·로 프라이스·오닐, chartpage/heroes.py)
+            (가치 5인 버핏·그레이엄·멍거·애크먼·클라만 + 성장 5인 린치·피셔·드러켄밀러·템플턴·로 프라이스, chartpage/heroes.py)
 보여주는 것: 운용 모드·긴급정지, 한국/미국 전략 평가·수익 곡선, 보유 종목(토스 실시간가), 시가 예약·매도 예정,
             최근 자사주 공시 감지, 청산 내역, 나스닥 200일선·목표 레버리지, 실제 토스 계좌 잔고
 할 수 있는 것: 긴급 정지 켜기/끄기 (실전 전환은 안전을 위해 서버 명령으로만)
@@ -1004,7 +1004,7 @@ def picks_hero():
 
 
 def picks_hero_global(market):
-    """발굴 › 대가 › 🇺🇸 미국 · 🇪🇺 유럽 · 🇨🇳 중국 · 🇯🇵 일본 — 시장별 대표 종목을 같은 8인 기준으로"""
+    """발굴 › 대가 › 🇺🇸 미국 · 🇪🇺 유럽 · 🇨🇳 중국 · 🇯🇵 일본 — 시장별 대표 종목을 같은 10인 기준으로"""
     import heroes
     t0 = time.time()
     pool = [{"code": c, "name": n, "src": ["대표 종목"]} for c, n in heroes.GLOBAL_POOL[market]]
@@ -1044,7 +1044,7 @@ def stock_detail(q, us_hint=None):
         with _lock:
             _cache.pop(key, None)
         return out
-    try:                                          # 🏛️ 대가 8인 체크 — 한국은 DART 10년 재무로 (처음엔 받는 데 시간이 걸려 8초까지만 기다림)
+    try:                                          # 🏛️ 대가 10인 체크 — 한국은 DART 10년 재무로 (처음엔 받는 데 시간이 걸려 8초까지만 기다림)
         import heroes
         dd = None
         if not it.get("us") and it.get("corp_code"):

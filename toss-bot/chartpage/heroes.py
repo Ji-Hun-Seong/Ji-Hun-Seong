@@ -1,16 +1,18 @@
 """
-heroes.py — 대가 8인(가치 4 · 성장 4)의 원전 기준으로 종목을 채점 (장기 투자 판단용)
+heroes.py — 대가 10인(가치 5 · 성장 5)의 원전 기준으로 종목을 채점 (장기 투자 판단용)
 
-  💎 가치주 4인                                   🚀 성장주 4인
-  🛡️ 그레이엄  안전마진 (『현명한 투자자』·『증권분석』)    🌱 피셔       위대한 성장 기업 (15가지 + 4차원)
-  🏰 버핏     해자·ROE (주주서한·주총 문답)          🔎 린치       성장 대비 가격 (6분류 점검표)
-  🧙 그린블랫  마법공식 (자본수익률 + 이익수익률)      📈 로 프라이스  이익이 사이클마다 새 고점 (성장주 투자의 아버지)
-  🎯 애크먼   촉매·환원 (퍼싱스퀘어 원칙)            🚀 오닐       CAN SLIM (분기·연간 이익 가속 + 신고가·주도주)
+  💎 가치주 5인                                       🚀 성장주 5인
+  🏰 버핏      해자·ROE (주주서한·주총 문답)            🔎 린치        성장 대비 가격 (6분류 점검표)
+  🛡️ 그레이엄  안전마진 (『현명한 투자자』·『증권분석』)   🌱 피셔        위대한 성장 기업 (15가지 + 4차원)
+  🧠 멍거      훌륭한 기업을 공정한 가격에 (ROE 18%)     🦅 드러켄밀러  18개월 뒤 이익·가격 흐름·자본 보존
+  🎯 애크먼    촉매·환원 (퍼싱스퀘어 원칙)              🌍 템플턴      미래 이익 대비 가격·최대 비관
+  🔒 클라만    보수적 가치 범위 대비 안전마진            📈 로 프라이스  이익이 사이클마다 새 고점·성장의 계절
 
-대가마다 20점 → 가치 점수 100 · 성장 점수 100 을 따로 냄. 종목 등급은 둘 중 높은 쪽 기준:
+대가마다 20점 → 5명 합 = 가치 점수 100 · 성장 점수 100 을 따로 냄. 종목 등급은 둘 중 높은 쪽 기준:
   70↑ 장기 핵심 · 55↑ 장기 위성 · 40↑ 관찰 · 그 아래 장기 부적합
   가치 쪽 거름망 = 그레이엄(10년 내 적자·부채비율 200%↑) · 성장 쪽 거름망 = 매출·이익 성장 5% 미만 또는 최근 3년 적자·부채비율 200%↑
   → 거름망에 걸린 쪽 점수로는 '관찰'까지만.
+  대가 동의 수 = 그 쪽 5명 중 14점(70%)↑ 준 사람 수 — 핵심(70점↑)은 3명 이상이 동의해야 유지, 아니면 위성으로 한 단계 내림
 세부 기준과 객관화 원칙은 heroes_core.py 머리말 참고.
 
 단독 테스트:  python3 heroes.py 005930 000660
@@ -29,15 +31,17 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import heroes_core as HC
 from heroes_core import cagr, last
 
-HEROES = [   # (키, 이름, 아이콘, 주제, 한 줄 원칙 — 반영한 원전, 유형 value/growth)
-    ("graham", "벤저민 그레이엄", "🛡️", "안전마진", "『현명한 투자자』 방어적 7기준 + 『증권분석』 수익력 — 규모·재무·10년 흑자·20년 배당·이익 성장·PER 15·PBR 1.5", "value"),
+HEROES = [   # (키, 이름, 아이콘, 주제, 한 줄 원칙 — 반영한 원전, 유형 value/growth) — 사진 순서(가치 TOP 5 · 성장 TOP 5)
     ("buffett", "워런 버핏", "🏰", "해자·ROE", "주주서한(1977~2007)·주총 문답 — 꾸준한 수익력, 빚 없이 높은 ROE, 주주 이익, 1달러 테스트, 가격 결정력, 적당한 가격", "value"),
-    ("greenblatt", "조엘 그린블랫", "🧙", "마법공식", "『주식시장을 이기는 작은 책』 — 좋은 회사(자본수익률 높음)를 싼 가격(이익수익률 높음)에, 한 해 반짝이 아닌지", "value"),
+    ("graham", "벤저민 그레이엄", "🛡️", "안전마진", "『현명한 투자자』 방어적 7기준 + 『증권분석』 수익력 — 규모·재무·10년 흑자·20년 배당·이익 성장·PER 15·PBR 1.5", "value"),
+    ("munger", "찰리 멍거", "🧠", "훌륭한 기업·공정한 가격", "『가난한 찰리의 연감』·USC 1994 강연·'오판의 심리학' — 장기 ROE 18%, 해자 지속, 복리 재투자, 뒤집어 보기(현금 없는 이익·레버리지·희석 회피), ROE만큼 가격 허용", "value"),
     ("ackman", "빌 애크먼", "🎯", "촉매·환원", "퍼싱스퀘어 원칙 — 단순·예측 가능·FCF 창출, 진입장벽, 튼튼한 재무, 매력적 가격, 가치가 드러날 계기", "value"),
-    ("fisher", "필립 피셔", "🌱", "위대한 성장 기업", "『위대한 기업에 투자하라』 15가지 + 『보수적인 투자자는 마음이 편하다』 4차원 — 평균보다 훨씬 빠른 성장, 업계 최고 이익률, 스스로 번 돈으로 성장 (매출 성장 5% 미만이면 최대 40%)", "growth"),
+    ("klarman", "세스 클라만", "🔒", "보수적 안전마진", "『안전마진』·바우포스트 서한 — 자산·수익·현금흐름 가치 중간값보다 33% 싸게, 5년 평균 FCF, 하방 받침, 재무 생존력, 소외 종목, 가치 함정 회피", "value"),
     ("lynch", "피터 린치", "🔎", "성장 대비 가격", "『전설로 떠나는 월가의 영웅』·『이기는 투자』 — 6분류별 점검표, (성장+배당)/PER, PEG, 재무, 과열 피하기", "growth"),
-    ("price", "T. 로 프라이스", "📈", "장기 성장주", "성장주 투자의 아버지(1939 '성장주 고르기'·1973 'New Era') — 이익이 경기 사이클마다 새 고점, 높은 자본이익률, 이익률 유지, 과한 값은 안 냄", "growth"),
-    ("oneil", "윌리엄 오닐", "🚀", "CAN SLIM", "『최고의 주식 최적의 타이밍』 — 분기 이익 25%↑·가속, 연간 이익 25%↑·ROE 17%↑, 신고가 근처, 주도주", "growth"),
+    ("fisher", "필립 피셔", "🌱", "위대한 성장 기업", "『위대한 기업에 투자하라』 15가지 + 『보수적인 투자자는 마음이 편하다』 4차원 — 평균보다 훨씬 빠른 성장, 업계 최고 이익률, 스스로 번 돈으로 성장 (매출 성장 5% 미만이면 최대 40%)", "growth"),
+    ("druckenmiller", "스탠리 드러켄밀러", "🦅", "18개월 뒤·추세", "『새로운 시장의 마법사들』·로스트트리 강연·국부펀드 인터뷰 — 18개월 뒤 이익, 이익 변곡, 가격 흐름(200일선), 주도주, 자본 보존(낙폭)", "growth"),
+    ("templeton", "존 템플턴", "🌍", "비관 속 바겐", "16계명·『템플턴 플랜』·『가치투자 전략』 — PER을 자기 5년 평균과, 5년 평균 이익 PER, 5년 뒤 이익 대비 가격, 최대 비관, 우량주 속 바겐", "growth"),
+    ("price", "T. 로 프라이스", "📈", "장기 성장주", "성장주 투자의 아버지(1939 '성장주 고르기'·1973 'New Era') — 이익이 경기 사이클마다 새 고점, 높은 자본이익률, 이익률 유지, 과한 값 안 냄, 성장의 계절", "growth"),
 ]
 STYLES = {"value": ("💎", "가치"), "growth": ("🚀", "성장")}
 
@@ -58,18 +62,21 @@ PRINCIPLES = {
     "rules": [
         ("린치", "종목 찾기", "생활·업무에서 아는 회사에서 출발하고, 왜 오를지 두 문장으로 말할 수 있어야 산다"),
         ("그레이엄", "거름망", "적자 연도가 있거나 부채비율 200%↑면 장기 바구니에 넣지 않는다"),
-        ("가치 4인", "가치주", "그레이엄·버핏·그린블랫·애크먼 — 좋은 회사를 가치보다 싸게, 가치에 닿으면 판다"),
-        ("성장 4인", "성장주", "피셔·린치·로 프라이스·오닐 — 매출·이익이 경제보다 훨씬 빨리 크는 회사, 성장이 꺾이면 판다"),
+        ("가치 5인", "가치주", "버핏·그레이엄·멍거·애크먼·클라만 — 좋은 회사를 보수적으로 잡은 가치보다 싸게, 가치에 닿으면 판다"),
+        ("성장 5인", "성장주", "린치·피셔·드러켄밀러·템플턴·로 프라이스 — 경제보다 훨씬 빨리 크는 회사를 18개월 뒤 이익 기준으로, 성장이 꺾이면 판다"),
+        ("멍거·클라만", "뒤집어 보기", "사기 전에 '어떻게 잃을 수 있나'부터 — 빚·희석·현금 없는 이익·가치 함정이면 사지 않는다"),
         ("그레이엄·린치", "가격", "좋은 회사라도 비싸면 기다린다 — 가치주는 PER×PBR ≤ 22.5, 성장주는 PEG ≤ 1"),
         ("애크먼", "촉매", "자사주 소각·배당·지배구조 개선 등 재평가 계기가 있는지 확인한다"),
     ],
     "portfolio": [
-        "장기 바구니 안: 핵심(가치 또는 성장 70점↑) 70% · 위성(55점↑ — 그레이엄 자산주·애크먼 촉매주·오닐 주도주) 30%",
+        "장기 바구니 안: 핵심(가치 또는 성장 70점↑) 70% · 위성(55점↑ — 그레이엄 자산주·애크먼 촉매주·드러켄밀러 주도주·템플턴 비관 바겐) 30%",
         "가치형과 성장형을 섞어 담는다 — 한쪽 스타일만 담으면 그 스타일이 안 먹히는 해에 같이 빠진다",
         "12~15종목, 한 종목은 장기 자산의 15%까지",
         "매도: 핵심은 산 이유가 깨질 때만 · 위성은 가치에 도달하면 · 단기는 정해진 규칙대로",
     ],
 }
+
+AGREE_PT, AGREE_MIN = 14, 3      # 대가 동의 = 20점 중 14점↑ · 핵심 등급은 5명 중 3명 이상 동의해야
 
 GRADES = [
     (70, "core", "🟢 장기 핵심", "핵심 바구니(70%) 후보 · 3년 이상 보유 전제"),
@@ -175,6 +182,15 @@ def _facts(d: dict) -> dict:
         cs = [c for c in oh["c"] if c]
         F["ret1y"] = cs[-1] / cs[-250] - 1 if len(cs) > 250 and cs[-250] else None
         F["close"] = F["close"] or (cs[-1] if cs else None)
+        # 드러켄밀러 — 200일 평균 대비 위치 · 최근 1년 최대 낙폭 / 템플턴 — 52주 최고가(프로필에 없을 때)
+        F["ma200_gap"] = cs[-1] / (sum(cs[-200:]) / 200) - 1 if len(cs) >= 200 else None
+        if len(cs) >= 120:
+            pk, mdd = 0.0, 0.0
+            for c in cs[-250:]:
+                pk = max(pk, c)
+                mdd = max(mdd, 1 - c / pk)
+            F["mdd1y"] = mdd
+        F["hi52_oh"] = max(cs[-250:]) if cs else None
     else:
         F["ret1y"] = None
     # 주식 수 = 지배순이익 ÷ EPS (희석·1달러 테스트용)
@@ -185,13 +201,16 @@ def _facts(d: dict) -> dict:
         by.setdefault(k, {})
         F[k] = [by[k][y] for y in sorted(by[k])]
     F["by"] = by
-    # 분기 EPS(오닐 C) — 네이버 분기 재무 실제치만, 오래된 → 최신
+    # 분기 EPS(드러켄밀러 이익 변곡) — 네이버 분기 재무 실제치만, 오래된 → 최신
     q = (fin.get("quarter") or {})
     qr, qp = (q.get("rows") or {}), (q.get("periods") or [])
     qv = qr.get("EPS") or qr.get("당기순이익") or []
     F["q_eps"] = [v for v, pp in zip(qv, qp) if _ok(v) and not pp.get("est")]
     F["q_yoy"] = ok(P.get("q_yoy"))
-    F["hi52"] = ok(P.get("hi52"))
+    F["hi52"] = ok(P.get("hi52")) or F.get("hi52_oh")
+    F["fper"] = ok(P.get("fper"))
+    F.setdefault("ma200_gap", None)
+    F.setdefault("mdd1y", None)
     if F["ret1y"] is None and _ok(P.get("ret1y")):
         F["ret1y"] = P["ret1y"]
     F["roc_now"], F["ey_now"] = ok(P.get("roc")), ok(P.get("ey"))
@@ -211,13 +230,15 @@ def _facts(d: dict) -> dict:
     # 현재 PER vs 자기 과거 PER 중간값 (그해 말 주가 ÷ 그해 EPS)
     hist = [v for y, v in sorted(by["per_y"].items())[:-1] if v and v > 0] if by["per_y"] else \
            [by["yclose"][y] / by["eps"][y] for y in sorted(by["eps"])[:-1] if y in by["yclose"] and by["eps"][y] and by["eps"][y] > 0]
+    h5 = hist[-5:]                                    # 템플턴 — 최근 5년 평균 PER 과 비교
+    F["per_rel5"] = F["per"] / (sum(h5) / len(h5)) if F["per"] and F["per"] > 0 and len(h5) >= 3 else None
     hist = hist[-7:]
     F["per_hist_n"] = len(hist)
     F["per_rel"] = F["per"] / stx.median(hist) if F["per"] and F["per"] > 0 and len(hist) >= 3 else None
     return F
 
 
-# ── 8인 채점 (가치 4 · 성장 4) ───────────────────────────────────────────
+# ── 10인 채점 (가치 5 · 성장 5) ───────────────────────────────────────────
 def score(d: dict) -> dict:
     """d = stock_info 상세(또는 board용 가벼운 dict). 반환: 대가별 점수·체크(출처·기준선), 가치·성장 점수와 등급, 린치 분류"""
     F = _facts(d)
@@ -230,15 +251,18 @@ def score(d: dict) -> dict:
     H["lynch"], T["lynch"], cat = HC.lynch(F)
     H["ackman"], T["ackman"] = HC.ackman(F, filings or [], has_f)
 
-    H["greenblatt"], T["greenblatt"] = HC.greenblatt(F)
+    H["munger"], T["munger"] = HC.munger(F)
+    H["klarman"], T["klarman"] = HC.klarman(F)
+    H["druckenmiller"], T["druckenmiller"] = HC.druckenmiller(F)
+    H["templeton"], T["templeton"] = HC.templeton(F)
     H["price"], T["price"] = HC.price(F)
-    H["oneil"], T["oneil"] = HC.oneil(F)
     caps = {"fisher": fisher_cap}
     if cat in ("저성장주", "자산주"):                    # 린치 본인도 이 두 분류는 '성장'으로 사지 않음 → 성장 트랙에선 최대 50%
         caps["lynch"] = 0.5
         H["lynch"].append(HC.C("『전설로 떠나는 월가의 영웅』 7장", f"🚧 린치 분류가 {cat} — 배당·자산 가치로 사는 종목이라 성장 점수에선 최대 50%", None, bonus=True))
 
     heroes, acc = [], {"value": [0, 0, 0], "growth": [0, 0, 0]}     # 점수 합 · 만점 합 · 데이터 반영 합
+    agree = {"value": 0, "growth": 0}                                # 14점(70%)↑ 준 대가 수
     for key, name, icon, theme, motto, style in HEROES:
         cs = H[key]
         sc = [c for c in cs if not c.get("na") and not c.get("bonus")]
@@ -256,6 +280,8 @@ def score(d: dict) -> dict:
         a_ = acc[style]
         a_[0], a_[1], a_[2] = a_[0] + r * 20, a_[1] + 20, a_[2] + m / (m + mm) * 20
         heroes.append({**base, "score": round(r * 20, 1), "coverage": round(m / (m + mm), 2), "capped": caps.get(key) is not None})
+        if r * 20 >= AGREE_PT:
+            agree[style] += 1
 
     # 성장 거름망 — 매출·이익이 5%도 못 크거나, 최근 3년 적자·부채비율 200%↑
     rv = [v for _, v in HC.yr_vals(F["by"], "rev", 6)] or HC.last(F["rev"], 6)
@@ -274,13 +300,18 @@ def score(d: dict) -> dict:
             gr = {"key": "na", "label": "⚪ 데이터 부족", "desc": "판단에 필요한 재무 데이터가 절반 미만"}
         else:
             gk = next(g for g in GRADES if sc_ >= g[0])
-            if fails[s_] and gk[1] in ("core", "sat"):
+            n_h = sum(1 for h in HEROES if h[5] == s_)
+            if gk[1] == "core" and agree[s_] < AGREE_MIN and not fails[s_]:
+                gk = GRADES[1]
+                gr = {"key": gk[1], "label": gk[2], "desc": f"점수는 70↑지만 대가 {agree[s_]}/{n_h}명만 동의(14점↑) — 소수 의견에 기댄 고득점이라 위성으로"}
+            elif fails[s_] and gk[1] in ("core", "sat"):
                 gk = GRADES[2]
                 gr = {"key": gk[1], "label": gk[2], "desc": fail_why[s_] + " — 점수와 상관없이 관찰까지만"}
             else:
                 gr = {"key": gk[1], "label": gk[2], "desc": gk[3]}
         gr["label"] = gr["label"].replace("장기 ", STYLES[s_][1] + " ")
-        sty[s_] = {"score": sc_, "coverage": round(cov, 2), "grade": gr, "fail": fails[s_]}
+        sty[s_] = {"score": sc_, "coverage": round(cov, 2), "grade": gr, "fail": fails[s_], "agree": agree[s_],
+                   "n_heroes": sum(1 for h in HEROES if h[5] == s_)}
     order = ["core", "sat", "watch", "no", "na"]
     v, g = sty["value"], sty["growth"]
     rank = lambda x: (order.index(x["grade"]["key"]), -(x["score"] or 0))
@@ -312,7 +343,8 @@ def score(d: dict) -> dict:
 
 METHOD = ("📖 = 책·주주서한에 나온 숫자 그대로 · ⚖️ = 원전에 숫자가 없어 정한 보조선(화면에 기준 공개). "
           "점수는 0점 선과 만점 선 사이를 직선으로, 한 대가 안의 항목은 같은 비중, 데이터 없는 항목은 반만 인정. "
-          "가치 점수 = 그레이엄·버핏·그린블랫·애크먼 합(100) · 성장 점수 = 피셔·린치·로 프라이스·오닐 합(100), 등급은 높은 쪽 기준")
+          "가치 점수 = 버핏·그레이엄·멍거·애크먼·클라만 합(100) · 성장 점수 = 린치·피셔·드러켄밀러·템플턴·로 프라이스 합(100), "
+          "등급은 높은 쪽 기준 · 핵심(70↑)은 그 쪽 대가 5명 중 3명 이상이 14점↑ 줘야 유지")
 
 
 # ── 발굴 탭: 후보 묶음을 한꺼번에 채점 ─────────────────────
@@ -322,11 +354,11 @@ def light(code: str, name: str | None = None, corp_code: str | None = None) -> d
     prof = si.kr_profile(code)
     fa = si.kr_finance(code, "annual")
     fq, oh = {}, None
-    try:                                              # 오닐 C(분기 이익 증가율)용
+    try:                                              # 드러켄밀러 이익 변곡(분기 이익 증가율)용
         fq = si.kr_finance(code, "quarter")
     except Exception:
         pass
-    try:                                              # 1년 주가(오닐 L·린치 과열) — 최근 약 14개월만
+    try:                                              # 1년 주가(드러켄밀러 추세·낙폭 · 템플턴 비관 · 린치 과열 · 클라만 소외) — 최근 약 14개월만
         df = si.kr_ohlcv(code, 420)
         oh = {"d": [f"{x:%Y-%m-%d}" for x in df.index], "c": [float(c) for c in df["close"]]}
     except Exception:
@@ -428,7 +460,7 @@ def light_global(sym: str, name: str | None = None) -> dict:
             "target": g("targetMeanPrice"), "mcap_usd": mcap, "currency": ccy,
             "mcap_eok": mcap * fx / 1e8 if mcap and fx else None,
             "hi52": g("fiftyTwoWeekHigh"), "ret1y": g("52WeekChange"), "q_yoy": g("earningsQuarterlyGrowth")}
-    try:                                              # 그린블랫 마법공식 — EBIT ≈ 영업이익률 × 매출, 투하자본 ≈ 자본 + 순차입
+    try:                                              # (참고용) 자본수익률·이익수익률 — EBIT ≈ 영업이익률 × 매출, 투하자본 ≈ 자본 + 순차입
         ebit = (g("operatingMargins") or 0) * (g("totalRevenue") or 0) or None
         nd = (g("totalDebt") or 0) - (g("totalCash") or 0)
         eq = (g("bookValue") or 0) * (g("sharesOutstanding") or 0)
@@ -459,6 +491,7 @@ def board(pool: list[dict], workers: int = 8, market: str = "kr") -> dict:
                     "value": s["value"]["score"], "growth": s["growth"]["score"], "style": s["style"],
                     "vgrade": s["value"]["grade"]["key"], "ggrade": s["growth"]["grade"]["key"],
                     "heroes": {h["key"]: h["score"] for h in s["heroes"]},
+                    "agree": {"value": s["value"]["agree"], "growth": s["growth"]["agree"]},
                     "best": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is True and not c.get("bonus")][:3],
                     "worst": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is False][:2],
                     "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok")}

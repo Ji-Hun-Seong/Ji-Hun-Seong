@@ -1,5 +1,6 @@
 """
-heroes_core.py — 가치 4인·성장 4인 대가의 '원전 기준'을 숫자로 옮긴 채점 엔진 (heroes.score 가 이걸 씀)
+heroes_core.py — 가치 5인·성장 5인 대가의 '원전 기준'을 숫자로 옮긴 채점 엔진 (heroes.score 가 이걸 씀)
+  2026-11-05 3차 개편: 그린블랫·오닐 → 멍거·클라만(가치), 드러켄밀러·템플턴(성장)으로 교체, 로 프라이스 '성장의 계절' 추가
 
 객관화 원칙
   1) 기준선 = 책·주주서한에 나온 숫자 그대로 (📖). 원전에 숫자가 없으면 공개된 보조선(⚖️)을 쓰고 화면에 그렇게 표시
@@ -10,16 +11,18 @@ heroes_core.py — 가치 4인·성장 4인 대가의 '원전 기준'을 숫자�
   5) 같은 입력이면 언제나 같은 점수 — 사람 판단(경영진·해자 등)은 점수에 넣지 않고 '직접 확인' 목록으로
 
 출처 약어
-  ─ 가치주 4인 ─
-  그레이엄  『현명한 투자자』(II) 14장 방어적 투자자 · 15장 기업형 투자자/넷넷 · 『증권분석』(SA) 수익력·투기 한계
+  ─ 가치주 5인 ─
   버핏      버크셔 주주서한 1977·1979·1983·1984·1986·1989·2007 · 주주총회 문답 · 2010 FCIC 인터뷰(가격 결정력)
-  그린블랫  『주식시장을 이기는 작은 책』 마법공식(자본수익률 + 이익수익률)
+  그레이엄  『현명한 투자자』(II) 14장 방어적 투자자 · 15장 기업형 투자자/넷넷 · 『증권분석』(SA) 수익력·투기 한계
+  멍거      『가난한 찰리의 연감』 · 1994 USC '세속적 지혜' 강연(ROE 6% vs 18%) · 1995 '인간 오판의 심리학' · 웨스코/데일리저널 주총
   애크먼    퍼싱스퀘어 투자 원칙(연차 서한·IR 자료)
-  ─ 성장주 4인 ─
-  피셔      『위대한 기업에 투자하라』(CS) 15가지 · 『보수적인 투자자는 마음이 편하다』(CI) 4가지 차원
+  클라만    『안전마진』(1991) — 보수적 가치 범위·하방 우선·소외 종목·촉매 · 바우포스트 연례 서한
+  ─ 성장주 5인 ─
   린치      『전설로 떠나는 월가의 영웅』(OU) 7·8·13·15장 · 『이기는 투자』(BS) 25가지 황금률·S&L 점검표 · 『Learn to Earn』(LE)
+  피셔      『위대한 기업에 투자하라』(CS) 15가지 · 『보수적인 투자자는 마음이 편하다』(CI) 4가지 차원
+  드러켄밀러 『새로운 시장의 마법사들』(1992) 인터뷰 · 2015 로스트트리 강연 · Sohn 컨퍼런스 · 2023 노르웨이 국부펀드 인터뷰
+  템플턴    16계명(1993) · 『템플턴 플랜』 · 『존 템플턴의 가치투자 전략』(2008) — 미래 이익 대비 가격·5년 평균 이익·최대 비관
   로 프라이스  1939 배런스 기고 'Picking Growth Stocks' · 1973 'The New Era for Investors'
-  오닐      『최고의 주식 최적의 타이밍』 CAN SLIM (C·A·N·L 채점, S·I·M 은 직접 확인)
 """
 from __future__ import annotations
 
@@ -372,43 +375,145 @@ def fisher(F):
 
 
 # ════════════════════════════════════════════════════════════════
-def greenblatt(F):
-    """조엘 그린블랫 『주식시장을 이기는 작은 책』 마법공식 = 높은 자본수익률(좋은 회사) + 높은 이익수익률(싼 가격)
-       책도 금융·유틸리티는 제외 → 금융업은 전 항목 제외"""
-    g, by = [], F["by"]
-    LB = "『주식시장을 이기는 작은 책』"
-    if F["fin_co"]:
-        return [C(LB, "마법공식: 금융업 — 책에서도 제외", None, na=True)], []
-    bond = BOND["us" if F["us"] else "kr"]
-    op, eq, nc = lastv(F["op"]), lastv(F["eq"]), lastv(F["netcash"])
-    roc = ey = None
-    if F["us"]:
-        roc, ey = F.get("roc_now"), F.get("ey_now")
-    elif op is not None and eq:
-        ic = eq - (nc or 0)                       # 투하자본 ≈ 자본 + 순차입 (남는 현금은 빼고)
-        roc = op / ic if ic > 0 else (1.0 if op > 0 else None)
-        if F["mcap_eok"]:
-            ev = F["mcap_eok"] - (nc or 0)
-            ey = op / ev if ev > 0 else (1.0 if op > 0 else None)
-    g.append(C(LB + " 6~7장", f"① 자본수익률: 영업이익 ÷ 투하자본 = {roc * 100:.0f}%", ramp(roc, 0.10, 0.25),
-               "📖 '좋은 회사 = 적은 자본으로 많이 버는 회사' (EBIT ÷ 순운전자본+순고정자산) → ⚖️ 자본+순차입으로 근사 · 25%↑ 만점 · 10%↓ 0점", orig=False)
-             if roc is not None else C(LB + " 6~7장", "① 자본수익률: 데이터 없음", None))
-    g.append(C(LB + " 5~6장", f"② 이익수익률: 영업이익 ÷ 기업가치(EV) = {ey * 100:.1f}% (국채 약 {bond:.1f}%)", ramp(ey, bond / 100, bond / 100 + 0.07),
-               "📖 '싼 가격 = 기업가치 대비 이익이 큼, 적어도 국채보다 높아야' → ⚖️ 국채 이하 0점 · 국채+7%p↑ 만점", orig=False)
-             if ey is not None else C(LB + " 5~6장", "② 이익수익률: 데이터 없음", None))
-    # ③ 한 해 반짝이 아닌가 — 최근 5년 자본수익률 중 가장 낮은 해 (책 '정상 이익' 언급 · 부록)
-    ys = [y for y in sorted(by.get("op") or {}) if y in (by.get("eq") or {})][-5:]
-    rocs = []
-    for y in ys:
-        ic = by["eq"][y] - ((by.get("netcash") or {}).get(y) or 0)
-        if ic > 0:
-            rocs.append(by["op"][y] / ic)
-    g.append(C(LB + " 부록", f"③ 꾸준한 자본수익률: 최근 {len(rocs)}년 중 가장 낮은 해 {min(rocs) * 100:.0f}%", ramp(min(rocs), 0.05, 0.15),
-               "⚖️ 일시적 호황 이익을 거르기 위해 → 나쁜 해에도 15%↑ 만점 · 5%↓ 0점", orig=False)
-             if len(rocs) >= 3 else C(LB + " 부록", "③ 자본수익률 꾸준함: 3년치 미만", None, na=F["us"]))
-    todo = ["마법공식 상위 종목 20~30개를 나눠 담고 1년마다 교체할 각오가 있는가 (책 8장 — 2~3년은 시장보다 못할 수 있음)",
-            "이익이 일회성(자산 매각 등)으로 부풀려지지 않았는가"]
-    return g, todo
+def munger(F):
+    """찰리 멍거 — 『가난한 찰리의 연감』(1994 USC '세속적 지혜' 강연 · 1995 '인간 오판의 심리학') · 웨스코/데일리저널 주총
+       '장기 수익률은 결국 그 사업의 자본수익률에 수렴한다' → 오래 높은 ROE를 빚·희석·회계 장난 없이 내는 훌륭한 기업을 공정한 가격에.
+       '뒤집어라, 항상 뒤집어라' → 망하는 길(레버리지·현금 없는 이익·희석)을 먼저 지운다"""
+    m, by, fin = [], F["by"], F["fin_co"]
+    USC, PSY, PCA, DJ = "1994 USC 강연", "1995 '오판의 심리학'", "『가난한 찰리의 연감』", "웨스코·데일리저널 주총"
+    rr = [v for _, v in yr_vals(by, "roe", 10)] or last(F["roe"], 10)
+    avg = sum(rr) / len(rr) if rr else None
+    if rr:
+        m.append(C(USC, f"① 장기 자본수익률: {len(rr)}년 ROE 평균 {avg:.1f}%", ramp(avg, 6, 18),
+                   "📖 '40년간 6% 버는 사업이면 6%, 18% 버는 사업이면 비싸게 사도 큰 결과' → 18%↑ 만점 · 6%↓ 0점"))
+        if len(rr) >= 3:
+            hi = sum(1 for v in rr if v >= 15)
+            m.append(C(PCA, f"② 해자가 오래가나: {len(rr)}년 중 ROE 15%↑인 해 {hi}번", hi / len(rr),
+                       "⚖️ 해마다 15%↑면 만점 — 한두 해 반짝이 아니라 경쟁을 버티는 해자", orig=False))
+        else:
+            m.append(C(PCA, "② 해자 지속: ROE 3년치 미만", None))
+    else:
+        m += [C(USC, "① 장기 자본수익률: 데이터 없음", None), C(PCA, "② 해자 지속: 데이터 없음", None)]
+    # ③ 복리 기계 — 번 돈을 높은 수익률로 다시 굴려 장부가치가 크는가
+    eqs = [v for _, v in yr_vals(by, "eqo", 10)] or [v for _, v in yr_vals(by, "eq", 10)]
+    g = cagr(eqs[0], eqs[-1], len(eqs) - 1) if len(eqs) >= 4 else None
+    m.append(C(DJ, f"③ 복리 재투자: 자본(장부가치) 연평균 {g * 100:+.1f}% ({len(eqs) - 1}년)", ramp(g, 0.04, 0.12),
+               "⚖️ 남긴 이익을 다시 굴려 장부가치가 연 12%↑ 크면 만점 · 4%↓ 0점", orig=False)
+             if g is not None else C(DJ, "③ 복리 재투자: 자본 4년치 미만", None))
+    # ④ 뒤집어 보기 — 이익이 현금으로 들어오는가
+    oc, nq = last(F["ocf"], 5), last(F["ni"], 5)
+    if fin:
+        m.append(C(PSY, "④ 이익의 질: 금융업 — 영업현금흐름 비교가 맞지 않아 제외", None, na=True))
+    elif len(oc) >= 3 and len(nq) >= len(oc) and sum(nq[-len(oc):]) > 0:
+        q = sum(oc) / sum(nq[-len(oc):])
+        m.append(C(PSY, f"④ 뒤집어 보기 — 이익이 현금으로 들어오나: {len(oc)}년 영업현금흐름 ÷ 순이익 = {q * 100:.0f}%", ramp(q, 0.7, 1.1),
+                   "📖 'EBITDA는 헛소리 이익' · 회계 장난 경계 → ⚖️ 110%↑ 만점 · 70%↓ 0점", orig=False))
+    else:
+        m.append(C(PSY, "④ 이익의 질: 데이터 없음", None))
+    # ⑤ 레버리지 — '똑똑한 사람이 망하는 세 가지: 술·여자·레버리지'
+    nc, opl = lastv(F["netcash"]), lastv(F["op"])
+    if fin:
+        m.append(C(PCA, "⑤ 레버리지: 금융업 — 제외", None, na=True))
+    elif nc is not None and opl:
+        lev = (-nc / opl) if nc < 0 and opl > 0 else (0 if nc >= 0 else 99)
+        m.append(C(PCA, "⑤ 레버리지 없이: " + ("순현금" if nc >= 0 else f"순차입 = 영업이익의 {lev:.1f}배"), ramp(lev, 3, 0),
+                   "📖 '똑똑한 사람이 망하는 세 가지 — 술·여자·레버리지' → ⚖️ 순현금 만점 · 영업이익 3배↑ 0점", orig=False))
+    elif F["dr"]:
+        m.append(C(PCA, f"⑤ 레버리지: 부채비율 {F['dr'][-1]:.0f}%", ramp(F["dr"][-1], 150, 50), "⚖️ 50%↓ 만점 · 150%↑ 0점", orig=False))
+    else:
+        m.append(C(PCA, "⑤ 레버리지: 데이터 없음", None))
+    # ⑥ 주주 몫을 나누지 않는가 (스톡옵션·증자 비판)
+    sh = [v for _, v in yr_vals(by, "shares", 6) if v]
+    if len(sh) >= 3:
+        dil = sh[-1] / sh[0] - 1
+        m.append(C(DJ, f"⑥ 주주 몫 희석 없음: 주식 수 {dil * 100:+.1f}% ({len(sh)}년)", ramp(dil, 0.05, 0.0),
+                   "⚖️ 주식 수가 안 늘면 만점 · 5%↑ 늘면 0점 (스톡옵션·유상증자로 주주 몫을 나누는 회사 경계)", orig=False))
+    else:
+        m.append(C(DJ, "⑥ 희석: 주식 수 데이터 없음", None))
+    # ⑦ 훌륭한 기업을 공정한 가격에 — ROE가 높을수록 더 비싼 PER 허용
+    per = F["per"]
+    if per and per > 0:
+        q_ = min(max((avg if avg is not None else 6) - 6, 0), 12) / 12
+        full = 15 + 10 * q_
+        m.append(C("1989 버크셔 서한(멍거의 영향)", f"⑦ 공정한 가격: PER {per:.1f}배 (ROE 반영 허용선 {full:.0f}배)", ramp(per, full * 1.6, full),
+                   "📖 '적당한 기업을 싸게보다 훌륭한 기업을 공정한 가격에' → ⚖️ ROE 18%면 25배↓ 만점(40배↑ 0점), ROE 6%면 15배↓(24배↑ 0점)", orig=False))
+    else:
+        m.append(C("1989 버크셔 서한(멍거의 영향)", "⑦ 가격: 적자이거나 PER 없음", 0.0 if per is not None else None))
+    todo = ["능력의 범위 안인가 — 모르면 '너무 어려움' 바구니에 넣고 넘긴다 (USC 1994)",
+            "인센티브를 보라 — 경영진 보상이 주주 이익과 같은 방향인가 ('인센티브의 힘을 과소평가하지 마라', 1995)",
+            "오판 체크리스트 — 확증 편향·사회적 증거(남들이 사서)·손실 회피로 사려는 건 아닌가 (1995 '오판의 심리학')",
+            "경영진이 정직하고 합리적인가 — 믿을 수 있는 사람과만 (데일리저널 주총)",
+            "확신이 큰 소수 종목에 집중하고, 사고 나면 오래 앉아 기다릴 수 있는가 ('엉덩이 투자', 웨스코 주총)"]
+    return m, todo
+
+
+# ════════════════════════════════════════════════════════════════
+def klarman(F):
+    """세스 클라만 — 『안전마진』(1991) · 바우포스트 연례 서한 · 인터뷰
+       가치를 여러 방법(자산·수익·현금흐름)으로 보수적으로 매기고, 그보다 크게 쌀 때만 산다. 먼저 잃지 않는 것(하방)부터 본다"""
+    k, by, fin = [], F["by"], F["fin_co"]
+    MS, BP = "『안전마진』", "바우포스트 서한"
+    mc = F["mcap_eok"]
+    eqv = lastv(F["eqo"]) or lastv(F["eq"])
+    n5 = last(F["nio"], 5) or last(F["ni"], 5)
+    f5 = last(F["fcf"], 5)
+    vals = {}
+    if eqv and eqv > 0:
+        vals["자산"] = eqv
+    if len(n5) >= 3:
+        vals["수익"] = max(0.0, sum(n5) / len(n5) * 10)
+    if len(f5) >= 3 and not fin:
+        vals["현금흐름"] = max(0.0, sum(f5) / len(f5) * 10)
+    if mc and len(vals) >= 2:
+        iv = stx.median(list(vals.values()))
+        mg = 1 - mc / iv if iv > 0 else -1.0
+        det = " · ".join(f"{a} {v:,.0f}억" for a, v in vals.items())
+        k.append(C(MS + " 8장", f"① 보수적 가치 대비 안전마진: 가치 중간값 {iv:,.0f}억({det}) vs 시총 {mc:,.0f}억 → 할인 {mg * 100:+.0f}%",
+                   ramp(mg, 0, 0.33),
+                   "📖 '가치는 하나의 숫자가 아니라 범위, 여러 방법으로 보수적으로' → ⚖️ 자산(자본)·수익(5년 평균 순이익×10)·현금흐름(5년 평균 FCF×10) 중간값보다 33%↑ 싸면 만점 · 할인 없으면 0점",
+                   orig=False))
+    else:
+        k.append(C(MS + " 8장", "① 안전마진: 가치 계산에 필요한 데이터 부족", None))
+    # ② 정상화 FCF 수익률 — 한 해가 아니라 5년 평균 현금으로
+    if fin:
+        k.append(C(MS + " 8장", "② FCF 수익률: 금융업 — 제외", None, na=True))
+    elif len(f5) >= 3 and mc:
+        fy = sum(f5) / len(f5) / mc * 100
+        k.append(C(MS + " 8장", f"② 5년 평균 FCF 수익률 {fy:.1f}%", ramp(fy, 3, 10),
+                   "📖 '사업 가치의 핵심은 미래 현금흐름의 현재가치' → ⚖️ 10%↑ 만점 · 3%↓ 0점 (성장을 가정하지 않고도 싼가)", orig=False))
+    else:
+        k.append(C(MS + " 8장", "② FCF 수익률: 데이터 없음", None))
+    # ③ 하방 — 자산이 받쳐 주는가
+    pbr = F["pbr"]
+    k.append(C(MS + " 6장", f"③ 하방 받침: PBR {pbr:.2f}배", ramp(pbr, 1.5, 0.7),
+               "📖 '얼마나 벌까보다 얼마나 잃을 수 있나를 먼저' → ⚖️ PBR 0.7↓ 만점 · 1.5↑ 0점", orig=False)
+             if pbr else C(MS + " 6장", "③ 하방 받침: PBR 없음", None))
+    # ④ 재무 생존력 — 레버리지는 안전마진을 갉아먹는다
+    if fin:
+        k.append(C(MS, "④ 재무 생존력: 금융업 — 제외", None, na=True))
+    else:
+        dr, cr = lastv(F["dr"]), lastv(F["cr"])
+        parts = [x for x in (ramp(dr, 150, 50), ramp(cr, 100, 150)) if x is not None]
+        k.append(C(MS, f"④ 재무 생존력: 부채비율 {f1(dr, 0)}% · 유동비율 {f1(cr, 0)}%", sum(parts) / len(parts),
+                   "⚖️ 부채비율 50%↓·유동비율 150%↑ 만점 (불황에도 버텨야 싸게 산 게 의미가 있다)", orig=False)
+                 if parts else C(MS, "④ 재무 생존력: 데이터 없음", None))
+    # ⑤ 소외·역발상 — 남들이 팔 때
+    r1 = F["ret1y"]
+    k.append(C(MS + " 9장", f"⑤ 소외된 종목: 1년 주가 {r1 * 100:+.0f}%", ramp(r1, 0.4, -0.1),
+               "📖 '기회는 인기 없고 남들이 억지로 팔 때' → ⚖️ 1년 −10%↓ 만점 · +40%↑ 0점", orig=False)
+             if r1 is not None else C(MS + " 9장", "⑤ 소외 여부: 1년 주가 데이터 없음", None))
+    # ⑥ 가치 함정 피하기 — 싸도 가치가 녹아내리면 안 된다
+    rv = [v for _, v in yr_vals(by, "rev", 6)] or last(F["rev"], 6)
+    sg = cagr(rv[0], rv[-1], len(rv) - 1) if len(rv) >= 3 else None
+    k.append(C(BP, f"⑥ 가치 함정 아님: 매출 연평균 {sg * 100:+.1f}% ({len(rv) - 1}년)", ramp(sg, -0.05, 0.0),
+               "⚖️ 매출이 줄지 않으면 만점 · 연 −5%↓ 0점 (싸 보여도 사업 가치가 녹는 종목 경계)", orig=False)
+             if sg is not None else C(BP, "⑥ 가치 함정: 매출 3년치 미만", None))
+    todo = ["절대 수익 — 시장보다 덜 빠지는 게 아니라 '돈을 잃지 않는 것'이 목표인가 (『안전마진』 1장)",
+            "살 게 없으면 현금으로 기다릴 수 있는가 — 바우포스트는 현금 비중 30~50%도 감수",
+            "강제 매도·구조조정·분할·지수 편출처럼 '가격이 가치와 상관없이 눌린' 사정이 있는가 (『안전마진』 9~10장)",
+            "가치를 숫자 하나가 아니라 범위로 봤는가 — 가장 나쁜 시나리오에서도 버틸 가격인가",
+            "가치가 드러날 계기(자산 매각·자사주·분할)가 있는가 (『안전마진』 10장 촉매)"]
+    return k, todo
 
 
 # ════════════════════════════════════════════════════════════════
@@ -452,57 +557,142 @@ def price(F):
                    "📖 1973년 '인기 성장주가 너무 비싸졌다'며 매도 → ⚖️ 25배↓ 만점 · 40배↑ 0점", orig=False))
     else:
         p.append(C("로 프라이스 1973 'New Era'", "⑤ 가격: 적자이거나 PER 없음", 0.0 if per is not None else None))
+    # ⑥ 성장의 계절 — 성장 속도가 꺾이면 '가을' (1939 기고의 기업 생애주기: 성장기 → 성숙기 → 쇠퇴기)
+    if len(e) >= 7 and all(v > 0 for v in e[-7:]):
+        rn, ro = cagr(e[-4], e[-1], 3), cagr(e[-7], e[-4], 3)
+        p.append(C(TP, f"⑥ 성장의 계절: 최근 3년 EPS 연 {rn * 100:+.0f}% vs 그 전 3년 연 {ro * 100:+.0f}%", ramp(rn - ro, -0.10, 0),
+                   "📖 '성장이 느려지기 시작하면 성장주의 가을 — 성숙기 회사는 판다' → ⚖️ 속도 유지 만점 · 10%p↓ 둔화 0점", orig=False))
+    else:
+        p.append(C(TP, "⑥ 성장의 계절: 흑자 EPS 7년치 미만", None))
     todo = ["산업 자체가 커지는가 — 성숙·쇠퇴 산업의 1등보다 성장 산업의 좋은 회사 (1939 기고)",
             "정부 규제·원자재 가격에 이익이 휘둘리지 않는가", "성장이 끝나 가는 신호(이익률 하락·신제품 부재)가 보이면 판다 — '성장주의 가을'"]
     return p, todo
 
 
 # ════════════════════════════════════════════════════════════════
-def oneil(F):
-    """윌리엄 오닐 『최고의 주식 최적의 타이밍』 CAN SLIM — 숫자로 볼 수 있는 C·A·N·L 만 채점 (S·I·M 은 직접 확인)"""
-    o = []
-    HM = "『최고의 주식 최적의 타이밍』"
+def druckenmiller(F):
+    """스탠리 드러켄밀러 — 『새로운 시장의 마법사들』(1992) 인터뷰 · 2015 로스트트리 강연 · Sohn 컨퍼런스 · 2023 노르웨이 국부펀드 인터뷰
+       책은 안 썼지만 원칙은 일관됨: 지금이 아니라 18개월 뒤 이익을 보고, 가격 흐름(시장이 먼저 안다)을 존중하며,
+       먼저 자본을 지키고 확신이 서면 크게. 밸류에이션으로 타이밍을 잡지 않는다"""
+    d = []
+    MW, LT, NB = "『새로운 시장의 마법사들』", "2015 로스트트리 강연", "2023 노르웨이 국부펀드 인터뷰"
+    # ① 18개월 뒤 이익
+    ee, eps = F["eps_est"], F["eps"]
+    fg, txt = None, ""
+    if ee and eps and eps[-1] and eps[-1] > 0:
+        n = min(2, len(ee))
+        fg = (ee[n - 1] / eps[-1]) ** (1 / n) - 1 if ee[n - 1] > 0 else -1.0
+        txt = f"① 18개월 뒤 이익: 증권사 추정 EPS 연 {fg * 100:+.0f}% ({n}년 앞까지)"
+    elif F["per"] and F.get("fper") and F["per"] > 0 and F["fper"] > 0:
+        fg = F["per"] / F["fper"] - 1
+        txt = f"① 18개월 뒤 이익: PER {F['per']:.1f} → 추정 PER {F['fper']:.1f} (이익 {fg * 100:+.0f}%)"
+    d.append(C(LT, txt, ramp(fg, 0, 0.25), "📖 '현재가 아니라 18개월 뒤 모습을 그려라' → ⚖️ 연 25%↑ 만점 · 0%↓ 0점", orig=False)
+             if fg is not None else C(LT, "① 18개월 뒤 이익: 증권사 추정치 없음", None))
+    # ② 이익 변곡 — 분기 이익이 돌아서거나 빨라지는가
     q = F.get("q_eps") or []
-    if len(q) >= 5:
-        a, b = q[-5], q[-1]
-        yoy = (b / a - 1) if a > 0 and b > 0 else (None if a <= 0 < b else -1.0)
-        if yoy is None:
-            o.append(C(HM + " C", f"① C 최근 분기 EPS: 적자 → 흑자 전환 ({f1(a, 0)} → {f1(b, 0)})", 0.5, "📖 전년 같은 분기보다 25%↑ · 흑자 전환은 반만"))
-        else:
-            o.append(C(HM + " C", f"① C 최근 분기 EPS 전년 대비 {yoy * 100:+.0f}%", ramp(yoy, 0, 0.25), "📖 전년 같은 분기보다 25%↑ 만점(클수록 좋음) · 0%↓ 0점"))
-        if len(q) >= 6 and q[-6] > 0 and a > 0 and b > 0:
-            prev = q[-2] / q[-6] - 1
-            o.append(C(HM + " C", f"② C 이익 가속: 최근 분기 {yoy * 100:+.0f}% vs 직전 분기 {prev * 100:+.0f}%", ramp(yoy - prev, -0.15, 0),
-                       "📖 '분기 이익 증가율이 빨라지는가' → 같거나 빨라지면 만점 · 15%p↓ 둔화 0점"))
-        else:
-            o.append(C(HM + " C", "② C 이익 가속: 분기 6개 미만이거나 적자", None))
-    elif F.get("q_yoy") is not None:                  # 해외: 야후 분기 이익 증가율
-        yoy = F["q_yoy"]
-        o.append(C(HM + " C", f"① C 최근 분기 이익 전년 대비 {yoy * 100:+.0f}%", ramp(yoy, 0, 0.25), "📖 전년 같은 분기보다 25%↑ 만점 · 0%↓ 0점"))
+    if len(q) >= 5 and q[-5] > 0 and q[-1] > 0:
+        yoy = q[-1] / q[-5] - 1
+        acc = (yoy - (q[-2] / q[-6] - 1)) if len(q) >= 6 and q[-6] > 0 and q[-2] > 0 else None
+        s = ramp(yoy, 0, 0.25) if acc is None else (ramp(yoy, 0, 0.25) + ramp(acc, -0.15, 0.05)) / 2
+        d.append(C(MW, f"② 이익 변곡: 최근 분기 EPS 전년 대비 {yoy * 100:+.0f}%" + (f" · 직전 분기보다 {acc * 100:+.0f}%p" if acc is not None else ""), s,
+                   "📖 '이익이 바뀌는 변곡점을 남보다 먼저' → ⚖️ +25%↑이면서 빨라지면 만점", orig=False))
+    elif len(q) >= 5 and q[-5] <= 0 < q[-1]:
+        d.append(C(MW, f"② 이익 변곡: 분기 적자 → 흑자 전환 ({f1(q[-5], 0)} → {f1(q[-1], 0)})", 0.7, "⚖️ 흑자 전환 = 변곡 (70%)", orig=False))
+    elif len(q) >= 5:
+        d.append(C(MW, "② 이익 변곡: 최근 분기 적자", 0.0, "⚖️ 이익이 꺾이는 중"))
+    elif F.get("q_yoy") is not None:
+        d.append(C(MW, f"② 이익 변곡: 최근 분기 이익 전년 대비 {F['q_yoy'] * 100:+.0f}%", ramp(F["q_yoy"], 0, 0.25), "⚖️ +25%↑ 만점 · 0%↓ 0점", orig=False))
     else:
-        o.append(C(HM + " C", "① C 분기 이익: 데이터 없음", None))
-    e = last(F["eps"], 4)
-    if len(e) >= 4:
-        ag = cagr(e[0], e[-1], 3) if all(v > 0 for v in e) else None
-        o.append(C(HM + " A", f"③ A 연간 EPS 3년 연평균 {ag * 100:+.0f}%" if ag is not None else "③ A 연간 EPS: 최근 4년 중 적자 있음",
-                   0.0 if ag is None else ramp(ag, 0, 0.25), "📖 3년 연속 25%↑ 성장 · 적자 해 있으면 0점"))
+        d.append(C(MW, "② 이익 변곡: 분기 데이터 없음", None))
+    # ③ 가격이 먼저 말해 준다 — 추세
+    gap, hi, cl = F.get("ma200_gap"), F.get("hi52"), F["close"]
+    if gap is not None:
+        d.append(C(MW, f"③ 가격 흐름: 주가가 200일 평균보다 {gap * 100:+.0f}%", ramp(gap, -0.05, 0.10),
+                   "📖 '시장이 먼저 안다 — 가격이 이야기와 다르면 가격을 믿어라' → ⚖️ 200일선 위 10%↑ 만점 · 5%↓ 아래 0점", orig=False))
+    elif hi and cl:
+        d.append(C(MW, f"③ 가격 흐름: 52주 최고가의 {cl / hi * 100:.0f}%", ramp(cl / hi, 0.70, 0.95), "⚖️ 95%↑ 만점 · 70%↓ 0점", orig=False))
     else:
-        o.append(C(HM + " A", "③ A 연간 EPS: 4년치 미만", None))
-    roe = lastv(F["roe"])
-    o.append(C(HM + " A", f"④ A ROE {roe:.1f}%", ramp(roe, 8, 17), "📖 ROE 17%↑ · ⚖️ 8%↓ 0점") if roe is not None
-             else C(HM + " A", "④ A ROE: 데이터 없음", None))
-    hi, cl = F.get("hi52"), F["close"]
-    o.append(C(HM + " N", f"⑤ N 신고가 근처: 주가가 52주 최고가의 {cl / hi * 100:.0f}%", ramp(cl / hi, 0.70, 0.95),
-               "📖 '신고가 근처에서 사고 바닥 근처 종목은 피한다' → ⚖️ 95%↑ 만점 · 70%↓ 0점", orig=False) if hi and cl
-             else C(HM + " N", "⑤ N 신고가: 52주 최고가 데이터 없음", None))
+        d.append(C(MW, "③ 가격 흐름: 주가 데이터 없음", None))
+    # ④ 상대 강도 — 주도하는 종목인가
     r1 = F["ret1y"]
-    o.append(C(HM + " L", f"⑥ L 주도주: 1년 주가 {r1 * 100:+.0f}%", ramp(r1, 0, 0.30),
-               "📖 '상대강도 80↑ 주도주, 뒤처진 종목은 피한다' → ⚖️ 1년 +30%↑ 만점 · 0%↓ 0점", orig=False) if r1 is not None
-             else C(HM + " L", "⑥ L 주도주: 1년 주가 데이터 없음", None))
-    todo = ["N 새 제품·새 경영진·새 고점 같은 '새로운 것'이 있는가", "S 유통 주식 수가 적거나 자사주로 줄고 있는가 · 상승일 거래량이 늘었는가",
-            "I 실적 좋은 기관이 새로 사들이고 있는가", "M 시장 전체가 상승 추세인가 — 하락장이면 좋은 종목도 3/4은 같이 빠진다",
-            "산 값에서 7~8% 빠지면 무조건 손절 (오닐의 철칙)"]
-    return o, todo
+    d.append(C(NB, f"④ 주도주인가: 1년 주가 {r1 * 100:+.0f}%", ramp(r1, 0, 0.30),
+               "📖 '밸류에이션으로 타이밍을 잡지 마라, 이기는 쪽에 서라' → ⚖️ 1년 +30%↑ 만점 · 0%↓ 0점", orig=False)
+             if r1 is not None else C(NB, "④ 주도주: 1년 주가 데이터 없음", None))
+    # ⑤ 자본 보존 — 먼저 살아남는다
+    mdd = F.get("mdd1y")
+    d.append(C(MW, f"⑤ 자본 보존: 최근 1년 최대 낙폭 −{mdd * 100:.0f}%", ramp(mdd, 0.45, 0.20),
+               "📖 '장기 수익은 자본 보존과 홈런에서 나온다' → ⚖️ 낙폭 20%↓ 만점 · 45%↑ 0점", orig=False)
+             if mdd is not None else C(MW, "⑤ 자본 보존: 1년 일봉 없음", None))
+    todo = ["유동성 방향 — '주가를 움직이는 건 이익이 아니라 유동성(연준)'. 지금 금리·유동성이 이 종목 편인가 (『새로운 시장의 마법사들』)",
+            "18개월 뒤 이 산업의 그림 — 지금 숫자가 아니라 그때 이익이 어디 있을지 두 문장으로",
+            "확신이 크면 크게, 아니면 작게 — '맞았을 때 얼마 버나·틀렸을 때 얼마 잃나'가 중요 (소로스에게 배운 것)",
+            "산 이유가 틀렸으면 가격 불문 바로 정리 — 본전 생각 금지",
+            "거품 끝물·과열 신호(모두가 아는 이야기)가 아닌가"]
+    return d, todo
+
+
+# ════════════════════════════════════════════════════════════════
+def templeton(F):
+    """존 템플턴 — 16계명(1993) · 『템플턴 플랜』 · 『존 템플턴의 가치투자 전략』(로렌 템플턴, 2008) · 펀드 보고서
+       '가장 많이 쓴 가치 잣대는 앞으로 벌 이익 대비 가격' + '비관이 극에 달했을 때 사라' + '우량주 속에서 바겐을 찾아라'
+       → 성장하는 회사가 일시적 비관으로 싸졌을 때 (사진 분류대로 성장 쪽에 둠)"""
+    t, by = [], F["by"]
+    TW, R16, TP = "『존 템플턴의 가치투자 전략』", "템플턴 16계명", "『템플턴 플랜』"
+    per, cl = F["per"], F["close"]
+    # ① 지금 PER이 자기 5년 평균보다 낮은가
+    r5 = F.get("per_rel5")
+    t.append(C(TW, f"① 자기 과거보다 싼가: 현재 PER = 최근 5년 평균 PER의 {r5 * 100:.0f}%", ramp(r5, 1.2, 0.7),
+               "📖 'PER을 그 회사의 과거 PER과 비교' → ⚖️ 5년 평균의 70%↓ 만점 · 120%↑ 0점", orig=False)
+             if r5 is not None else C(TW, "① 과거 PER 비교: 5년 PER 데이터 없음", None))
+    # ② 12개월이 아니라 5년 평균 이익으로 본 PER
+    e = [v for _, v in yr_vals(by, "eps", 10)] or last(F["eps"], 10)
+    e5 = e[-5:]
+    if cl and len(e5) >= 3 and sum(e5) > 0:
+        pe5 = cl / (sum(e5) / len(e5))
+        t.append(C(TP, f"② 5년 평균 이익 기준 PER {pe5:.1f}배", ramp(pe5, 20, 10),
+                   "📖 '12개월 이익 대신 최근 5년 이익으로 — 경기 왜곡을 지운다' → ⚖️ 10배↓ 만점 · 20배↑ 0점", orig=False))
+    else:
+        t.append(C(TP, "② 5년 평균 이익 PER: 적자이거나 데이터 부족", 0.0 if len(e5) >= 3 else None))
+    # ③ 앞으로 벌 이익 대비 가격 (5년 뒤 예상 EPS)
+    gs = [x for x in (F["eg"], (F["eps_est"][0] / e[-1] - 1) if F["eps_est"] and e and e[-1] > 0 else None) if x is not None]
+    if cl and e and e[-1] > 0 and gs:
+        g = max(0.0, min(min(gs), 0.25))
+        fut = e[-1] * (1 + g) ** 5
+        x = cl / fut
+        t.append(C(TW, f"③ 미래 이익 대비 가격: 5년 뒤 예상 EPS {fut:,.0f}(연 {g * 100:.0f}% 가정)의 {x:.1f}배", ramp(x, 15, 8),
+                   "📖 '가장 많이 쓴 잣대는 앞으로 벌 이익 대비 가격' → ⚖️ 8배↓ 만점 · 15배↑ 0점 (성장률은 과거·추정 중 작은 값, 25% 상한)", orig=False))
+    else:
+        t.append(C(TW, "③ 미래 이익 대비 가격: 적자이거나 데이터 부족", 0.0 if e and e[-1] <= 0 else None))
+    # ④ 최대 비관
+    hi = F.get("hi52")
+    if hi and cl:
+        dd = 1 - cl / hi
+        t.append(C(R16, f"④ 비관 속에서 사기: 52주 최고가 대비 −{dd * 100:.0f}%", ramp(dd, 0.05, 0.35),
+                   "📖 '비관이 극에 달했을 때가 최고의 매수 시점' → ⚖️ 고점 대비 −35%↓ 만점 · −5% 이내 0점", orig=False))
+    else:
+        t.append(C(R16, "④ 비관 여부: 52주 최고가 데이터 없음", None))
+    # ⑤ 우량주 속 바겐 — 이익이 꾸준히 크는가
+    e6 = e[-6:]
+    if len(e6) >= 4:
+        ups = sum(1 for a, b in zip(e6, e6[1:]) if b > a)
+        t.append(C(R16, f"⑤ 우량주 속 바겐: 최근 {len(e6) - 1}번 중 {ups}번 EPS 증가", ups / (len(e6) - 1),
+                   "📖 '싼 주식이 아니라 우량주 속에서 바겐을' → 해마다 이익이 늘면 만점"))
+    else:
+        t.append(C(R16, "⑤ 이익 꾸준함: 4년치 미만", None))
+    # ⑥ 이익률이 과거보다 나은가 (일시적 비관인지 구조적 쇠퇴인지)
+    om = [v for _, v in yr_vals(by, "opm", 6)] or last(F["opm"], 6)
+    if len(om) >= 3 and not F["fin_co"]:
+        base = sum(om[:-1]) / len(om[:-1])
+        t.append(C(TW, f"⑥ 일시적 비관인가: 최근 영업이익률 {om[-1]:.1f}% vs 이전 평균 {base:.1f}%", ramp(om[-1] - base, -3, 0),
+                   "⚖️ 이익률이 과거 평균 이상이면 만점 · 3%p↓ 0점 (주가만 빠지고 사업은 멀쩡해야)", orig=False))
+    else:
+        t.append(C(TW, "⑥ 이익률 비교: 금융업이거나 3년치 미만", None, na=F["fin_co"]))
+    todo = ["비관의 이유가 일시적인가 — 사업 자체가 망가진 건 아닌가 (16계명 '모두가 팔 때')",
+            "나라·업종을 넘어 비교했나 — 다른 시장의 같은 업종보다도 싼가 (글로벌 바겐 헌팅)",
+            "세금·물가를 뺀 '실질 총수익'으로 봐도 남는가 (16계명 1)",
+            "'이번엔 다르다' — 가장 위험한 네 마디를 내가 하고 있지 않은가",
+            "분산했는가 — 아무리 공부해도 틀릴 수 있다 (16계명 '분산')"]
+    return t, todo
 
 
 # ════════════════════════════════════════════════════════════════

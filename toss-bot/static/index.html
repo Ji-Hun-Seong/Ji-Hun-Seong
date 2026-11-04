@@ -202,7 +202,7 @@ em.avg{background:var(--warn);color:#fff}em.mine.b{background:var(--up);color:#f
 .mixmk{position:relative;height:14px;font-size:10px;color:var(--sub)}.mixmk span{position:absolute;transform:translateX(-50%);white-space:nowrap}
 .mixmk span::before{content:"";position:absolute;left:50%;top:-22px;height:18px;border-left:1px dashed var(--sub)}
 .st{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px}.st.ok{background:var(--g-bg);color:var(--g-fg)}.st.warn{background:var(--y-bg);color:var(--y-fg)}.st.bad{background:var(--r-bg);color:var(--r-fg)}
-.hbars{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:7px}.hbars.st2{grid-template-columns:52px repeat(4,1fr);align-items:end}.hbars .sl{text-align:left;color:var(--txt);font-weight:700;font-size:11.5px;white-space:nowrap}
+.hbars{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:7px}.hbars.st2{grid-template-columns:52px repeat(5,1fr);align-items:end}.hbars .sl{text-align:left;color:var(--txt);font-weight:700;font-size:11.5px;white-space:nowrap}
 .hbars.gr i b{background:var(--ok)}.vg{display:flex;gap:10px;align-items:baseline}.vg span{font-size:12px;color:var(--sub)}.vg b{font-size:17px;font-weight:800;color:var(--txt);font-variant-numeric:tabular-nums}
 .hgrp{font-size:13px;font-weight:700;margin:14px 0 6px;padding:7px 10px;border-radius:9px;background:var(--bg);display:flex;justify-content:space-between}.hbars div{font-size:10.5px;color:var(--sub);text-align:center}
 .hbars i{display:block;height:5px;border-radius:9px;background:var(--line);margin-top:3px;overflow:hidden}.hbars i b{display:block;height:100%;background:var(--blue)}
@@ -539,24 +539,24 @@ function principlesCard(P, heroes, open) {
     <div class="small" style="margin:12px 0;padding:10px;background:var(--bg);border-radius:10px">⚖️ <b>${esc(P.mix.text)}</b></div>
     <div class="prin">${P.rules.map(([who, step, txt], i) => `<div><b>${i + 1}. ${esc(step)}</b> <em>${esc(who)}</em><br>${esc(txt)}</div>`).join("")}</div>
     <div class="tiny mut" style="margin:12px 0 4px">포트폴리오 규칙</div><div class="prin">${P.portfolio.map(x => `<div>${esc(x)}</div>`).join("")}</div>
-    ${heroes ? [["value", "💎 가치주 4인 — 가치 점수 100"], ["growth", "🚀 성장주 4인 — 성장 점수 100"]].map(([s, lab]) => {
-        const hs = heroes.filter(h => (h.style || "value") === s); return hs.length ? `<div class="tiny mut" style="margin:12px 0 4px">${lab} (각 25점 환산)</div><div class="prin">${hs.map(h => `<div>${h.icon} <b>${esc(h.name)}</b> <em>${esc(h.theme)}</em><br>${esc(h.motto)}</div>`).join("")}</div>` : ""; }).join("") : ""}
+    ${heroes ? [["value", "💎 가치주 5인 — 가치 점수 100"], ["growth", "🚀 성장주 5인 — 성장 점수 100"]].map(([s, lab]) => {
+        const hs = heroes.filter(h => (h.style || "value") === s); return hs.length ? `<div class="tiny mut" style="margin:12px 0 4px">${lab} (각 20점)</div><div class="prin">${hs.map(h => `<div>${h.icon} <b>${esc(h.name)}</b> <em>${esc(h.theme)}</em><br>${esc(h.motto)}</div>`).join("")}</div>` : ""; }).join("") : ""}
   </details></div>`;
 }
-const HKEYS = [["graham", "🛡️ 그레이엄"], ["buffett", "🏰 버핏"], ["greenblatt", "🧙 그린블랫"], ["ackman", "🎯 애크먼"],
-               ["fisher", "🌱 피셔"], ["lynch", "🔎 린치"], ["price", "📈 프라이스"], ["oneil", "🚀 오닐"]];
-const HSTY = {value: ["graham", "buffett", "greenblatt", "ackman"], growth: ["fisher", "lynch", "price", "oneil"]};
+const HKEYS = [["buffett", "🏰 버핏"], ["graham", "🛡️ 그레이엄"], ["munger", "🧠 멍거"], ["ackman", "🎯 애크먼"], ["klarman", "🔒 클라만"],
+               ["lynch", "🔎 린치"], ["fisher", "🌱 피셔"], ["druckenmiller", "🦅 드러켄밀러"], ["templeton", "🌍 템플턴"], ["price", "📈 프라이스"]];
+const HSTY = {value: ["buffett", "graham", "munger", "ackman", "klarman"], growth: ["lynch", "fisher", "druckenmiller", "templeton", "price"]};
 const hbar1 = (h, keys, cls, lab) => { const ks = HKEYS.filter(([k]) => keys.includes(k));
   return `<div class="hbars st2 ${cls}"><div class="sl">${lab}</div>${ks.map(([k, l]) => `<div>${l.split(" ")[1]}<i><b style="width:${h[k] == null ? 0 : h[k] * 5}%"></b></i></div>`).join("")}</div>`; };
 const hbars = (h, x) => {
   if (!h) return "";
-  if (x && x.value !== undefined)                   // 가치 4인 · 성장 4인 두 줄
+  if (x && x.value !== undefined)                   // 가치 5인 · 성장 5인 두 줄
     return hbar1(h, HSTY.value, "", `💎 ${x.value == null ? "-" : Math.round(x.value)}`) + hbar1(h, HSTY.growth, "gr", `🚀 ${x.growth == null ? "-" : Math.round(x.growth)}`);
   const ks = HKEYS.filter(([k]) => h[k] != null);    // (예전 5인 데이터 — 캐시가 남아 있을 때)
   return ks.length ? `<div class="hbars" style="grid-template-columns:repeat(${ks.length},1fr)">${ks.map(([k, l]) => `<div>${l.split(" ")[1]}<i><b style="width:${h[k] * 5}%"></b></i></div>`).join("")}</div>` : ""; };
 function heroCard(a) {
   const H = a.heroes; if (!H) return "";
-  if (H.error) return `<div class="card"><h2>🏛️ 대가 8인 체크</h2><div class="empty">${esc(H.error)}</div></div>`;
+  if (H.error) return `<div class="card"><h2>🏛️ 대가 10인 체크</h2><div class="empty">${esc(H.error)}</div></div>`;
   const V = H.value || {}, G = H.growth || {}, two = H.value !== undefined;
   const sTxt = s => s == null ? "-" : Math.round(s);
   const heroDiv = h => `<div class="hero"><div class="hd"><span><b>${h.icon} ${esc(h.name)}</b> <span class="tiny mut">${esc(h.theme)}</span></span>
@@ -568,12 +568,12 @@ function heroCard(a) {
           <div class="tiny mut" style="margin:2px 0 4px 18px">${esc(c.src || "")}${c.line ? " · " + esc(c.line) : ""}${c.ok == null ? " · 데이터 없어 반만 인정" : ""}</div></details>`).join("")}
       <div class="tiny mut">항목 ${h.n || 0}개 중 📖 원전 숫자 그대로 ${h.n_orig || 0}개 · 항목마다 같은 비중</div>
       ${(h.todo || []).length ? `<details style="margin-top:4px"><summary class="tiny">📝 숫자로 못 보는 것 — 직접 확인 ${h.todo.length}가지</summary>${h.todo.map(t => `<div class="ck mut">☐ ${esc(t)}</div>`).join("")}</details>` : ""}</div>`;
-  const grp = (s, lab, X) => { const hs = H.heroes.filter(h => (h.style || "value") === s); return hs.length ? `<div class="hgrp"><span>${lab}</span><span>${sTxt(X.score)}<span class="tiny mut">/100 · ${esc((X.grade || {}).label || "")}</span></span></div>${hs.map(heroDiv).join("")}` : ""; };
-  return `<div class="card"><div class="row"><h2 style="margin:0">🏛️ 대가 8인 체크</h2>${two ? `<div class="vg"><span>💎 가치 <b>${sTxt(V.score)}</b></span><span>🚀 성장 <b>${sTxt(G.score)}</b></span></div>` : `<span><span class="score">${H.total ?? "-"}</span><span class="tiny mut">/100</span></span>`}</div>
+  const grp = (s, lab, X) => { const hs = H.heroes.filter(h => (h.style || "value") === s); return hs.length ? `<div class="hgrp"><span>${lab}</span><span>${sTxt(X.score)}<span class="tiny mut">/100 · ${esc((X.grade || {}).label || "")}${X.agree != null ? ` · 대가 ${X.agree}/${X.n_heroes || 5}명 동의` : ""}</span></span></div>${hs.map(heroDiv).join("")}` : ""; };
+  return `<div class="card"><div class="row"><h2 style="margin:0">🏛️ 대가 10인 체크</h2>${two ? `<div class="vg"><span>💎 가치 <b>${sTxt(V.score)}</b></span><span>🚀 성장 <b>${sTxt(G.score)}</b></span></div>` : `<span><span class="score">${H.total ?? "-"}</span><span class="tiny mut">/100</span></span>`}</div>
     <div class="grade" style="margin-top:12px"><b>${esc(H.grade.label)}</b><div class="small mut" style="margin-top:4px">${esc(H.grade.desc)}</div>
       ${H.note ? `<div class="small" style="margin-top:6px">${esc(H.note)}</div>` : ""}
       <div class="small" style="margin-top:6px">🔎 린치 분류: <b>${esc(H.lynch_cat)}</b> <span class="mut">· 매도 기준: ${esc(H.lynch_sell || "")}</span></div></div>
-    ${two ? grp("value", "💎 가치주 4인", V) + grp("growth", "🚀 성장주 4인", G) : H.heroes.map(heroDiv).join("")}
+    ${two ? grp("value", "💎 가치주 5인", V) + grp("growth", "🚀 성장주 5인", G) : H.heroes.map(heroDiv).join("")}
     <div class="tiny mut" style="margin-top:10px">${H.method ? esc(H.method) + "<br>" : ""}데이터 반영률 ${Math.round((H.coverage || 0) * 100)}% · ${H.src === "dart" ? "DART 사업보고서 최대 10년" : "연간 재무 최근 4년(네이버·야후)"} 기준 · 데이터 없는 항목은 반만 인정 · 기계적 채점이라 산 이유는 직접 두 문장으로 적어 보세요</div></div>`;
 }
 
@@ -715,7 +715,7 @@ function fomoCard(a) {
   if (!why.length) return "";
   return `<div class="card fomo-alert"><h2>🧘 FOMO 경보 — ${why.join(" · ")}</h2>
     <div class="small">지금 사고 싶은 마음이 든다면 그게 FOMO일 수 있어요.<br>
-    ① 하루 기다리기 ② 왜 더 오를지 두 문장으로 써 보기 ③ 원칙에 맞는 가격(대가 8인·밸류 기준)인지 확인하기 — 셋 다 통과 못 하면 사지 않기.<br>
+    ① 하루 기다리기 ② 왜 더 오를지 두 문장으로 써 보기 ③ 원칙에 맞는 가격(대가 10인·밸류 기준)인지 확인하기 — 셋 다 통과 못 하면 사지 않기.<br>
     <b>그리고 어떤 경우에도 대출로 사지 않기.</b></div></div>`;
 }
 
@@ -837,7 +837,7 @@ function ctxCard() {
     <div class="tally" style="margin:-4px 0 8px">${[["value", "밸류"], ["payout", "주주환원"], ["cash", "현금·재무"], ["fit", "내 성향"]].map(([k, l]) => `<span class="tag ${x.scores[k] >= 70 ? "g" : x.scores[k] < 40 ? "r" : ""}">${l} ${x.scores[k]}</span>`).join("")}</div>
     ${x.reasons.map(w => `<div class="small" style="padding:3px 0">✔︎ ${esc(w)}</div>`).join("")}${x.risks.map(w => `<div class="small" style="padding:3px 0;color:var(--r-fg)">⚠︎ ${esc(w)}</div>`).join("")}
     ${x.note ? `<div class="tiny mut" style="margin-top:6px">📝 ${esc(x.note)}</div>` : ""}</div>`;
-  if (c.kind === "hero") return "";                 // 대가 목록에서 왔으면 아래 '대가 8인 체크'가 같은 내용
+  if (c.kind === "hero") return "";                 // 대가 목록에서 왔으면 아래 '대가 10인 체크'가 같은 내용
   if (c.kind === "ackman" && x.total == null) return "";
   if (c.kind === "ackman") return `<div class="card"><h2>🇺🇸 애크먼 TOP ${x.rank} · ${x.total != null ? x.total + "점" : ""} ${x.status || ""}</h2>
     ${x.fv ? `<div class="small">적정가 <b>${usd(x.fv)}</b> · 매수가 ≤ <b>${usd(x.buy)}</b> · 현재 ${usd(x.price)} <span class="mut">(${esc(x.word || "")})</span></div>` : ""}
@@ -1047,9 +1047,9 @@ function pRender(d) {
     const hs = tabItems.slice().sort((a, b) => key(b) - key(a));
     pItems = hs.concat(d.more || []);
     const styBar = two ? `<div class="seg" id="h-sort" style="margin-top:8px">${[["value", `💎 가치주 ${d.items.filter(isV).length}`], ["growth", `🚀 성장주 ${d.items.filter(isG).length}`], ["all", "전체"]].map(([k, l]) => `<button data-s="${k}" class="${sk === k ? "act" : ""}">${l}</button>`).join("")}</div>` : "";
-    head = hMktBar() + styBar + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 8인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
-      <div class="small" style="margin-top:6px;line-height:1.6">💎 <b>가치</b> 그레이엄·버핏·그린블랫·애크먼 · 🚀 <b>성장</b> 피셔·린치·로 프라이스·오닐 — 각 100점, 등급은 높은 쪽</div>
-      ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 그레이엄·버핏·그린블랫·애크먼 점수 순" : "🚀 성장주 — 피셔·린치·로 프라이스·오닐 점수 순"}</b> <span class="tiny mut">${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다"}</span></div>` : ""}
+    head = hMktBar() + styBar + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 10인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
+      <div class="small" style="margin-top:6px;line-height:1.6">💎 <b>가치</b> 버핏·그레이엄·멍거·애크먼·클라만 · 🚀 <b>성장</b> 린치·피셔·드러켄밀러·템플턴·로 프라이스 — 각 100점, 등급은 높은 쪽 · 핵심은 5명 중 3명↑ 동의</div>
+      ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 버핏·그레이엄·멍거·애크먼·클라만 점수 순" : "🚀 성장주 — 린치·피셔·드러켄밀러·템플턴·로 프라이스 점수 순"}</b> <span class="tiny mut">${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다"}</span></div>` : ""}
       <div class="tally"><span class="tag g">🟢 핵심 ${(sk === "all" ? G : TG).core || 0}</span><span class="tag y">🟡 위성 ${(sk === "all" ? G : TG).sat || 0}</span><span class="tag">⚪ 관찰 ${(sk === "all" ? G : TG).watch || 0}</span><span class="tag r">🔴 부적합 ${(sk === "all" ? G : TG).no || 0}</span></div>
       ${S ? `<div class="tiny mut" style="margin-top:6px">위성 이상: 💎 가치형 ${S.value} · 🚀 성장형 ${S.growth} · 둘 다 ${S.both}</div>` : ""}
       <div class="tiny mut" style="margin-top:8px">${glob ? "후보 = 그 나라 대표 우량주·배당주 (chartpage/heroes.py GLOBAL_POOL) · 야후 재무 기준 — 공시·수급 항목은 채점에서 제외" : "후보 = 내가 아는 회사(toss-bot/heroes_pool.txt) + 가치주 후보 + 📌 내 계좌"} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
