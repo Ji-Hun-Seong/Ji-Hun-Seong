@@ -863,13 +863,15 @@ let hMkt = "kr";
 try { hMkt = localStorage.getItem("h-mkt") || "kr"; } catch (e) {}
 const HMKT = [["kr", "🇰🇷 한국"], ["us", "🇺🇸 미국"], ["eu", "🇪🇺 유럽"], ["cn", "🇨🇳 중국"], ["jp", "🇯🇵 일본"]];
 function hSetMkt(m) { hMkt = m; try { localStorage.setItem("h-mkt", m); } catch (e) {} pLoad(); }
+let sDate = null;                                       // 급등: 보고 있는 날짜 (null = 최신)
+const pKey = () => pKind === "hero" && hMkt !== "kr" ? "hero_" + hMkt : pKind === "surge" && sDate ? "surge:" + sDate : pKind;
 async function pLoad(force) {
-  const k = pKind === "hero" && hMkt !== "kr" ? "hero_" + hMkt : pKind;
+  const k = pKey();
   if (PK[k] && !force && Date.now() - PK[k].t < 300000) return pRender(PK[k].d);
   if (!PK[k]) $("p-out").innerHTML = (pKind === "hero" ? hMktBar() : "") + `<div class="card"><div class="empty">불러오는 중…${k.startsWith("hero") ? `<br><span class="tiny">${k === "hero" ? "영웅 채점은 후보 약 90종목의 재무·공시를 모아서 처음엔 1분쯤 걸립니다 (이후 6시간 저장)" : "해외 대표 종목 30~40개의 재무를 모아서 처음엔 1~2분 걸립니다 (이후 12시간 저장)"}</span>` : ""}</div></div>`;
   if (pKind === "hero") hMktBind();
-  const cur = () => (pKind === "hero" && hMkt !== "kr" ? "hero_" + hMkt : pKind);
-  try { const d = await (await fetch("api/picks?k=" + k, {cache: "no-store"})).json(); PK[k] = {t: Date.now(), d}; if (k === cur()) pRender(d); }
+  const url = k.startsWith("surge:") ? "api/picks?k=surge&d=" + k.slice(6) : "api/picks?k=" + k;
+  try { const d = await (await fetch(url, {cache: "no-store"})).json(); PK[k] = {t: Date.now(), d}; if (k === pKey()) pRender(d); }
   catch (e) { $("p-out").innerHTML = `<div class="card"><div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
 const hMktBar = () => `<div class="seg" id="h-mkt" style="margin-top:-4px">${HMKT.map(([k, l]) => `<button data-m="${k}" class="${hMkt === k ? "act" : ""}">${l}</button>`).join("")}</div>`;
@@ -895,17 +897,28 @@ function pRender(d) {
       ${x.note ? `<div class="why">${esc(x.note)}</div>` : ""}</div>`).join("");
     if (d.failed && d.failed.length) rows += `<div class="tiny mut" style="padding-top:12px">데이터 부족·실패 ${d.failed.length}종목: ${d.failed.slice(0, 12).map(x => esc(x.name)).join(" · ")}</div>`;
   } else if (d.kind === "surge") {
-    const p = d.prev;
-    head = `<div class="card"><div class="label">다음 거래일 급등 후보 · ${d.date} 장 마감 기준</div>
-      <div class="small" style="margin-top:6px;line-height:1.6">재료(오늘 공시) 35 · 거래량 선행 20 · 차트 에너지 25 · 종가 강도 10 · 유동성 10 − 감점 − 추격(이미 오른 만큼). ${fmtN(d.n_scored)}종목 채점</div>
-      ${p ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 ${p.from} 후보의 다음 날 성적: 평균 <b class="${cls(p.avg)}">${p.avg != null ? (p.avg >= 0 ? "+" : "") + p.avg + "%" : "-"}</b> (시장 ${p.market_avg >= 0 ? "+" : ""}${p.market_avg}%) · 상승 ${p.up}/${p.n} · +10%↑ ${p.hit10}개
-        <div class="tiny mut" style="margin-top:4px">${p.results.map(r => `${esc(r.name)} ${r.next_chg == null ? "-" : (r.next_chg >= 0 ? "+" : "") + r.next_chg + "%"}`).join(" · ")}</div></div>` : ""}
-      <div class="tiny mut" style="margin-top:8px">v0 규칙 점수 — 매일 채점하면서 한 달 데이터가 쌓이면 학습 모형으로 바꿉니다. 매수 추천 아님</div></div>`;
+    const D = d.dates || [], i = D.findIndex(x => x.date === d.date), g = d.graded, latest = i <= 0;
+    const sg = v => v == null ? "-" : (v >= 0 ? "+" : "") + v + "%";
+    head = `<div class="card"><div class="row" style="gap:6px">
+        <button class="kc-ic" id="s-older" ${i < 0 || i >= D.length - 1 ? "disabled style='opacity:.3'" : ""}>‹</button>
+        <select class="kc-rng" id="s-date" style="flex:1;text-align:center">${(D.length ? D : [{date: d.date}]).map(x => `<option value="${x.date}" ${x.date === d.date ? "selected" : ""}>${x.date}${x.graded && x.graded.avg != null ? `  (다음 날 ${sg(x.graded.avg)})` : ""}</option>`).join("")}</select>
+        <button class="kc-ic" id="s-newer" ${latest ? "disabled style='opacity:.3'" : ""}>›</button></div>
+      <div class="label" style="margin-top:10px">${d.date} 장 마감 기준 → 다음 거래일 급등 후보 ${latest ? "· 최신" : ""}</div>
+      <div class="small" style="margin-top:6px;line-height:1.6">재료(오늘 공시) 35 · 거래량 선행 20 · 차트 에너지 25 · 종가 강도 10 · 유동성 10 − 감점 − 추격(이미 오른 만큼). ${fmtN(d.n_scored)}종목 채점 · <span class="tiny mut">${esc(d.method || "")}</span></div>
+      ${g ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 이 후보들의 다음 날 성적: 평균 <b class="${cls(g.avg)}">${sg(g.avg)}</b> (시장 평균 ${sg(g.market_avg)}) · 오른 종목 ${g.up}/${g.n} · +10%↑ ${g.hit10}개</div>`
+        : `<div class="small mut" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px">📋 다음 거래일 장 마감 후(18:45쯤) 채점돼요</div>`}
+      <div class="tiny mut" style="margin-top:8px">규칙 점수 — 매일 채점하면서 데이터가 쌓이면 학습 모형으로 바꿉니다. 매수 추천 아님</div></div>`;
     rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>
-        <span class="tiny mut"> ${esc(x.market)}</span></div><div style="text-align:right"><span class="score">${x.score}</span><span class="tiny mut">점</span></div></div>
+        <span class="tiny mut"> ${esc(x.market)}</span></div><div style="text-align:right">${x.next_chg != null ? `<span class="tag ${x.next_chg >= 10 ? "g" : x.next_chg < 0 ? "r" : ""}" style="margin-right:6px">다음 날 ${sg(x.next_chg)}</span>` : ""}<span class="score">${x.score}</span><span class="tiny mut">점</span></div></div>
       <div class="row tiny mut" style="margin-top:3px"><span>${won(x.close)} <span class="${cls(x.chg)}">${x.chg >= 0 ? "+" : ""}${x.chg}%</span> · 거래량 ${x.vol_ratio}배 · ${fmtN(x.tv / 1e8)}억${x.ret5 != null ? ` · 5일 <span class="${cls(x.ret5)}">${pct(x.ret5, 0)}</span>` : ""}${x.ret20 != null ? ` · 20일 <span class="${cls(x.ret20)}">${pct(x.ret20, 0)}</span>` : ""}</span></div>
       <div>${x.why.slice(0, 4).map(w => `<span class="tag g">${esc(w)}</span>`).join("")}${x.warn.map(w => `<span class="tag r">${esc(w)}</span>`).join("")}</div></div>`).join("");
     if (d.more && d.more.length) rows += `<div class="tiny mut" style="padding-top:12px">11~20위: ${d.more.map((x, j) => `<a ${open(d.items.length + j)} href="javascript:void 0">${esc(x.name)}</a>`).join(" · ")}</div>`;
+    const S = d.surgers || [];
+    if (S.length) rows += `</div><div class="card"><h2>🔥 ${d.date} 실제 급등주 ${d.context && d.context.n_surge != null ? d.context.n_surge + "개" : ""} <span class="tiny mut">(+15%↑ · 왜 올랐나)</span></h2>
+      ${S.slice(0, SD.sAll ? 30 : 10).map(x => `<div class="prow" data-sc="${esc(x.code)}"><div class="row"><span><span class="name">${esc(x.name)}</span> <span class="tiny mut">${esc(x.market || "")}</span>${x.picked ? ` <span class="tag b">🎯 전날 후보</span>` : ""}</span><span class="up name">+${x.chg}%</span></div>
+        <div>${x.catalysts.map(c => `<span class="tag y">${esc(c)}</span>`).join("")}${x.themes.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+        ${x.news.length ? `<div class="why">📰 ${esc(x.news[0])}</div>` : ""}</div>`).join("")}
+      ${S.length > 10 ? `<button class="more" id="s-all">${SD.sAll ? "접기 ▲" : `${S.length - 10}개 더 보기 ▼`}</button>` : ""}`;
   } else if (d.kind === "value") {
     head = `<div class="card"><div class="label">매매일지 DNA 가치주 20선 (코스피) · 데이터 ${esc(d.asof)}</div>
       <div class="small" style="margin-top:6px;line-height:1.6">밸류 25 · 주주환원 25 · 현금·재무 25 · 내 성향 적합도 25 − 리스크 감점 · 📌 = 지금 계좌에 있음</div></div>`;
@@ -925,6 +938,15 @@ function pRender(d) {
   $("p-out").innerHTML = head + `<div class="card">${rows || `<div class="empty">목록 없음</div>`}</div>
     <div class="tiny mut" style="text-align:center;margin:4px 0 12px">종목을 누르면 차트·수급·재무·공시를 한 화면에 · 투자 권유 아님</div>`;
   if (d.kind === "hero") hMktBind();
+  if (d.kind === "surge") {
+    const D = d.dates || [], i = D.findIndex(x => x.date === d.date);
+    const go = dt => { sDate = dt && D.length && dt !== D[0].date ? dt : null; pLoad(); };
+    if ($("s-date")) $("s-date").onchange = e => go(e.target.value);
+    if ($("s-older")) $("s-older").onclick = () => { if (i >= 0 && i < D.length - 1) go(D[i + 1].date); };
+    if ($("s-newer")) $("s-newer").onclick = () => { if (i > 0) go(D[i - 1].date); };
+    if ($("s-all")) $("s-all").onclick = () => { SD.sAll = !SD.sAll; pRender(d); };
+    $("p-out").querySelectorAll("[data-sc]").forEach(el => el.onclick = () => openStock(el.dataset.sc));
+  }
   $("p-out").querySelectorAll("[data-pi]").forEach(el => el.onclick = () => {
     const x = pItems[+el.dataset.pi];
     openStock(d.kind === "ackman" ? x.t : x.code, {us: d.kind === "ackman" || !!x.us, ctx: {kind: d.kind, item: x}});

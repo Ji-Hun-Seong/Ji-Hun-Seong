@@ -198,12 +198,42 @@ def grade_prev(today: pd.Timestamp, chg_today: dict[str, float]) -> dict | None:
     return summary
 
 
+def build_index():
+    """candidates/index.json — 날짜별 요약(대시보드 '지난 날짜 보기'용). 저장할 때마다 전체를 다시 만든다"""
+    daily = os.path.join(HERE, "data", "daily")
+    rows = []
+    for f in sorted(os.listdir(OUT), reverse=True):
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}\.json", f):
+            continue
+        try:
+            c = json.load(open(os.path.join(OUT, f), encoding="utf-8"))
+        except Exception:
+            continue
+        g = c.get("graded") or {}
+        n_surge = None
+        df = os.path.join(daily, f)
+        if os.path.exists(df):
+            try:
+                n_surge = (json.load(open(df, encoding="utf-8")).get("context") or {}).get("n_surge")
+            except Exception:
+                pass
+        rows.append({"date": c["date"], "method": c.get("method"), "n_scored": c.get("n_scored"),
+                     "top": [x["name"] for x in c.get("candidates", [])[:3]], "n_surge": n_surge,
+                     "graded": {k: g.get(k) for k in ("avg", "up", "n", "hit10", "market_avg")} if g else None})
+    json.dump({"dates": rows}, open(os.path.join(OUT, "index.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    return rows
+
+
 def save(out: dict, prev: dict | None):
     os.makedirs(OUT, exist_ok=True)
     out["prev"] = prev
     path = os.path.join(OUT, f"{out['date']}.json")
     json.dump(out, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
     json.dump(out, open(os.path.join(OUT, "latest.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
+    try:
+        build_index()
+    except Exception as e:
+        print("index.json 실패:", e)
     return path
 
 

@@ -401,11 +401,31 @@ def gh_text(path, branch="main", ttl=1800):
     raise FileNotFoundError(f"{path} 를 GitHub·서버 어디서도 못 찾음 ({out.get('error') if isinstance(out, dict) else ''})")
 
 
-def picks_surge():
-    j = json.loads(gh_text("surge-study/data/candidates/latest.json", ttl=900))
+def picks_surge(date=None):
+    """급등 후보 — date 없으면 최신. 날짜 목록·그 후보의 다음 날 성적·그날 실제 급등주까지"""
+    try:
+        idx = json.loads(gh_text("surge-study/data/candidates/index.json", ttl=900)).get("dates", [])
+    except Exception:
+        idx = []
+    path = f"surge-study/data/candidates/{date}.json" if date else "surge-study/data/candidates/latest.json"
+    j = json.loads(gh_text(path, ttl=900 if not date or (idx and date == idx[0]["date"]) else 86400))
+    g = j.get("graded")
+    nxt = {r["code"]: r.get("next_chg") for r in (g or {}).get("results", [])}
+    items = [{"rank": i, **c, "next_chg": nxt.get(c["code"])} for i, c in enumerate(j["candidates"][:10], 1)]
+    surgers = []
+    try:                                          # 그날 실제로 급등한 종목(+15%↑) — 왜 올랐나
+        dj = json.loads(gh_text(f"surge-study/data/daily/{j['date']}.json", ttl=900 if not date else 86400))
+        cand = {c["code"] for c in j["candidates"]}
+        for x in sorted(dj.get("surgers", []), key=lambda x: -x.get("chg", 0))[:30]:
+            surgers.append({"code": x["code"], "name": x["name"], "market": x.get("market"), "chg": round(x.get("chg", 0), 1),
+                            "catalysts": x.get("catalysts") or [], "themes": x.get("themes") or [],
+                            "news": [n.get("title") for n in (x.get("news") or [])[:1]], "picked": x["code"] in cand})
+        ctx = dj.get("context") or {}
+    except Exception:
+        ctx = {}
     return {"kind": "surge", "date": j["date"], "method": j.get("method"), "n_scored": j.get("n_scored"),
-            "items": [{"rank": i, **c} for i, c in enumerate(j["candidates"][:10], 1)],
-            "more": j["candidates"][10:20], "prev": j.get("prev")}
+            "items": items, "more": j["candidates"][10:20], "prev": j.get("prev"), "graded": g,
+            "dates": idx, "surgers": surgers, "context": ctx}
 
 
 def picks_value():
@@ -670,7 +690,11 @@ class H(BaseHTTPRequestHandler):
             qs = parse_qs(urlparse(self.path).query)
             try:
                 if path == "/api/picks":
-                    out = picks((qs.get("k") or ["surge"])[0])
+                    k, dd = (qs.get("k") or ["surge"])[0], (qs.get("d") or [""])[0]
+                    if k == "surge" and re.fullmatch(r"\d{4}-\d{2}-\d{2}", dd):
+                        out = cached("picks:surge:" + dd, 900, lambda: picks_surge(dd))
+                    else:
+                        out = picks(k)
                 else:
                     out = stock_detail((qs.get("q") or [""])[0], (qs.get("us") or [""])[0] == "1")
             except Exception as e:
