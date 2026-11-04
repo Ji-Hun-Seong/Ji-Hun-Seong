@@ -40,25 +40,52 @@ def _keys():
     return k, s
 
 
+_tok_mem = {"token": None, "expires": None}
+
+
+def _read_cache():
+    try:
+        c = json.loads(TOKEN_CACHE.read_text())
+        if datetime.fromisoformat(c["expires"]) > datetime.now() + timedelta(minutes=10):
+            return c["token"], datetime.fromisoformat(c["expires"])
+    except Exception:
+        pass
+    return None, None
+
+
 def get_token() -> str:
-    """토큰은 24시간 유효, 발급은 1분에 1번 제한 → 파일에 캐시해서 재사용."""
-    if TOKEN_CACHE.exists():
-        try:
-            c = json.loads(TOKEN_CACHE.read_text())
-            if datetime.fromisoformat(c["expires"]) > datetime.now() + timedelta(minutes=30):
-                return c["token"]
-        except Exception:
-            pass
-    k, s = _keys()
-    r = requests.post(f"{BASE}/oauth2/tokenP", timeout=10,
-                      json={"grant_type": "client_credentials", "appkey": k, "appsecret": s})
-    r.raise_for_status()
-    d = r.json()
-    expires = datetime.now() + timedelta(seconds=int(d.get("expires_in", 86400)))
+    """토큰은 24시간 유효, 한투 원칙은 '하루 1회 발급' → 파일에 캐시해서 모든 프로그램이 같이 씀.
+    대시보드·봇·감시가 동시에 요청해도 한 번만 발급되도록 파일 잠금을 걸고, 잠근 뒤 캐시를 다시 확인한다."""
+    if _tok_mem["token"] and _tok_mem["expires"] > datetime.now() + timedelta(minutes=10):
+        return _tok_mem["token"]
+    tok, exp = _read_cache()
+    if tok:
+        _tok_mem.update(token=tok, expires=exp)
+        return tok
+    import fcntl
     TOKEN_CACHE.parent.mkdir(parents=True, exist_ok=True)
-    TOKEN_CACHE.write_text(json.dumps({"token": d["access_token"], "expires": expires.isoformat()}))
-    os.chmod(TOKEN_CACHE, 0o600)
-    return d["access_token"]
+    with open(str(TOKEN_CACHE) + ".lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)            # 다른 프로세스·스레드는 여기서 기다림
+        try:
+            tok, exp = _read_cache()              # 기다리는 사이 누가 이미 받았으면 그걸 씀
+            if tok:
+                _tok_mem.update(token=tok, expires=exp)
+                return tok
+            k, s = _keys()
+            r = requests.post(f"{BASE}/oauth2/tokenP", timeout=10,
+                              json={"grant_type": "client_credentials", "appkey": k, "appsecret": s})
+            r.raise_for_status()
+            d = r.json()
+            exp = datetime.now() + timedelta(seconds=int(d.get("expires_in", 86400)))
+            tmp = TOKEN_CACHE.with_suffix(".tmp")
+            tmp.write_text(json.dumps({"token": d["access_token"], "expires": exp.isoformat()}))
+            os.chmod(tmp, 0o600)
+            tmp.replace(TOKEN_CACHE)
+            print(f"한투 접근 토큰 새로 발급 (만료 {exp:%m-%d %H:%M})", flush=True)
+            _tok_mem.update(token=d["access_token"], expires=exp)
+            return d["access_token"]
+        finally:
+            fcntl.flock(lk, fcntl.LOCK_UN)
 
 
 def _num(v) -> float:
