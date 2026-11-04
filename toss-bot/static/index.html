@@ -858,13 +858,22 @@ document.querySelectorAll("#p-seg button").forEach(b => {
 document.querySelector('nav button[data-t="pick"]').addEventListener("click", () => pLoad());
 function openHero() { pKind = "hero"; try { localStorage.setItem("p-kind", "hero"); } catch (e) {}
   document.querySelectorAll("#p-seg button").forEach(x => x.classList.toggle("act", x.dataset.k === "hero")); goTab("pick"); }
+// 영웅 탭 안의 국가 선택 (한국·미국·유럽·중국·일본)
+let hMkt = "kr";
+try { hMkt = localStorage.getItem("h-mkt") || "kr"; } catch (e) {}
+const HMKT = [["kr", "🇰🇷 한국"], ["us", "🇺🇸 미국"], ["eu", "🇪🇺 유럽"], ["cn", "🇨🇳 중국"], ["jp", "🇯🇵 일본"]];
+function hSetMkt(m) { hMkt = m; try { localStorage.setItem("h-mkt", m); } catch (e) {} pLoad(); }
 async function pLoad(force) {
-  const k = pKind;
+  const k = pKind === "hero" && hMkt !== "kr" ? "hero_" + hMkt : pKind;
   if (PK[k] && !force && Date.now() - PK[k].t < 300000) return pRender(PK[k].d);
-  if (!PK[k]) $("p-out").innerHTML = `<div class="card"><div class="empty">불러오는 중…${k === "hero" ? "<br><span class=\"tiny\">영웅 채점은 후보 약 90종목의 재무·공시를 모아서 처음엔 1분쯤 걸립니다 (이후 6시간 저장)</span>" : ""}</div></div>`;
-  try { const d = await (await fetch("api/picks?k=" + k, {cache: "no-store"})).json(); PK[k] = {t: Date.now(), d}; if (k === pKind) pRender(d); }
+  if (!PK[k]) $("p-out").innerHTML = (pKind === "hero" ? hMktBar() : "") + `<div class="card"><div class="empty">불러오는 중…${k.startsWith("hero") ? `<br><span class="tiny">${k === "hero" ? "영웅 채점은 후보 약 90종목의 재무·공시를 모아서 처음엔 1분쯤 걸립니다 (이후 6시간 저장)" : "해외 대표 종목 30~40개의 재무를 모아서 처음엔 1~2분 걸립니다 (이후 12시간 저장)"}</span>` : ""}</div></div>`;
+  if (pKind === "hero") hMktBind();
+  const cur = () => (pKind === "hero" && hMkt !== "kr" ? "hero_" + hMkt : pKind);
+  try { const d = await (await fetch("api/picks?k=" + k, {cache: "no-store"})).json(); PK[k] = {t: Date.now(), d}; if (k === cur()) pRender(d); }
   catch (e) { $("p-out").innerHTML = `<div class="card"><div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
+const hMktBar = () => `<div class="seg" id="h-mkt" style="margin-top:-4px">${HMKT.map(([k, l]) => `<button data-m="${k}" class="${hMkt === k ? "act" : ""}">${l}</button>`).join("")}</div>`;
+function hMktBind() { document.querySelectorAll("#h-mkt button").forEach(b => b.onclick = () => hSetMkt(b.dataset.m)); }
 let pItems = [];
 function pRender(d) {
   if (d.error) { $("p-out").innerHTML = `<div class="card"><div class="empty">${esc(d.error)}${d.kind === "surge" || pKind === "surge" ? "<br><br>급등 후보는 평일 장 마감 후(18:45쯤) 처음 만들어집니다." : ""}</div></div>`; return; }
@@ -873,10 +882,11 @@ function pRender(d) {
   let head = "", rows = "";
   if (d.kind === "hero") {
     const G = d.grades || {}, f = filt => d.items.filter(x => filt === "all" || x.grade.key === filt);
-    head = principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 영웅 6인 채점 · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
-      <div class="small" style="margin-top:6px;line-height:1.6">그레이엄(안전마진) · 버핏(해자·ROE) · 피셔(성장) · 린치(성장 대비 가격) · 애크먼(촉매·환원) 각 20점</div>
+    const glob = d.market && d.market !== "kr";
+    head = hMktBar() + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 영웅 6인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${d.n_pool}종목</div>
+      <div class="small" style="margin-top:6px;line-height:1.6">아빠(매매일지) · 그레이엄(안전마진) · 버핏(해자·ROE) · 피셔(성장) · 린치(성장 대비 가격) · 애크먼(촉매·환원) 각 20점</div>
       <div class="tally"><span class="tag g">🟢 핵심 ${G.core || 0}</span><span class="tag y">🟡 위성 ${G.sat || 0}</span><span class="tag">⚪ 관찰 ${G.watch || 0}</span><span class="tag r">🔴 부적합 ${G.no || 0}</span></div>
-      <div class="tiny mut" style="margin-top:8px">후보 = 내가 아는 회사(toss-bot/heroes_pool.txt) + 가치주 후보 + 📌 내 계좌 · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
+      <div class="tiny mut" style="margin-top:8px">${glob ? "후보 = 그 나라 대표 우량주·배당주 (chartpage/heroes.py GLOBAL_POOL) · 야후 재무 기준 — 공시·수급 항목은 채점에서 제외" : "후보 = 내가 아는 회사(toss-bot/heroes_pool.txt) + 가치주 후보 + 📌 내 계좌"} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
     rows = d.items.slice(0, 30).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>${x.held ? " 📌" : ""}
         <span class="tag ${GCLS[x.grade.key]}">${esc(x.grade.label)}</span></div><div style="text-align:right"><span class="score">${Math.round(x.total)}</span><span class="tiny mut">점</span></div></div>
       <div class="tiny mut" style="margin-top:3px">${esc(x.lynch_cat)} · PER ${x.per != null ? x.per.toFixed(1) : "-"} · PBR ${x.pbr != null ? x.pbr.toFixed(2) : "-"} · 배당 ${x.yield != null ? x.yield.toFixed(1) + "%" : "-"} · ${eokFmt(x.mcap_eok)}</div>
@@ -914,9 +924,10 @@ function pRender(d) {
   }
   $("p-out").innerHTML = head + `<div class="card">${rows || `<div class="empty">목록 없음</div>`}</div>
     <div class="tiny mut" style="text-align:center;margin:4px 0 12px">종목을 누르면 차트·수급·재무·공시를 한 화면에 · 투자 권유 아님</div>`;
+  if (d.kind === "hero") hMktBind();
   $("p-out").querySelectorAll("[data-pi]").forEach(el => el.onclick = () => {
     const x = pItems[+el.dataset.pi];
-    openStock(d.kind === "ackman" ? x.t : x.code, {us: d.kind === "ackman", ctx: {kind: d.kind, item: x}});
+    openStock(d.kind === "ackman" ? x.t : x.code, {us: d.kind === "ackman" || !!x.us, ctx: {kind: d.kind, item: x}});
   });
 }
 

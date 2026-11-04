@@ -526,7 +526,20 @@ def picks_hero():
                                                         for k, n, i, th, m in heroes.HEROES], **b}
 
 
-PICKS = {"hero": (picks_hero, 6 * 3600), "surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600)}
+def picks_hero_global(market):
+    """발굴 › 영웅 › 🇺🇸 미국 · 🇪🇺 유럽 · 🇨🇳 중국 · 🇯🇵 일본 — 시장별 대표 종목을 같은 6인 기준으로"""
+    import heroes
+    t0 = time.time()
+    pool = [{"code": c, "name": n, "src": ["대표 종목"]} for c, n in heroes.GLOBAL_POOL[market]]
+    b = heroes.board(pool, workers=6, market=market)
+    return {"kind": "hero", "asof": bot.now().strftime("%Y-%m-%d %H:%M"), "took": round(time.time() - t0, 1),
+            "principles": heroes.PRINCIPLES, "heroes": [{"key": k, "name": n, "icon": i, "theme": th, "motto": m}
+                                                        for k, n, i, th, m in heroes.HEROES], **b}
+
+
+PICKS = {"hero_us": (lambda: picks_hero_global("us"), 12 * 3600), "hero_eu": (lambda: picks_hero_global("eu"), 12 * 3600),
+         "hero_cn": (lambda: picks_hero_global("cn"), 12 * 3600), "hero_jp": (lambda: picks_hero_global("jp"), 12 * 3600),
+         "hero": (picks_hero, 6 * 3600), "surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600)}
 
 
 def picks(kind):

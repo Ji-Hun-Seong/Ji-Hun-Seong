@@ -22,6 +22,7 @@ from __future__ import annotations
 import math
 import os
 import re
+import time
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
@@ -139,7 +140,7 @@ def dad_checks(d: dict, pbr, dy) -> list:
     c = []
     if pbr is not None:                               # 아빠가 산 종목은 대부분 PBR 1배 미만, 0.5배 아래를 특히 좋아함
         pts = 6 if pbr <= 0.5 else 4 if pbr <= 0.8 else 2 if pbr <= 1.0 else 0
-        c.append(_chk(pts, 6, f"PBR {pbr:.2f}배 " + ("(아빠가 제일 좋아한 0.5배 아래)" if pbr <= 0.5 else "(싼 편)" if pbr <= 1.0 else "(아빠 기준엔 비쌈)"), ok=pbr <= 0.8))
+        c.append(_chk(pts, 6, f"PBR {pbr:.2f}배 " + ("(아빠가 제일 좋아한 0.5배 아래)" if pbr <= 0.5 else "(싼 편)" if pbr <= 0.8 else "(1배 아래지만 아빠 기준엔 조금 비쌈)" if pbr <= 1.0 else "(아빠 기준엔 비쌈)"), ok=pbr <= 0.8))
     else:
         c.append(_chk(0, 6, "PBR 없음"))
     if dy is not None:
@@ -428,14 +429,97 @@ def light(code: str, name: str | None = None, corp_code: str | None = None) -> d
             "finance": {"annual": fa}, "filings": filings, "filings_ok": fok, "close": close}
 
 
-def board(pool: list[dict], workers: int = 8) -> dict:
-    """pool = [{code, name, corp_code, src:[...], held}] → 점수 순 목록"""
+# ── 해외 시장별 후보 (발굴 › 영웅 › 국가 탭) — 대표 우량주 + 가치·배당주 + 애크먼 계열 ─────────
+GLOBAL_POOL = {
+    "us": [("AAPL", "애플"), ("MSFT", "마이크로소프트"), ("NVDA", "엔비디아"), ("GOOGL", "알파벳"), ("AMZN", "아마존"), ("META", "메타"),
+           ("BRK-B", "버크셔해서웨이"), ("AVGO", "브로드컴"), ("LLY", "일라이릴리"), ("JPM", "JP모건"), ("V", "비자"), ("MA", "마스터카드"),
+           ("COST", "코스트코"), ("WMT", "월마트"), ("HD", "홈디포"), ("PG", "P&G"), ("KO", "코카콜라"), ("PEP", "펩시코"),
+           ("JNJ", "존슨앤존슨"), ("MRK", "머크"), ("UNH", "유나이티드헬스"), ("XOM", "엑슨모빌"), ("CVX", "셰브론"), ("CAT", "캐터필러"),
+           ("ORCL", "오라클"), ("ADBE", "어도비"), ("QCOM", "퀄컴"), ("TXN", "텍사스인스트루먼트"), ("MCD", "맥도날드"), ("NKE", "나이키"),
+           ("CMG", "치폴레"), ("QSR", "레스토랑브랜즈"), ("HLT", "힐튼"), ("HHH", "하워드휴즈"), ("BN", "브룩필드"), ("UBER", "우버"),
+           ("GOOG", "알파벳C"), ("BAC", "뱅크오브아메리카"), ("ABBV", "애브비"), ("MO", "알트리아"), ("VZ", "버라이즌"), ("PFE", "화이자")],
+    "eu": [("ASML.AS", "ASML"), ("MC.PA", "LVMH"), ("RMS.PA", "에르메스"), ("OR.PA", "로레알"), ("TTE.PA", "토탈에너지"), ("SAN.PA", "사노피"),
+           ("SU.PA", "슈나이더"), ("AIR.PA", "에어버스"), ("SAP.DE", "SAP"), ("SIE.DE", "지멘스"), ("ALV.DE", "알리안츠"), ("MBG.DE", "메르세데스"),
+           ("BMW.DE", "BMW"), ("VOW3.DE", "폭스바겐"), ("RHM.DE", "라인메탈"), ("IFX.DE", "인피니언"), ("NESN.SW", "네슬레"), ("ROG.SW", "로슈"),
+           ("NOVN.SW", "노바티스"), ("UBSG.SW", "UBS"), ("NOVO-B.CO", "노보노디스크"), ("SHEL.L", "셸"), ("AZN.L", "아스트라제네카"),
+           ("HSBA.L", "HSBC"), ("ULVR.L", "유니레버"), ("BP.L", "BP"), ("RIO.L", "리오틴토"), ("BA.L", "BAE시스템스"), ("RR.L", "롤스로이스"),
+           ("RACE.MI", "페라리"), ("ITX.MC", "인디텍스"), ("UMG.AS", "유니버설뮤직"), ("EQNR.OL", "에퀴노르"), ("VOLV-B.ST", "볼보")],
+    "cn": [("600519.SS", "귀주모태"), ("300750.SZ", "CATL"), ("601318.SS", "중국평안"), ("600036.SS", "초상은행"), ("601398.SS", "공상은행"),
+           ("000858.SZ", "오량액"), ("000333.SZ", "메이디"), ("600276.SS", "항서제약"), ("600900.SS", "장강전력"), ("600887.SS", "이리"),
+           ("601088.SS", "중국신화에너지"), ("601899.SS", "자금광업"), ("002415.SZ", "하이크비전"), ("002475.SZ", "럭스셰어"), ("603288.SS", "해천미업"),
+           ("0700.HK", "텐센트"), ("9988.HK", "알리바바"), ("3690.HK", "메이퇀"), ("1810.HK", "샤오미"), ("1211.HK", "BYD"),
+           ("9618.HK", "징둥"), ("9888.HK", "바이두"), ("9999.HK", "넷이즈"), ("0941.HK", "차이나모바일"), ("0883.HK", "CNOOC"),
+           ("0939.HK", "중국건설은행"), ("1299.HK", "AIA"), ("0388.HK", "홍콩거래소"), ("2020.HK", "안타스포츠"), ("9961.HK", "트립닷컴")],
+    "jp": [("7203.T", "토요타"), ("6758.T", "소니"), ("7974.T", "닌텐도"), ("6861.T", "키엔스"), ("8035.T", "도쿄일렉트론"), ("9984.T", "소프트뱅크그룹"),
+           ("9983.T", "패스트리테일링"), ("8306.T", "미쓰비시UFJ"), ("8058.T", "미쓰비시상사"), ("8031.T", "미쓰이물산"), ("8001.T", "이토추"),
+           ("8053.T", "스미토모상사"), ("8002.T", "마루베니"), ("7267.T", "혼다"), ("6501.T", "히타치"), ("4063.T", "신에쓰화학"),
+           ("6857.T", "어드반테스트"), ("6367.T", "다이킨"), ("6954.T", "화낙"), ("6981.T", "무라타"), ("9432.T", "NTT"), ("9433.T", "KDDI"),
+           ("2914.T", "JT"), ("4502.T", "다케다"), ("7011.T", "미쓰비시중공업"), ("6098.T", "리쿠르트"), ("8766.T", "도쿄해상"),
+           ("8316.T", "스미토모미쓰이"), ("7936.T", "아식스"), ("7832.T", "반다이남코"), ("9697.T", "캡콤"), ("4661.T", "오리엔탈랜드")],
+}
+MARKET_NAME = {"kr": "🇰🇷 한국", "us": "🇺🇸 미국", "eu": "🇪🇺 유럽", "cn": "🇨🇳 중국·홍콩", "jp": "🇯🇵 일본"}
+_FX = {}
+
+
+def _krw_per(ccy: str) -> float | None:
+    """통화 1단위 = 몇 원 (GBp·ZAc 같은 1/100 단위 보정)"""
+    if not ccy:
+        return None
+    if ccy == "KRW":
+        return 1.0
+    unit = 0.01 if ccy in ("GBp", "ZAc", "ILA") else 1.0
+    base = {"GBp": "GBP", "ZAc": "ZAR", "ILA": "ILS"}.get(ccy, ccy)
+    hit = _FX.get(base)
+    if hit and time.time() - hit[0] < 6 * 3600:
+        return hit[1] * unit
+    try:
+        import data_sources as ds
+        df = ds._yahoo(f"{base}KRW=X", "1mo")
+        v = float(df["close"].iloc[-1])
+    except Exception:
+        v = {"USD": 1400, "JPY": 9.3, "EUR": 1500, "GBP": 1800, "CNY": 195, "HKD": 180, "CHF": 1600}.get(base)
+    if v:
+        _FX[base] = (time.time(), v)
+    return v * unit if v else None
+
+
+def light_global(sym: str, name: str | None = None) -> dict:
+    """해외 목록용 가벼운 데이터 — yfinance info + 연간 손익 (일봉은 받지 않음)"""
+    import yfinance as yf
+    import stock_info as si
+    tk = yf.Ticker(sym)
+    info = tk.info or {}
+    g = info.get
+    price = g("currentPrice") or g("regularMarketPrice") or g("previousClose")
+    rate = g("dividendRate") or g("trailingAnnualDividendRate")
+    dy = rate / price * 100 if rate and price else (g("trailingAnnualDividendYield") or 0) * 100
+    if dy and dy > 25:                                 # 통화 단위가 어긋난 경우(펜스 등)
+        dy /= 100
+    ccy = g("currency")
+    fx = _krw_per(ccy)
+    mcap = g("marketCap")
+    prof = {"name": name or g("shortName") or sym, "per": g("trailingPE"), "fper": g("forwardPE"), "pbr": g("priceToBook"),
+            "div_yield": dy, "roe": g("returnOnEquity"), "opm": g("operatingMargins"), "de": g("debtToEquity"),
+            "target": g("targetMeanPrice"), "mcap_usd": mcap, "currency": ccy,
+            "mcap_eok": mcap * fx / 1e8 if mcap and fx else None}
+    fin = {}
+    try:
+        ps, rows = si._yf_rows(tk.income_stmt, si.US_ROWS)
+        fin["annual"] = {"periods": ps, "rows": rows}
+    except Exception:
+        pass
+    return {"us": True, "code": sym, "name": prof["name"], "profile": prof, "finance": fin, "filings": None, "close": price}
+
+
+def board(pool: list[dict], workers: int = 8, market: str = "kr") -> dict:
+    """pool = [{code, name, corp_code, src:[...], held}] → 점수 순 목록 (market != kr 이면 해외 yfinance)"""
     def one(p):
         try:
-            d = light(p["code"], p.get("name"), p.get("corp_code"))
+            d = light(p["code"], p.get("name"), p.get("corp_code")) if market == "kr" else light_global(p["code"], p.get("name"))
             s = score(d)
             P = d["profile"]
             return {"code": p["code"], "name": d["name"], "src": p.get("src", []), "held": p.get("held", False),
+                    "us": market != "kr", "ccy": (d["profile"] or {}).get("currency"),
                     "total": s["total"], "grade": s["grade"], "note": s["note"], "lynch_cat": s["lynch_cat"],
                     "heroes": {h["key"]: h["score"] for h in s["heroes"]},
                     "best": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"]][:3],
@@ -452,7 +536,8 @@ def board(pool: list[dict], workers: int = 8) -> dict:
     cnt = {}
     for r in ok:
         cnt[r["grade"]["key"]] = cnt.get(r["grade"]["key"], 0) + 1
-    return {"items": ok, "failed": [r for r in rows if r not in ok], "n_pool": len(pool), "grades": cnt}
+    return {"items": ok, "failed": [r for r in rows if r not in ok], "n_pool": len(pool), "grades": cnt, "market": market,
+            "market_name": MARKET_NAME.get(market, market)}
 
 
 if __name__ == "__main__":
