@@ -171,6 +171,14 @@ body.tb-on section#t-chart{padding-bottom:80px}
 .tv-mbox{background:var(--card);width:100%;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
 #tv-r textarea{width:100%;box-sizing:border-box;margin-top:8px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--txt);padding:8px;font-size:13px;font-family:inherit;resize:none}#tv-r textarea.need{border-color:var(--up)}
 .ok{color:var(--ok)}
+.ob-card .ob .obr{grid-template-columns:1fr 1.25fr 1fr}.obr .op b{display:block;font-size:14px}.obr .op small{font-size:10.5px}
+.obr .oi{font-size:11px;padding:4px 6px;white-space:nowrap;display:flex;justify-content:space-between;gap:4px;color:var(--sub);background:var(--card)}.obr .oi b{font-size:12px;color:var(--txt);font-weight:600}
+.obr .oi b.up{color:var(--up)}.obr .oi b.dn{color:var(--dn)}.obr .oi.tk small{font-size:11px}
+.f-up{animation:fu .6s}.f-dn{animation:fd .6s}@keyframes fu{from{box-shadow:inset 0 0 0 99px color-mix(in srgb,var(--up) 16%,transparent)}}@keyframes fd{from{box-shadow:inset 0 0 0 99px color-mix(in srgb,var(--dn) 16%,transparent)}}
+em.avg,em.mine{font-style:normal;font-size:10px;padding:1px 5px;border-radius:6px;margin-left:3px;display:inline-block;vertical-align:1px}
+em.avg{background:var(--warn);color:#fff}em.mine.b{background:var(--up);color:#fff}em.mine.s{background:var(--dn);color:#fff}
+.tv-sticky{position:sticky;top:0;z-index:2;background:var(--card)}.tv-sticky .tv-oh{position:static}
+.tv-st{display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;padding:6px 10px;font-size:11px;color:var(--sub);border-bottom:1px solid var(--line)}.tv-st b{font-size:12px;color:var(--txt)}.tv-st b.up{color:var(--up)}.tv-st b.dn{color:var(--dn)}
 #sheet{position:fixed;inset:0;z-index:100;display:none}#sheet.on{display:block}
 #sheet .bd{position:absolute;inset:0;background:rgba(0,0,0,.55)}
 #sheet .pn{position:absolute;left:0;right:0;bottom:0;max-height:90vh;background:var(--card);border-radius:20px 20px 0 0;display:flex;flex-direction:column;animation:up .22s ease-out}
@@ -1163,7 +1171,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) load
 // ── 📒 호가창 · 💸 수동 매수/매도 (토스증권 Open API) ─────────
 // 서버(manual_trade.py)가 최종으로 막음: 주인만 · 현금 안에서만(대출 X) · 1회 한도 · 급등주는 이유 필수 · 긴급 정지 시 매수 X
 window.VIEWER = true;                                     // api/data 가 주인이라고 알려 주기 전까지는 숨김
-const OB = {code: null, a: null, timer: null, d: null, info: null, off: false, side: "BUY", busy: false};
+const OB = {code: null, a: null, timer: null, d: null, info: null, off: false, side: "BUY", busy: false, pv: {}};
 const obMoney = (v, us) => v == null ? "-" : us ? "$" + Number(v).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}) : fmtN(v) + "원";
 const obTick = p => p < 2000 ? 1 : p < 5000 ? 5 : p < 20000 ? 10 : p < 50000 ? 50 : p < 200000 ? 100 : p < 500000 ? 500 : 1000;
 function tbarSync() {
@@ -1171,8 +1179,8 @@ function tbarSync() {
   $("tbar").style.display = on ? "flex" : "none"; document.body.classList.toggle("tb-on", !!on);
 }
 function obStart(a) {
-  OB.code = a.code; OB.a = a; OB.d = null; OB.off = false; OB.info = null; OB.errs = 0;
-  obStop(); obOpen(); tbarSync();
+  OB.code = a.code; OB.a = a; OB.d = null; OB.off = false; OB.info = null; OB.errs = 0; OB.pv = {}; TV.info = null;
+  obStop(); obOpen(); tbarSync(); obMineLoad();
 }
 function obStop() { if (OB.es) { OB.es.close(); OB.es = null; } if (OB.timer) { clearInterval(OB.timer); OB.timer = null; } }
 function obOpen() {                                       // ⚡ 실시간: 서버가 토스 웹소켓으로 받은 호가를 바로 밀어 줌 (SSE)
@@ -1205,23 +1213,56 @@ async function obPoll() {
     OB.d = {...d, mode: "poll"}; obRender();
   } catch (e) { if ($("ob-st")) $("ob-st").textContent = "⚠️ " + e.message.slice(0, 60); }
 }
+// 호가 공통 도우미 — 잔량 변화 깜빡임 · 내 주문 · 평균가 · 기준가(전일 종가)
+function obBase() { const d = OB.d || {}, T = (OB.a || {}).tech || {}; return (d.day && d.day.prev) || (T.close != null && T.chg != null ? T.close / (1 + T.chg) : null); }
+const obBig = v => v == null ? "-" : v >= 1e8 ? (v / 1e8).toFixed(2) + "억" : v >= 1e4 ? fmtN(v / 1e4, v >= 1e6 ? 0 : 1) + "만" : fmtN(v);
+function obFlash(key, p, v) {                             // 직전 화면보다 잔량이 늘면 빨강, 줄면 파랑으로 잠깐
+  const m = OB.pv[key] || (OB.pv[key] = {}), o = m[p]; m[p] = v;
+  return o == null || o === v ? "" : v > o ? " f-up" : " f-dn";
+}
+function obMine(p) {
+  const I = TV.info; if (!I || window.VIEWER) return "";
+  const os = (I.open || []).filter(o => o.price === p);
+  const q = os.reduce((s, o) => s + ((o.qty || 0) - (o.filled || 0)), 0);
+  const side = os.length ? os[0].side : null;
+  return q > 0 ? `<em class="mine ${side === "BUY" ? "b" : "s"}">내 ${side === "BUY" ? "매수" : "매도"} ${fmtN(q, OB.a && OB.a.us ? 2 : 0)}</em>` : "";
+}
+function obAvgRow(levels) {                               // 내 평균 매수가가 들어가는 호가 줄
+  const h = TV.info && TV.info.hold; if (!h || !h.avg || window.VIEWER) return null;
+  const all = levels.map(x => x.p).sort((a, b) => a - b);
+  let k = null; for (const p of all) if (p <= h.avg) k = p; return k;
+}
 function obRender() {
   const d = OB.d, a = OB.a; if (!d || !$("sd-ob")) return;
-  const us = !!a.us, T = a.tech || {}, prev = T.close != null && T.chg != null ? T.close / (1 + T.chg) : null;
+  const us = !!a.us, base = obBase(), D = d.day || {}, fm = v => v == null ? "-" : us ? Number(v).toFixed(2) : fmtN(v);
   const asks = d.asks.slice(-10), bids = d.bids.slice(0, 10), mx = Math.max(1, ...asks.map(x => x.v || 0), ...bids.map(x => x.v || 0));
-  const pc = p => prev ? (p > prev ? "up" : p < prev ? "dn" : "") : "";
-  const rt = p => prev ? `<span class="tiny">${((p / prev - 1) * 100).toFixed(2)}%</span>` : "";
-  const row = (x, sideCls) => `<div class="obr ${sideCls}" data-px="${x.p}"><span class="ov">${sideCls === "ask" ? `<i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}` : ""}</span>
-    <span class="op ${pc(x.p)} ${d.last === x.p ? "cur" : ""}">${us ? x.p.toFixed(2) : fmtN(x.p)} ${rt(x.p)}</span>
-    <span class="ov">${sideCls === "bid" ? `<i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}` : ""}</span></div>`;
-  const sa = d.sum_ask || 0, sb = d.sum_bid || 0;
-  $("sd-ob").innerHTML = `<div class="card"><div class="row"><h2 style="margin:0">📒 호가</h2><span class="tiny mut" id="ob-st">${(d.tts || d.ts || "").slice(11, 19)} · ${d.mode === "ws" ? "⚡ 실시간" : d.mode === "rest" ? "🔁 0.35초" : d.mode === "poll" ? "🔁 1초" : "연결 중"}</span></div>
-    <div class="ob">${asks.map(x => row(x, "ask")).join("")}${bids.map(x => row(x, "bid")).join("")}</div>
-    <div class="obsum"><span class="dn">매도 잔량 ${fmtN(sa)}</span><span class="mut tiny">${d.upper ? `상한 ${obMoney(d.upper, us)} · 하한 ${obMoney(d.lower, us)}` : ""}</span><span class="up">매수 잔량 ${fmtN(sb)}</span></div>
+  const avgP = obAvgRow(asks.concat(bids));
+  const pc = p => base ? cls(p - base) : "";
+  const rt = p => base ? `<small class="${pc(p)}">${pct(p / base - 1, 2)}</small>` : "";
+  const sa = d.sum_ask || 0, sb = d.sum_bid || 0, st = d.strength;
+  const info = [["상한", fm(d.upper), "up"], ["하한", fm(d.lower), "dn"], ["시가", fm(D.open), D.open && base ? pc(D.open) : ""], ["고가", fm(D.high), D.high && base ? pc(D.high) : ""],
+    ["저가", fm(D.low), D.low && base ? pc(D.low) : ""], ["전일", fm(base), ""], ["거래량", obBig(D.vol_now ?? D.vol), ""],
+    ["체결강도", st == null ? "-" : st.toFixed(1) + "%", st == null ? "" : st >= 100 ? "up" : "dn"], ["매수잔량비", sa + sb ? Math.round(sb / (sa + sb) * 100) + "%" : "-", sb > sa ? "up" : "dn"],
+    ["내 평균", TV.info && TV.info.hold && !window.VIEWER ? fm(TV.info.hold.avg) : "-", ""]];
+  const tk = (d.ticks || []).slice(0, 10);
+  const pcell = x => `<span class="op ${pc(x.p)} ${d.last === x.p ? "cur" : ""}"><b>${fm(x.p)}</b>${rt(x.p)}${avgP === x.p ? `<em class="avg">평균</em>` : ""}${obMine(x.p)}</span>`;
+  const rowA = (x, i) => `<div class="obr ask${obFlash("a", x.p, x.v)}" data-px="${x.p}"><span class="ov"><i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}</span>${pcell(x)}
+      <span class="oi">${info[i] ? `<small>${info[i][0]}</small><b class="${info[i][2]}">${info[i][1]}</b>` : ""}</span></div>`;
+  const rowB = (x, i) => `<div class="obr bid${obFlash("b", x.p, x.v)}" data-px="${x.p}"><span class="oi tk">${tk[i] ? `<b class="${base ? cls(tk[i].p - base) : ""}">${fm(tk[i].p)}</b><small class="${tk[i].s === "S" ? "dn" : "up"}">${fmtN(tk[i].v, us ? 2 : 0)}</small>` : ""}</span>
+      ${pcell(x)}<span class="ov"><i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}</span></div>`;
+  const pad = asks.length < 10 ? Array(10 - asks.length).fill(null) : [];
+  $("sd-ob").innerHTML = `<div class="card ob-card"><div class="row"><h2 style="margin:0">📒 호가</h2><span class="tiny mut" id="ob-st">${(d.tts || d.ts || "").slice(11, 19)} · ${d.mode === "ws" ? "⚡ 실시간" : d.mode === "rest" ? "🔁 0.35초" : d.mode === "poll" ? "🔁 1초" : "연결 중"}</span></div>
+    <div class="ob">${pad.map((_, i) => `<div class="obr ask"><span class="ov"></span><span class="op"></span><span class="oi"><small>${info[i][0]}</small><b class="${info[i][2]}">${info[i][1]}</b></span></div>`).join("")}
+      ${asks.map((x, i) => rowA(x, i + pad.length)).join("")}${bids.map(rowB).join("")}</div>
+    <div class="obsum"><span class="dn">매도 ${fmtN(sa)}</span><span class="tiny mut">왼쪽 아래 = 실시간 체결(빨강 매수·파랑 매도 주도 추정)</span><span class="up">매수 ${fmtN(sb)}</span></div>
     <div class="mixbar" style="margin-top:6px;height:6px"><i style="width:${sa + sb ? sa / (sa + sb) * 100 : 50}%;background:var(--dn)"></i><i style="width:${sa + sb ? sb / (sa + sb) * 100 : 50}%;background:var(--up)"></i></div>
-    ${window.VIEWER ? "" : `<div class="tiny mut" style="margin-top:6px">가격을 누르면 그 가격으로 주문창이 열려요</div>`}</div>`;
+    ${window.VIEWER ? "" : `<div class="tiny mut" style="margin-top:6px">가격을 누르면 그 가격으로 주문창이 열려요 · 체결강도는 이 화면을 연 뒤부터 계산</div>`}</div>`;
   if (!window.VIEWER) $("sd-ob").querySelectorAll("[data-px]").forEach(el => el.onclick = () => tvOpen(TV.tab === "SELL" ? "SELL" : "BUY", +el.dataset.px));
   tvLive();
+}
+async function obMineLoad() {                             // 내 미체결·보유(평균가) — 호가에 표시용
+  if (window.VIEWER || !OB.code) return;
+  try { const I = await (await fetch("api/trade?q=" + encodeURIComponent(OB.code), {cache: "no-store"})).json(); if (!I.error) TV.info = I; } catch (e) {}
 }
 function openSheet(key, title, meta, html) {
   $("sh-title").textContent = title; $("sh-meta").textContent = meta; $("sh-body").innerHTML = html; $("sh-body").scrollTop = 0;
@@ -1261,23 +1302,26 @@ function tvRender() {
 // 왼쪽: 호가 / 실시간 체결
 function tvOb() {
   const el = $("tv-ob"); if (!el) return;
-  const d = OB.d, us = tvUs(), prev = tvPrev();
+  const d = OB.d, us = tvUs(), prev = obBase();
   if (!d) { el.innerHTML = `<div class="empty small">호가 연결 중…</div>`; return; }
   const dots = `<div class="tv-dots"><i class="${TV.page === "ob" ? "on" : ""}" data-pg="ob"></i><i class="${TV.page === "tk" ? "on" : ""}" data-pg="tk"></i></div>`;
   if (TV.page === "tk") {
     const tk = d.ticks || [];
     el.innerHTML = `<div class="tv-oh"><span>체결가</span><span>체결량</span></div>` + (tk.map((t, i) => {
-      const up = i < tk.length - 1 ? (t.p > tk[i + 1].p ? "up" : t.p < tk[i + 1].p ? "dn" : "") : "";
+      const up = t.s ? (t.s === "B" ? "up" : "dn") : i < tk.length - 1 ? (t.p > tk[i + 1].p ? "up" : t.p < tk[i + 1].p ? "dn" : "") : "";
       return `<div class="tv-tk"><span class="${prev ? cls(t.p - prev) : ""}">${tvPx(t.p)}</span><span class="${up}">${fmtN(t.v, us ? 2 : 0)}</span><span class="tiny mut">${(t.t || "").slice(11, 19)}</span></div>`;
     }).join("") || `<div class="empty small">체결 대기</div>`) + dots;
   } else {
-    const asks = d.asks.slice(-10), bids = d.bids.slice(0, 10), mx = Math.max(1, ...asks.map(x => x.v || 0), ...bids.map(x => x.v || 0));
-    const row = (x, k) => `<div class="tv-r1 ${k} ${d.last === x.p ? "cur" : ""}" data-px="${x.p}"><span><b class="${prev ? cls(x.p - prev) : ""}">${tvPx(x.p)}</b>
-        <small class="${prev ? cls(x.p - prev) : ""}">${prev ? pct(x.p / prev - 1, 2) : ""}</small></span><span class="vv"><i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v, us ? 0 : 0)}</span></div>`;
-    el.innerHTML = `<div class="tv-oh"><span>호가</span><span>잔량</span></div>${asks.map(x => row(x, "ask")).join("")}${bids.map(x => row(x, "bid")).join("")}
+    const asks = d.asks.slice(-10), bids = d.bids.slice(0, 10), mx = Math.max(1, ...asks.map(x => x.v || 0), ...bids.map(x => x.v || 0)), avgP = obAvgRow(asks.concat(bids));
+    const D = d.day || {}, st = d.strength;
+    const row = (x, k) => `<div class="tv-r1 ${k} ${d.last === x.p ? "cur" : ""}${obFlash("t" + k, x.p, x.v)}" data-px="${x.p}"><span><b class="${prev ? cls(x.p - prev) : ""}">${tvPx(x.p)}</b>
+        <small class="${prev ? cls(x.p - prev) : ""}">${prev ? pct(x.p / prev - 1, 2) : ""}</small>${avgP === x.p ? `<em class="avg">평균</em>` : ""}${obMine(x.p)}</span><span class="vv"><i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}</span></div>`;
+    el.innerHTML = `<div class="tv-sticky"><div class="tv-st"><span>시 <b class="${prev && D.open ? cls(D.open - prev) : ""}">${tvPx(D.open)}</b></span><span>고 <b class="up">${tvPx(D.high)}</b></span><span>저 <b class="dn">${tvPx(D.low)}</b></span>
+        <span>강도 <b class="${st == null ? "" : st >= 100 ? "up" : "dn"}">${st == null ? "-" : st.toFixed(0) + "%"}</b></span></div>
+      <div class="tv-oh"><span>호가</span><span>잔량</span></div></div>${asks.map(x => row(x, "ask")).join("")}${bids.map(x => row(x, "bid")).join("")}
       <div class="tv-oh" style="font-size:11px"><span class="dn">${fmtN(d.sum_ask)}</span><span class="up">${fmtN(d.sum_bid)}</span></div>${dots}`;
     el.querySelectorAll("[data-px]").forEach(r => r.onclick = () => { TV.px = +r.dataset.px; if ($("tv-px")) { $("tv-px").value = us ? TV.px.toFixed(2) : TV.px; tvCalc(); } });
-    if (!TV.scrolled) { const c = el.querySelector(".tv-r1.bid"); if (c) { el.scrollTop = c.offsetTop - el.clientHeight / 2; TV.scrolled = true; } }
+    if (!TV.scrolled) { const c = el.querySelector(".tv-r1.bid"); if (c) { el.scrollTop = c.offsetTop - el.clientHeight / 2 + 40; TV.scrolled = true; } }
   }
   el.querySelectorAll("[data-pg]").forEach(x => x.onclick = () => { TV.page = x.dataset.pg; TV.scrolled = false; tvOb(); });
 }
@@ -1349,8 +1393,16 @@ function tvCalc() {
   $("tv-qk").innerHTML = I ? [10, 25, 50, 100].map(p => `<button data-pc="${p}">${p}%</button>`).join("") : "";
   $("tv-qk").querySelectorAll("[data-pc]").forEach(b => b.onclick = () => { const q = (m || 0) * +b.dataset.pc / 100; $("tv-qty").value = us ? Math.floor(q * 100) / 100 : Math.floor(q); TV.qty = $("tv-qty").value; tvCalc(); });
   const over = TV.tab === "BUY" && I && (est > (I.cash || 0) || est > I.max_order);
+  let fill = "";
+  if (TV.type === "MARKET" && qty > 0 && OB.d) {             // 시장가: 호가를 따라 채워 본 예상 평균 체결가
+    const lv = TV.tab === "BUY" ? OB.d.asks.slice().sort((x, y) => x.p - y.p) : OB.d.bids.slice().sort((x, y) => y.p - x.p);
+    let left = qty, cost = 0, n = 0;
+    for (const x of lv) { if (left <= 0) break; const q = Math.min(left, x.v || 0); cost += q * x.p; left -= q; n++; }
+    const got = qty - left, avg = got ? cost / got : null, best = lv[0] ? lv[0].p : null;
+    fill = avg ? `<div class="tiny mut" style="text-align:right">예상 평균 체결가 <b>${tvPx(avg)}</b> · ${n}호가까지${best ? ` · 최우선가 대비 ${pct(avg / best - 1, 2)}` : ""}${left > 0 ? ` · <span class="up">보이는 호가로 ${fmtN(left, us ? 2 : 0)}주 부족</span>` : ""}</div>` : "";
+  }
   $("tv-sum").innerHTML = `<div class="tiny mut" style="text-align:right">주문금액${TV.type === "MARKET" ? " (시장가 +2% 여유)" : ""}</div><div style="text-align:right;font-size:20px;font-weight:800" class="${over ? "up" : ""}">${obMoney(est, us)}</div>
-    ${over ? `<div class="tiny up" style="text-align:right">${est > (I.cash || 0) ? "현금을 넘어요 — 빚으로는 안 사요" : "1회 한도를 넘어요"}</div>` : ""}`;
+    ${over ? `<div class="tiny up" style="text-align:right">${est > (I.cash || 0) ? "현금을 넘어요 — 빚으로는 안 사요" : "1회 한도를 넘어요"}</div>` : ""}${fill}`;
   const T = OB.a.tech || {}, lim = ((OB.a.profile || {}).mcap_eok || 0) >= 50000 ? 5 : 10, chg = T.chg != null ? T.chg * 100 : null;
   $("tv-fomo").innerHTML = TV.tab === "BUY" && chg != null && chg >= lim ? `<div class="fomo">🧘 오늘 <b>${pct(chg / 100, 1)}</b> — 이유를 한 줄 적어야 주문돼요</div>` : "";
   $("tv-go").disabled = !!over || qty <= 0;

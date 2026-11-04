@@ -142,8 +142,22 @@ class Hub:
                         except (TypeError, ValueError):
                             continue
                         with self.cv:
-                            ticks = (self.data.get(sym) or {}).get("ticks") or []
-                        self._put(sym, last=tk["p"], ts=tk["t"], ticks=([tk] + ticks)[:40], src="ws")
+                            cur = self.data.get(sym) or {}
+                            ticks = cur.get("ticks") or []
+                            ob = cur.get("ob") or {}
+                            ask0 = ob["asks"][-1]["p"] if ob.get("asks") else None
+                            bid0 = ob["bids"][0]["p"] if ob.get("bids") else None
+                            prev = cur.get("last")
+                            # 매수·매도 체결 추정: 매도1호가 이상에 체결 = 매수 주도, 매수1호가 이하 = 매도 주도, 사이면 직전가와 비교
+                            side = ("B" if ask0 and tk["p"] >= ask0 else "S" if bid0 and tk["p"] <= bid0
+                                    else "B" if prev and tk["p"] > prev else "S" if prev and tk["p"] < prev else cur.get("lside", "B"))
+                            tk["s"] = side
+                            bv = (cur.get("buy_v") or 0) + (tk["v"] if side == "B" else 0)
+                            sv = (cur.get("sell_v") or 0) + (tk["v"] if side == "S" else 0)
+                            hi = max(cur.get("hi") or tk["p"], tk["p"])
+                            lo = min(cur.get("lo") or tk["p"], tk["p"])
+                        self._put(sym, last=tk["p"], ts=tk["t"], ticks=([tk] + ticks)[:40], src="ws", buy_v=bv, sell_v=sv, lside=side,
+                                  hi=hi, lo=lo, vol_add=(cur.get("vol_add") or 0) + tk["v"])
             except (WSError, OSError, Exception) as e:
                 fails += 1
                 self.mode, self.err = "reconnect", f"{type(e).__name__}: {str(e)[:120]}"

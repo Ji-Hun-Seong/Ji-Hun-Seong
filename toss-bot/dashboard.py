@@ -993,7 +993,18 @@ class H(BaseHTTPRequestHandler):
             self.wfile.write(("data: " + json.dumps(o, ensure_ascii=False, default=str) + "\n\n").encode())
             self.wfile.flush()
         try:
-            snap = mt.orderbook(code)                  # 처음 한 번은 REST 로 전체(상·하한가·현재가·최근 체결 포함)
+            snap = mt.orderbook(code)                  # 처음 한 번은 REST 로 전체(상·하한가·현재가·최근 체결·오늘 시고저 포함)
+            day0 = {}
+            try:
+                cs = bot.daily(mt.api(), code, 2)          # (날짜, 시, 고, 저, 종, 거래량) 과거 → 최신
+                if cs:
+                    t_ = cs[-1]
+                    istoday = t_[0] == bot.now().strftime("%Y-%m-%d") or not code.isdigit()
+                    day0 = {"open": t_[1], "high": t_[2], "low": t_[3], "vol": t_[5], "prev": (cs[-2][4] if len(cs) > 1 else None) if istoday else t_[4],
+                            "today": istoday}
+            except Exception:
+                pass
+            snap["day"] = day0
             try:
                 snap["ticks"] = [{"p": mt._f(t.get("price")), "v": mt._f(t.get("volume")), "t": t.get("timestamp")}
                                  for t in (mt.api().trades(code, 30) or [])]
@@ -1003,6 +1014,9 @@ class H(BaseHTTPRequestHandler):
                 pass
             up, lo = snap.get("upper"), snap.get("lower")
             cur = {**snap, "mode": "rest"}
+            with HUB.cv:                                # 이 화면 기준으로 체결강도를 새로 셈
+                h_ = HUB.data.setdefault(code, {"v": 0})
+                h_.update(buy_v=0, sell_v=0, hi=None, lo=None, vol_add=0)
             emit(cur)
             ver, started, last_beat, last_emit = 0, time.time(), time.time(), 0
             while time.time() - started < 600:         # 10분마다 끊으면 브라우저가 알아서 다시 붙음
@@ -1020,6 +1034,15 @@ class H(BaseHTTPRequestHandler):
                         cur["last"], cur["tts"] = x["last"], x.get("ts")
                     if x.get("ticks"):
                         cur["ticks"] = x["ticks"][:30]
+                    if x.get("buy_v") is not None:             # 체결강도(추정) = 매수 주도 체결량 ÷ 매도 주도 × 100 (이 화면을 연 뒤부터)
+                        bv, sv = x.get("buy_v") or 0, x.get("sell_v") or 0
+                        cur["strength"] = round(bv / sv * 100, 1) if sv else None
+                        cur["bs"] = [bv, sv]
+                    if x.get("hi") is not None and cur["day"].get("today"):
+                        cur["day"]["high"] = max(cur["day"].get("high") or 0, x["hi"])
+                        cur["day"]["low"] = min(cur["day"].get("low") or x["lo"], x["lo"])
+                    if x.get("vol_add") and cur["day"].get("vol") is not None and cur["day"].get("today"):
+                        cur["day"]["vol_now"] = cur["day"]["vol"] + x["vol_add"]
                     cur.update(upper=up, lower=lo, mode=HUB.mode, err=HUB.err)
                     emit(cur); last_emit = last_beat = time.time()
                 elif time.time() - last_beat > 15:        # 조용한 동안에도 연결 유지
