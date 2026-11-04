@@ -87,6 +87,9 @@ canvas.c-big{max-height:none}
 .tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
 .tbl th,.tbl td{padding:7px 4px;text-align:right;border-top:1px solid var(--line);white-space:nowrap}.tbl th:first-child,.tbl td:first-child{text-align:left;color:var(--sub);font-weight:400}
 .tbl thead th{border-top:0;color:var(--sub);font-weight:600}.tbl .est{color:#8fb6ff}
+.tbl.stk td:first-child,.tbl.stk th:first-child{position:sticky;left:0;background:var(--card);z-index:1;padding-right:10px;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.tbl .grp td{color:var(--txt)!important;font-weight:700;padding-top:14px;border-top:0;font-size:12px}.tbl tr.mn td:first-child{color:var(--txt);font-weight:600}.tbl .neg{color:#ff9aa3}
+.tbl tr.sub td:first-child{padding-left:10px}.tbl .grp td:first-child{overflow:visible;max-width:none}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .kc-card{background:#0b0b0d;padding:0;overflow:hidden}.kc{padding:10px 0 12px}
 .kc-top{display:flex;align-items:center;gap:8px;padding:0 12px 8px;border-bottom:1px solid #232328}
@@ -338,7 +341,7 @@ function render(d) {
   $("stopCard").style.display = V ? "none" : "";
   $("h-mix").style.display = V ? "none" : "";
   const accBtn = document.querySelector('nav button[data-t="acct"]'); if (accBtn) accBtn.style.display = V ? "none" : "";
-  if (V) { $("mode").textContent = "👀 조회 전용"; if (document.querySelector("#t-acct.act, #t-acct.on")) goTab("home"); }
+  if (V) { $("mode").textContent = "👀 조회 전용"; $("mode").title = d.role_why || ""; if (document.querySelector("#t-acct.act, #t-acct.on")) goTab("home"); }
   // 계좌
   const a = d.account || {};
   if (a.hidden) { $("a-val").textContent = "-"; $("a-sub").textContent = "조회 전용 화면에서는 계좌 금액을 보여 주지 않음"; $("a-items").innerHTML = ""; } else
@@ -356,6 +359,7 @@ function render(d) {
   const errs = [a.stale && "계좌 정보 갱신 실패(이전 값 표시)", sg.stale && "나스닥 신호 갱신 실패"].filter(Boolean);
   $("errBanner").style.display = errs.length ? "block" : "none"; $("errBanner").textContent = errs.join(" · ");
   $("upd").textContent = "업데이트 " + d.now.slice(11, 19) + " · 30초마다 자동 새로고침";
+  if (d.viewer) $("upd").textContent += " · 👀 조회 전용 (" + (d.role_why || "") + ")";
 }
 
 // ── 장기 9 : 단기 1 ──────────────────────────────────
@@ -581,7 +585,7 @@ function sdRender(a) {
   <div class="foot">${Object.entries(a.links || {}).map(([k, u]) => `<a href="${u}" target="_blank">${{naver: "네이버 증권", dart: "DART 공시", yahoo: "야후 파이낸스"}[k] || k} ↗</a>`).join(" · ")}</div>`;
   document.querySelectorAll("#sd-who button").forEach(b => b.onclick = () => { SD.who = b.dataset.w;
     document.querySelectorAll("#sd-who button").forEach(x => x.classList.toggle("act", x === b)); flowChart(a); });
-  document.querySelectorAll("#sd-fin button").forEach(b => b.onclick = () => { SD.fin = b.dataset.f; $("sd-fin-out").outerHTML = finTable(a); finChart(a);
+  document.querySelectorAll("#sd-fin button").forEach(b => b.onclick = () => { SD.fin = b.dataset.f; $("sd-fin-out").outerHTML = finTable(a); finChart(a); finLong(a);
     document.querySelectorAll("#sd-fin button").forEach(x => x.classList.toggle("act", x === b)); });
   $("sd-bb-btn").onclick = async () => {
     $("sd-bb-btn").textContent = "판정 중…";
@@ -589,7 +593,7 @@ function sdRender(a) {
       if (r.error) throw new Error(r.error); cRender(r); }
     catch (e) { $("sd-bb-btn").textContent = "실패: " + e.message; }
   };
-  sdCharts(a); flowChart(a); finChart(a);
+  sdCharts(a); flowChart(a); finChart(a); finLong(a);
 }
 
 function ctxCard() {
@@ -636,16 +640,17 @@ function usHolders(a) {
 
 const FIN_SHOW = ["매출액", "영업이익", "당기순이익", "영업이익률", "순이익률", "ROE", "부채비율", "EPS", "PER", "PBR", "주당배당금"];
 function finTable(a) {
+  if (SD.fin === "long" || SD.fin === "full") return `<div id="sd-fin-out"><div class="empty">DART 재무제표 불러오는 중… <span class="tiny">(처음 한 번은 10~20초, 다음부터 바로)</span></div></div>`;
   const f = (a.finance || {})[SD.fin];
   if (!f || !f.periods || !f.periods.length) return `<div id="sd-fin-out" class="empty">재무 데이터 없음</div>`;
-  const pctRow = k => /률|ROE|비율/.test(k), dec = k => pctRow(k) || k === "PER" || k === "PBR" ? 1 : 0;
-  const rows = FIN_SHOW.filter(k => f.rows[k]);
+  const pctRow = k => /률|ROE|비율|성향|ROA/.test(k), dec = k => pctRow(k) || k === "PER" || k === "PBR" ? 1 : 0;
+  const rows = [...FIN_SHOW.filter(k => f.rows[k]), ...Object.keys(f.rows).filter(k => !FIN_SHOW.includes(k) && (f.rows[k] || []).some(v => v != null))];
   return `<div id="sd-fin-out" class="scroll"><table class="tbl"><thead><tr><th></th>${f.periods.map(p => `<th class="${p.est ? "est" : ""}">${p.title.slice(2)}${p.est ? "E" : ""}</th>`).join("")}</tr></thead><tbody>
     ${rows.map(k => `<tr><td>${k}</td>${f.rows[k].map((v, i) => `<td class="${f.periods[i].est ? "est" : ""}">${v == null ? "-" : fmtN(v, dec(k)) + (pctRow(k) ? "%" : "")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 function finCard(a) {
   return `<div class="card"><h2>📊 재무제표 <span class="tiny mut">(${a.finance && a.finance.unit || ""} · E = 증권사 추정)</span></h2>
-    <div class="minis" id="sd-fin">${[["annual", "연간"], ["quarter", "분기"]].map(([k, l]) => `<button data-f="${k}" class="${SD.fin === k ? "act" : ""}">${l}</button>`).join("")}</div>
+    <div class="minis" id="sd-fin">${[["annual", "연간"], ["quarter", "분기"], ...(a.us ? [] : [["long", "📜 장기(2013~)"], ["full", "📑 전체 재무제표"]])].map(([k, l]) => `<button data-f="${k}" class="${SD.fin === k ? "act" : ""}">${l}</button>`).join("")}</div>
     <canvas id="sd-fc" style="margin-bottom:10px"></canvas>${finTable(a)}</div>`;
 }
 function filingCard(a) {
@@ -690,7 +695,66 @@ function flowChart(a) {
   mk("sd-fr", {type: "line", data: {labels: L, datasets: [{data: F.map(x => x.frgn_ratio), borderColor: "#4fd1c5", borderWidth: 1.5, pointRadius: 0, tension: .2}]},
     options: {responsive: true, animation: false, aspectRatio: 4, plugins: {legend: {display: false}}, scales: {x: XAX, y: {...AX, position: "right"}}}});
 }
+// ── 장기(DART 2013~) · 전체 재무제표 ─────────────────────
+const FINL = {};
+const LONG_GROUPS = [["수익성", ["매출액", "매출총이익", "영업이익", "당기순이익", "지배순이익", "영업이익률", "순이익률", "ROE", "ROA"]],
+  ["재무 안정성", ["자산총계", "부채총계", "자본총계", "지배자본", "부채비율", "유동비율", "현금성자산", "차입금", "순현금"]],
+  ["현금흐름", ["영업CF", "투자CF", "재무CF", "CAPEX", "FCF", "배당금지급"]],
+  ["주당·주주환원 (원)", ["EPS", "BPS", "DPS", "배당성향"]],
+  ["밸류 (그해 말 주가 기준)", ["연말 주가", "PER", "PBR", "배당수익률"]]];
+const finFmt = (k, v) => {
+  if (v == null) return "-";
+  if (/률|ROE|ROA|비율|성향/.test(k)) return v.toFixed(1) + "%";
+  if (k === "PER" || k === "PBR") return v.toFixed(2);
+  return fmtN(v, Math.abs(v) < 10 && v % 1 ? 1 : 0);
+};
+async function finLong(a) {
+  if (SD.fin !== "long" && SD.fin !== "full") return;
+  const mode = SD.fin;
+  let d = FINL[a.code];
+  if (!d) {
+    try { d = await (await fetch("api/fin?q=" + encodeURIComponent(a.code))).json(); } catch (e) { d = {error: e.message}; }
+    if (!d.error) FINL[a.code] = d;
+  }
+  const out = $("sd-fin-out"); if (!out || SD.fin !== mode || SD.last !== a) return;
+  if (d.error) { out.innerHTML = `<div class="empty">${esc(d.error)}</div>`; if ($("sd-fc")) $("sd-fc").style.display = "none"; return; }
+  const L = d.labels.slice().reverse(), rev = v => (v || []).slice().reverse();
+  const head = `<thead><tr><th></th>${L.map(l => `<th class="${/누적/.test(l) ? "est" : ""}">${l.length === 4 ? l.slice(2) : l}</th>`).join("")}</tr></thead>`;
+  const cell = (k, v) => `<td class="${v != null && v < 0 ? "neg" : ""}">${finFmt(k, v)}</td>`;
+  let body = "";
+  if (mode === "long") {
+    for (const [g, ks] of LONG_GROUPS) {
+      const rows = ks.filter(k => d.key[k]);
+      if (!rows.length) continue;
+      body += `<tr class="grp"><td>${g}</td><td colspan="${L.length}"></td></tr>` + rows.map(k => `<tr><td>${k}</td>${rev(d.key[k]).map(v => cell(k, v)).join("")}</tr>`).join("");
+    }
+    out.innerHTML = `<div class="scroll" id="sd-fin-sc"><table class="tbl stk">${head}<tbody>${body}</tbody></table></div>
+      <div class="tiny mut" style="margin-top:8px">${esc(d.src)} · ${esc(d.fs_note)} · 억원 · 파란 칸 = 올해 누적(분기) · 2013·14년은 2015년 보고서의 전기 숫자 · PER·PBR은 그해 마지막 거래일 종가 기준</div>`;
+    const c = $("sd-fc"); if (c) { c.style.display = "block";
+      mk("sd-fc", {type: "bar", data: {labels: L.map(l => l.length === 4 ? l.slice(2) : l), datasets: [
+        {label: "매출액", data: rev(d.key["매출액"]), backgroundColor: "#4f8cff", yAxisID: "y"},
+        {label: "영업이익", data: rev(d.key["영업이익"]), backgroundColor: "#2fbf71", yAxisID: "y1"},
+        {label: "순이익", data: rev(d.key["당기순이익"]), backgroundColor: "#f5a524", yAxisID: "y1"}]},
+        options: {responsive: true, animation: false, aspectRatio: 2.2, plugins: {legend: {labels: {color: "#8a9bb0", boxWidth: 10, font: {size: 11}}}},
+          scales: {x: XAX, y: {...AX, ticks: {...AX.ticks, maxTicksLimit: 4}}, y1: {...AX, position: "right", grid: {display: false}, ticks: {...AX.ticks, maxTicksLimit: 4}}}}}); }
+  } else {
+    SD.fst = SD.fst || "IS";
+    const st = d.statements[SD.fst] || [], main = st.filter(r => r.main), rest = st.filter(r => !r.main);
+    const row = (r, cls) => `<tr class="${cls}"><td title="${esc(r.name)}">${esc(r.name)}${r.unit ? ` <span class="tiny">(${r.unit})</span>` : ""}</td>${rev(r.v).map(v => `<td class="${v != null && v < 0 ? "neg" : ""}">${v == null ? "-" : fmtN(v, r.unit ? 0 : Math.abs(v) < 10 && v % 1 ? 1 : 0)}</td>`).join("")}</tr>`;
+    body = main.map(r => row(r, "mn")).join("") + (SD.fdet ? `<tr class="grp"><td>세부 계정 ${rest.length}개</td><td colspan="${L.length}"></td></tr>` + rest.map(r => row(r, "sub")).join("") : "");
+    out.innerHTML = `<div class="minis" id="sd-fst">${[["IS", "손익계산서"], ["BS", "재무상태표"], ["CF", "현금흐름표"]].map(([k, l]) => `<button data-s="${k}" class="${SD.fst === k ? "act" : ""}">${l}</button>`).join("")}</div>
+      <div class="scroll" id="sd-fin-sc"><table class="tbl stk">${head}<tbody>${body}</tbody></table></div>
+      ${rest.length ? `<button class="more" id="sd-fdet" style="margin-top:8px">${SD.fdet ? "세부 계정 접기 ▲" : `세부 계정 ${rest.length}개 더 보기 ▼`}</button>` : ""}
+      <div class="tiny mut" style="margin-top:8px">${esc(d.src)} 사업보고서 원문 계정 · ${esc(d.fs_note)} · 억원 · 파란 칸 = 올해 누적(분기)</div>`;
+    out.querySelectorAll("#sd-fst button").forEach(b => b.onclick = () => { SD.fst = b.dataset.s; finLong(a); });
+    if ($("sd-fdet")) $("sd-fdet").onclick = () => { SD.fdet = !SD.fdet; finLong(a); };
+    if ($("sd-fc")) $("sd-fc").style.display = "none";
+  }
+  const sc = $("sd-fin-sc"); if (sc) sc.scrollLeft = sc.scrollWidth;       // 최근 연도가 보이게
+}
+
 function finChart(a) {
+  if (SD.fin === "long" || SD.fin === "full") return;
   const f = (a.finance || {})[SD.fin]; if (!f || !f.rows || !$("sd-fc")) { if ($("sd-fc")) $("sd-fc").style.display = "none"; return; }
   const L = f.periods.map(p => p.title.slice(2) + (p.est ? "E" : "")), r = f.rows["매출액"] || [], op = f.rows["영업이익"] || [], ni = f.rows["당기순이익"] || [];
   const est = f.periods.map(p => p.est);

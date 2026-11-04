@@ -38,28 +38,42 @@ def _ts_json(*args):
 
 
 def role_of(ip: str) -> str:
+    return role_info(ip)[0]
+
+
+def role_info(ip: str) -> tuple[str, str]:
+    """(역할, 이유) — 같은 Tailscale 계정 기기면 owner, 다른 계정(공유받은 사람)이면 viewer"""
     if not ip.startswith("100."):                 # 서버 자신(localhost) 등 → 주인
-        return "owner"
+        return "owner", "로컬 접속"
     hit = _roles.get(ip)
     if hit and time.time() - hit[0] < 600:
-        return hit[1]
+        return hit[1], hit[2]
     lst = lambda k: {x.strip().lower() for x in os.environ.get(k, "").split(",") if x.strip()}
+    role, why = "viewer", ""
     try:
-        w = _ts_json("whois", ip)
-        prof = w.get("UserProfile") or {}
-        login = (prof.get("LoginName") or "").lower()
-        if login in lst("DASH_VIEWERS"):
-            role = "viewer"
-        elif login in lst("DASH_OWNERS"):
-            role = "owner"
+        st = _ts_json("status")
+        me = (st.get("Self") or {}).get("UserID")
+        users = st.get("User") or {}
+        peer = next((p for p in (st.get("Peer") or {}).values() if ip in (p.get("TailscaleIPs") or [])), None)
+        uid = peer.get("UserID") if peer else None
+        login = ((users.get(str(uid)) or {}).get("LoginName") or "").lower() if uid is not None else ""
+        if peer is None:                          # 상태 목록에 없으면 whois로 한 번 더
+            w = _ts_json("whois", ip)
+            uid = (w.get("UserProfile") or {}).get("ID")
+            login = ((w.get("UserProfile") or {}).get("LoginName") or "").lower()
+        if login and login in lst("DASH_VIEWERS"):
+            role, why = "viewer", f"{login} = DASH_VIEWERS"
+        elif login and login in lst("DASH_OWNERS"):
+            role, why = "owner", f"{login} = DASH_OWNERS"
+        elif uid is not None and uid == me:
+            role, why = "owner", "서버와 같은 Tailscale 계정"
         else:
-            me = (_ts_json("status").get("Self") or {}).get("UserID")
-            role = "owner" if me is not None and prof.get("ID") == me else "viewer"
+            role, why = "viewer", f"다른 계정({login or uid})"
     except Exception as e:                        # 판별 실패 → 안전하게 보기 전용
-        print("tailscale whois 실패:", e, flush=True)
-        role = "viewer"
-    _roles[ip] = (time.time(), role)
-    return role
+        role, why = "viewer", f"계정 확인 실패: {type(e).__name__}: {str(e)[:80]}"
+        print("tailscale 역할 판별 실패:", e, flush=True)
+    _roles[ip] = (time.time(), role, why)
+    return role, why
 
 
 def for_viewer(d: dict) -> dict:
@@ -564,6 +578,35 @@ def stock_detail(q, us_hint=None):
     return {**out, "tags": tags}
 
 
+def fin_long(q):
+    """종목 → DART 2015~최근 재무 전체 + 그해 말 종가 PER·PBR (장기 재무 화면)"""
+    import data_sources as ds
+    import dart_fin
+    hits = ds.search(q.strip(), 1)
+    if not hits:
+        return {"error": f"'{q}' 종목을 찾지 못했습니다"}
+    it = hits[0]
+    if it.get("us"):
+        return {"error": "미국 종목은 DART 공시가 없어 장기 재무를 지원하지 않음 (연간·분기 표는 야후 기준)"}
+    if not it.get("corp_code"):
+        return {"error": "DART 고유번호를 찾지 못함"}
+
+    def closes():
+        hit = _cache.get("stock:" + it["code"])
+        o = hit[1].get("ohlc") if hit and isinstance(hit[1], dict) else None
+        if not o:
+            import stock_info as si
+            df = si.kr_ohlcv(it["code"], 20000)
+            o = {"d": [f"{x:%Y%m%d}" for x in df.index], "c": list(df["close"])}
+        out = {}
+        for d8, c in zip(o["d"], o["c"]):
+            if c:
+                out[d8[:4]] = c                   # 그해 마지막 거래일 종가
+        return out
+    cl = _try(closes, {})
+    return {"name": it.get("name"), "code": it["code"], **dart_fin.build(it["corp_code"], cl)}
+
+
 class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
@@ -630,6 +673,16 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 return self._send(200, json.dumps({"error": f"{type(e).__name__}: {str(e)[:200]}"}, ensure_ascii=False),
                                   "application/json; charset=utf-8")
+        if path == "/api/fin":                    # 장기·전체 재무제표 (DART)
+            q = (parse_qs(urlparse(self.path).query).get("q") or [""])[0]
+            try:
+                out = cached("fin:" + q, 12 * 3600, lambda: fin_long(q))
+                if out.get("error"):
+                    with _lock:
+                        _cache.pop("fin:" + q, None)
+            except Exception as e:
+                out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/doc":                    # 공시·리포트 상세 (앱 안에서 보기)
             qs = parse_qs(urlparse(self.path).query)
             k, i = (qs.get("k") or [""])[0], (qs.get("id") or [""])[0]
@@ -645,7 +698,8 @@ class H(BaseHTTPRequestHandler):
         if path == "/api/data":
             try:
                 d = data()
-                d = for_viewer(d) if role_of(self.client_address[0]) == "viewer" else {**d, "viewer": False}
+                role, why = role_info(self.client_address[0])
+                d = {**(for_viewer(d) if role == "viewer" else {**d, "viewer": False}), "role_why": why}
                 return self._send(200, json.dumps(d, ensure_ascii=False, default=str), "application/json; charset=utf-8")
             except Exception as e:
                 return self._send(500, json.dumps({"error": str(e)}), "application/json")

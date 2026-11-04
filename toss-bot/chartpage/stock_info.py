@@ -196,7 +196,7 @@ def kr_finance(code: str, kind: str) -> dict:
                for t in fi.get("trTitleList") or []]
     rows = {}
     for r in fi.get("rowList") or []:
-        if r.get("title") in FIN_ROWS:
+        if r.get("title"):                        # 네이버가 주는 행 전부 (화면에서 주요 행 먼저)
             rows[r["title"]] = [num((r.get("columns") or {}).get(p["key"], {}).get("value")) for p in periods]
     return {"periods": periods, "rows": rows}
 
