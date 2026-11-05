@@ -196,6 +196,11 @@ em.avg{background:var(--warn);color:#fff}em.mine.b{background:var(--up);color:#f
 .btnrow{display:flex;gap:8px;margin-top:6px}.btnrow a{flex:1;text-align:center;background:var(--line);color:var(--txt);border-radius:12px;padding:12px;font-size:14px;font-weight:600}.btnrow a.pri{background:var(--blue);color:#fff}
 .minis{display:flex;gap:6px;margin:0 0 10px;flex-wrap:wrap}.minis button{background:var(--bg);color:var(--sub);border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-size:12px;font-family:inherit}
 .minis button.act{color:var(--txt);border-color:var(--blue)}
+.sdtabs{display:flex;gap:6px;overflow-x:auto;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin:4px 0 2px;scrollbar-width:none}.sdtabs::-webkit-scrollbar{display:none}
+.sdtabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--sub);border-radius:99px;padding:7px 13px;font-size:13px;font-weight:600;font-family:inherit}
+.sdtabs button.act{background:var(--txt);color:var(--card);border-color:var(--txt)}
+.ob-card.sm .obr>span{padding:2px 6px}.ob-card.sm .obr .op b{font-size:13px}.ob-card.sm .obr .op small{font-size:9.5px}.ob-card.sm .obr .oi{padding:2px 6px}
+.obinfo{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:6px}.obinfo div{background:var(--bg);border-radius:8px;padding:4px 6px;font-size:10.5px;color:var(--sub)}.obinfo b{display:block;font-size:12px;color:var(--txt);font-weight:600}
 .fl{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:6px 10px;font-size:13px;font-variant-numeric:tabular-nums;margin-bottom:10px}.fl b{color:var(--sub);font-weight:400}
 /* 장기·단기 비율 · 대가 */
 .mixbar{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--line);margin:12px 0 6px;position:relative}
@@ -752,6 +757,8 @@ const usdBig = v => v == null ? "-" : v >= 1e12 ? "$" + (v / 1e12).toFixed(2) + 
 const sEok = v => v == null ? "-" : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? fmtN(v) : fmtN(v, 1)) + "억";
 
 let SD = {prev: "home", last: null, range: 120, ma: true, bb: true, who: "frgn", fin: "annual", ctx: null,
+  tab: "chart",
+  obN: (() => { try { return +localStorage.getItem("ob-n") || 5; } catch (e) { return 5; } })(),
   kc: (() => { try { return JSON.parse(localStorage.getItem("kc-state")) || {tf: "D", rng: "6M", ma: true, bb: true, sig: true}; } catch (e) { return {tf: "D", rng: "6M", ma: true, bb: true, sig: true}; } })()};
 
 async function openStock(q, opt = {}) {
@@ -765,7 +772,7 @@ async function openStock(q, opt = {}) {
     const a = await (await fetch("api/stock?q=" + encodeURIComponent(q) + (opt.us ? "&us=1" : ""))).json();
     if (a.error) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">${esc(a.error)}</div></div>`; return; }
     cq.value = a.name; cSaveRecent(a.name, a.us ? a.code : a.name, a.us);
-    SD.last = a; sdRender(a);
+    SD.last = a; SD.tab = "chart"; sdRender(a);       // 새 종목은 항상 차트·호가 탭부터
   } catch (e) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
 const TABN = {pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "미국", acct: "계좌", det: "공시"};
@@ -810,22 +817,25 @@ function sdRender(a) {
     <div class="kv">${kvs.join("")}</div>${err}
   </div>
   ${descCard(a)}
-  <div id="sd-ob"></div>
-  ${fomoCard(a)}
-  ${ctxCard()}
-  ${heroCard(a)}
-  <div class="card"><h2>👀 한눈에 보기</h2><div class="tally" style="margin:-4px 0 10px">${tally}</div>${sigs}
-    <div class="tiny mut" style="margin-top:8px">🟢 긍정 · 🟠 주의 · ⚪ 중립 — 기계적 기준이라 참고용</div></div>
+  <div class="sdtabs" id="sd-tabs">${SDTABS(a).map(([k, l]) => `<button data-t="${k}" class="${SD.tab === k ? "act" : ""}">${l}</button>`).join("")}</div>
+  <div class="sdp" data-p="chart">
   <div class="card kc-card"><div id="sd-kc"></div></div>
+  <div id="sd-ob"></div>
   <div class="card"><h2>📏 이평선 · 수익률</h2>
     <div class="fl" style="grid-template-columns:repeat(4,1fr)">${[5, 20, 60, 120].map(n => `<div><b>${n}일선</b><br>${money(T["ma" + n])}<br><span class="${cls(T["gap" + n])}">${pct(T["gap" + n])}</span></div>`).join("")}</div>
     <div class="tiny mut">수익률 1주 ${pct(T.ret5)} · 1개월 ${pct(T.ret20)} · 3개월 ${pct(T.ret60)} · 1년 ${pct(T.ret250)}</div>
-  </div>
-  ${a.us ? usHolders(a) : flowCard(a)}
-  ${finCard(a)}
-  ${a.us ? "" : filingCard(a) + researchCard(a)}
-  <div id="sd-bb"><div class="card"><h2>🤖 자동매매 전략 판정</h2><div class="tiny mut" style="margin-bottom:10px">자사주 공시 · 볼린저(책 기법) · 외국인 수급 세 조건 확인</div>
-    <button class="stopbtn on" id="sd-bb-btn">판정 불러오기</button></div></div>
+  </div></div>
+  <div class="sdp" data-p="sum">
+  ${fomoCard(a)}
+  ${ctxCard()}
+  <div class="card"><h2>👀 한눈에 보기</h2><div class="tally" style="margin:-4px 0 10px">${tally}</div>${sigs}
+    <div class="tiny mut" style="margin-top:8px">🟢 긍정 · 🟠 주의 · ⚪ 중립 — 기계적 기준이라 참고용</div></div></div>
+  <div class="sdp" data-p="hero">${heroCard(a) || `<div class="card"><div class="empty">대가 채점 정보 없음</div></div>`}</div>
+  <div class="sdp" data-p="flow">${a.us ? usHolders(a) : flowCard(a)}</div>
+  <div class="sdp" data-p="fin">${finCard(a)}</div>
+  ${a.us ? "" : `<div class="sdp" data-p="news">${filingCard(a) + researchCard(a)}</div>`}
+  <div class="sdp" data-p="bot"><div id="sd-bb"><div class="card"><h2>🤖 자동매매 전략 판정</h2><div class="tiny mut" style="margin-bottom:10px">자사주 공시 · 볼린저(책 기법) · 외국인 수급 세 조건 확인</div>
+    <button class="stopbtn on" id="sd-bb-btn">판정 불러오기</button></div></div></div>
   <div class="foot">${Object.entries(a.links || {}).map(([k, u]) => `<a href="${u}" target="_blank">${{naver: "네이버 증권", dart: "DART 공시", yahoo: "야후 파이낸스"}[k] || k} ↗</a>`).join(" · ")}</div>`;
   document.querySelectorAll("#sd-who button").forEach(b => b.onclick = () => { SD.who = b.dataset.w;
     document.querySelectorAll("#sd-who button").forEach(x => x.classList.toggle("act", x === b)); flowChart(a); });
@@ -837,8 +847,22 @@ function sdRender(a) {
       if (r.error) throw new Error(r.error); cRender(r); }
     catch (e) { $("sd-bb-btn").textContent = "실패: " + e.message; }
   };
-  sdCharts(a); flowChart(a); finChart(a); finLong(a);
+  document.querySelectorAll("#sd-tabs button").forEach(b => b.onclick = () => { SD.tab = b.dataset.t; sdTab(a, true); });
+  sdTab(a, false);
   obStart(a);
+}
+// 종목 상세 세부 탭 — 📈 차트·호가 / 👀 요약 / 🏛️ 대가 / 수급 / 📊 재무 / 📄 공시·리포트(한국) / 🤖 전략
+const SDTABS = a => [["chart", "📈 차트·호가"], ["sum", "👀 요약"], ["hero", "🏛️ 대가"], ["flow", a.us ? "🏦 보유" : "🧭 수급"], ["fin", "📊 재무"]]
+  .concat(a.us ? [] : [["news", "📄 공시·리포트"]]).concat([["bot", "🤖 전략"]]);
+function sdTab(a, scroll) {
+  if (!SDTABS(a).some(([k]) => k === SD.tab)) SD.tab = "chart";
+  document.querySelectorAll("#sd-tabs button").forEach(b => b.classList.toggle("act", b.dataset.t === SD.tab));
+  document.querySelectorAll(".sdp").forEach(p => p.style.display = p.dataset.p === SD.tab ? "" : "none");
+  // 숨겨진 상태에선 그래프 폭이 0이라, 보이는 탭의 그래프만 그 자리에서 다시 그림
+  if (SD.tab === "chart") sdCharts(a);
+  if (SD.tab === "flow") flowChart(a);
+  if (SD.tab === "fin") { finChart(a); finLong(a); }
+  const t = $("sd-tabs"); if (scroll && t && t.getBoundingClientRect().top < 0) t.scrollIntoView({block: "start"});
 }
 
 function ctxCard() {
@@ -1348,7 +1372,8 @@ function obAvgRow(levels) {                               // 내 평균 매수�
 function obRender() {
   const d = OB.d, a = OB.a; if (!d || !$("sd-ob")) return;
   const us = !!a.us, base = obBase(), D = d.day || {}, fm = v => v == null ? "-" : us ? Number(v).toFixed(2) : fmtN(v);
-  const asks = d.asks.slice(-10), bids = d.bids.slice(0, 10), mx = Math.max(1, ...asks.map(x => x.v || 0), ...bids.map(x => x.v || 0));
+  const N = SD.obN === 10 ? 10 : 5;                     // 기본 5호가 (작게) · "10호가" 누르면 펼침
+  const asks = d.asks.slice(-N), bids = d.bids.slice(0, N), mx = Math.max(1, ...asks.map(x => x.v || 0), ...bids.map(x => x.v || 0));
   const avgP = obAvgRow(asks.concat(bids));
   const pc = p => base ? cls(p - base) : "";
   const rt = p => base ? `<small class="${pc(p)}">${pct(p / base - 1, 2)}</small>` : "";
@@ -1357,19 +1382,21 @@ function obRender() {
     ["저가", fm(D.low), D.low && base ? pc(D.low) : ""], ["전일", fm(base), ""], ["거래량", obBig(D.vol_now ?? D.vol), ""],
     ["체결강도", st == null ? "-" : st.toFixed(1) + "%", st == null ? "" : st >= 100 ? "up" : "dn"], ["매수잔량비", sa + sb ? Math.round(sb / (sa + sb) * 100) + "%" : "-", sb > sa ? "up" : "dn"],
     ["내 평균", TV.info && TV.info.hold && !window.VIEWER ? fm(TV.info.hold.avg) : "-", ""]];
-  const tk = (d.ticks || []).slice(0, 10);
+  const tk = (d.ticks || []).slice(0, N);
   const pcell = x => `<span class="op ${pc(x.p)} ${d.last === x.p ? "cur" : ""}"><b>${fm(x.p)}</b>${rt(x.p)}${avgP === x.p ? `<em class="avg">평균</em>` : ""}${obMine(x.p)}</span>`;
   const rowA = (x, i) => `<div class="obr ask${obFlash("a", x.p, x.v)}" data-px="${x.p}"><span class="ov"><i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}</span>${pcell(x)}
       <span class="oi">${info[i] ? `<small>${info[i][0]}</small><b class="${info[i][2]}">${info[i][1]}</b>` : ""}</span></div>`;
   const rowB = (x, i) => `<div class="obr bid${obFlash("b", x.p, x.v)}" data-px="${x.p}"><span class="oi tk">${tk[i] ? `<b class="${base ? cls(tk[i].p - base) : ""}">${fm(tk[i].p)}</b><small class="${tk[i].s === "S" ? "dn" : "up"}">${fmtN(tk[i].v, us ? 2 : 0)}</small>` : ""}</span>
       ${pcell(x)}<span class="ov"><i style="width:${(x.v || 0) / mx * 100}%"></i>${fmtN(x.v)}</span></div>`;
-  const pad = asks.length < 10 ? Array(10 - asks.length).fill(null) : [];
-  $("sd-ob").innerHTML = `<div class="card ob-card"><div class="row"><h2 style="margin:0">📒 호가</h2><span class="tiny mut" id="ob-st">${(d.tts || d.ts || "").slice(11, 19)} · ${d.mode === "ws" ? "⚡ 실시간" : d.mode === "rest" ? "🔁 0.35초" : d.mode === "poll" ? "🔁 1초" : "연결 중"}</span></div>
+  const pad = asks.length < N ? Array(N - asks.length).fill(null) : [];
+  $("sd-ob").innerHTML = `<div class="card ob-card ${N === 5 ? "sm" : ""}"><div class="row"><h2 style="margin:0">📒 호가 <button class="kc-ic" id="ob-n" style="font-size:11px;padding:3px 8px;vertical-align:middle">${N === 5 ? "10호가 ▾" : "5호가 ▴"}</button></h2><span class="tiny mut" id="ob-st">${(d.tts || d.ts || "").slice(11, 19)} · ${d.mode === "ws" ? "⚡ 실시간" : d.mode === "rest" ? "🔁 0.35초" : d.mode === "poll" ? "🔁 1초" : "연결 중"}</span></div>
     <div class="ob">${pad.map((_, i) => `<div class="obr ask"><span class="ov"></span><span class="op"></span><span class="oi"><small>${info[i][0]}</small><b class="${info[i][2]}">${info[i][1]}</b></span></div>`).join("")}
       ${asks.map((x, i) => rowA(x, i + pad.length)).join("")}${bids.map(rowB).join("")}</div>
+    ${N < info.length ? `<div class="obinfo">${info.slice(N).map(([l, v, c]) => `<div>${l}<b class="${c}">${v}</b></div>`).join("")}</div>` : ""}
     <div class="obsum"><span class="dn">매도 ${fmtN(sa)}</span><span class="tiny mut">왼쪽 아래 = 실시간 체결(빨강 매수·파랑 매도 주도 추정)</span><span class="up">매수 ${fmtN(sb)}</span></div>
     <div class="mixbar" style="margin-top:6px;height:6px"><i style="width:${sa + sb ? sa / (sa + sb) * 100 : 50}%;background:var(--dn)"></i><i style="width:${sa + sb ? sb / (sa + sb) * 100 : 50}%;background:var(--up)"></i></div>
     ${window.VIEWER ? "" : `<div class="tiny mut" style="margin-top:6px">가격을 누르면 그 가격으로 주문창이 열려요 · 체결강도는 이 화면을 연 뒤부터 계산</div>`}</div>`;
+  const nb = $("ob-n"); if (nb) nb.onclick = e => { e.stopPropagation(); SD.obN = N === 5 ? 10 : 5; try { localStorage.setItem("ob-n", SD.obN); } catch (er) {} obRender(); };
   if (!window.VIEWER) $("sd-ob").querySelectorAll("[data-px]").forEach(el => el.onclick = () => tvOpen(TV.tab === "SELL" ? "SELL" : "BUY", +el.dataset.px));
   tvLive();
 }
