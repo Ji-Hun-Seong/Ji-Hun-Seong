@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="자동매매">
@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>내 자동매매</title>
-<script src="kchart.js?v=20261105b"></script>
+<script src="kchart.js?v=20261105c"></script>
 <script src="chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js'"></script>
 <style>
 :root,:root[data-theme=dark]{--bg:#0f1720;--card:#17212b;--line:#243140;--txt:#e8eef5;--sub:#8a9bb0;--sub2:#c4d0de;--blue:#4f8cff;--up:#f04452;--dn:#3d8bfd;--ok:#2fbf71;--warn:#f5a524;
@@ -196,6 +196,7 @@ em.avg{background:var(--warn);color:#fff}em.mine.b{background:var(--up);color:#f
 .btnrow{display:flex;gap:8px;margin-top:6px}.btnrow a{flex:1;text-align:center;background:var(--line);color:var(--txt);border-radius:12px;padding:12px;font-size:14px;font-weight:600}.btnrow a.pri{background:var(--blue);color:#fff}
 .minis{display:flex;gap:6px;margin:0 0 10px;flex-wrap:wrap}.minis button{background:var(--bg);color:var(--sub);border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-size:12px;font-family:inherit}
 .minis button.act{color:var(--txt);border-color:var(--blue)}
+body{overflow-x:clip}
 .sdtabs{display:flex;gap:6px;overflow-x:auto;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin:4px 0 2px;scrollbar-width:none}.sdtabs::-webkit-scrollbar{display:none}
 .sdtabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--sub);border-radius:99px;padding:7px 13px;font-size:13px;font-weight:600;font-family:inherit}
 .sdtabs button.act{background:var(--txt);color:var(--card);border-color:var(--txt)}
@@ -867,7 +868,8 @@ function sdSwipe(a) {
       const ks = SDTABS(a).map(([k]) => k), i = ks.indexOf(SD.tab), j = i + (dx > 0 ? 1 : -1);   // 앱 전체 규칙과 같게: 오른쪽으로 쓸기 → 오른쪽(다음) 탭
       if (j < 0 || j >= ks.length) return;
       SD.tab = ks[j]; sdTab(a, true);
-      const b = document.querySelector(`#sd-tabs button[data-t="${SD.tab}"]`); if (b) b.scrollIntoView({inline: "center", block: "nearest", behavior: "smooth"});
+      const t = $("sd-tabs"), b = t && t.querySelector(`button[data-t="${SD.tab}"]`);   // 탭 줄만 옆으로 (scrollIntoView는 화면 전체가 옆으로 밀림)
+      if (b) t.scrollTo({left: b.offsetLeft - (t.clientWidth - b.offsetWidth) / 2, behavior: "smooth"});
     }, {passive: true});
   });
 }
@@ -1651,6 +1653,10 @@ document.addEventListener("visibilitychange", () => { if (document.hidden) obSto
 document.querySelectorAll("#tv-tabs button").forEach(b => b.onclick = () => { TV.tab = b.dataset.k; TV.edit = null; TV.scrolled = false; tvRender(); if (["BUY", "SELL", "EDIT"].includes(TV.tab)) tvInfo(); });   // 화면 꺼지면 끊고, 켜지면 다시
 
 
+// ── 아이폰 화면 전체 확대 막기 — 차트 두 손가락 확대가 페이지 확대로 새서 화면이 커지고 옆으로 밀리던 문제
+["gesturestart", "gesturechange"].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), {passive: false}));
+let _lastTap = 0;
+document.addEventListener("touchend", e => { const n = Date.now(); if (n - _lastTap < 300 && e.target.closest && e.target.closest("canvas, .kc-wrap")) e.preventDefault(); _lastTap = n; }, {passive: false});
 // ── 👆 손가락으로 쓸어서 탭 이동 — 오른쪽으로 쓸면 오른쪽 탭, 왼쪽으로 쓸면 왼쪽 탭 ─────────
 (function () {
   let sx = 0, sy = 0, st = 0, ok = false;

@@ -180,6 +180,7 @@
     bind() {
       const cv = this.cv, P = new Map(); let g = null, lpT = null, vel = 0, lastX = 0, lastT = 0;
       cv.style.touchAction = "pan-y";
+      cv.addEventListener("touchmove", e => { if (e.touches.length > 1) e.preventDefault(); }, {passive: false});   // 두 손가락 = 차트만 확대 (아이폰 화면 확대 막기)
       const local = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
       const setCross = (x, y) => { this.cross = {x: Math.max(0, Math.min(x, this.pw - 1)), y}; this.draw(); };
       cv.addEventListener("pointerdown", e => {
