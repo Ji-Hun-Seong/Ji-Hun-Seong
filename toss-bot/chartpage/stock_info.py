@@ -624,6 +624,11 @@ def us_detail(sym: str, ohlcv=None) -> dict:
                 "opm": g("operatingMargins"), "npm": g("profitMargins"), "rev_growth": g("revenueGrowth"),
                 "summary": g("longBusinessSummary") or "", "currency": g("currency") or g("financialCurrency"),
                 "exchange": g("fullExchangeName") or g("exchange"), "country": g("country")}
+        try:                                          # ADR 등 통화가 섞인 종목도 PBR이 맞게 (시총 ÷ 자본총계)
+            import heroes
+            prof["pbr"] = heroes.yf_pbr(tk, info, sym)
+        except Exception:
+            pass
         px_now = float(df["close"].iloc[-1])
         rate = g("dividendRate") or g("trailingAnnualDividendRate")
         prof["div_yield"] = rate / px_now * 100 if rate and px_now else 0.0   # yfinance 버전마다 dividendYield 단위가 달라 직접 계산

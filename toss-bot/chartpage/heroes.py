@@ -463,6 +463,38 @@ def _krw_per(ccy: str) -> float | None:
     return v * unit if v else None
 
 
+def yf_pbr(tk, info: dict, sym: str):
+    """해외 PBR = 시가총액 ÷ 자본총계 (둘 다 원화로 바꿔서).
+       야후 priceToBook 은 ADR(TSM 등)에서 주가는 달러·장부가는 대만달러/원주 1주 기준이라 75배 같은 엉뚱한 값이 나와서 직접 계산.
+       자본총계를 못 받으면 야후 값 그대로"""
+    g = info.get
+    mcap, ccy = g("marketCap"), g("currency")
+    fccy = g("financialCurrency") or ccy
+
+    def eq_get():
+        for attr in ("quarterly_balance_sheet", "balance_sheet"):
+            try:
+                bs = getattr(tk, attr)
+                if bs is None or bs.empty:
+                    continue
+                for row in ("Stockholders Equity", "Common Stock Equity", "Total Equity Gross Minority Interest"):
+                    if row in bs.index:
+                        v = bs.loc[row].dropna()
+                        if len(v):
+                            return float(v.iloc[0])
+            except Exception:
+                pass
+        return None
+    try:
+        eq = _disk(f"yeq_{sym}", 7 * 86400, eq_get)
+        f1, f2 = _krw_per(ccy), _krw_per(fccy)
+        if mcap and eq and f1 and f2:
+            return mcap * f1 / (eq * f2)              # 자본잠식이면 마이너스 그대로
+    except Exception:
+        pass
+    return g("priceToBook")
+
+
 def light_global(sym: str, name: str | None = None) -> dict:
     """해외 목록용 가벼운 데이터 — yfinance info + 연간 손익 (일봉은 받지 않음)"""
     import yfinance as yf
@@ -478,7 +510,7 @@ def light_global(sym: str, name: str | None = None) -> dict:
     ccy = g("currency")
     fx = _krw_per(ccy)
     mcap = g("marketCap")
-    prof = {"name": name or g("shortName") or sym, "per": g("trailingPE"), "fper": g("forwardPE"), "pbr": g("priceToBook"),
+    prof = {"name": name or g("shortName") or sym, "per": g("trailingPE"), "fper": g("forwardPE"), "pbr": yf_pbr(tk, info, sym),
             "div_yield": dy, "roe": g("returnOnEquity"), "opm": g("operatingMargins"), "de": g("debtToEquity"),
             "target": g("targetMeanPrice"), "mcap_usd": mcap, "currency": ccy,
             "mcap_eok": mcap * fx / 1e8 if mcap and fx else None,
