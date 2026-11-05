@@ -1,0 +1,30 @@
+name: Industry map (KR)
+
+# 발굴 목록에 업종·주요제품을 보여 주려고 KRX KIND 상장법인목록을 매주 받아 둔다.
+on:
+  schedule:
+    - cron: "33 22 * * 0"   # 월요일 07:33 KST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests pandas lxml
+      - run: python toss-bot/industry_map.py
+      - name: Save
+        run: |
+          git config user.name "industry-map-bot"
+          git config user.email "industry-map-bot@users.noreply.github.com"
+          git add toss-bot/data/industry_kr.csv
+          git diff --cached --quiet && exit 0
+          git commit -m "industry-map: 한국 업종·주요제품 갱신"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
