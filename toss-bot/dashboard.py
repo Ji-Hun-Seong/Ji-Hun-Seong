@@ -97,6 +97,36 @@ def cached(key, ttl, fn):
     return val
 
 
+_bg = {}                                          # 키 → 계산 시작 시각 (같은 계산이 겹쳐 돌지 않게)
+
+
+def bg_cached(key, ttl, fn):
+    """무거운 계산은 뒤에서 — 화면은 기다리지 않고 직전 결과를 바로 받음(없으면 {"loading": ...}).
+       기한이 지나면 뒤에서 한 번만 새로 계산 (뉴스·공시 레이더: 처음 1~2분 걸려서 화면이 '불러오는 중'에 멈추던 문제)"""
+    with _lock:
+        hit = _cache.get(key)
+        running = _bg.get(key)
+        fresh = hit and time.time() - hit[0] < ttl
+        if not fresh and not (running and time.time() - running < 600):
+            _bg[key] = time.time()
+
+            def work():
+                try:
+                    val = fn()
+                except Exception as e:
+                    val = {"error": f"{type(e).__name__}: {str(e)[:160]}"}
+                    if hit and isinstance(hit[1], dict) and not hit[1].get("error"):
+                        val = {**hit[1], "stale": True}
+                with _lock:
+                    _cache[key] = (time.time(), val)
+                    _bg.pop(key, None)
+            threading.Thread(target=work, daemon=True).start()
+            running = _bg[key]
+    if hit:
+        return {**hit[1], "refreshing": bool(running)} if isinstance(hit[1], dict) else hit[1]
+    return {"loading": True, "since": int(time.time() - (running or time.time()))}
+
+
 def api():
     if _api["a"] is None:
         _api["a"] = bot.api()
@@ -1220,7 +1250,7 @@ class H(BaseHTTPRequestHandler):
         path = self.path.split("?")[0]
         if path == "/api/radar":
             try:
-                out = cached("radar", 120, news_radar)
+                out = bg_cached("radar", 120, news_radar)
             except Exception as e:
                 out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
             return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")

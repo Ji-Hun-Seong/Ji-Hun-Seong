@@ -1451,7 +1451,19 @@ const RD = {t: 0};
 async function rLoad(force) {
   if (!$("t-scan").classList.contains("act")) return;
   if (!force && Date.now() - RD.t < 55000) return; RD.t = Date.now();
-  let R; try { R = await (await fetch("api/radar", {cache: "no-store"})).json(); } catch (e) { return; }
+  let R;
+  try {
+    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 25000);
+    R = await (await fetch("api/radar", {cache: "no-store", signal: ac.signal})).json(); clearTimeout(to);
+  } catch (e) {                                          // 조용히 멈추지 않게 — 이유를 보여 주고 20초 뒤 다시
+    if (!RD.ok) $("r-out").innerHTML = `<div class="card"><div class="empty small">불러오기 실패 (${esc(e.name === "AbortError" ? "25초 넘게 응답 없음" : e.message)}) — 20초 뒤 다시 시도해요</div></div>`;
+    RD.t = Date.now() - 35000; setTimeout(() => rLoad(), 20500); return;
+  }
+  if (R.loading) {                                       // 서버가 뒤에서 처음 계산 중 (공시 원문·뉴스 확인이라 1~2분)
+    $("r-out").innerHTML = `<div class="card"><div class="empty small">⏳ 서버가 오늘·어제 공시와 뉴스를 확인하는 중이에요 (${R.since || 0}초째 · 처음엔 1~2분)<br>다 되면 자동으로 보여 줘요</div></div>`;
+    RD.t = 0; setTimeout(() => rLoad(), 8000); return;
+  }
+  RD.ok = true;
   if (R.error) { $("r-out").innerHTML = `<div class="card"><div class="empty small">${esc(R.error)}</div></div>`; return; }
   const dl = d => d === R.today ? "오늘" : "어제";
   const chgT = x => x.chg != null ? `<span class="${cls(x.chg)} name">${x.chg >= 0 ? "+" : ""}${x.chg.toFixed(1)}%</span>` : `<span class="tiny mut">${R.market_open ? "+3% 미만" : "-"}</span>`;
