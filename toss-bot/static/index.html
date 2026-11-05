@@ -318,7 +318,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 
 <section id="t-pick">
   <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
-  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 아빠</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 아빠</button><button data-k="fund">🏦 펀드</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -1113,7 +1113,7 @@ function finChart(a) {
 // ── 발굴 탭 ──────────────────────────────────────────
 let pKind = "hero"; const PK = {};
 try { pKind = localStorage.getItem("p-kind") || "hero"; } catch (e) {}
-if (!["hero", "surge", "value"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
+if (!["hero", "surge", "value", "fund"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
 document.querySelectorAll("#p-seg button").forEach(b => {
   b.classList.toggle("act", b.dataset.k === pKind);
   b.onclick = () => { pKind = b.dataset.k; try { localStorage.setItem("p-kind", pKind); } catch (e) {}
@@ -1145,7 +1145,65 @@ async function pLoad(force) {
 const hMktBar = () => `<div class="seg" id="h-mkt" style="margin-top:-4px">${HMKT.map(([k, l]) => `<button data-m="${k}" class="${hMkt === k ? "act" : ""}">${l}</button>`).join("")}</div>`;
 function hMktBind() { document.querySelectorAll("#h-mkt button").forEach(b => b.onclick = () => hSetMkt(b.dataset.m)); }
 let pItems = [];
+// 🏦 대가 TOP 10 모의 펀드 — 실제 공모펀드처럼 매일 기준가 산출 (chartpage/fund_sim.py)
+function fundChart(h) {
+  if (!h || h.length < 2) return `<div class="tiny mut" style="margin-top:8px">기준가 그래프는 둘째 거래일부터 그려져요</div>`;
+  const W = 320, H = 110, P = 4, vs = h.flatMap(r => [r.nav, r.bench]), lo = Math.min(...vs), hi = Math.max(...vs), rg = hi - lo || 1;
+  const X = i => P + i * (W - 2 * P) / (h.length - 1), Y = v => H - P - (v - lo) / rg * (H - 2 * P);
+  const line = k => h.map((r, i) => `${i ? "L" : "M"}${X(i).toFixed(1)},${Y(r[k]).toFixed(1)}`).join("");
+  const y0 = 1000 >= lo && 1000 <= hi ? `<line x1="0" x2="${W}" y1="${Y(1000)}" y2="${Y(1000)}" stroke="var(--line)" stroke-dasharray="3 3"/>` : "";
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-top:10px">${y0}<path d="${line("bench")}" fill="none" stroke="var(--sub)" stroke-width="1.5"/><path d="${line("nav")}" fill="none" stroke="var(--up)" stroke-width="2"/></svg>
+    <div class="tiny mut"><span class="up">━</span> 기준가 &nbsp; <span>━</span> 코스피(설정일 = 1,000) · ${esc(h[0].d)} ~ ${esc(h[h.length - 1].d)}</div>`;
+}
+function fundRender(d) {
+  const R = d.rules || {}, pc = v => v == null ? "-" : `<span class="${v > 0 ? "up" : v < 0 ? "dn" : ""}">${v > 0 ? "+" : ""}${v.toFixed(2)}%</span>`;
+  const won = v => fmtN(v) + "원";
+  let html = `<div class="card"><div class="label">🏦 대가 TOP 10 모의 펀드</div>
+    <div class="small" style="margin-top:6px;line-height:1.6">발굴 › 대가 탭의 💎 가치주 · 🚀 성장주 TOP 10을 실제 국내 주식형 공모펀드처럼 운용한다고 가정하고, 매일 장 마감 후 종가로 <b>기준가</b>를 산출해요. 실제 주문은 내지 않아요.</div>
+    ${d.updated ? `<div class="tiny mut" style="margin-top:6px">마지막 산출 ${esc(d.updated)}</div>` : ""}</div>`;
+  if (!d.funds || !d.funds.length) { $("p-out").innerHTML = html + `<div class="card"><div class="empty">${esc(d.note || "아직 설정 전")}</div></div>`; return; }
+  d.funds.forEach(f => {
+    const L = f.last, fees = L.fee_today || {}, feeSum = Object.values(fees).reduce((a, b) => a + b, 0);
+    html += `<div class="card">
+      <div class="row"><div><span class="name">${esc(f.name)}</span></div><div style="text-align:right"><span class="score">${fmtN(L.nav, 2)}</span><span class="tiny mut">원</span></div></div>
+      <div class="tiny mut" style="margin-top:3px">${esc(f.desc)}</div>
+      <div class="kv">
+        <div><small>설정 후</small><b>${pc(f.ret)}</b></div><div><small>코스피</small><b>${pc(f.bench_ret)}</b></div><div><small>초과</small><b>${pc(f.ret - f.bench_ret)}</b></div>
+        <div><small>순자산</small><b>${fmtN(L.net / 1e8, 2)}억</b></div><div><small>설정일</small><b>${esc(f.inception)}</b></div><div><small>기준일</small><b>${esc(L.date)}</b></div></div>
+      ${fundChart(f.hist)}
+      <details style="margin-top:12px"><summary class="small"><b>📒 오늘 기준가 산출 내역</b></summary>
+        <table class="small" style="width:100%;margin-top:8px;border-collapse:collapse;font-variant-numeric:tabular-nums">
+          <tr><td>주식 평가액 (${L.n}종목 × 종가)</td><td style="text-align:right">${won(L.stock)}</td></tr>
+          <tr><td>현금</td><td style="text-align:right">${won(L.cash)}</td></tr>
+          <tr><td>미수배당금</td><td style="text-align:right">${won(L.recv)}</td></tr>
+          <tr style="border-top:1px solid var(--line)"><td><b>자산총액</b></td><td style="text-align:right"><b>${won(L.assets)}</b></td></tr>
+          <tr><td>미지급 보수 (부채)</td><td style="text-align:right" class="dn">− ${won(L.payable)}</td></tr>
+          <tr style="border-top:1px solid var(--line)"><td><b>순자산총액</b></td><td style="text-align:right"><b>${won(L.net)}</b></td></tr>
+          <tr><td>총좌수</td><td style="text-align:right">${fmtN(L.units)}좌</td></tr>
+          <tr style="border-top:1px solid var(--line)"><td><b>기준가</b> = 순자산 ÷ 좌수 × 1,000</td><td style="text-align:right"><b>${fmtN(L.nav, 2)}원</b></td></tr>
+        </table>
+        ${feeSum ? `<div class="tiny mut" style="margin-top:8px">오늘 쌓인 보수 ${won(feeSum)} = ${Object.entries(fees).map(([k, v]) => `${esc(k)} ${fmtN(v)}`).join(" · ")} (전일 순자산 × 연율 ÷ 365 × 경과일)</div>` : `<div class="tiny mut" style="margin-top:8px">설정일 — 기준가 1,000.00원으로 시작, 보수는 다음 산출일부터 쌓여요</div>`}
+        ${L.stale && L.stale.length ? `<div class="tiny up" style="margin-top:4px">⚠️ 오늘 종가 없음(직전가로 평가): ${L.stale.map(esc).join(", ")}</div>` : ""}
+        ${L.rebal ? `<div class="tiny mut" style="margin-top:4px">🔄 오늘 리밸런싱: 매매 ${L.rebal.trades}건 · 회전율 ${L.rebal.turnover}%</div>` : ""}
+      </details>
+      <div class="label" style="margin-top:14px">보유 종목 · 리밸런싱 ${esc(f.last_rebal || "-")}</div>
+      ${f.holdings.map(h => `<div class="row" data-sc="${esc(h.code)}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid var(--line)"><div><span class="small">${esc(h.name)}</span> <span class="tiny mut">${fmtN(h.shares)}주</span></div>
+        <div class="small" style="text-align:right">${h.weight != null ? h.weight.toFixed(1) + "%" : "-"} · ${pc(h.pnl)}</div></div>`).join("")}
+      <div class="tiny mut" style="margin-top:8px">누적 매매비용(수수료·거래세) ${won(f.costs)} · 지급한 보수 ${won(f.fee_paid)}${f.recv.length ? ` · 미수배당 ${f.recv.map(r => `${esc(r.name)} ${fmtN(r.amount)}원(${esc(r.pay)} 입금)`).join(", ")}` : ""}</div>
+      ${f.trades.length ? `<details style="margin-top:8px"><summary class="tiny mut">최근 매매 ${f.trades.length}건</summary>${f.trades.map(t => `<div class="tiny" style="padding:3px 0">${esc(t.date)} ${t.side === "매수" ? "<span class='up'>매수</span>" : "<span class='dn'>매도</span>"} ${esc(t.name)} ${fmtN(t.qty)}주 × ${fmtN(t.price)} <span class="mut">· ${esc(t.why)} · 비용 ${fmtN(t.fee)}</span></div>`).join("")}</details>` : ""}
+    </div>`;
+  });
+  html += `<div class="card"><div class="label">운용 규칙</div><div class="small" style="margin-top:6px;line-height:1.7">
+    · 설정액 ${eokFmt(R.seed / 1e8)}, 최초 기준가 1,000.00원 (1좌 = 1원)<br>
+    · 매월 첫 거래일에 그날 TOP ${R.n}로 교체, 동일비중(현금 ${(R.cash_buf * 100).toFixed(0)}% 남김), 그날 종가 체결 가정 · 정수 주<br>
+    · 총보수 연 ${R.fee_total}% = ${Object.entries(R.fees || {}).map(([k, v]) => `${esc(k)} ${(v * 100).toFixed(2)}%`).join(" · ")} — 매일 쌓고(미지급 보수) 분기마다 지급<br>
+    · 매매수수료 ${(R.commission * 100).toFixed(3)}% · 매도 시 증권거래세 ${(R.sell_tax * 100).toFixed(2)}% · 배당은 배당락일에 미수배당 → ${R.div_pay_days}일 뒤 입금<br>
+    · 비교지수 코스피 · 실제 주문 없음 · 투자 권유 아님</div></div>`;
+  $("p-out").innerHTML = html;
+  $("p-out").querySelectorAll("[data-sc]").forEach(el => el.onclick = () => openStock(el.dataset.sc));
+}
 function pRender(d) {
+  if (d.kind === "fund") return fundRender(d);
   if (d.error) { $("p-out").innerHTML = `<div class="card"><div class="empty">${esc(d.error)}${d.kind === "surge" || pKind === "surge" ? "<br><br>급등 후보는 평일 장 마감 후(18:45쯤) 처음 만들어집니다." : ""}</div></div>`; return; }
   pItems = d.items.concat(d.more || []);
   const open = i => `data-pi="${i}"`;
