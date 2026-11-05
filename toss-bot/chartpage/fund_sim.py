@@ -71,6 +71,8 @@ def top10(kind: str, items: list[dict]) -> list[dict]:
 
 def board_items() -> list[dict]:
     import hero_db
+    if hero_db.PATH is None:                                # 대시보드 밖(cron)에서 돌 때 — 같은 채점 DB 를 읽기만 함
+        hero_db.init(os.path.join(os.path.dirname(PATH), "heroes.db"))
     return hero_db.board("kr").get("items", [])
 
 
