@@ -771,6 +771,19 @@ async function openStock(q, opt = {}) {
 const TABN = {pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "미국", acct: "계좌", det: "공시"};
 const backBtn = () => SD.prev && SD.prev !== "chart" ? `<button class="back" onclick="goTab('${SD.prev}')">‹ ${TABN[SD.prev] || "뒤로"}</button>` : "";
 
+// 🏢 무슨 회사? — 종목 상세 맨 위 (한국: 에프앤가이드 기업개요 · 해외: 야후 설명 한국어 번역)
+function descCard(a) {
+  const D = a.desc || {}, P = a.profile || {};
+  const sents = D.lines && D.lines.length ? D.lines : (D.text || "").split(/(?<=[.!?。]|다\.)\s+/).filter(Boolean);
+  const meta = [P.sector, P.industry].filter(Boolean).map(esc).join(" · ");
+  if (!sents.length) return meta ? `<div class="card"><h2>🏢 무슨 회사?</h2><div class="small">${meta}</div></div>` : "";
+  const head = sents.slice(0, 3).join(" "), rest = sents.slice(3).join(" ");
+  return `<div class="card"><h2>🏢 무슨 회사?</h2>${meta ? `<div class="tiny mut" style="margin:-6px 0 6px">${meta}</div>` : ""}
+    <div class="small" style="line-height:1.65">${esc(head)}</div>
+    ${rest ? `<details style="margin-top:6px"><summary>더 보기</summary><div class="small" style="line-height:1.65;margin-top:6px">${esc(rest)}</div></details>` : ""}
+    ${D.translated && D.en ? `<details style="margin-top:6px"><summary class="tiny">영어 원문</summary><div class="tiny mut" style="line-height:1.6;margin-top:6px">${esc(D.en)}</div></details>` : ""}
+    <div class="tiny mut" style="margin-top:6px">출처: ${esc(D.src || "")}</div></div>`;
+}
 function sdRender(a) {
   const P = a.profile || {}, T = a.tech || {}, CC = a.ccy || "USD", money = v => a.us ? cur(v, CC) : won(v);
   const kv = (k, v) => `<div><small>${k}</small><b>${v}</b></div>`;
@@ -796,6 +809,7 @@ function sdRender(a) {
     ${(a.tags || []).length ? `<div style="margin-top:8px">${a.tags.map(t => `<span class="tag ${tagCls(t)}">${esc(t)}</span>`).join("")}</div>` : ""}
     <div class="kv">${kvs.join("")}</div>${err}
   </div>
+  ${descCard(a)}
   <div id="sd-ob"></div>
   ${fomoCard(a)}
   ${ctxCard()}
@@ -809,7 +823,7 @@ function sdRender(a) {
   </div>
   ${a.us ? usHolders(a) : flowCard(a)}
   ${finCard(a)}
-  ${a.us ? (P.summary ? `<div class="card"><h2>🏢 회사 소개</h2><div class="small mut" style="line-height:1.6">${esc(P.summary)}…</div></div>` : "") : filingCard(a) + researchCard(a)}
+  ${a.us ? "" : filingCard(a) + researchCard(a)}
   <div id="sd-bb"><div class="card"><h2>🤖 자동매매 전략 판정</h2><div class="tiny mut" style="margin-bottom:10px">자사주 공시 · 볼린저(책 기법) · 외국인 수급 세 조건 확인</div>
     <button class="stopbtn on" id="sd-bb-btn">판정 불러오기</button></div></div>
   <div class="foot">${Object.entries(a.links || {}).map(([k, u]) => `<a href="${u}" target="_blank">${{naver: "네이버 증권", dart: "DART 공시", yahoo: "야후 파이낸스"}[k] || k} ↗</a>`).join(" · ")}</div>`;

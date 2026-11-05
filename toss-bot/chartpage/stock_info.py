@@ -442,6 +442,7 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
         f_fa = ex.submit(safe, "finance", lambda: kr_finance(code, "annual"), {})
         f_fq = ex.submit(safe, "finance_q", lambda: kr_finance(code, "quarter"), {})
         f_dt = ex.submit(safe, "filings", lambda: kr_filings(corp_code), [])
+        f_ds = ex.submit(lambda: _quiet(kr_desc, code))
         df = f_px.result()
         prof, fl, fa, fq, filings = f_pr.result(), f_fl.result(), f_fa.result(), f_fq.result(), f_dt.result()
     d = indicators(df)
@@ -451,11 +452,86 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
     return clean({
         "us": False, "code": code, "name": prof.get("name") or name or code, "asof": f"{d.index[-1]:%Y-%m-%d}",
         "src": df.attrs.get("src", ""), "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df),
-        "flows": fl[::-1], "flow_sum": fs, "finance": fin, "filings": filings[:30],
+        "flows": fl[::-1], "flow_sum": fs, "finance": fin, "filings": filings[:30], "desc": f_ds.result(),
         "signals": signals(tech, prof, fs, fin, filings),
         "links": {"naver": f"https://m.stock.naver.com/domestic/stock/{code}/total",
                   "dart": f"https://dart.fss.or.kr/dsab007/main.do?option=corp&textCrpNm={name or code}"},
         "errors": errs, "took": round(time.time() - t0, 2)})
+
+
+# ── 회사 소개 (종목 상세 맨 위 '🏢 무슨 회사?') ──────────────────────
+_DESC_DIR = os.path.join(os.path.expanduser(os.environ.get("CHART_CACHE_DIR", "~/.cache/bbchart")), "desc")
+
+
+def _desc_cache(key: str, ttl: float, fn):
+    """회사 소개는 잘 안 바뀌어서 30일 저장 (번역도 한 번만). 비어 있으면 저장 안 함"""
+    f = os.path.join(_DESC_DIR, re.sub(r"[^\w.-]", "_", key) + ".json")
+    try:
+        if time.time() - os.path.getmtime(f) < ttl:
+            return json.load(open(f, encoding="utf-8"))
+    except Exception:
+        pass
+    v = fn()
+    if v and v.get("text"):
+        try:
+            os.makedirs(_DESC_DIR, exist_ok=True)
+            json.dump(v, open(f + ".tmp", "w", encoding="utf-8"), ensure_ascii=False)
+            os.replace(f + ".tmp", f)
+        except Exception:
+            pass
+    return v
+
+
+def ko_translate(text: str) -> str | None:
+    """영어 → 한국어 (구글 번역 무료 주소, 1,500자씩 나눠서). 실패하면 None"""
+    if not text:
+        return None
+    parts, buf = [], ""
+    for s in re.split(r"(?<=[.!?])\s+", text):
+        if len(buf) + len(s) > 1500 and buf:
+            parts.append(buf)
+            buf = ""
+        buf += (" " if buf else "") + s
+    if buf:
+        parts.append(buf)
+    out = []
+    for p in parts:
+        r = requests.get("https://translate.googleapis.com/translate_a/single",
+                         params={"client": "gtx", "sl": "auto", "tl": "ko", "dt": "t", "q": p}, headers=UA, timeout=10)
+        r.raise_for_status()
+        out.append("".join(seg[0] for seg in (r.json() or [[]])[0] if seg and seg[0]))
+    return " ".join(out).strip() or None
+
+
+def _quiet(fn, *a):
+    """회사 소개는 없어도 그만 — 실패해도 '일부 데이터 실패'에 안 띄움"""
+    try:
+        return fn(*a) or {}
+    except Exception:
+        return {}
+
+
+def kr_desc(code: str) -> dict:
+    """한국: 에프앤가이드(네이버 기업정보) '기업개요' 문장들"""
+    def get():
+        r = _get("https://navercomp.wisereport.co.kr/v2/company/c1010001.aspx", {"cmp_cd": code}, timeout=10)
+        lis = re.findall(r'<li[^>]*class="dot_cmp"[^>]*>(.*?)</li>', r.text, re.S)
+        lines = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", x)).strip() for x in lis]
+        lines = [x for x in lines if x]
+        return {"text": " ".join(lines), "lines": lines, "src": "에프앤가이드 기업개요"}
+    return _desc_cache(f"kr_{code}", 30 * 86400, get)
+
+
+def us_desc(sym: str, en: str) -> dict:
+    """해외: 야후 회사 설명(영어) → 한국어 번역 (번역 실패하면 영어 그대로)"""
+    def get():
+        ko = None
+        try:
+            ko = ko_translate(en)
+        except Exception:
+            pass
+        return {"text": ko or en, "en": en, "translated": bool(ko), "src": "야후 파이낸스" + (" · 자동 번역" if ko else "")}
+    return _desc_cache(f"us_{sym}", 30 * 86400, get) if en else {}
 
 
 # ── 미국 종목 상세 ─────────────────────────────────────
@@ -546,7 +622,7 @@ def us_detail(sym: str, ohlcv=None) -> dict:
                 "inst_pct": g("heldPercentInstitutions"), "insider_pct": g("heldPercentInsiders"),
                 "short_pct": g("shortPercentOfFloat"), "roe": g("returnOnEquity"), "de": g("debtToEquity"),
                 "opm": g("operatingMargins"), "npm": g("profitMargins"), "rev_growth": g("revenueGrowth"),
-                "summary": (g("longBusinessSummary") or "")[:400], "currency": g("currency") or g("financialCurrency"),
+                "summary": g("longBusinessSummary") or "", "currency": g("currency") or g("financialCurrency"),
                 "exchange": g("fullExchangeName") or g("exchange"), "country": g("country")}
         px_now = float(df["close"].iloc[-1])
         rate = g("dividendRate") or g("trailingAnnualDividendRate")
@@ -583,6 +659,11 @@ def us_detail(sym: str, ohlcv=None) -> dict:
     ccy = df.attrs.get("currency") or prof.get("currency") or ccy0
     prof["currency"] = ccy
     fin["unit"] = f"백만 {ccy}"
+    desc = {}
+    try:
+        desc = us_desc(sym, prof.get("summary") or "")
+    except Exception as e:
+        errs["desc"] = str(e)[:120]
     S = signals(tech, prof, None, fin, None, us=True)
     if prof.get("inst_pct") is not None:
         S.append(_sig("수급", "기관 보유", f"{prof['inst_pct'] * 100:.0f}%", "neu", "발행주식 대비"))
@@ -591,7 +672,7 @@ def us_detail(sym: str, ohlcv=None) -> dict:
         S.append(_sig("수급", "공매도 비율", f"{sp_:.1f}%", "bad" if sp_ > 10 else "neu", "유통주식 대비"))
     return clean({"us": True, "code": sym, "name": prof.get("name") or sym, "asof": f"{d.index[-1]:%Y-%m-%d}",
                   "mkt": mkt, "ccy": ccy, "src": "야후", "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df, True), "flows": [], "flow_sum": {},
-                  "holders": holders, "finance": fin, "filings": [], "signals": S,
+                  "holders": holders, "finance": fin, "filings": [], "signals": S, "desc": desc,
                   "links": {"yahoo": f"https://finance.yahoo.com/quote/{sym}"},
                   "errors": errs, "took": round(time.time() - t0, 2)})
 
