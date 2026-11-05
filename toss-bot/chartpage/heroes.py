@@ -398,6 +398,12 @@ def light(code: str, name: str | None = None, corp_code: str | None = None) -> d
     """목록용 가벼운 데이터 — 밸류·종가·1년 일봉은 매번, 재무·공시는 디스크 저장본(기한 안이면)"""
     import stock_info as si
     prof = si.kr_profile(code)
+    if prof.get("industry_code"):                     # 목록에서 바로 보이게 — 네이버 업종 이름(30일 저장)
+        try:
+            prof["industry"] = _disk(f"ind_{prof['industry_code']}", 30 * 86400,
+                                     lambda: {"name": si.kr_industry_name(prof["industry_code"])}).get("name")
+        except Exception:
+            pass
     fa = _disk(f"fa_{code}", 7 * 86400, lambda: si.kr_finance(code, "annual"))
     fq, oh = {}, None
     try:                                              # 드러켄밀러 이익 변곡(분기 이익 증가율)용
@@ -534,6 +540,7 @@ def light_global(sym: str, name: str | None = None) -> dict:
     fx = _krw_per(ccy)
     mcap = g("marketCap")
     prof = {"name": name or g("shortName") or sym, "per": g("trailingPE"), "fper": g("forwardPE"), "pbr": yf_pbr(tk, info, sym),
+            "sector": si._ko_label(g("sector"), si.SECTOR_KO), "industry": si._ko_label(g("industry"), si.INDUSTRY_KO),
             "div_yield": dy, "roe": g("returnOnEquity"), "opm": g("operatingMargins"), "de": g("debtToEquity"),
             "target": g("targetMeanPrice"), "mcap_usd": mcap, "currency": ccy,
             "mcap_eok": mcap * fx / 1e8 if mcap and fx else None,
@@ -572,7 +579,8 @@ def board_row(p: dict, market: str = "kr") -> dict:
                 "best": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is True and not c.get("bonus")][:3],
                 "worst": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is False][:2],
                 "steady": {k: s["steady"][k] for k in ("ok", "rev", "ni")},
-                "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok")}
+                "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok"),
+                "industry": P.get("industry") or P.get("sector")}
     except Exception as e:
         return {"code": p["code"], "name": p.get("name") or p["code"], "error": f"{type(e).__name__}: {str(e)[:80]}"}
 

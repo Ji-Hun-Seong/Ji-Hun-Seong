@@ -109,6 +109,15 @@ def kr_ohlcv(code: str, days: int = 760) -> pd.DataFrame:
     return df
 
 
+def kr_industry_name(industry_code) -> str | None:
+    """네이버 업종 번호 → 업종 이름 (예: 278 → 반도체와반도체장비)"""
+    j = _get(f"https://m.stock.naver.com/api/stocks/industry/{industry_code}?page=1&pageSize=1").json()
+    name = ((j or {}).get("groupInfo") or {}).get("name")
+    if not name:
+        raise ValueError("업종 이름 없음")            # 빈 값은 저장하지 않게
+    return name
+
+
 # ── 한국: 네이버 integration (밸류·컨센서스·리포트·업종 비교) ───────────
 def kr_profile(code: str) -> dict:
     j = _get(f"{NAVER}/{code}/integration").json()
