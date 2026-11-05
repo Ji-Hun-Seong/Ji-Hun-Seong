@@ -169,6 +169,14 @@ body.tb-on section#t-chart{padding-bottom:80px}
 .tv-oc,.tv-fr{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}.tv-oc .btnrow a,.tv-fr .btnrow a{padding:8px;font-size:13px}
 .tv-fs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}.tv-fs div{background:var(--bg);border-radius:10px;padding:8px 10px}.tv-fs small{display:block;color:var(--sub);font-size:11px}.tv-fs b{font-size:14px}
 .tv-day{font-size:12px;color:var(--sub);margin:12px 2px 6px;font-weight:700}.tv-fr .row{padding:2px 0}
+.tv-nm{flex:1;min-width:0;background:none;border:0;color:var(--txt);text-align:left;padding:0;font-family:inherit;cursor:pointer}.tv-nm:active{opacity:.6}
+.tv-nm .name{display:flex;align-items:center;gap:4px}.tv-nm .name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tv-nm .name i{font-style:normal;font-size:12px;color:var(--sub)}
+#tv-s{position:absolute;inset:0;background:var(--card);display:none;flex-direction:column;z-index:3;padding-top:env(safe-area-inset-top)}#tv-s.on{display:flex}
+.tvs-hd{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.tvs-hd input{flex:1;min-width:0;padding:11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--txt);font-size:16px;outline:none;font-family:inherit}.tvs-hd input:focus{border-color:var(--blue)}
+.tvs-l{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+.tvs-l .it{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent);cursor:pointer;font-size:15px}.tvs-l .it:active{background:var(--bg)}
+.tvs-l .it.cur b{color:var(--blue)}.tvs-l h3{font-size:12px;color:var(--sub);margin:14px 16px 4px;font-weight:700}
 #tv-modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end}#tv-modal.on{display:flex}
 .tv-mbox{background:var(--card);width:100%;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
 #tv-r textarea{width:100%;box-sizing:border-box;margin-top:8px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--txt);padding:8px;font-size:13px;font-family:inherit;resize:none}#tv-r textarea.need{border-color:var(--up)}
@@ -332,7 +340,8 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 <div id="tv"><div class="tv-hd" id="tv-hd"></div>
   <div class="tv-tabs" id="tv-tabs"><button data-k="BUY">매수</button><button data-k="SELL">매도</button><button data-k="EDIT">정정/취소</button><button data-k="FILL">체결</button><button data-k="RSV">예약</button></div>
   <div class="tv-body" id="tv-body"><div class="tv-l" id="tv-ob"></div><div class="tv-r" id="tv-r"></div></div>
-  <div class="tv-full" id="tv-full"></div><div id="tv-modal"></div></div>
+  <div class="tv-full" id="tv-full"></div><div id="tv-modal"></div>
+  <div id="tv-s"><div class="tvs-hd"><button class="tv-x" id="tvs-x" aria-label="닫기">‹</button><input id="tvs-q" placeholder="종목명·코드·티커 검색" autocomplete="off" enterkeyhint="search"></div><div class="tvs-l" id="tvs-l"></div></div></div>
 
 <div id="tbar"><button class="sell" onclick="tvOpen('SELL')">매도</button><button class="buy" onclick="tvOpen('BUY')">매수</button></div>
 
@@ -1450,11 +1459,58 @@ function tvClose(fromPop) {
   if (!TV.open) return; TV.open = false; $("tv").classList.remove("on"); document.body.style.overflow = "";
   if (!fromPop && history.state && history.state.tv) history.back();
 }
-window.addEventListener("popstate", () => { if (TV.open) tvClose(true); });
+window.addEventListener("popstate", () => { if (TVS.skip) { TVS.skip = false; return; } if (TVS.open) { tvsClose(true); return; } if (TV.open) tvClose(true); });
+// 🔍 주문 화면에서 종목명을 누르면 — 증권사 앱처럼 종목 검색 → 고르면 같은 탭(매수/매도…)으로 그 종목 주문 화면
+const TVS = {open: false, items: [], timer: null, seq: 0};
+function tvsOpen() {
+  if (TVS.open) return; TVS.open = true; $("tvs-q").value = ""; tvsList([]);
+  $("tv-s").classList.add("on"); history.pushState({tvs: 1}, "");
+  setTimeout(() => $("tvs-q").focus(), 30);
+}
+function tvsClose(fromPop) {
+  if (!TVS.open) return; TVS.open = false; TVS.seq++; $("tv-s").classList.remove("on"); $("tvs-q").blur();
+  if (!fromPop && history.state && history.state.tvs) { TVS.skip = true; history.back(); }   // 검색만 닫고 주문 화면은 그대로
+}
+function tvsList(items, msg) {
+  const q = $("tvs-q").value.trim(), cur = OB.a ? OB.a.code : null;
+  const row = (x, k, i) => `<div class="it ${x.code === cur ? "cur" : ""}" data-${k}="${i}"><b>${esc(x.name || x.n)}</b><span class="tiny mut">${x.mkt ? esc(x.mkt) + " · " : ""}${esc(x.code || (x.us ? "해외" : ""))}</span></div>`;
+  let h = "";
+  if (msg) h = `<div class="empty small" style="padding:20px 16px">${esc(msg)}</div>`;
+  else if (q) h = items.length ? items.map((x, i) => row(x, "i", i)).join("") : `<div class="empty small" style="padding:20px 16px">검색 결과 없음</div>`;
+  else { const r = cRecent(); h = r.length ? `<h3>최근 본 종목</h3>` + r.map((x, i) => row({name: x.n, code: x.us ? x.q : "", us: x.us}, "r", i)).join("") : `<div class="empty small" style="padding:20px 16px">종목명·코드·해외 티커를 입력하세요</div>`; }
+  $("tvs-l").innerHTML = h;
+  $("tvs-l").querySelectorAll("[data-i]").forEach(d => d.onclick = () => { const x = TVS.items[d.dataset.i]; tvsPick(x.code, x.us, x.name); });
+  $("tvs-l").querySelectorAll("[data-r]").forEach(d => d.onclick = () => { const x = cRecent()[d.dataset.r]; tvsPick(x.q, x.us, x.n); });
+}
+$("tvs-q").addEventListener("input", () => {
+  clearTimeout(TVS.timer); const v = $("tvs-q").value.trim();
+  if (!v) { TVS.items = []; tvsList([]); return; }
+  TVS.timer = setTimeout(async () => {
+    const my = ++TVS.seq;
+    try { TVS.items = await (await fetch("api/search?q=" + encodeURIComponent(v))).json(); } catch (e) { TVS.items = []; }
+    if (my !== TVS.seq || !TVS.open) return;
+    if (!Array.isArray(TVS.items)) TVS.items = [];
+    tvsList(TVS.items);
+  }, 200);
+});
+$("tvs-q").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); const x = TVS.items[0]; const v = $("tvs-q").value.trim(); if (x) tvsPick(x.code, x.us, x.name); else if (v) tvsPick(v, false, v); } });
+$("tvs-x").onclick = () => tvsClose();
+async function tvsPick(q, us, name) {
+  if (!q) return;
+  if (OB.a && (q === OB.a.code || q === OB.a.name)) { tvsClose(); return; }
+  const my = ++TVS.seq; $("tvs-q").blur(); tvsList([], `${name || q} 불러오는 중…`);
+  const before = OB.a;
+  await openStock(q, {us});                              // 종목 상세(뒤 화면)까지 새 종목으로 — 닫으면 그 종목 차트가 보임
+  if (my !== TVS.seq || !TVS.open) return;
+  if (!OB.a || OB.a === before) { tvsList([], "불러오지 못했어요 — 다른 이름으로 검색해 보세요"); return; }
+  tvsClose();
+  TV.px = null; TV.qty = null; TV.edit = null; TV.scrolled = false; TV.info = null;
+  tvRender(); if (["BUY", "SELL", "EDIT"].includes(TV.tab)) tvInfo();
+}
 function tvRender() {
   const a = OB.a, d = OB.d || {}, T = a.tech || {}, last = d.last ?? T.close, prev = tvPrev(), ch = prev && last ? last / prev - 1 : T.chg;
   $("tv-hd").innerHTML = `<button class="tv-x" onclick="tvClose()">‹</button>
-    <div style="flex:1;min-width:0"><div class="tiny mut">${esc(a.code)}${a.mkt ? " · " + esc(a.mkt) : ""}</div><div class="name" style="font-size:17px">${esc(a.name)}</div></div>
+    <button class="tv-nm" onclick="tvsOpen()" aria-label="종목 검색"><div class="tiny mut">${esc(a.code)}${a.mkt ? " · " + esc(a.mkt) : ""}</div><div class="name" style="font-size:17px"><span>${esc(a.name)}</span><i>▾ 🔍</i></div></button>
     <div style="text-align:right"><div class="mid ${cls(ch)}" id="tv-last">${tvPx(last)}</div><div class="tiny ${cls(ch)}" id="tv-chg">${pct(ch, 2)}</div></div>`;
   document.querySelectorAll("#tv-tabs button").forEach(b => b.classList.toggle("act", b.dataset.k === TV.tab));
   const split = ["BUY", "SELL", "EDIT"].includes(TV.tab);
