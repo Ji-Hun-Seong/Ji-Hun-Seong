@@ -772,7 +772,7 @@ async function openStock(q, opt = {}) {
     const a = await (await fetch("api/stock?q=" + encodeURIComponent(q) + (opt.us ? "&us=1" : ""))).json();
     if (a.error) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">${esc(a.error)}</div></div>`; return; }
     cq.value = a.name; cSaveRecent(a.name, a.us ? a.code : a.name, a.us);
-    SD.last = a; SD.tab = "chart"; sdRender(a);       // 새 종목은 항상 차트·호가 탭부터
+    SD.last = a; SD.tab = "chart"; sdRender(a);       // 새 종목은 항상 차트 탭부터
   } catch (e) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
 const TABN = {pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "미국", acct: "계좌", det: "공시"};
@@ -820,11 +820,11 @@ function sdRender(a) {
   <div class="sdtabs" id="sd-tabs">${SDTABS(a).map(([k, l]) => `<button data-t="${k}" class="${SD.tab === k ? "act" : ""}">${l}</button>`).join("")}</div>
   <div class="sdp" data-p="chart">
   <div class="card kc-card"><div id="sd-kc"></div></div>
-  <div id="sd-ob"></div>
   <div class="card"><h2>📏 이평선 · 수익률</h2>
     <div class="fl" style="grid-template-columns:repeat(4,1fr)">${[5, 20, 60, 120].map(n => `<div><b>${n}일선</b><br>${money(T["ma" + n])}<br><span class="${cls(T["gap" + n])}">${pct(T["gap" + n])}</span></div>`).join("")}</div>
     <div class="tiny mut">수익률 1주 ${pct(T.ret5)} · 1개월 ${pct(T.ret20)} · 3개월 ${pct(T.ret60)} · 1년 ${pct(T.ret250)}</div>
   </div></div>
+  <div class="sdp" data-p="ob"><div id="sd-ob"></div></div>
   <div class="sdp" data-p="sum">
   ${fomoCard(a)}
   ${ctxCard()}
@@ -849,10 +849,29 @@ function sdRender(a) {
   };
   document.querySelectorAll("#sd-tabs button").forEach(b => b.onclick = () => { SD.tab = b.dataset.t; sdTab(a, true); });
   sdTab(a, false);
+  sdSwipe(a);
   obStart(a);
 }
-// 종목 상세 세부 탭 — 📈 차트·호가 / 👀 요약 / 🏛️ 대가 / 수급 / 📊 재무 / 📄 공시·리포트(한국) / 🤖 전략
-const SDTABS = a => [["chart", "📈 차트·호가"], ["sum", "👀 요약"], ["hero", "🏛️ 대가"], ["flow", a.us ? "🏦 보유" : "🧭 수급"], ["fin", "📊 재무"]]
+// 손가락으로 왼쪽/오른쪽 쓸면 옆 탭으로 (차트 위에서는 차트 끌기가 우선이라 제외)
+function sdSwipe(a) {
+  let x0 = null, y0 = 0, t0 = 0;
+  document.querySelectorAll(".sdp").forEach(p => {
+    p.addEventListener("touchstart", e => {
+      if (e.touches.length !== 1 || e.target.closest("#sd-kc, canvas, .tbl, input, select")) { x0 = null; return; }
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); }, {passive: true});
+    p.addEventListener("touchend", e => {
+      if (x0 == null) return;
+      const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5 || Date.now() - t0 > 700) return;
+      const ks = SDTABS(a).map(([k]) => k), i = ks.indexOf(SD.tab), j = i + (dx < 0 ? 1 : -1);
+      if (j < 0 || j >= ks.length) return;
+      SD.tab = ks[j]; sdTab(a, true);
+      const b = document.querySelector(`#sd-tabs button[data-t="${SD.tab}"]`); if (b) b.scrollIntoView({inline: "center", block: "nearest", behavior: "smooth"});
+    }, {passive: true});
+  });
+}
+// 종목 상세 세부 탭 — 📈 차트 / 📒 호가 / 👀 요약 / 🏛️ 대가 / 수급 / 📊 재무 / 📄 공시·리포트(한국) / 🤖 전략
+const SDTABS = a => [["chart", "📈 차트"], ["ob", "📒 호가"], ["sum", "👀 요약"], ["hero", "🏛️ 대가"], ["flow", a.us ? "🏦 보유" : "🧭 수급"], ["fin", "📊 재무"]]
   .concat(a.us ? [] : [["news", "📄 공시·리포트"]]).concat([["bot", "🤖 전략"]]);
 function sdTab(a, scroll) {
   if (!SDTABS(a).some(([k]) => k === SD.tab)) SD.tab = "chart";
