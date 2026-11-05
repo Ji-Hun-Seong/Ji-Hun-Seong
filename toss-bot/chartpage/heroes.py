@@ -560,7 +560,33 @@ def light_global(sym: str, name: str | None = None) -> dict:
         fin["annual"] = _disk(f"yfa_{sym}", 7 * 86400, lambda: si.yf_annual(tk))   # 4년치 (꾸준함 판단용) — 7일 저장
     except Exception:
         pass
+    prof["summary_en"] = g("longBusinessSummary") or ""
     return {"us": True, "code": sym, "name": prof["name"], "profile": prof, "finance": fin, "filings": None, "close": price}
+
+
+def about_line(d: dict) -> str | None:
+    """목록에 보여 줄 '무슨 회사' 한 줄 — 해외: 야후 설명 첫 문장 한국어 번역 · 한국: 에프앤가이드 기업개요 첫 문장 (30일 저장)"""
+    import stock_info as si
+    P = d.get("profile") or {}
+    def get():
+        if d.get("us"):
+            en = re.split(r"(?<=[a-z0-9)][.])\s+(?=[A-Z])", (P.get("summary_en") or "").strip())[0]
+            if not en:
+                return {"t": None}
+            try:
+                ko = si.ko_translate(en)
+            except Exception:
+                ko = None
+            return {"t": ko or en}
+        D = si.kr_desc(d["code"]) or {}
+        ln = (D.get("lines") or [None])[0] or (D.get("text") or "").split(". ")[0]
+        return {"t": ln or None}
+    try:
+        v = _disk(f"about_{d['code']}", 30 * 86400, get)
+        t = (v or {}).get("t")
+        return t[:140] if t else None
+    except Exception:
+        return None
 
 
 def board_row(p: dict, market: str = "kr") -> dict:
@@ -580,7 +606,7 @@ def board_row(p: dict, market: str = "kr") -> dict:
                 "worst": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is False][:2],
                 "steady": {k: s["steady"][k] for k in ("ok", "rev", "ni")},
                 "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok"),
-                "industry": P.get("industry") or P.get("sector")}
+                "industry": P.get("industry") or P.get("sector"), "about": about_line(d)}
     except Exception as e:
         return {"code": p["code"], "name": p.get("name") or p["code"], "error": f"{type(e).__name__}: {str(e)[:80]}"}
 
