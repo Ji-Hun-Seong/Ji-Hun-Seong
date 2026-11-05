@@ -2051,5 +2051,74 @@
   "up": 5,
   "avg": 0.38,
   "market_avg": 0.62
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "011210",
+    "name": "현대위아",
+    "score": 64,
+    "next_chg": -0.2
+   },
+   {
+    "code": "007610",
+    "name": "선도전기",
+    "score": 61.0,
+    "next_chg": -5.67
+   },
+   {
+    "code": "226400",
+    "name": "오스테오닉",
+    "score": 60,
+    "next_chg": -2.29
+   },
+   {
+    "code": "017510",
+    "name": "세명전기",
+    "score": 59,
+    "next_chg": -6.77
+   },
+   {
+    "code": "000880",
+    "name": "한화",
+    "score": 58,
+    "next_chg": -11.76
+   },
+   {
+    "code": "251970",
+    "name": "펌텍코리아",
+    "score": 58,
+    "next_chg": 8.28
+   },
+   {
+    "code": "068270",
+    "name": "셀트리온",
+    "score": 57.8,
+    "next_chg": 5.94
+   },
+   {
+    "code": "112610",
+    "name": "씨에스윈드",
+    "score": 55.5,
+    "next_chg": 7.09
+   },
+   {
+    "code": "326030",
+    "name": "SK바이오팜",
+    "score": 55,
+    "next_chg": 11.66
+   },
+   {
+    "code": "069620",
+    "name": "대웅제약",
+    "score": 55,
+    "next_chg": 4.06
+   }
+  ],
+  "n": 10,
+  "hit10": 1,
+  "up": 5,
+  "avg": 1.03,
+  "market_avg": -2.42
  }
 }

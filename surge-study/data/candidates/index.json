@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-05",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 945,
+   "top": [
+    "IPARK현대산업개발",
+    "롯데렌탈",
+    "HDC"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-04",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 941,
@@ -9,8 +21,14 @@
     "선도전기",
     "오스테오닉"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 57,
+   "graded": {
+    "avg": 1.03,
+    "up": 5,
+    "n": 10,
+    "hit10": 1,
+    "market_avg": -2.42
+   }
   },
   {
    "date": "2026-11-03",
