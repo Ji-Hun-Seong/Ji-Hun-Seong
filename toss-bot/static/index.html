@@ -854,7 +854,7 @@ function descCard(a) {
   return `<div class="card biz"><h3>사업요약</h3>${meta ? `<div class="cat">${meta}</div>` : ""}
     ${txt ? `<div class="txt">${esc(txt)}</div><div class="more">더 보기</div>` : `<div class="tiny mut">회사 설명을 아직 못 가져왔어요</div>`}
     ${D.translated && D.en ? `<details style="margin-top:8px"><summary class="tiny mut">영어 원문</summary><div class="tiny mut" style="line-height:1.6;margin-top:6px">${esc(D.en)}</div></details>` : ""}
-    <div class="tiny mut" style="margin-top:8px">출처: ${esc(D.src || "")}</div></div>`;
+    <div class="tiny mut" style="margin-top:8px">출처: ${esc(D.src || "")}</div>${D.tr_err ? `<div class="tiny mut" style="margin-top:4px">⚠️ 번역 오류: ${esc(D.tr_err)}</div>` : ""}</div>`;
 }
 function sdRender(a) {
   const P = a.profile || {}, T = a.tech || {}, CC = a.ccy || "USD", money = v => a.us ? cur(v, CC) : won(v);

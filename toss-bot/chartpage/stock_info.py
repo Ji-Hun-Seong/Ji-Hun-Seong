@@ -492,25 +492,62 @@ def _desc_cache(key: str, ttl: float, fn):
     return v
 
 
+_TR_ERR = {"last": None}
+
+
+def _tr_google(p: str) -> str:
+    r = requests.get("https://translate.googleapis.com/translate_a/single",
+                     params={"client": "gtx", "sl": "auto", "tl": "ko", "dt": "t", "q": p}, headers=UA, timeout=10)
+    r.raise_for_status()
+    return "".join(seg[0] for seg in (r.json() or [[]])[0] if seg and seg[0])
+
+
+def _tr_google2(p: str) -> str:
+    r = requests.get("https://clients5.google.com/translate_a/t",
+                     params={"client": "dict-chrome-ex", "sl": "auto", "tl": "ko", "q": p}, headers=UA, timeout=10)
+    r.raise_for_status()
+    j = r.json()
+    x = j[0] if isinstance(j, list) and j else j
+    return x[0] if isinstance(x, list) else str(x)
+
+
+def _tr_mymemory(p: str) -> str:
+    out = []
+    for q in re.findall(r".{1,450}(?:\s|$)", p, re.S):         # 한 번에 500바이트까지
+        r = requests.get("https://api.mymemory.translated.net/get", params={"q": q.strip(), "langpair": "en|ko"}, timeout=12)
+        r.raise_for_status()
+        t = ((r.json() or {}).get("responseData") or {}).get("translatedText") or ""
+        if not t or "MYMEMORY WARNING" in t:
+            raise RuntimeError("mymemory 한도")
+        out.append(t)
+    return " ".join(out)
+
+
 def ko_translate(text: str) -> str | None:
-    """영어 → 한국어 (구글 번역 무료 주소, 1,500자씩 나눠서). 실패하면 None"""
+    """영어 → 한국어 (1,500자씩). 구글 번역 2곳 → MyMemory 순서로 시도 — 서버 IP가 한 곳에서 막혀도 되게. 다 실패하면 None"""
     if not text:
         return None
     parts, buf = [], ""
-    for s in re.split(r"(?<=[.!?])\s+", text):
-        if len(buf) + len(s) > 1500 and buf:
+    for s_ in re.split(r"(?<=[.!?])\s+", text):
+        if len(buf) + len(s_) > 1500 and buf:
             parts.append(buf)
             buf = ""
-        buf += (" " if buf else "") + s
+        buf += (" " if buf else "") + s_
     if buf:
         parts.append(buf)
-    out = []
-    for p in parts:
-        r = requests.get("https://translate.googleapis.com/translate_a/single",
-                         params={"client": "gtx", "sl": "auto", "tl": "ko", "dt": "t", "q": p}, headers=UA, timeout=10)
-        r.raise_for_status()
-        out.append("".join(seg[0] for seg in (r.json() or [[]])[0] if seg and seg[0]))
-    return " ".join(out).strip() or None
+    errs = []
+    for fn in (_tr_google, _tr_google2, _tr_mymemory):
+        try:
+            t = " ".join(fn(p) for p in parts).strip()
+            if t and re.search(r"[가-힣]", t):
+                _TR_ERR["last"] = None
+                return t
+            errs.append(f"{fn.__name__}: 한국어 아님")
+        except Exception as e:
+            errs.append(f"{fn.__name__}: {type(e).__name__} {str(e)[:60]}")
+    _TR_ERR["last"] = " / ".join(errs)
+    print("[번역 실패]", _TR_ERR["last"], file=sys.stderr)
+    return None
 
 
 def _segs_kr(corp_code):
@@ -581,8 +618,9 @@ def us_desc(sym: str, en: str, name: str = "") -> dict:
             ko = ko_translate(en)
         except Exception:
             pass
-        return {"text": ko or en, "en": en, "translated": bool(ko), "src": "야후 파이낸스" + (" · 자동 번역" if ko else ""), "_cache": bool(ko)}
-    return _desc_cache(f"us_{sym}", 30 * 86400, get) if (en or name) else {}
+        return {"text": ko or en, "en": en, "translated": bool(ko), "_cache": bool(ko),
+                "src": "야후 파이낸스" + (" · 자동 번역" if ko else " (번역 실패 — 다음에 다시 시도)"), "tr_err": None if ko else _TR_ERR["last"]}
+    return _desc_cache(f"us2_{sym}", 30 * 86400, get) if (en or name) else {}     # us2_: 예전에 영어로 저장된 것 무시
 
 
 # 야후 업종(11개) — 한국어

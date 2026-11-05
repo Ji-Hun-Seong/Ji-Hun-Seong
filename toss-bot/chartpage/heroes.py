@@ -577,12 +577,18 @@ def about_line(d: dict) -> str | None:
                 ko = si.ko_translate(en)
             except Exception:
                 ko = None
-            return {"t": ko or en}
+            return {"t": ko or en, "ko": bool(ko)}
         D = si.kr_desc(d["code"]) or {}
         ln = (D.get("lines") or [None])[0] or (D.get("text") or "").split(". ")[0]
         return {"t": ln or None}
     try:
-        v = _disk(f"about_{d['code']}", 30 * 86400, get)
+        key = f"about2_{d['code']}"
+        v = _disk(key, 30 * 86400, get)
+        if d.get("us") and v and v.get("ko") is False:           # 번역 실패한 영어는 저장 지움 → 다음 채점 때 다시
+            try:
+                os.remove(os.path.join(_DISK, key + ".json"))
+            except Exception:
+                pass
         t = (v or {}).get("t")
         return t[:220] if t else None
     except Exception:
