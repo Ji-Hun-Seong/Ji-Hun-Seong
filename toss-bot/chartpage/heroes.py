@@ -584,7 +584,7 @@ def about_line(d: dict) -> str | None:
     try:
         v = _disk(f"about_{d['code']}", 30 * 86400, get)
         t = (v or {}).get("t")
-        return t[:140] if t else None
+        return t[:220] if t else None
     except Exception:
         return None
 
