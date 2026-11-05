@@ -18,6 +18,7 @@
   }
   palette();
   const MA = [[5, "#ff8a00"], [20, "#3d7bf5"], [60, "#5aa03c"], [120, "#22b58c"]];
+  const VMA = [[5, "#ff8a00"], [20, "#9b59ff"]], VSPIKE = 2;   // 거래량 이평선 5·20 · 20일 평균의 2배↑ = 급증
   const BBC = {up: "#4a86ff", mid: "#ff9a1f", lo: "#5aa03c"}, RSIC = "#ff8a00", SIGC = "#5aa03c";
   const AXW = 76, DATEH = 24, FONT = "-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif";
 
@@ -76,7 +77,8 @@
   class KChart {
     constructor(root, raw, opt = {}) {
       this.root = root; this.us = !!opt.us; this.markers = opt.markers || [];
-      this.state = Object.assign({tf: "D", rng: "6M", ma: true, bb: true, sig: true}, opt.state || {});
+      this.state = Object.assign({tf: "D", rng: "6M", ma: true, bb: true, sig: true, vma: true}, opt.state || {});
+      if (this.state.vma === undefined) this.state.vma = true;
       if (!RNG.some(r => r[0] === this.state.rng)) this.state.rng = "6M";
       this.onState = opt.onState || (() => {});
       const D = {d: [], o: [], h: [], l: [], c: [], v: []};
@@ -90,7 +92,8 @@
           <div class="kc-dd"><button class="kc-ddb">관심지표 ▾</button><div class="kc-menu">
             <label><input type="checkbox" data-t="ma"> 이동평균선 5·20·60·120</label>
             <label><input type="checkbox" data-t="bb"> 볼린저밴드 (20, 2)</label>
-            <label><input type="checkbox" data-t="sig"> RSI 교차 화살표</label></div></div>
+            <label><input type="checkbox" data-t="sig"> RSI 교차 화살표</label>
+            <label><input type="checkbox" data-t="vma"> 거래량 이평선 5·20 + 급증 표시</label></div></div>
           <select class="kc-rng">${RNG.map(([k, l]) => `<option value="${k}">${l}</option>`).join("")}</select>
           <span style="flex:1"></span>
           <button class="kc-ic kc-fs" title="크게 보기">⤢</button></div>
@@ -121,6 +124,7 @@
     build() {
       const B = this.B = aggregate(this.daily, this.state.tf), c = B.c;
       B.ma = MA.map(([n]) => sma(c, n)); B.bb = boll(c); B.rsi = rsi(c); B.sig = sma(B.rsi, 6); B.N = c.length;
+      B.vma = VMA.map(([n]) => sma(B.v, n));
       B.x = [];                                    // RSI × Signal 교차 (과매도권 골든 ▲ / 과매수권 데드 ▼)
       for (let i = 1; i < B.N; i++) {
         const a = B.rsi[i], s = B.sig[i], pa = B.rsi[i - 1], ps = B.sig[i - 1];
@@ -167,7 +171,7 @@
       this.end = Math.max(this.n * 0.3 - 1, Math.min(this.end, N - 1 + this.n * 0.35));
     }
     panes() {
-      const top = 26, avail = this.H - top - DATEH, ph = Math.round(avail * 0.56), vh = Math.round(avail * 0.16);
+      const top = 26, avail = this.H - top - DATEH, ph = Math.round(avail * 0.52), vh = Math.round(avail * 0.22);
       const p = [top, top + ph], dband = [p[1], p[1] + DATEH], v = [dband[1] + 18, dband[1] + vh], r = [v[1] + 22, this.H - 6];
       return {p, dband, v, r};
     }
@@ -311,11 +315,21 @@
 
       // ── 거래량
       f(12); C.fillStyle = AXT; C.textAlign = "left"; C.fillText("거래량", 8, vt - 9);
+      const v20 = B.vma[1];
+      if (S.vma) {                                   // 범례: 거래량 MA5 MA20 · 마지막 봉이 20일 평균의 몇 배인지
+        let vx = 8 + C.measureText("거래량").width + 10;
+        for (const [[n, c], k] of VMA.map((m, k) => [m, k])) { const t = `MA${n}`; C.fillStyle = c; C.fillRect(vx, vt - 11, 9, 2); C.fillText(t, vx + 11, vt - 9); vx += 11 + C.measureText(t).width + 10; }
+        if (v20[L]) { const r = B.v[L] / v20[L]; C.fillStyle = r >= VSPIKE ? UP : AXT; C.fillText(`20일 평균의 ${r.toFixed(1)}배`, vx, vt - 9); }
+      }
       C.save(); C.beginPath(); C.rect(0, vt, pw, vb - vt); C.clip();
       for (let i = i0; i <= i1; i++) {
         const upb = B.c[i] > B.o[i] || (B.c[i] === B.o[i] && i > 0 && B.c[i] >= B.c[i - 1]);
+        const spike = S.vma && v20[i] && B.v[i] >= v20[i] * VSPIKE;
+        C.globalAlpha = S.vma && !spike ? 0.55 : 1;   // 급증한 날만 진하게
         C.fillStyle = upb ? UP : DN; const y = VY(B.v[i]); C.fillRect(X(i) - body / 2, y, body, vb - y);
       }
+      C.globalAlpha = 1;
+      if (S.vma) VMA.forEach(([, c], k) => path(C, B.vma[k], i0, i1, X, VY, c, 1.2));
       C.restore();
       f(11); C.fillStyle = AXT; C.fillText(fvol(vmax), pw + 8, vt + 6);
       ptag(C, pw, Math.max(vt + 22, Math.min(vb - 10, VY(B.v[L]))), [fvol(B.v[L])], "#5a5a62", W - pw, 20);
@@ -358,7 +372,7 @@
       this.info.innerHTML = `<div class="kc-l1"><b>${dstr(B.d[i])}${tfn}</b>
         <span>시 <i ${cc(B.o[i])}>${fmt(B.o[i], us)}</i></span><span>고 <i ${cc(B.h[i])}>${fmt(B.h[i], us)}</i></span>
         <span>저 <i ${cc(B.l[i])}>${fmt(B.l[i], us)}</i></span><span>종 <i style="color:${col}">${fmt(B.c[i], us)}</i></span>
-        <span style="color:${col}">${ch > 0 ? "▲" : ch < 0 ? "▼" : ""}${(Math.abs(ch) * 100).toFixed(2)}%</span><span>거래량 ${fvol(B.v[i])}</span></div>
+        <span style="color:${col}">${ch > 0 ? "▲" : ch < 0 ? "▼" : ""}${(Math.abs(ch) * 100).toFixed(2)}%</span><span>거래량 ${fvol(B.v[i])}${B.vma && B.vma[1][i] ? ` <i style="color:${B.v[i] >= B.vma[1][i] * VSPIKE ? UP : "inherit"}">(20일 평균 ${(B.v[i] / B.vma[1][i]).toFixed(1)}배)</i>` : ""}</span></div>
         ${ma ? `<div class="kc-l2">${ma}</div>` : ""}${mk}`;
     }
   }
