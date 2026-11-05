@@ -1044,7 +1044,8 @@ function pRender(d) {
     // 💎 가치주 / 🚀 성장주 탭 — 가치 점수가 높으면 가치주, 성장 점수가 높으면 성장주 (둘 다 위성 이상이면 양쪽에)
     // 💎 가치주 탭은 PBR 0 초과 ~ 2.0 이하만 (자본잠식·마이너스 PBR, 2배 넘게 비싼 건 가치주로 안 봄 · PBR 모르면 일단 보여 줌)
     const pbrOk = x => x.pbr == null || (x.pbr > 0 && x.pbr <= 2);
-    const isV = x => pbrOk(x) && (x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1)), isG = x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1);
+    const perOk = x => x.per == null || x.per <= 30;      // PER 30배 넘으면 가치주 탭에서 제외
+    const isV = x => pbrOk(x) && perOk(x) && (x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1)), isG = x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1);
     const szk = hSize[sk] || (sk === "growth" ? "mid" : "all");
     const inSize = x => szk === "all" || x.mcap_eok == null ? true : szk === "big" ? x.mcap_eok >= 100000 : x.mcap_eok < 100000;
     const inTab = x => (sk === "value" ? isV(x) : sk === "growth" ? isG(x) : true) && inSize(x);
@@ -1060,7 +1061,7 @@ function pRender(d) {
       ${(() => { const P = d.progress; if (!P) return ""; const busy = P.fresh < P.pool;
         return `<div class="small" style="margin-top:8px;padding:8px 10px;background:var(--bg);border-radius:10px">🗄️ DB: 채점 ${fmtN(P.scored)}/${fmtN(P.pool)}종목 · 오늘 최신 ${fmtN(P.fresh)}${busy ? ` · 🔄 ${esc(P.worker || "")}` : " · ✅ 전부 최신"}${!d.items.length ? "<br>아직 채점된 종목이 없어요 — 서버가 시총 큰 종목부터 채점 중이라 잠시 뒤 하나씩 늘어나요" : ""}${P.error ? `<br><span class="up">⚠️ ${esc(P.error)}</span>` : ""}</div>`; })()}
       <div class="small" style="margin-top:6px;line-height:1.6">💎 <b>가치</b> 버핏·그레이엄·멍거·애크먼·클라만 · 🚀 <b>성장</b> 린치·피셔·드러켄밀러·템플턴·로 프라이스 — 각 100점, 등급은 높은 쪽 · 핵심은 5명 중 3명↑ 동의</div>
-      ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 버핏·그레이엄·멍거·애크먼·클라만 점수 순" : "🚀 성장주 — 린치·피셔·드러켄밀러·템플턴·로 프라이스 점수 순"}</b> <span class="tiny mut">${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다 · PBR 2.0 초과·마이너스는 제외" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다"}</span></div>` : ""}
+      ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 버핏·그레이엄·멍거·애크먼·클라만 점수 순" : "🚀 성장주 — 린치·피셔·드러켄밀러·템플턴·로 프라이스 점수 순"}</b> <span class="tiny mut">${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다 · PBR 2.0 초과·마이너스, PER 30 초과는 제외" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다"}</span></div>` : ""}
       <div class="tally"><span class="tag g">🟢 핵심 ${(sk === "all" ? G : TG).core || 0}</span><span class="tag y">🟡 위성 ${(sk === "all" ? G : TG).sat || 0}</span><span class="tag">⚪ 관찰 ${(sk === "all" ? G : TG).watch || 0}</span><span class="tag r">🔴 부적합 ${(sk === "all" ? G : TG).no || 0}</span></div>
       ${S ? `<div class="tiny mut" style="margin-top:6px">위성 이상: 💎 가치형 ${S.value} · 🚀 성장형 ${S.growth} · 둘 다 ${S.both}</div>` : ""}
       <div class="tiny mut" style="margin-top:8px">${glob ? "야후 재무 기준 — 공시·수급 항목은 채점에서 제외 · " : ""}${`후보 = ${glob ? "그 나라 시총 2조원(약 14억 달러)↑ 전 종목" : "코스피 시총 2,000억↑ 전 종목(스팩·우선주 제외)"} + 가치주 후보·대표 종목 + 📌 내 계좌 · 서버가 매일 한 바퀴 다시 채점해 DB에 저장`} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
