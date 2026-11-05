@@ -452,6 +452,7 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
         f_fq = ex.submit(safe, "finance_q", lambda: kr_finance(code, "quarter"), {})
         f_dt = ex.submit(safe, "filings", lambda: kr_filings(corp_code), [])
         f_ds = ex.submit(lambda: _quiet(kr_desc, code))
+        f_sg = ex.submit(lambda: _quiet(_segs_kr, corp_code))
         df = f_px.result()
         prof, fl, fa, fq, filings = f_pr.result(), f_fl.result(), f_fa.result(), f_fq.result(), f_dt.result()
     d = indicators(df)
@@ -461,7 +462,7 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
     return clean({
         "us": False, "code": code, "name": prof.get("name") or name or code, "asof": f"{d.index[-1]:%Y-%m-%d}",
         "src": df.attrs.get("src", ""), "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df),
-        "flows": fl[::-1], "flow_sum": fs, "finance": fin, "filings": filings[:30], "desc": f_ds.result(),
+        "flows": fl[::-1], "flow_sum": fs, "finance": fin, "filings": filings[:30], "desc": f_ds.result(), "segments": f_sg.result(),
         "signals": signals(tech, prof, fs, fin, filings),
         "links": {"naver": f"https://m.stock.naver.com/domestic/stock/{code}/total",
                   "dart": f"https://dart.fss.or.kr/dsab007/main.do?option=corp&textCrpNm={name or code}"},
@@ -510,6 +511,16 @@ def ko_translate(text: str) -> str | None:
         r.raise_for_status()
         out.append("".join(seg[0] for seg in (r.json() or [[]])[0] if seg and seg[0]))
     return " ".join(out).strip() or None
+
+
+def _segs_kr(corp_code):
+    import segments
+    return segments.kr_segments(corp_code)
+
+
+def _segs_us(sym):
+    import segments
+    return segments.us_segments(sym)
 
 
 def _quiet(fn, *a):
@@ -793,6 +804,7 @@ def us_detail(sym: str, ohlcv=None) -> dict:
     prof["name"] = _ko_name(sym, prof["name_en"])
     prof["sector_en"], prof["industry_en"] = prof.get("sector"), prof.get("industry")
     prof["sector"], prof["industry"] = _ko_label(prof.get("sector"), SECTOR_KO), _ko_label(prof.get("industry"), INDUSTRY_KO)
+    segs = _quiet(_segs_us, sym)
     S = signals(tech, prof, None, fin, None, us=True)
     if prof.get("inst_pct") is not None:
         S.append(_sig("수급", "기관 보유", f"{prof['inst_pct'] * 100:.0f}%", "neu", "발행주식 대비"))
@@ -801,7 +813,7 @@ def us_detail(sym: str, ohlcv=None) -> dict:
         S.append(_sig("수급", "공매도 비율", f"{sp_:.1f}%", "bad" if sp_ > 10 else "neu", "유통주식 대비"))
     return clean({"us": True, "code": sym, "name": prof.get("name") or sym, "asof": f"{d.index[-1]:%Y-%m-%d}",
                   "mkt": mkt, "ccy": ccy, "src": "야후", "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df, True), "flows": [], "flow_sum": {},
-                  "holders": holders, "finance": fin, "filings": [], "signals": S, "desc": desc,
+                  "holders": holders, "finance": fin, "filings": [], "signals": S, "desc": desc, "segments": segs,
                   "links": {"yahoo": f"https://finance.yahoo.com/quote/{sym}"},
                   "errors": errs, "took": round(time.time() - t0, 2)})
 

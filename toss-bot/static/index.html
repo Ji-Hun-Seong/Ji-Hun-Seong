@@ -837,6 +837,15 @@ function perfDraw(a, sel) {
   $("pf-v").innerHTML = `<span class="d">${x.t}</span><span>${x.est ? `<i style="border:2px solid var(--sub)"></i>추정` : `<i style="background:${OR}"></i>${lab}`}</span><span style="margin-left:auto;font-weight:700">${perfFmt(a, x.v)}</span>`;
   cv.onclick = e => { const r = cv.getBoundingClientRect(); perfDraw(a, Math.max(0, Math.min(n - 1, Math.floor((e.clientX - r.left) / (W / n))))); };
 }
+// 🧩 매출비중 — 한국 DART 사업보고서 '주요 제품' 표 · 미국 SEC 10-K XBRL
+function segCard(a) {
+  const G = a.segments || {}, it = G.items || []; if (!it.length) return "";
+  const mx = Math.max(...it.map(x => x.pct));
+  return `<div class="card"><h2>🧩 매출비중 <span class="tiny mut">${G.asof ? esc(String(G.asof).slice(0, 10)) + " 기준" : ""}</span></h2>
+    ${it.map(x => `<div style="margin:10px 0 0"><div class="row small"><span>${esc(x.name)}</span><b>${x.pct.toFixed(2)}%</b></div>
+      <div style="height:6px;background:var(--bg);border-radius:4px;margin-top:5px"><div style="height:100%;width:${(x.pct / mx * 100).toFixed(1)}%;background:#f97316;border-radius:4px"></div></div></div>`).join("")}
+    <div class="tiny mut" style="margin-top:10px">출처: ${G.url ? `<a href="${esc(G.url)}" target="_blank" rel="noopener">${esc(G.src || "")}</a>` : esc(G.src || "")}${a.us ? " · 이름은 자동 번역" : ""}</div></div>`;
+}
 function descCard(a) {
   const D = a.desc || {}, P = a.profile || {};
   const meta = [P.sector, P.industry].filter(Boolean).map(esc).join(" · ");
@@ -889,6 +898,7 @@ function sdRender(a) {
     <div class="pills" id="sd-mcp">${MCR.map(([k, l]) => `<button data-r="${k}" class="${SD.mcr === k ? "act" : ""}">${l}</button>`).join("")}</div></div>
   <div class="card"><h2>📌 투자 지표</h2><div class="kv">${kvs.join("")}</div>${err}</div>
   ${perfCard(a)}
+  ${segCard(a)}
   ${descCard(a)}
   ${fomoCard(a)}
   ${ctxCard()}
