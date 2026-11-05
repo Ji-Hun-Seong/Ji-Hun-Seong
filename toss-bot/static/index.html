@@ -212,6 +212,10 @@ body{overflow-x:clip}
 .hmet{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:13px;color:var(--sub)}.hmet b{color:var(--txt);font-weight:700}
 .mc-wrap{position:relative;height:230px}.mc-wrap canvas{width:100%;height:100%;display:block}
 .pills{display:flex;gap:4px;background:var(--bg);border-radius:14px;padding:4px;margin-top:10px}.pills button{flex:1;border:0;background:none;color:var(--sub);font:600 14px inherit;font-family:inherit;padding:8px 0;border-radius:10px}.pills button.act{background:var(--card);color:var(--txt);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.perf .pills{margin:0 0 12px;width:max-content}.perf .pills button{padding:7px 16px;flex:0 0 auto}
+.perf .pv{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:14px;margin-bottom:6px}
+.perf .pv .d{padding-right:10px;border-right:1px solid var(--line);font-weight:600}.perf .pv i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.perf .pc{position:relative;height:200px}.perf .pc canvas{width:100%;height:100%;display:block}
 .biz h3{font-size:19px;margin:0 0 8px}.biz .cat{color:var(--sub);font-size:13px;margin-bottom:8px}.biz .txt{font-size:15px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}.biz.open .txt{display:block;-webkit-line-clamp:unset}
 .biz .more{color:var(--sub);font-size:13px;margin-top:6px;cursor:pointer}
 .ob-card.sm .obr>span{padding:2px 6px}.ob-card.sm .obr .op b{font-size:13px}.ob-card.sm .obr .op small{font-size:9.5px}.ob-card.sm .obr .oi{padding:2px 6px}
@@ -795,6 +799,44 @@ const TABN = {pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "�
 const backBtn = () => SD.prev && SD.prev !== "chart" ? `<button class="back" onclick="goTab('${SD.prev}')">‹ ${TABN[SD.prev] || "뒤로"}</button>` : "";
 
 // 🏢 무슨 회사? — 종목 상세 맨 위 (한국: 에프앤가이드 기업개요 · 해외: 야후 설명 한국어 번역)
+// 📈 실적 — 연간 매출·영업이익 점 그래프 (● 실제 · ○ 증권사 추정), 점 누르면 값 (토스 '실적'처럼)
+function perfData(a) {
+  const A = (a.finance || {}).annual || {}, ps = A.periods || [], rows = A.rows || {};
+  const pick = nm => ps.map((p, i) => ({t: (p.title || "").slice(2, 7), est: !!p.est, v: (rows[nm] || [])[i]})).filter(x => x.v != null).slice(-6);
+  return {rev: pick("매출액"), op: pick("영업이익")};
+}
+function perfFmt(a, v) {                                  // 한국 억원 / 해외 백만(통화)
+  if (v == null) return "-";
+  if (!a.us) return Math.abs(v) >= 1e4 ? (v / 1e4).toFixed(Math.abs(v) >= 1e5 ? 1 : 2) + "조원" : Math.round(v).toLocaleString() + "억원";
+  const c = (a.finance || {}).unit ? a.finance.unit.replace("백만 ", "") : "USD";
+  return Math.abs(v) >= 1e3 ? (v / 1e3).toFixed(1) + " B " + c : Math.round(v).toLocaleString() + " M " + c;
+}
+function perfCard(a) {
+  const D = perfData(a); if (D.rev.length < 2 && D.op.length < 2) return "";
+  if (!SD.perf || !D[SD.perf] || D[SD.perf].length < 2) SD.perf = D.rev.length >= 2 ? "rev" : "op";
+  return `<div class="card perf"><h2>📈 실적 <span class="tiny mut">연간 · ● 실제 ○ 추정</span></h2>
+    <div class="pills" id="pf-k">${[["rev", "매출"], ["op", "영업이익"]].filter(([k]) => D[k].length >= 2).map(([k, l]) => `<button data-k="${k}" class="${SD.perf === k ? "act" : ""}">${l}</button>`).join("")}</div>
+    <div class="pv" id="pf-v"></div><div class="pc"><canvas id="pf-c"></canvas></div></div>`;
+}
+function perfDraw(a, sel) {
+  const cv = $("pf-c"); if (!cv) return;
+  const D = perfData(a)[SD.perf] || [], n = D.length; if (n < 2) return;
+  if (sel == null || sel >= n) sel = n - 1;
+  const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
+  cv.width = W * dpr; cv.height = H * dpr; const C = cv.getContext("2d"); C.setTransform(dpr, 0, 0, dpr, 0, 0); C.clearRect(0, 0, W, H);
+  const css = getComputedStyle(document.documentElement), LINE = css.getPropertyValue("--line").trim(), SUB = css.getPropertyValue("--sub").trim(), OR = "#f97316";
+  const vs = D.map(x => x.v), mx = Math.max(...vs), lo = Math.min(...vs), mn = lo > 0 ? lo * 0.85 : lo - (mx - lo) * 0.1;
+  const top = 16, bot = H - 32, Y = v => bot - (v - mn) / ((mx - mn) || 1) * (bot - top), X = i => (i + 0.5) * W / n;
+  C.strokeStyle = LINE; C.lineWidth = 1; for (let k = 0; k <= 4; k++) { const y = Math.round(top + (bot - top) * k / 4) + .5; C.beginPath(); C.moveTo(0, y); C.lineTo(W, y); C.stroke(); }
+  C.setLineDash([3, 3]); C.strokeStyle = SUB; C.beginPath(); C.moveTo(X(sel), top - 10); C.lineTo(X(sel), bot + 4); C.stroke(); C.setLineDash([]);
+  C.font = "13px -apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif"; C.textAlign = "center";
+  D.forEach((x, i) => { C.beginPath(); C.arc(X(i), Y(x.v), i === sel ? 11 : 9, 0, Math.PI * 2);
+    if (x.est) { C.fillStyle = css.getPropertyValue("--card").trim(); C.fill(); C.strokeStyle = SUB; C.lineWidth = 2; C.stroke(); } else { C.fillStyle = OR; C.fill(); }
+    C.fillStyle = SUB; C.fillText(x.t, X(i), H - 8); });
+  const x = D[sel], lab = SD.perf === "rev" ? "매출" : "영업이익";
+  $("pf-v").innerHTML = `<span class="d">${x.t}</span><span>${x.est ? `<i style="border:2px solid var(--sub)"></i>추정` : `<i style="background:${OR}"></i>${lab}`}</span><span style="margin-left:auto;font-weight:700">${perfFmt(a, x.v)}</span>`;
+  cv.onclick = e => { const r = cv.getBoundingClientRect(); perfDraw(a, Math.max(0, Math.min(n - 1, Math.floor((e.clientX - r.left) / (W / n))))); };
+}
 function descCard(a) {
   const D = a.desc || {}, P = a.profile || {};
   const meta = [P.sector, P.industry].filter(Boolean).map(esc).join(" · ");
@@ -846,6 +888,7 @@ function sdRender(a) {
   <div class="card"><div class="mc-wrap"><canvas id="sd-mc"></canvas></div>
     <div class="pills" id="sd-mcp">${MCR.map(([k, l]) => `<button data-r="${k}" class="${SD.mcr === k ? "act" : ""}">${l}</button>`).join("")}</div></div>
   <div class="card"><h2>📌 투자 지표</h2><div class="kv">${kvs.join("")}</div>${err}</div>
+  ${perfCard(a)}
   ${descCard(a)}
   ${fomoCard(a)}
   ${ctxCard()}
@@ -872,6 +915,8 @@ function sdRender(a) {
   document.querySelectorAll("#sd-mcp button").forEach(b => b.onclick = () => { SD.mcr = b.dataset.r;
     document.querySelectorAll("#sd-mcp button").forEach(x => x.classList.toggle("act", x === b)); miniChart(a); });
   const bz = document.querySelector(".biz"); if (bz) bz.querySelectorAll(".txt,.more").forEach(e => e.onclick = () => { bz.classList.toggle("open"); const m = bz.querySelector(".more"); if (m) m.textContent = bz.classList.contains("open") ? "접기" : "더 보기"; });
+  document.querySelectorAll("#pf-k button").forEach(b => b.onclick = () => { SD.perf = b.dataset.k;
+    document.querySelectorAll("#pf-k button").forEach(x => x.classList.toggle("act", x === b)); perfDraw(a); });
   sdTab(a, false);
   sdSwipe(a);
   obStart(a);
@@ -934,7 +979,7 @@ function sdTab(a, scroll) {
   document.querySelectorAll(".sdp").forEach(p => p.style.display = p.dataset.p === SD.tab ? "" : "none");
   // 숨겨진 상태에선 그래프 폭이 0이라, 보이는 탭의 그래프만 그 자리에서 다시 그림
   if (SD.tab === "chart") sdCharts(a);
-  if (SD.tab === "info") miniChart(a);
+  if (SD.tab === "info") { miniChart(a); perfDraw(a); }
   if (SD.tab === "flow") flowChart(a);
   if (SD.tab === "fin") { finChart(a); finLong(a); }
   const t = $("sd-tabs"); if (scroll && t && t.getBoundingClientRect().top < 0) t.scrollIntoView({block: "start"});

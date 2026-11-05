@@ -682,6 +682,27 @@ def yf_annual(tk) -> dict:
     return {"periods": ps, "rows": rows}
 
 
+def yf_rev_est(tk, A: dict):
+    """증권사 매출 추정(올해·내년, 야후 revenue_estimate 평균) → 연간 표 뒤에 E 열로 붙임. 영업이익 추정은 야후에 없어 빈칸"""
+    try:
+        re_ = tk.revenue_estimate
+    except Exception:
+        return
+    if re_ is None or getattr(re_, "empty", True) or not A.get("periods"):
+        return
+    last = A["periods"][-1]["key"]                     # 'YYYYMM' (마지막 실적 결산월)
+    y, m = int(last[:4]), last[4:6]
+    for i, k in enumerate(("0y", "+1y")):
+        if k not in re_.index:
+            continue
+        v = re_.at[k, "avg"] if "avg" in re_.columns else None
+        if v is None or pd.isna(v):
+            continue
+        A["periods"].append({"key": f"{y + i + 1}{m}", "title": f"{y + i + 1}.{m}", "est": True})
+        for name, vals in A["rows"].items():
+            vals.append(float(v) / 1e6 if name == "매출액" else None)
+
+
 def us_ohlcv(sym: str) -> pd.DataFrame:
     import data_sources as ds
     try:
@@ -732,6 +753,7 @@ def us_detail(sym: str, ohlcv=None) -> dict:
         prof["div_yield"] = rate / px_now * 100 if rate and px_now else 0.0   # yfinance 버전마다 dividendYield 단위가 달라 직접 계산
         try:
             fin["annual"] = yf_annual(tk)
+            yf_rev_est(tk, fin["annual"])
         except Exception as e:
             errs["annual"] = str(e)[:120]
         for kind, src in (("quarter", "quarterly_income_stmt"),):
