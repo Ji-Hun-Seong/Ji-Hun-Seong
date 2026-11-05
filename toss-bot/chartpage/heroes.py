@@ -289,6 +289,7 @@ def score(d: dict) -> dict:
     ni3 = [v for _, v in HC.yr_vals(F["by"], "ni", 3)] or HC.last(F["ni"], 3)
     growth_fail = bool((sg is not None and sg < HC.FISHER_GATE) or (F["eg"] is not None and F["eg"] < HC.FISHER_GATE)
                        or any(v <= 0 for v in ni3) or (F["dr"] and not F["fin_co"] and not F["us"] and F["dr"][-1] >= 200))
+    steady = steady_growth(F["by"])
     fails = {"value": graham_fail, "growth": growth_fail}
     fail_why = {"value": "그레이엄 거름망 탈락(최근 10년 적자 연도·부채비율 200%↑)",
                 "growth": "성장 거름망 탈락(매출·이익 성장 5% 미만 또는 최근 3년 적자·부채비율 200%↑)"}
@@ -338,7 +339,29 @@ def score(d: dict) -> dict:
     elif both:
         note = "💎+🚀 가치와 성장을 모두 갖춤 — 핵심 바구니 우선 후보"
     return {"total": total, "value": v, "growth": g, "style": style, "coverage": B["coverage"], "grade": grade, "note": note,
-            "heroes": heroes, "src": F["src"], "lynch_cat": cat, "lynch_sell": LYNCH_SELL.get(cat), "fin_co": F["fin_co"], "method": METHOD}
+            "heroes": heroes, "src": F["src"], "steady": steady, "lynch_cat": cat, "lynch_sell": LYNCH_SELL.get(cat), "fin_co": F["fin_co"], "method": METHOD}
+
+
+STEADY_N = 4                                          # 최근 4개 연도(3번의 변화)
+
+
+def _steady(vals: list) -> bool | None:
+    """꾸준히 증가 = 최근 4년 중 뒷걸음질 1번 이하 + 마지막 해가 첫해보다 큼 (3년치뿐이면 뒷걸음질 0번). 3년 미만이면 None(모름)"""
+    v = [x for x in vals if x is not None][-STEADY_N:]
+    if len(v) < 3:
+        return None
+    downs = sum(1 for a, b in zip(v, v[1:]) if b < a)
+    return v[-1] > v[0] and downs <= (1 if len(v) >= 4 else 0)
+
+
+def steady_growth(by: dict) -> dict:
+    rv = [x for _, x in HC.yr_vals(by, "rev", STEADY_N)]
+    ni = [x for _, x in HC.yr_vals(by, "ni", STEADY_N)]
+    r, n = _steady(rv), _steady(ni)
+    if n and ni and ni[-1] <= 0:                       # 적자 축소는 '증가'로 안 봄
+        n = False
+    ok = None if r is None or n is None else (r and n)
+    return {"ok": ok, "rev": r, "ni": n, "rev_v": rv, "ni_v": ni}
 
 
 METHOD = ("📖 = 책·주주서한에 나온 숫자 그대로 · ⚖️ = 원전에 숫자가 없어 정한 보조선(화면에 기준 공개). "
@@ -548,6 +571,7 @@ def board_row(p: dict, market: str = "kr") -> dict:
                 "agree": {"value": s["value"]["agree"], "growth": s["growth"]["agree"]},
                 "best": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is True and not c.get("bonus")][:3],
                 "worst": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is False][:2],
+                "steady": {k: s["steady"][k] for k in ("ok", "rev", "ni")},
                 "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok")}
     except Exception as e:
         return {"code": p["code"], "name": p.get("name") or p["code"], "error": f"{type(e).__name__}: {str(e)[:80]}"}
