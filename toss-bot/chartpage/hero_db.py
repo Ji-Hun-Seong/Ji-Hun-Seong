@@ -297,6 +297,34 @@ def start(extras_fn):
     threading.Thread(target=score_loop, args=("gl", ["us", "eu", "cn", "jp"], 3), daemon=True).start()
 
 
+# ── 한국 업종·주요제품 (GitHub Actions 가 매주 만드는 toss-bot/data/industry_kr.csv, 하루 캐시) ──
+_IND = {"t": 0, "map": {}}
+
+
+def industry_kr() -> dict:
+    if time.time() - _IND["t"] < 86400 and _IND["map"]:
+        return _IND["map"]
+    import csv, io
+    text = None
+    try:
+        import requests
+        r = requests.get("https://raw.githubusercontent.com/Ji-Hun-Seong/Ji-Hun-Seong/main/toss-bot/data/industry_kr.csv", timeout=10)
+        r.raise_for_status()
+        text = r.text
+    except Exception:
+        f = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "industry_kr.csv")
+        if os.path.exists(f):
+            text = open(f, encoding="utf-8").read()
+    if text:
+        m = {}
+        for x in csv.DictReader(io.StringIO(text)):
+            m[x["code"]] = {"sector": x.get("sector") or "", "product": x.get("product") or ""}
+        _IND.update(t=time.time(), map=m)
+    else:
+        _IND["t"] = time.time() - 86400 + 600                 # 못 받으면 10분 뒤 다시
+    return _IND["map"]
+
+
 # ── 화면용 읽기 (바로 응답) ─────────────────────────────
 def board(market: str) -> dict:
     import heroes
@@ -304,8 +332,12 @@ def board(market: str) -> dict:
     rows = c.execute("""SELECT c.row, s.src, s.held, s.mcap_eok, c.ok FROM scores c JOIN stocks s ON s.market=c.market AND s.code=c.code
                         WHERE c.market=? AND s.active=1""", (market,)).fetchall()
     items = []
+    ind = industry_kr() if market == "kr" else {}
     for row, src, held, mc, ok in rows:
         x = json.loads(row)
+        i = ind.get(x.get("code"))
+        if i:                                                   # 한국: KRX 업종 + 주요제품
+            x["industry"], x["product"] = i["sector"] or x.get("industry"), i["product"]
         x["src"], x["held"] = json.loads(src or "[]"), bool(held)
         if market != "kr":
             x["name"] = short_name(x.get("name"))

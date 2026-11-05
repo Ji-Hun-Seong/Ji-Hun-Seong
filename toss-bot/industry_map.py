@@ -7,6 +7,7 @@ import requests
 URL = "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "industry_kr.csv")
 
+os.makedirs(os.path.dirname(OUT), exist_ok=True)
 r = requests.get(URL, timeout=60, headers={"User-Agent": "Mozilla/5.0"})
 r.raise_for_status()
 df = pd.read_html(io.StringIO(r.content.decode("euc-kr", "replace")), header=0)[0]
