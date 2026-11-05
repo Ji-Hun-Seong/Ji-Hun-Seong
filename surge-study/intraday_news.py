@@ -5,7 +5,7 @@
 
 오늘 스냅샷(data/intraday/{mkt}/날짜.csv)의 마지막 시각에서 +10%↑(미국은 $2↑·시총 $3억↑) 종목 중
 아직 안 모은 종목만 동시에(병렬) 가져와 data/intraday/{mkt}/news-날짜.csv 에 이어 붙인다.
-열: symbol, fetched_at, auto_cat(키워드 자동 분류), themes, headlines(최신 5개 ' || '), filings, link
+열: symbol, fetched_at, auto_cat(키워드 자동 분류), themes, headlines(신뢰도 순 5개 ' || ', ★=신뢰 매체), filings, link
 환경변수(있으면 사용): SEC_UA(미국 SEC), DART_API_KEY(한국 DART)
 """
 from __future__ import annotations
@@ -85,13 +85,14 @@ def one_us(r, tick, ua, since) -> dict:
 
 def one_kr(r, dart) -> dict:
     code, name = str(r["sym"]), r["name"]
-    nw = news(name, n=5)
+    nw = news(name, n=5, extra=("특징주", "주가"))                 # 신뢰도 순 상위 5개
     texts = [x["title"] for x in nw]
+    shown = [("★" if x.get("tier") == "A" else "") + x["title"] for x in nw]   # ★ = 신뢰 매체
     fl = dart.get(code, [])
     cats = classify(fl, CATALYST_DART) + [c for c in classify(texts, CATALYST_NEWS)]
     cats = list(dict.fromkeys(cats))
     return {"symbol": code, "auto_cat": "/".join(cats), "themes": "/".join(themes_of(texts + fl)),
-            "headlines": " || ".join(texts), "filings": " || ".join(fl[:4]), "link": nw[0]["link"] if nw else ""}
+            "headlines": " || ".join(shown), "filings": " || ".join(fl[:4]), "link": nw[0]["link"] if nw else ""}
 
 
 def main(mkt: str):

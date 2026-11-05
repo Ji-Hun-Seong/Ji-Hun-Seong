@@ -221,22 +221,96 @@ THEMES = ["AI", "반도체", "HBM", "2차전지", "배터리", "로봇", "원전
           "양자", "초전도", "스테이블코인", "가상자산", "비트코인", "남북", "광통신", "데이터센터", "전력", "변압기", "의료기기"]
 
 
-def news(name: str, n: int = 6) -> list[dict]:
+# 매체 신뢰도: A = 종합·경제 통신/일간지와 업종 전문지(편집 기사), C = 공시 자동 요약·연예·블로그·저품질
+SRC_A = ["연합뉴스", "연합인포맥스", "한국경제", "한경", "매일경제", "머니투데이", "이데일리", "서울경제", "조선비즈",
+         "Chosunbiz", "아시아경제", "헤럴드경제", "파이낸셜뉴스", "뉴스1", "뉴시스", "전자신문", "더벨", "딜사이트",
+         "비즈니스워치", "이투데이", "아주경제", "머니S", "디지털타임스", "한국경제TV", "SBS Biz", "중앙일보", "동아일보",
+         "조선일보", "한겨레", "경향신문", "서울신문", "국민일보", "세계일보", "블로터", "디일렉", "ZDNet", "지디넷",
+         "팜이데일리", "데일리팜", "약업", "히트뉴스", "바이오스펙테이터", "더바이오", "약사공론", "메디컬타임즈",
+         "청년의사", "팜뉴스", "전기신문", "에너지경제", "인베스트조선", "뉴스핌", "서울파이낸스", "자본시장뉴스"]
+SRC_C = ["비건뉴스", "톱스타뉴스", "금강일보", "디지털투데이", "데이터투자", "Investing.com", "블로그", "Blog",
+         "아시아뉴스통신", "핀포인트뉴스", "뉴스티앤티", "버핏연구소", "ThinkPool", "Vietnam.vn", "빌리어즈",
+         "르몽드디플로마티크", "스톡허브", "와이드경제", "중기이코노미"]
+GOOD_WORDS = r"특징주|급등|상한가|강세|출시|승인|허가|계약|수주|실적|영업익|영업이익|인수|공개매수|합병|기술이전|최대"
+
+
+SRC_AUTO = ["매일경제 마켓", "MK시그널"]   # 큰 매체지만 시세 자동 생성 기사 → 보통(B)
+
+
+def short_name(name: str) -> str:
+    """기사 제목에 실제로 쓰는 짧은 이름: 한국타이어앤테크놀로지→한국타이어, 깨끗한나라우→깨끗한나라"""
+    s = re.sub(r"(\d?우[A-C]?|우선주)$", "", name)
+    s = re.sub(r"(앤테크놀로지|테크놀로지|홀딩스|지주)$", "", s)
+    return s if len(s) >= 2 else name
+
+
+def src_tier(src: str) -> str:
+    if any(k in src for k in SRC_AUTO):
+        return "B"
+    if any(k in src for k in SRC_C):
+        return "C"
+    return "A" if any(k in src for k in SRC_A) else "B"
+
+
+def rank_news(items: list[dict], name: str) -> list[dict]:
+    """신뢰도 높은 매체 · 이 회사가 주어인 제목 · 재료 단어 · 최신 · 중복 아님 순으로 정렬 (버리지는 않음)"""
+    now = dt.datetime.now(dt.timezone.utc)
+    seen: set[str] = set()
+    for it in items:
+        src = it.get("source") or ""
+        t = re.sub(r"\s+-\s+[^-]+$", "", it["title"]).strip()      # ' - 매체' 떼고 본문 제목만
+        tier = src_tier(src)
+        sc = {"A": 3, "B": 0, "C": -3}[tier]
+        head = re.sub(r"^\[[^\]]*\]\s*", "", t)                      # [특징주] 같은 머리말 제거
+        nm = name if name in t else short_name(name)
+        if nm not in t:
+            sc -= 5                                                    # 제목에 회사 이름이 없음
+        elif head.startswith(nm):
+            sc += 2                                                    # 이 회사가 주어
+        elif re.match(r"^[^,·…]{1,20}[,·…]", head):
+            sc -= 2                                                    # '지씨씨엘, 한미약품 …' → 다른 회사 기사
+        if re.search(GOOD_WORDS, t):
+            sc += 1
+        try:
+            age = (now - dt.datetime.strptime(it.get("date", ""), "%a, %d %b %Y %H:%M:%S %Z")
+                   .replace(tzinfo=dt.timezone.utc)).total_seconds() / 3600
+            sc += 1 if age <= 24 else 0
+        except ValueError:
+            pass
+        key = re.sub(r"[^가-힣A-Za-z0-9]", "", head)[:14]
+        if key in seen:
+            sc -= 2                                                    # 같은 보도자료 복사본
+        seen.add(key)
+        it["tier"], it["score"] = tier, sc
+    return sorted(items, key=lambda x: -x["score"])
+
+
+def _gnews(q: str) -> list[dict]:
     try:
         r = requests.get("https://news.google.com/rss/search", headers=UA, timeout=15,
-                         params={"q": f'"{name}" when:2d', "hl": "ko", "gl": "KR", "ceid": "KR:ko"})
+                         params={"q": q, "hl": "ko", "gl": "KR", "ceid": "KR:ko"})
         root = ElementTree.fromstring(r.content)
-        out = []
-        for it in root.iter("item"):
-            title = (it.findtext("title") or "").strip()
-            src = it.find("source")
-            out.append({"title": title, "source": src.text if src is not None else "",
-                        "date": it.findtext("pubDate") or "", "link": it.findtext("link") or ""})
-            if len(out) >= n:
-                break
-        return out
     except Exception:
         return []
+    out = []
+    for it in root.iter("item"):
+        src = it.find("source")
+        out.append({"title": (it.findtext("title") or "").strip(), "source": src.text if src is not None else "",
+                    "date": it.findtext("pubDate") or "", "link": it.findtext("link") or ""})
+    return out
+
+
+def news(name: str, n: int = 6, extra: tuple[str, ...] = ()) -> list[dict]:
+    """구글 뉴스에서 최근 2일 기사를 넉넉히(최대 100개) 받아 신뢰도 순으로 n개.
+    extra: 추가 검색어(예: '특징주') — '"짧은이름" 특징주' 로 최근 7일을 한 번 더 찾아 합친다(최신 가점은 24시간)."""
+    pool, seen = [], set()
+    alt = short_name(name)
+    qs = [f'"{name}" when:2d'] + ([f'"{alt}" when:2d'] if alt != name else [])
+    for q in qs + [f'"{alt}" {w} when:7d' for w in extra]:     # 추가 검색은 7일 — 며칠 전 출시·계약 같은 배경 재료
+        for it in _gnews(q):
+            if it["title"] not in seen:
+                seen.add(it["title"]); pool.append(it)
+    return rank_news(pool, name)[:n]
 
 
 def themes_of(texts: list[str]) -> list[str]:

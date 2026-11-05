@@ -5,7 +5,7 @@ CSV(원본)를 한 파일 DB로 묶어 SQL로 조회한다. `surge.db`는 git에
 | 원본 CSV | DB 표 | 누가 쓰나 |
 |---|---|---|
 | `data/intraday/{kr,us}/날짜.csv` | `snapshots` | 수집 봇(20분마다) |
-| `data/intraday/{kr,us}/news-날짜.csv` | `news` | 수집 봇이 스냅샷 직후 +10% 종목의 뉴스 제목 5개·공시(SEC 8-K / DART)·자동 분류를 미리 모음(병렬) |
+| `data/intraday/{kr,us}/news-날짜.csv` | `news` | 수집 봇이 스냅샷 직후 +10% 종목의 뉴스 제목 5개(한국: 매체 신뢰도·회사가 주어인 제목·재료 단어·최신 순으로 골라 ★=신뢰 매체 표시, `collect.py` 의 SRC_A/SRC_C 목록)·공시(SEC 8-K / DART)·자동 분류를 미리 모음(병렬) |
 | `db/catalysts.csv` | `catalysts` | 장중 노트 작성 때 재료 판정 저장 → 같은 날 다시 검색 안 함 |
 | `db/hypotheses.csv` | `hypotheses` | 한 줄 가설·채점 |
 
