@@ -818,23 +818,23 @@ function sdRender(a) {
   </div>
   ${descCard(a)}
   <div class="sdtabs" id="sd-tabs">${SDTABS(a).map(([k, l]) => `<button data-t="${k}" class="${SD.tab === k ? "act" : ""}">${l}</button>`).join("")}</div>
-  <div class="sdp" data-p="chart">
+  <div class="sdp" data-noswipe data-p="chart">
   <div class="card kc-card"><div id="sd-kc"></div></div>
   <div class="card"><h2>📏 이평선 · 수익률</h2>
     <div class="fl" style="grid-template-columns:repeat(4,1fr)">${[5, 20, 60, 120].map(n => `<div><b>${n}일선</b><br>${money(T["ma" + n])}<br><span class="${cls(T["gap" + n])}">${pct(T["gap" + n])}</span></div>`).join("")}</div>
     <div class="tiny mut">수익률 1주 ${pct(T.ret5)} · 1개월 ${pct(T.ret20)} · 3개월 ${pct(T.ret60)} · 1년 ${pct(T.ret250)}</div>
   </div></div>
-  <div class="sdp" data-p="ob"><div id="sd-ob"></div></div>
-  <div class="sdp" data-p="sum">
+  <div class="sdp" data-noswipe data-p="ob"><div id="sd-ob"></div></div>
+  <div class="sdp" data-noswipe data-p="sum">
   ${fomoCard(a)}
   ${ctxCard()}
   <div class="card"><h2>👀 한눈에 보기</h2><div class="tally" style="margin:-4px 0 10px">${tally}</div>${sigs}
     <div class="tiny mut" style="margin-top:8px">🟢 긍정 · 🟠 주의 · ⚪ 중립 — 기계적 기준이라 참고용</div></div></div>
-  <div class="sdp" data-p="hero">${heroCard(a) || `<div class="card"><div class="empty">대가 채점 정보 없음</div></div>`}</div>
-  <div class="sdp" data-p="flow">${a.us ? usHolders(a) : flowCard(a)}</div>
-  <div class="sdp" data-p="fin">${finCard(a)}</div>
-  ${a.us ? "" : `<div class="sdp" data-p="news">${filingCard(a) + researchCard(a)}</div>`}
-  <div class="sdp" data-p="bot"><div id="sd-bb"><div class="card"><h2>🤖 자동매매 전략 판정</h2><div class="tiny mut" style="margin-bottom:10px">자사주 공시 · 볼린저(책 기법) · 외국인 수급 세 조건 확인</div>
+  <div class="sdp" data-noswipe data-p="hero">${heroCard(a) || `<div class="card"><div class="empty">대가 채점 정보 없음</div></div>`}</div>
+  <div class="sdp" data-noswipe data-p="flow">${a.us ? usHolders(a) : flowCard(a)}</div>
+  <div class="sdp" data-noswipe data-p="fin">${finCard(a)}</div>
+  ${a.us ? "" : `<div class="sdp" data-noswipe data-p="news">${filingCard(a) + researchCard(a)}</div>`}
+  <div class="sdp" data-noswipe data-p="bot"><div id="sd-bb"><div class="card"><h2>🤖 자동매매 전략 판정</h2><div class="tiny mut" style="margin-bottom:10px">자사주 공시 · 볼린저(책 기법) · 외국인 수급 세 조건 확인</div>
     <button class="stopbtn on" id="sd-bb-btn">판정 불러오기</button></div></div></div>
   <div class="foot">${Object.entries(a.links || {}).map(([k, u]) => `<a href="${u}" target="_blank">${{naver: "네이버 증권", dart: "DART 공시", yahoo: "야후 파이낸스"}[k] || k} ↗</a>`).join(" · ")}</div>`;
   document.querySelectorAll("#sd-who button").forEach(b => b.onclick = () => { SD.who = b.dataset.w;
@@ -852,7 +852,8 @@ function sdRender(a) {
   sdSwipe(a);
   obStart(a);
 }
-// 손가락으로 왼쪽/오른쪽 쓸면 옆 탭으로 (차트 위에서는 차트 끌기가 우선이라 제외)
+// 손가락으로 쓸면 옆 세부 탭으로 (차트 위에서는 차트 끌기가 우선이라 제외)
+// .sdp 에는 data-noswipe 가 붙어 있어 아래쪽 메뉴(홈·발굴·종목…) 전환은 안 일어남
 function sdSwipe(a) {
   let x0 = null, y0 = 0, t0 = 0;
   document.querySelectorAll(".sdp").forEach(p => {
@@ -863,7 +864,7 @@ function sdSwipe(a) {
       if (x0 == null) return;
       const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
       if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5 || Date.now() - t0 > 700) return;
-      const ks = SDTABS(a).map(([k]) => k), i = ks.indexOf(SD.tab), j = i + (dx < 0 ? 1 : -1);
+      const ks = SDTABS(a).map(([k]) => k), i = ks.indexOf(SD.tab), j = i + (dx > 0 ? 1 : -1);   // 앱 전체 규칙과 같게: 오른쪽으로 쓸기 → 오른쪽(다음) 탭
       if (j < 0 || j >= ks.length) return;
       SD.tab = ks[j]; sdTab(a, true);
       const b = document.querySelector(`#sd-tabs button[data-t="${SD.tab}"]`); if (b) b.scrollIntoView({inline: "center", block: "nearest", behavior: "smooth"});
