@@ -821,7 +821,7 @@ function sdRender(a) {
   $("c-out").innerHTML = `
   ${backBtn()}
   <div class="card">
-    <div class="row"><div><div class="mid">${esc(a.name)}</div><div class="tiny mut">${a.mkt ? esc(a.mkt) + " · " : ""}${esc(a.code)} · ${a.asof} · ${esc(a.src)} · ${a.took}초</div></div>
+    <div class="row"><div><div class="mid">${esc(a.name)}</div>${a.us && P.name_en && P.name_en !== a.name ? `<div class="tiny mut">${esc(P.name_en)}</div>` : ""}<div class="tiny mut">${a.mkt ? esc(a.mkt) + " · " : ""}${esc(a.code)} · ${a.asof} · ${esc(a.src)} · ${a.took}초</div></div>
       <div style="text-align:right"><div class="mid">${money(T.close)}</div><div class="small ${cls(T.chg)}">${pct(T.chg, 2)}</div></div></div>
     ${(a.tags || []).length ? `<div style="margin-top:8px">${a.tags.map(t => `<span class="tag ${tagCls(t)}">${esc(t)}</span>`).join("")}</div>` : ""}
     <div class="kv">${kvs.join("")}</div>${err}

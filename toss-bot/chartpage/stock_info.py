@@ -472,7 +472,7 @@ def _desc_cache(key: str, ttl: float, fn):
     except Exception:
         pass
     v = fn()
-    if v and v.get("text"):
+    if v and v.get("text") and v.pop("_cache", True):   # 번역 실패(영어 그대로)는 저장 안 함 → 다음에 다시 번역
         try:
             os.makedirs(_DESC_DIR, exist_ok=True)
             json.dump(v, open(f + ".tmp", "w", encoding="utf-8"), ensure_ascii=False)
@@ -522,16 +522,105 @@ def kr_desc(code: str) -> dict:
     return _desc_cache(f"kr_{code}", 30 * 86400, get)
 
 
-def us_desc(sym: str, en: str) -> dict:
-    """해외: 야후 회사 설명(영어) → 한국어 번역 (번역 실패하면 영어 그대로)"""
+def _wiki_desc(name: str) -> dict:
+    """야후 설명이 비었을 때: 위키백과 (한국어 문서 우선, 없으면 영어 문서 번역)"""
+    q = re.sub(r"[,.]|\b(inc|corp|corporation|co|ltd|limited|plc|holdings?|group|sa|ag|nv|se|class [a-z])\b", " ", name or "", flags=re.I).strip()
+    if not q:
+        return {}
+    r = requests.get("https://en.wikipedia.org/w/api.php", headers=UA, timeout=8,
+                     params={"action": "query", "format": "json", "list": "search", "srsearch": q + " company", "srlimit": 1})
+    hit = ((r.json().get("query") or {}).get("search") or [{}])[0].get("title")
+    if not hit:
+        return {}
+    r = requests.get("https://en.wikipedia.org/w/api.php", headers=UA, timeout=8,
+                     params={"action": "query", "format": "json", "titles": hit, "prop": "langlinks|extracts", "lllang": "ko",
+                             "exintro": 1, "explaintext": 1, "redirects": 1})
+    pg = next(iter(((r.json().get("query") or {}).get("pages") or {}).values()), {})
+    ko_title = ((pg.get("langlinks") or [{}])[0]).get("*")
+    if ko_title:
+        r = requests.get("https://ko.wikipedia.org/api/rest_v1/page/summary/" + requests.utils.quote(ko_title.replace(" ", "_")), headers=UA, timeout=8)
+        if r.ok and r.json().get("extract"):
+            return {"text": r.json()["extract"], "src": "위키백과(한국어)"}
+    en = (pg.get("extract") or "").strip()
+    if not en:
+        return {}
+    ko = ko_translate(en[:3000])
+    return {"text": ko or en, "en": en, "translated": bool(ko), "src": "위키백과" + (" · 자동 번역" if ko else ""), "_cache": bool(ko)}
+
+
+def us_desc(sym: str, en: str, name: str = "") -> dict:
+    """해외: 야후 회사 설명(영어) → 한국어 번역. 야후 설명이 없으면 위키백과. 번역 실패하면 영어 그대로(저장은 안 함)"""
     def get():
+        if not en:
+            try:
+                return _wiki_desc(name)
+            except Exception:
+                return {}
         ko = None
         try:
             ko = ko_translate(en)
         except Exception:
             pass
-        return {"text": ko or en, "en": en, "translated": bool(ko), "src": "야후 파이낸스" + (" · 자동 번역" if ko else "")}
-    return _desc_cache(f"us_{sym}", 30 * 86400, get) if en else {}
+        return {"text": ko or en, "en": en, "translated": bool(ko), "src": "야후 파이낸스" + (" · 자동 번역" if ko else ""), "_cache": bool(ko)}
+    return _desc_cache(f"us_{sym}", 30 * 86400, get) if (en or name) else {}
+
+
+# 야후 업종(11개) — 한국어
+SECTOR_KO = {"Technology": "기술", "Information Technology": "정보기술", "Financial Services": "금융", "Financials": "금융",
+             "Healthcare": "헬스케어", "Health Care": "헬스케어", "Consumer Cyclical": "경기소비재", "Consumer Discretionary": "경기소비재",
+             "Consumer Defensive": "필수소비재", "Consumer Staples": "필수소비재", "Communication Services": "커뮤니케이션 서비스",
+             "Industrials": "산업재", "Energy": "에너지", "Basic Materials": "소재", "Materials": "소재", "Real Estate": "부동산",
+             "Utilities": "유틸리티"}
+INDUSTRY_KO = {"Auto Manufacturers": "자동차 제조", "Auto Parts": "자동차 부품", "Semiconductors": "반도체",
+               "Semiconductor Equipment & Materials": "반도체 장비·소재", "Consumer Electronics": "가전·전자기기",
+               "Software—Infrastructure": "소프트웨어(인프라)", "Software - Infrastructure": "소프트웨어(인프라)",
+               "Software—Application": "소프트웨어(응용)", "Software - Application": "소프트웨어(응용)",
+               "Internet Content & Information": "인터넷 콘텐츠·정보", "Internet Retail": "온라인 유통", "Banks—Diversified": "대형 은행",
+               "Banks - Diversified": "대형 은행", "Banks—Regional": "지역 은행", "Banks - Regional": "지역 은행", "Drug Manufacturers—General": "대형 제약",
+               "Drug Manufacturers - General": "대형 제약", "Biotechnology": "바이오", "Electronic Gaming & Multimedia": "게임·멀티미디어",
+               "Entertainment": "엔터테인먼트", "Oil & Gas Integrated": "석유·가스(통합)", "Aerospace & Defense": "항공우주·방산",
+               "Credit Services": "신용·결제 서비스", "Insurance—Diversified": "종합 보험", "Insurance - Diversified": "종합 보험",
+               "Discount Stores": "할인점", "Restaurants": "외식", "Beverages—Non-Alcoholic": "음료", "Beverages - Non-Alcoholic": "음료",
+               "Footwear & Accessories": "신발·잡화", "Luxury Goods": "명품", "Specialty Industrial Machinery": "산업 기계",
+               "Electronic Components": "전자 부품", "Communication Equipment": "통신 장비", "Telecom Services": "통신 서비스",
+               "Conglomerates": "복합 기업", "Tobacco": "담배", "Household & Personal Products": "생활용품·화장품"}
+
+
+def _ko_label(text: str | None, table: dict) -> str | None:
+    """업종 이름 한국어로 — 표에 없으면 번역(한 번 하면 저장)"""
+    if not text or re.search(r"[가-힣]", text):
+        return text
+    if text in table:
+        return table[text]
+    def get():
+        ko = ko_translate(text)
+        return {"text": ko, "_cache": True} if ko else {}
+    try:
+        return _desc_cache("lbl_" + text, 365 * 86400, get).get("text") or text
+    except Exception:
+        return text
+
+
+def _ko_name(sym: str, en: str) -> str:
+    """해외 종목 이름 한국어로: 자주 찾는 종목 한글 별칭 → 없으면 번역(저장). 실패하면 영어 그대로"""
+    try:
+        import data_sources as ds
+        for k, v in ds.WORLD_KO.items():
+            if v == sym:
+                return k
+    except Exception:
+        pass
+    if not en or re.search(r"[가-힣]", en):
+        return en
+    base = re.sub(r"\s*(,?\s*(inc\.?|corp\.?|corporation|co\.?,? ltd\.?|ltd\.?|plc|n\.?v\.?|s\.?a\.?|ag|se|limited))+\s*$", "", en, flags=re.I).strip() or en
+    try:
+        def get():
+            ko = ko_translate(base.title() if base.isupper() else base)
+            return {"text": ko, "_cache": True} if ko else {}
+        v = _desc_cache("name_" + sym, 365 * 86400, get)
+        return v.get("text") or en
+    except Exception:
+        return en
 
 
 # ── 미국 종목 상세 ─────────────────────────────────────
@@ -666,9 +755,13 @@ def us_detail(sym: str, ohlcv=None) -> dict:
     fin["unit"] = f"백만 {ccy}"
     desc = {}
     try:
-        desc = us_desc(sym, prof.get("summary") or "")
+        desc = us_desc(sym, prof.get("summary") or "", prof.get("name") or "")
     except Exception as e:
         errs["desc"] = str(e)[:120]
+    prof["name_en"] = prof.get("name") or sym                  # 화면은 전부 한국어로 (원래 영어 이름은 작게)
+    prof["name"] = _ko_name(sym, prof["name_en"])
+    prof["sector_en"], prof["industry_en"] = prof.get("sector"), prof.get("industry")
+    prof["sector"], prof["industry"] = _ko_label(prof.get("sector"), SECTOR_KO), _ko_label(prof.get("industry"), INDUSTRY_KO)
     S = signals(tech, prof, None, fin, None, us=True)
     if prof.get("inst_pct") is not None:
         S.append(_sig("수급", "기관 보유", f"{prof['inst_pct'] * 100:.0f}%", "neu", "발행주식 대비"))
