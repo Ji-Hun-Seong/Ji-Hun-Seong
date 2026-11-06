@@ -322,7 +322,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 
 <section id="t-pick">
   <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
-  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 아빠</button><button data-k="fund">🏦 펀드</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 자바</button><button data-k="fund">🏦 펀드</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -859,7 +859,7 @@ function descCard(a) {
 function sdRender(a) {
   const P = a.profile || {}, T = a.tech || {}, CC = a.ccy || "USD", money = v => a.us ? cur(v, CC) : won(v);
   const kv = (k, v) => `<div><small>${k}</small><b>${v}</b></div>`;
-  const tagCls = t => t.includes("급등") ? "r" : t.includes("가치") || t.includes("아빠") ? "g" : t.includes("애크먼") ? "b" : "y";
+  const tagCls = t => t.includes("급등") ? "r" : t.includes("가치") || t.includes("아빠") || t.includes("자바") ? "g" : t.includes("애크먼") ? "b" : "y";
   const kvs = a.us ? [kv("시가총액", curBig(P.mcap_usd, CC)), kv("PER", P.per ? P.per.toFixed(1) + "배" : "-"), kv("선행 PER", P.fper ? P.fper.toFixed(1) + "배" : "-"),
       kv("PBR", P.pbr ? P.pbr.toFixed(1) + "배" : "-"), kv("배당", P.div_yield != null ? P.div_yield.toFixed(2) + "%" : "-"), kv("기관 보유", P.inst_pct != null ? (P.inst_pct * 100).toFixed(0) + "%" : "-"),
       kv("52주", `${fmtN(T.lo52, 0)}~${fmtN(T.hi52, 0)}`), kv("목표가", P.target ? cur(P.target, CC) : "-"), kv("업종", esc(P.sector || "-"))]
@@ -1002,7 +1002,7 @@ function ctxCard() {
     <div class="tally" style="margin:-4px 0 8px">${Object.entries(x.parts || {}).map(([k, v]) => `<span class="tag ${v > 0 ? "g" : v < 0 ? "r" : ""}">${k} ${v}</span>`).join("")}</div>
     ${(x.why || []).map(w => `<div class="small" style="padding:3px 0">✔︎ ${esc(w)}</div>`).join("")}${(x.warn || []).map(w => `<div class="small" style="padding:3px 0;color:var(--r-fg)">⚠︎ ${esc(w)}</div>`).join("")}
     ${(x.filings || []).map(f => `<div class="tiny" style="padding:3px 0"><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${f.rcept_no}" target="_blank">📄 ${esc(f.title)}</a></div>`).join("")}</div>`;
-  if (c.kind === "value") return `<div class="card"><h2>💎 아빠 20선 ${x.rank}위 · ${x.total}점${x.held ? " · 📌 보유 중" : ""}</h2>
+  if (c.kind === "value") return `<div class="card"><h2>💎 자바 20선 ${x.rank}위 · ${x.total}점${x.held ? " · 📌 보유 중" : ""}</h2>
     <div class="tally" style="margin:-4px 0 8px">${[["value", "밸류"], ["payout", "주주환원"], ["cash", "현금·재무"], ["fit", "내 성향"]].map(([k, l]) => `<span class="tag ${x.scores[k] >= 70 ? "g" : x.scores[k] < 40 ? "r" : ""}">${l} ${x.scores[k]}</span>`).join("")}</div>
     ${x.reasons.map(w => `<div class="small" style="padding:3px 0">✔︎ ${esc(w)}</div>`).join("")}${x.risks.map(w => `<div class="small" style="padding:3px 0;color:var(--r-fg)">⚠︎ ${esc(w)}</div>`).join("")}
     ${x.note ? `<div class="tiny mut" style="margin-top:6px">📝 ${esc(x.note)}</div>` : ""}</div>`;
@@ -1374,8 +1374,8 @@ function pRender(d) {
         ${x.news.length ? `<div class="why">📰 ${esc(x.news[0])}</div>` : ""}</div>`).join("")}
       ${S.length > 10 ? `<button class="more" id="s-all">${SD.sAll ? "접기 ▲" : `${S.length - 10}개 더 보기 ▼`}</button>` : ""}`;
   } else if (d.kind === "value") {
-    head = `<div class="card"><div class="label">💎 아빠 매매일지 DNA 20선 (코스피) · 데이터 ${esc(d.asof)}</div>
-      <div class="small" style="margin-top:6px;line-height:1.6">아빠가 실제로 사고판 매매일지에서 뽑은 성향(좋아하는 업종·가격대·배당·재무)에 가장 잘 맞는 종목 순서</div>
+    head = `<div class="card"><div class="label">💎 자바 매매일지 DNA 20선 (코스피) · 데이터 ${esc(d.asof)}</div>
+      <div class="small" style="margin-top:6px;line-height:1.6">자바가 실제로 사고판 매매일지에서 뽑은 성향(좋아하는 업종·가격대·배당·재무)에 가장 잘 맞는 종목 순서</div>
       <div class="small" style="margin-top:6px;line-height:1.6">밸류 25 · 주주환원 25 · 현금·재무 25 · 내 성향 적합도 25 − 리스크 감점 · 📌 = 지금 계좌에 있음</div></div>`;
     rows = d.items.map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${x.rank}</span><span class="name">${esc(x.name)}</span>${x.code ? `<span class="tkr">${esc(x.code)}</span>` : ""}${x.held ? " 📌" : ""}
         <span class="tiny mut"> ${esc(x.sector || "")}</span></div><div style="text-align:right"><span class="score">${x.total}</span><span class="tiny mut">점</span></div></div>

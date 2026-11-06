@@ -1093,7 +1093,7 @@ def stock_detail(q, us_hint=None):
             tags.append("🤖 봇 보유")
     except Exception:
         pass
-    for kind, label in (("hero", "🏛️ 대가"), ("surge", "🚀 급등 후보"), ("value", "💎 아빠 20선"), ("ackman", "🇺🇸 애크먼")):
+    for kind, label in (("hero", "🏛️ 대가"), ("surge", "🚀 급등 후보"), ("value", "💎 자바 20선"), ("ackman", "🇺🇸 애크먼")):
         p = _cache.get("picks:" + kind)
         if p and isinstance(p[1], dict):
             for x in p[1].get("items", []):
