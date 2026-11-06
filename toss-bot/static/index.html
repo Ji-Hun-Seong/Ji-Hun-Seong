@@ -322,7 +322,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 
 <section id="t-pick">
   <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
-  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 자바</button><button data-k="fund">🏦 펀드</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 자바</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -1168,7 +1168,7 @@ function finChart(a) {
 // ── 발굴 탭 ──────────────────────────────────────────
 let pKind = "hero"; const PK = {};
 try { pKind = localStorage.getItem("p-kind") || "hero"; } catch (e) {}
-if (!["hero", "surge", "value", "fund"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
+if (!["hero", "surge", "value", "fund", "etf"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
 document.querySelectorAll("#p-seg button").forEach(b => {
   b.classList.toggle("act", b.dataset.k === pKind);
   b.onclick = () => { pKind = b.dataset.k; try { localStorage.setItem("p-kind", pKind); } catch (e) {}
@@ -1271,8 +1271,69 @@ function fundRender(d) {
   bindM();
   $("p-out").querySelectorAll("[data-sc]").forEach(el => el.onclick = () => openStock(el.dataset.sc, {us: fMkt === "us"}));
 }
+// 📦 ETF — KRX 일별 데이터로 수익률 순위 (chartpage/etf.py) · 설명은 펀드를 처음 보는 사람 기준
+let eCat = "all", eSort = "mom";
+try { eCat = localStorage.getItem("e-cat") || "all"; eSort = localStorage.getItem("e-sort") || "mom"; } catch (e) {}
+const ETF_GUIDE = `<details class="card" id="e-guide"><summary style="font-size:15px;font-weight:700;color:var(--txt)">📘 ETF가 처음이라면 — 3분 설명 <span class="tiny" style="color:var(--blue)">펼치기</span></summary>
+  <div class="small" style="line-height:1.7;margin-top:10px">
+  <b>① 펀드란?</b><br>여러 사람의 돈을 한 바구니에 모아 <b>운용사</b>(삼성·미래에셋 등)가 대신 굴리는 상품이에요. 내가 갖는 건 그 바구니의 <b>지분(좌수)</b>이고, 바구니 값이 오르면 내 돈도 늘어요.<br><br>
+  <b>② ETF = 주식처럼 사고파는 펀드</b><br>보통 펀드는 은행·증권사에서 '가입'하고 하루 한 번 정해지는 가격(<b>기준가</b>)으로 사고팔아요. ETF는 펀드를 <b>거래소에 상장</b>시켜서, 증권 앱에서 주식처럼 장중 아무 때나 1주씩 살 수 있어요. 보통 펀드보다 보수(수수료)도 싼 편이에요.<br><br>
+  <b>③ 패시브 vs 액티브</b><br>
+  · <b>패시브</b>: 코스피200·S&P500 같은 <b>지수를 그대로 따라가요</b>. 사람이 종목을 고르지 않아서 보수가 싸요. 대부분의 ETF가 여기 속해요.<br>
+  · <b>액티브</b>: 지수를 기본으로 두고 <b>운용역이 종목을 골라 지수를 이기려고</b> 해요. 이름에 '액티브'가 붙고, 보수가 조금 더 비싸요. (국내 규정상 주식형 액티브도 비교지수와 상관계수 0.7 이상을 지켜야 해서, 지수와 완전히 따로 움직이지는 않아요)<br><br>
+  <b>④ 추가설정(개방형) vs 폐쇄형</b><br>
+  · <b>추가설정 가능(개방형)</b>: 언제든 새 돈이 들어올 수 있고(설정), 돈을 뺄 수도 있어요(환매). 바구니 크기가 수요에 따라 커졌다 줄었다 해요.<br>
+  · <b>폐쇄형</b>: 처음 한 번 모집한 뒤로는 새 돈을 안 받고, 만기 전에는 환매가 안 돼요. 그래서 폐쇄형 펀드는 중간에 팔 수 있게 거래소에 상장하기도 하는데, 사는 사람이 적으면 실제 가치보다 싸게 팔아야 할 수 있어요.<br>
+  · <b>ETF는 모두 추가설정이 가능해요.</b> 사려는 사람이 많으면 <b>LP(유동성공급자)</b>가 새 ETF 주식을 만들어 공급해서, 가격이 실제 가치(NAV) 근처에 붙어 있어요.<br><br>
+  <b>⑤ 이 표에서 볼 숫자</b><br>
+  · <b>수익률</b>: 1개월·3개월·6개월·1년·3년 동안 가격이 얼마나 올랐는지 (분배금 제외 가격 기준)<br>
+  · <b>모멘텀</b>: 3·6·12개월 수익률의 평균 — 이 순서로 줄 세워요<br>
+  · <b>최대 낙폭</b>: 지난 1년 중 고점에서 가장 크게 빠졌던 폭 — 내가 견뎌야 했을 최악의 순간<br>
+  · <b>순자산</b>: 바구니 전체 크기. 작으면(50억 밑) 상장폐지될 수 있어 200억 이상만 보여 줘요<br>
+  · <b>괴리율</b>: 시장 가격과 실제 가치(NAV)의 차이. ±1%를 넘으면 비싸게/싸게 사고 있는 거예요<br><br>
+  <b>⑥ 이름 읽는 법</b><br>
+  KODEX·TIGER·ACE·RISE·SOL·PLUS 등은 운용사 브랜드예요. <b>(H)</b> = 환헤지(환율 영향을 없앰), <b>합성</b> = 주식을 직접 담지 않고 계약(스왑)으로 수익만 받아옴, <b>레버리지</b> = 하루 등락의 2배, <b>인버스</b> = 하루 등락의 반대. 레버리지·인버스는 오래 들고 있으면 지수와 다르게 손실이 커질 수 있어 기본 목록에서 빼 뒀어요.<br><br>
+  <b>⑦ 세금 한 줄</b><br>국내 주식형 ETF는 팔아서 번 돈에 세금이 없고, 그 밖의 ETF(해외·채권·원자재)는 번 돈과 분배금에 15.4%를 떼요. 연금저축·IRP 계좌에서 사면 세금을 나중으로 미룰 수 있어요(레버리지·인버스는 연금계좌에서 못 사요).
+  </div></details>`;
+function etfRender(d) {
+  const gOpen = !!($("e-guide") && $("e-guide").open);
+  const pc = v => v == null ? `<span class="mut">-</span>` : `<span class="${cls(v)}">${v > 0 ? "+" : ""}${v.toFixed(1)}%</span>`;
+  const st = d.status || {};
+  let head = `<div class="card"><div class="label">📦 ETF 수익률 순위 · ${d.asof ? "데이터 " + esc(d.asof) : "데이터 준비 중"}</div>
+    <div class="small" style="margin-top:6px;line-height:1.6">국내 상장 ETF를 <b>수익률</b>로 줄 세웠어요. 기본 순서는 3·6·12개월 수익률 평균(모멘텀)이고, 같은 지수를 따라가는 ETF끼리는 1년 수익이 가장 좋은 하나만 보여 줘요.</div>`;
+  if (!d.has_key) head += `<div class="small" style="margin-top:8px;color:var(--r-fg)">서버 .env 에 KRX_API_KEY 가 없어요</div>`;
+  if (st.state === "error") head += `<div class="small" style="margin-top:8px;color:var(--r-fg)">KRX 데이터 받기 실패: ${esc(st.msg || "")} — 30분 뒤 다시 시도해요</div>`;
+  if (st.state === "fetching") head += `<div class="small" style="margin-top:8px">⏳ 과거 데이터 받는 중 ${st.done || 0}/${st.todo || 0}일 (처음 한 번 몇 분) — 1년·3년 수익률은 다 받은 뒤 정확해져요</div>`;
+  if (d.bench && Object.keys(d.bench).length) head += `<div class="tiny mut" style="margin-top:8px">비교: ${Object.values(d.bench).map(b => `${esc(b.name)} 3개월 ${pc(b.r3)} · 1년 ${pc(b.r12)}`).join(" &nbsp;|&nbsp; ")}</div>`;
+  const bt = d.bt;
+  head += bt ? `<div class="small" style="margin-top:10px;padding:10px;background:var(--bg);border-radius:10px;line-height:1.55">🧪 <b>이 순위를 얼마나 믿을까?</b> ${esc(bt.from)}~${esc(bt.to)} 매달 그때의 상위 10개(레버리지·인버스 제외)를 샀다면, 다음 3개월에 KODEX 200을 이긴 건 <b>${bt.n}번 중 ${bt.wins}번 (${Math.round(bt.wins / bt.n * 100)}%)</b> · 평균 ${pc(bt.avg_top)} vs ${pc(bt.avg_bench)}<br><span class="tiny mut">50%를 크게 넘지 않으면 '과거 1등 = 앞으로 1등'이 잘 안 통한다는 뜻이에요</span></div>`
+    : `<div class="tiny mut" style="margin-top:8px">🧪 과거 검증(상위 10개 vs KODEX 200)은 데이터가 1년 3개월치 쌓이면 나와요</div>`;
+  head += `<div class="tiny mut" style="margin-top:8px">전체 ${d.n_all || 0}개 중 순자산 200억↑·상장 1년↑ ${d.n_ok || 0}개 · 수익률은 가격 기준(분배금 제외 — 배당·채권형은 실제보다 낮게 보여요) · 투자 권유 아님</div></div>`;
+  const CATS = [["all", "전체"], ["kr", "🇰🇷 국내주식"], ["foreign", "🌍 해외주식"], ["bond", "🏦 채권·혼합"], ["cmdty", "🪙 원자재"], ["active", "🧑‍💼 액티브"], ["lev", "⚡ 레버리지·인버스"]];
+  const SORTS = [["mom", "모멘텀"], ["r12", "1년"], ["r36", "3년"], ["r3", "3개월"], ["eff", "덜 흔들림"]];
+  const chip = (k, l, on, a) => `<span class="tag ${on ? "b" : ""}" data-${a}="${k}" style="cursor:pointer;margin:3px 4px 0 0;${on ? "font-weight:700" : ""}">${l}</span>`;
+  head += `<div class="card"><div>${CATS.map(([k, l]) => chip(k, l, eCat === k, "ec")).join("")}</div>
+    <div style="margin-top:8px"><span class="tiny mut">정렬 </span>${SORTS.map(([k, l]) => chip(k, l, eSort === k, "es")).join("")}</div>
+    ${eSort === "eff" ? `<div class="tiny mut" style="margin-top:6px">덜 흔들림 = 1년 수익률 ÷ 1년 변동성 — 같은 수익이면 덜 출렁인 쪽이 위</div>` : ""}</div>`;
+  let xs = (d.items || []).filter(x => eCat === "all" ? x.cat !== "lev" : eCat === "active" ? x.active : x.cat === eCat);
+  xs = xs.filter(x => x[eSort] != null).sort((a, b) => b[eSort] - a[eSort]).slice(0, 50);
+  const CL = d.cats || {};
+  const rows = xs.map((x, i) => `<div class="prow" data-ec2="${esc(x.code)}"><div class="row"><div><span class="rk">${i + 1}</span><span class="name">${esc(x.name)}</span><span class="tkr">${esc(x.code)}</span></div>
+      <div style="text-align:right">${pc(x[eSort === "eff" ? "r12" : eSort === "mom" ? "mom" : eSort])}<div class="tiny mut">${eSort === "mom" ? "모멘텀" : eSort === "eff" ? "1년" : ""}</div></div></div>
+      <div style="margin-top:4px"><span class="tag ${x.active ? "y" : "g"}">${x.active ? "액티브" : "패시브"}</span><span class="tag">${esc(CL[x.cat] || "")}</span>${x.hedge ? `<span class="tag">환헤지</span>` : ""}${x.synth ? `<span class="tag">합성</span>` : ""}<span class="tag">추가설정 가능</span></div>
+      <div class="kv" style="margin-top:6px"><div><small>1개월</small><b>${pc(x.r1)}</b></div><div><small>3개월</small><b>${pc(x.r3)}</b></div><div><small>6개월</small><b>${pc(x.r6)}</b></div>
+        <div><small>1년</small><b>${pc(x.r12)}</b></div><div><small>3년</small><b>${pc(x.r36)}</b></div><div><small>최대 낙폭</small><b>${pc(x.mdd)}</b></div></div>
+      <div class="tiny mut" style="margin-top:4px">순자산 ${fmtN(x.net_eok)}억 · 괴리율 ${x.disc != null ? (x.disc > 0 ? "+" : "") + x.disc.toFixed(2) + "%" : "-"} · 변동성 ${x.vol != null ? x.vol + "%" : "-"}${x.ex12 != null ? ` · KODEX 200 대비 1년 ${pc(x.ex12)}` : ""}${x.idx ? ` · 기초지수 ${esc(x.idx)}` : ""}</div>
+      ${x.sibs ? `<div class="tiny mut" style="margin-top:2px">같은 지수 ETF ${x.sibs + 1}개 중 1년 수익 1등 (${x.sib_names.map(esc).join(", ")}${x.sibs > 3 ? " 등" : ""})</div>` : ""}</div>`).join("");
+  $("p-out").innerHTML = (gOpen ? ETF_GUIDE.replace('id="e-guide">', 'id="e-guide" open>').replace(">펼치기<", ">접기<") : ETF_GUIDE) + head + `<div class="card">${rows || `<div class="empty">${d.empty ? "아직 받은 데이터가 없어요 — 서버가 KRX에서 받는 중" : "이 분류에 해당하는 ETF가 없어요"}</div>`}</div>`;
+  $("p-out").querySelectorAll("[data-ec]").forEach(b => b.onclick = () => { eCat = b.dataset.ec; try { localStorage.setItem("e-cat", eCat); } catch (e) {} etfRender(d); });
+  $("p-out").querySelectorAll("[data-es]").forEach(b => b.onclick = () => { eSort = b.dataset.es; try { localStorage.setItem("e-sort", eSort); } catch (e) {} etfRender(d); });
+  $("p-out").querySelectorAll("[data-ec2]").forEach(el => el.onclick = () => openStock(el.dataset.ec2));
+  const g = $("e-guide"); if (g) g.ontoggle = () => { const s = g.querySelector("summary .tiny"); if (s) s.textContent = g.open ? "접기" : "펼치기"; };
+}
 function pRender(d) {
   if (d.kind === "fund") return fundRender(d);
+  if (d.kind === "etf") return etfRender(d);
   if (d.error) { $("p-out").innerHTML = `<div class="card"><div class="empty">${esc(d.error)}${d.kind === "surge" || pKind === "surge" ? "<br><br>급등 후보는 평일 장 마감 후(18:45쯤) 처음 만들어집니다." : ""}</div></div>`; return; }
   pItems = d.items.concat(d.more || []);
   const open = i => `data-pi="${i}"`;

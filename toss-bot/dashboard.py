@@ -1040,7 +1040,8 @@ def picks_hero_db(market):
 PICKS = {"hero_us": (lambda: picks_hero_db("us"), 60), "hero_eu": (lambda: picks_hero_db("eu"), 60),
          "hero_cn": (lambda: picks_hero_db("cn"), 60), "hero_jp": (lambda: picks_hero_db("jp"), 60),
          "hero": (lambda: picks_hero_db("kr"), 60), "surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600),
-         "fund": (lambda: __import__("fund_sim").summary(), 120)}
+         "fund": (lambda: __import__("fund_sim").summary(), 120),
+         "etf": (lambda: __import__("etf").summary(), 600)}
 
 
 def picks(kind):
@@ -1422,4 +1423,6 @@ if __name__ == "__main__":
     hero_db.start(hero_extras)                   # 🏛️ 대가 채점 일꾼 (뒤에서 계속)
     threading.Thread(target=warm_up, daemon=True).start()
     threading.Thread(target=intraday_loop, daemon=True).start()
+    import etf
+    threading.Thread(target=etf.worker, daemon=True).start()   # 📦 ETF: KRX 일별 데이터 채우기 (매시간)
     ThreadingHTTPServer((host, port), H).serve_forever()
