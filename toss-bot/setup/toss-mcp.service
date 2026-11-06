@@ -1,0 +1,13 @@
+[Unit]
+Description=Toss bot MCP server (read-only, for Claude app)
+After=network-online.target toss-dash.service
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ji-hun-seong/toss-bot
+ExecStart=/usr/bin/python3 mcp_server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
