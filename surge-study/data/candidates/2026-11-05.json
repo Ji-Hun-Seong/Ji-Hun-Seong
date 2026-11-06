@@ -2078,5 +2078,74 @@
   "up": 5,
   "avg": 1.03,
   "market_avg": -2.42
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "294870",
+    "name": "IPARK현대산업개발",
+    "score": 74.0,
+    "next_chg": -3.62
+   },
+   {
+    "code": "089860",
+    "name": "롯데렌탈",
+    "score": 73,
+    "next_chg": 10.17
+   },
+   {
+    "code": "012630",
+    "name": "HDC",
+    "score": 63,
+    "next_chg": -5.37
+   },
+   {
+    "code": "068930",
+    "name": "디지털대성",
+    "score": 58,
+    "next_chg": 0.64
+   },
+   {
+    "code": "039200",
+    "name": "오스코텍",
+    "score": 54,
+    "next_chg": -3.2
+   },
+   {
+    "code": "002990",
+    "name": "금호건설",
+    "score": 54,
+    "next_chg": -1.23
+   },
+   {
+    "code": "004990",
+    "name": "롯데지주",
+    "score": 54,
+    "next_chg": -1.53
+   },
+   {
+    "code": "004800",
+    "name": "효성",
+    "score": 54,
+    "next_chg": -6.84
+   },
+   {
+    "code": "011930",
+    "name": "신성이엔지",
+    "score": 53,
+    "next_chg": -8.6
+   },
+   {
+    "code": "253450",
+    "name": "스튜디오드래곤",
+    "score": 53,
+    "next_chg": -2.47
+   }
+  ],
+  "n": 10,
+  "hit10": 1,
+  "up": 2,
+  "avg": -2.21,
+  "market_avg": -2.42
  }
 }
