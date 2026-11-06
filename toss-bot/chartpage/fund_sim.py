@@ -43,10 +43,7 @@ SELL_TAX = 0.0020                  # 증권거래세+농특세 (2026년 코스�
 DIV_PAY_DAYS = 30                  # 배당락 → 입금까지
 
 FUNDS = {
-    "value": {"name": "💎 대가 가치주 TOP 10", "desc": "가치 대가 점수 순 · PBR 0~2 · PER 10 이하 · 버핏 10점↑ · 매출·순이익 꾸준히 증가",
-              "market": "kr", "kind": "value"},
-    "growth": {"name": "🚀 대가 성장주 TOP 10", "desc": "성장 대가 점수 순 · 시총 10조 미만 · PBR 0~10 · 린치 10점↑ · 매출·순이익 꾸준히 증가",
-               "market": "kr", "kind": "growth"},
+    # 🇰🇷 한국 모의 펀드 2개(대가 가치주·성장주 TOP 10)는 2026-11-06 종료 → 👤 내 펀드(my_fund.py, 실제 계좌 펀드화)로 대체
     "us_value": {"name": "🇺🇸💎 미국 대가 가치주 TOP 10", "desc": "가치 대가 점수 순 · PBR 0~2 · PER 30 이하 · 버핏 10점↑ · 매출·순이익 꾸준히 증가 · 원화 환산(환노출)",
                  "market": "us", "kind": "value"},
     "us_growth": {"name": "🇺🇸🚀 미국 대가 성장주 TOP 10", "desc": "성장 대가 점수 순 · PBR 0~10 · 린치 10점↑ · 매출·순이익 꾸준히 증가 · 원화 환산(환노출)",
@@ -341,10 +338,27 @@ def run(day: str | None = None, dry: bool = False, market: str = "kr") -> dict:
 
 
 # ── 화면용 ─────────────────────────────────────────────
-def summary() -> dict:
+def drop_retired(st: dict) -> bool:
+    """끝낸 펀드(한국 모의 펀드)를 상태 파일에서 지움 — 처음 한 번 백업"""
+    gone = [k for k in list(st) if isinstance(st[k], dict) and "hist" in st[k] and k not in FUNDS]
+    if gone:
+        if os.path.exists(PATH):
+            import shutil
+            shutil.copy(PATH, PATH + f".bak{int(time.time())}")
+        for k in gone:
+            st.pop(k)
+    return bool(gone)
+
+
+def summary(viewer: bool = False) -> dict:
+    import my_fund
+    try:
+        mine = my_fund.summary(viewer)
+    except Exception as e:
+        mine = {"error": f"{type(e).__name__}: {str(e)[:160]}"}
     st = load()
     if not st:
-        return {"kind": "fund", "funds": [], "note": "아직 설정 전 — 서버에서 python chartpage/fund_sim.py run (장 마감 후)"}
+        return {"kind": "fund", "funds": [], "mine": mine, "note": "🇺🇸 미국 모의 펀드는 아직 설정 전 — 서버 cron 07:10(화~토)"}
     funds = []
     for key in FUNDS:
         f = st.get(key)
@@ -364,15 +378,20 @@ def summary() -> dict:
                       "ret": round((last["nav"] / 1000 - 1) * 100, 2), "bench_ret": round((last["bench"] / 1000 - 1) * 100, 2),
                       "holdings": hold, "trades": f["trades"][-30:][::-1], "recv": f["recv"], "fee_paid": round(f["fee_paid"]),
                       "costs": round(f["costs"]), "last_rebal": f["last_rebal"], "picks": f.get("picks", [])})
-    return {"kind": "fund", "funds": funds, "updated": st.get("updated"),
+    return {"kind": "fund", "funds": funds, "mine": mine, "updated": st.get("updated"),
             "rules": {"seed": SEED, "n": N, "cash_buf": CASH_BUF, "fees": FEES, "fee_total": round(sum(FEES.values()) * 100, 2),
                       "commission": COMMISSION, "sell_tax": SELL_TAX, "div_pay_days": DIV_PAY_DAYS}}
 
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "show"
-    if cmd == "run":
-        print(json.dumps(run(sys.argv[2] if len(sys.argv) > 2 else None), ensure_ascii=False, indent=1))
+    if cmd == "run":                                   # 서버 cron 16:10 — 한국 모의 펀드 대신 👤 내 펀드 산출
+        st0 = load()
+        if drop_retired(st0):
+            save(st0)
+            print("한국 모의 펀드 2개 삭제(백업 남김)")
+        import my_fund
+        print(json.dumps(my_fund.run(sys.argv[2] if len(sys.argv) > 2 else None), ensure_ascii=False, indent=1))
     elif cmd == "run-us":
         print(json.dumps(run(sys.argv[2] if len(sys.argv) > 2 else None, market="us"), ensure_ascii=False, indent=1))
     elif cmd == "reset":

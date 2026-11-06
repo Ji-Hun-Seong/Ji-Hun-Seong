@@ -1268,6 +1268,8 @@ class H(BaseHTTPRequestHandler):
                     k, dd = (qs.get("k") or ["surge"])[0], (qs.get("d") or [""])[0]
                     if k == "surge" and re.fullmatch(r"\d{4}-\d{2}-\d{2}", dd):
                         out = cached("picks:surge:" + dd, 900, lambda: picks_surge(dd))
+                    elif k == "fund" and role_of(self.client_address[0]) == "viewer":   # 보기 전용: 내 펀드 금액·주수 숨김
+                        out = cached("picks:fund:viewer", 120, lambda: __import__("fund_sim").summary(viewer=True))
                     else:
                         out = picks(k)
                 else:

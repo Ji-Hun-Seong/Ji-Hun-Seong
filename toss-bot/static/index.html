@@ -1201,7 +1201,36 @@ const hMktBar = () => `<div class="seg" id="h-mkt" style="margin-top:-4px">${HMK
 function hMktBind() { document.querySelectorAll("#h-mkt button").forEach(b => b.onclick = () => hSetMkt(b.dataset.m)); }
 let pItems = [];
 // 🏦 대가 TOP 10 모의 펀드 — 실제 공모펀드처럼 매일 기준가 산출 (chartpage/fund_sim.py)
-let fMkt = (() => { try { return localStorage.getItem("fund-mkt") || "kr"; } catch (e) { return "kr"; } })();
+let fMkt = (() => { try { const v = localStorage.getItem("fund-mkt"); return v === "us" ? "us" : "me"; } catch (e) { return "me"; } })();   // me = 👤 내 펀드(실제 계좌), us = 🇺🇸 미국 모의 펀드
+// 👤 내 펀드 — 실제 계좌(내가 지정가로 사고판 종목)를 공모펀드처럼 기준가로 (chartpage/my_fund.py)
+function myFundRender(d, html, bindM) {
+  const m = d.mine || {}, pc = v => v == null ? "-" : `<span class="${v > 0 ? "up" : v < 0 ? "dn" : ""}">${v > 0 ? "+" : ""}${v.toFixed(2)}%</span>`;
+  const how = `<details style="margin-top:10px"><summary>기준가는 어떻게 계산하나요?</summary><div class="tiny mut" style="margin-top:6px;line-height:1.7">
+    · 설정일에 들고 있던 종목을 그날 종가로 평가 = 기준가 <b>1,000.00</b>에서 시작<br>
+    · 매일 장 마감 후(16:10) 토스 계좌 잔고와 체결내역을 읽어서 계산해요. 주문은 내지 않아요<br>
+    · 하루 수익률 = (오늘 평가액 + 판 돈 − 어제 평가액 − 산 돈) ÷ (어제 평가액 + 산 돈)<br>
+    · 산 돈은 펀드에 새로 들어온 돈(<b>설정</b>), 판 돈은 펀드에서 나간 돈(<b>환매</b>)으로 처리해요. 그래서 돈을 더 넣거나 빼도 기준가는 흔들리지 않고, <b>종목을 고르고 지정가로 사고판 실력</b>만 남아요<br>
+    · 수수료·세금은 수익에서 빠지고, 배당락일엔 배당금이 수익에 더해져요(미국은 원천징수 15% 뗀 금액)<br>
+    · 미국 종목은 그날 원/달러로 원화 환산 · 비교지수 코스피(설정일 = 1,000)</div></details>`;
+  if (m.error) { $("p-out").innerHTML = html + `<div class="card"><div class="empty">내 펀드 불러오기 실패: ${esc(m.error)}</div></div>`; bindM(); return; }
+  if (m.empty || !m.last) { $("p-out").innerHTML = html + `<div class="card"><div class="label">👤 내 펀드</div><div class="empty" style="margin-top:6px">${esc(m.note || "아직 설정 전")}</div>${how}</div>`; bindM(); return; }
+  const L = m.last;
+  let h = html + `<div class="card">
+    <div class="row"><div><span class="name">👤 내 펀드</span></div><div style="text-align:right"><span class="score">${fmtN(L.nav, 2)}</span><span class="tiny mut">원</span></div></div>
+    <div class="tiny mut" style="margin-top:3px">토스 실제 계좌에서 내가 직접 사고판 종목 그대로 · 마지막 산출 ${esc(m.updated || L.date)}</div>
+    <div class="kv">
+      <div><small>설정 후</small><b>${pc(m.ret)}</b></div><div><small>코스피</small><b>${pc(m.bench_ret)}</b></div><div><small>초과</small><b>${pc(m.ret - m.bench_ret)}</b></div>
+      <div><small>오늘</small><b>${pc(L.r)}</b></div><div><small>설정일</small><b>${esc(m.inception)}</b></div><div><small>${m.hidden ? "종목 수" : "순자산"}</small><b>${m.hidden ? (L.n || 0) + "개" : fmtN(L.net) + "원"}</b></div></div>
+    ${fundChart(m.hist, "코스피")}${how}</div>`;
+  h += `<div class="card"><div class="label">보유 종목 · ${esc(L.date)} 종가</div>${(m.holdings || []).map(x => `<div class="srow small" data-sc="${esc(x.code)}" data-us="${x.us ? 1 : 0}" style="cursor:pointer"><span><b>${esc(x.name)}</b>${x.qty != null ? ` <span class="tiny mut">${fmtN(x.qty, x.us ? 4 : 0)}주</span>` : ""}</span><span>${x.weight != null ? x.weight + "%" : "-"} · ${pc(x.pnl)}</span></div>`).join("") || `<div class="empty small">보유 종목 없음 (현금만)</div>`}
+    <div class="tiny mut" style="margin-top:6px">비중 · 평균 매입가 대비 수익률</div></div>`;
+  if ((m.trades || []).length) h += `<div class="card"><div class="label">최근 체결 (설정·환매)</div>${m.trades.map(t => `<div class="srow small"><span><span class="${t.side === "매수" ? "up" : "dn"}">${esc(t.side)}</span> <b>${esc(t.name || t.code)}</b> <span class="tiny mut">${esc(t.date)}</span></span><span>${t.qty != null ? fmtN(t.qty, t.us ? 4 : 0) + "주 · " : ""}${t.price != null ? fmtN(t.price, t.us ? 2 : 0) + (t.us ? "$" : "원") : ""}</span></div>`).join("")}</div>`;
+  if ((m.divs || []).length) h += `<div class="card"><div class="label">배당</div>${m.divs.map(v => `<div class="srow small"><span><b>${esc(v.name)}</b> <span class="tiny mut">배당락 ${esc(v.date)}</span></span><span>${fmtN(v.amount)}원</span></div>`).join("")}</div>`;
+  $("p-out").innerHTML = h;
+  bindM();
+  $("p-out").querySelectorAll("[data-sc]").forEach(el => el.onclick = () => openStock(el.dataset.sc, {us: el.dataset.us === "1"}));
+}
+
 function fundChart(h, bn) {
   if (!h || h.length < 2) return `<div class="tiny mut" style="margin-top:8px">기준가 그래프는 둘째 거래일부터 그려져요</div>`;
   const W = 320, H = 110, P = 4, vs = h.flatMap(r => [r.nav, r.bench]), lo = Math.min(...vs), hi = Math.max(...vs), rg = hi - lo || 1;
@@ -1214,15 +1243,18 @@ function fundChart(h, bn) {
 function fundRender(d) {
   const R = d.rules || {}, pc = v => v == null ? "-" : `<span class="${v > 0 ? "up" : v < 0 ? "dn" : ""}">${v > 0 ? "+" : ""}${v.toFixed(2)}%</span>`;
   const won = v => fmtN(v) + "원";
-  let html = `<div class="card"><div class="label">🏦 대가 TOP 10 모의 펀드</div>
-    <div class="small" style="margin-top:6px;line-height:1.6">${fMkt === "us"
+  let html = `<div class="card"><div class="label">🏦 ${fMkt === "me" ? "내 펀드 — 실제 계좌를 펀드처럼" : "대가 TOP 10 모의 펀드"}</div>
+    <div class="small" style="margin-top:6px;line-height:1.6">${fMkt === "me"
+      ? "토스 계좌에서 내가 <b>직접 지정가로 사고판 종목</b>을 공모펀드처럼 묶어, 매일 장 마감 후 <b>기준가</b>를 산출해요. 돈을 넣고 빼는 것과 상관없이 고르는 실력만 숫자로 남아요."
+      : fMkt === "us"
       ? "발굴 › 대가 › 🇺🇸 미국 탭의 💎 가치주 · 🚀 성장주 TOP 10을 국내 <b>해외주식형 공모펀드(환노출형)</b>처럼 원화로 운용한다고 가정하고, 미국 장 마감 후 종가 × 원/달러 환율로 <b>기준가</b>를 산출해요. 실제 주문은 내지 않아요."
       : "발굴 › 대가 탭의 💎 가치주 · 🚀 성장주 TOP 10을 실제 국내 주식형 공모펀드처럼 운용한다고 가정하고, 매일 장 마감 후 종가로 <b>기준가</b>를 산출해요. 실제 주문은 내지 않아요."}</div>
-    <div class="seg" id="f-mkt" style="margin-top:10px"><button data-m="kr" class="${fMkt === "kr" ? "act" : ""}">🇰🇷 한국</button><button data-m="us" class="${fMkt === "us" ? "act" : ""}">🇺🇸 미국</button></div>
+    <div class="seg" id="f-mkt" style="margin-top:10px"><button data-m="me" class="${fMkt === "me" ? "act" : ""}">👤 내 펀드</button><button data-m="us" class="${fMkt === "us" ? "act" : ""}">🇺🇸 미국 모의</button></div>
     ${d.updated ? `<div class="tiny mut" style="margin-top:6px">마지막 산출 ${esc(d.updated)}</div>` : ""}</div>`;
   const all = d.funds || [];
   d = {...d, funds: all.filter(f => (f.market || "kr") === fMkt)};
   const bindM = () => document.querySelectorAll("#f-mkt [data-m]").forEach(b => b.onclick = () => { fMkt = b.dataset.m; try { localStorage.setItem("fund-mkt", fMkt); } catch (e) {} fundRender({...d, funds: all}); });
+  if (fMkt === "me") return myFundRender({...d, funds: all}, html, bindM);
   if (!d.funds || !d.funds.length) { $("p-out").innerHTML = html + `<div class="card"><div class="empty">${fMkt === "us" ? "🇺🇸 미국 펀드는 아직 설정 전 — 서버 cron 이 한국 시간 아침 7:10(화~토)에 처음 산출해요<br>바로 하려면: python chartpage/fund_sim.py run-us" : esc(d.note || "아직 설정 전")}</div></div>`; bindM(); return; }
   d.funds.forEach(f => {
     const L = f.last, fees = L.fee_today || {}, feeSum = Object.values(fees).reduce((a, b) => a + b, 0);

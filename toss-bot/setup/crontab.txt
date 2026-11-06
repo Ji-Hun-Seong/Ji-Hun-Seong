@@ -11,7 +11,7 @@
 7,27,47 9-15 * * 1-5   $HOME/ji-hun-seong/toss-bot/setup/kick_intraday.sh >> $HOME/ji-hun-seong/toss-bot/state/kick.log 2>&1
 7,27,47 22-23 * * 1-5  $HOME/ji-hun-seong/toss-bot/setup/kick_intraday.sh >> $HOME/ji-hun-seong/toss-bot/state/kick.log 2>&1
 7,27,47 0-6 * * 2-6    $HOME/ji-hun-seong/toss-bot/setup/kick_intraday.sh >> $HOME/ji-hun-seong/toss-bot/state/kick.log 2>&1
-# 🏦 대가 TOP 10 모의 펀드 — 장 마감 후 그날 종가로 기준가 산출 (휴장이면 알아서 건너뜀, 매월 첫 거래일에 리밸런싱)
+# 👤 내 펀드(실제 계좌 펀드화) — 장 마감 후 계좌 잔고·체결로 기준가 산출 (fund_sim.py run → my_fund.run, 휴장이면 건너뜀)
 10 16 * * 1-5  cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python chartpage/fund_sim.py run >> state/fund.log 2>&1
 # 🇺🇸 미국 모의 펀드 — 미국 장 마감(한국 05~06시) 뒤, 직전 미국 거래일 기준가
 10 7 * * 2-6  cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python chartpage/fund_sim.py run-us >> state/fund.log 2>&1
