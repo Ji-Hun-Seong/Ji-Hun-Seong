@@ -101,6 +101,32 @@ _gzc = {}                                         # 정적 파일 압축본 (경
 _bg = {}                                          # 키 → 계산 시작 시각 (같은 계산이 겹쳐 돌지 않게)
 
 
+def swr(key, ttl, fn):
+    """⚡ 오래된 값이라도 있으면 바로 돌려주고, 기한이 지났으면 뒤에서 한 번만 새로 계산 (stale-while-revalidate).
+       처음(값이 아예 없을 때)만 기다림. → 발굴·계좌 화면이 15분마다 한 번씩 '한세월' 걸리던 문제"""
+    with _lock:
+        hit = _cache.get(key)
+        if hit and time.time() - hit[0] < ttl:
+            return hit[1]
+        running = _bg.get(key)
+        if hit and not (running and time.time() - running < 600):
+            _bg[key] = time.time()
+
+            def work():
+                try:
+                    val = fn()
+                except Exception as e:
+                    val = {**hit[1], "stale": True} if isinstance(hit[1], dict) else hit[1]
+                    print(f"swr {key} 실패: {type(e).__name__} {str(e)[:120]}", flush=True)
+                with _lock:
+                    _cache[key] = (time.time(), val)
+                    _bg.pop(key, None)
+            threading.Thread(target=work, daemon=True).start()
+    if hit:
+        return hit[1]
+    return cached(key, ttl, fn)
+
+
 def bg_cached(key, ttl, fn):
     """무거운 계산은 뒤에서 — 화면은 기다리지 않고 직전 결과를 바로 받음(없으면 {"loading": ...}).
        기한이 지나면 뒤에서 한 번만 새로 계산 (뉴스·공시 레이더: 처음 1~2분 걸려서 화면이 '불러오는 중'에 멈추던 문제)"""
@@ -200,7 +226,7 @@ def data():
     s = bot.peek()
     k, u = s["kr"], s["us"]
     syms = list(k["positions"]) + [bot.CFG["us_symbol"]]
-    px = cached("px:" + ",".join(sorted(syms)), 20, lambda: live_prices(syms))
+    px = swr("px:" + ",".join(sorted(syms)), 20, lambda: live_prices(syms))
     if "error" in px:
         px = {}
     pos = []
@@ -226,7 +252,7 @@ def data():
         "us": {"capital": bot.CFG["us_capital"], "cash": u["cash"], "qty": u["qty"], "avg": u.get("avg"), "price": upx,
                "symbol": bot.CFG["us_symbol"], "equity": us_eq, "curve": u.get("equity", [])[-250:],
                "history": u.get("history", [])[-30:][::-1],
-               "signal": cached("us_signal", 600, us_signal)},
+               "signal": swr("us_signal", 600, us_signal)},
         "detections": detections(),
         "account": cached("account", 60, account),
         "mix": _try(lambda: mix(s["mode"], pos, kr_eq, us_eq, u["qty"], upx), {"error": "비율 계산 실패"}),
@@ -388,8 +414,25 @@ def warm_up():
         ds.load_corps()
     except Exception as e:
         print("종목 목록 준비 실패:", e, flush=True)
-    for k in ("surge", "value", "ackman", "hero"):  # 발굴 목록도 미리 (종목 상세의 '어느 목록' 표시에 씀) · 대가은 1분쯤 걸려 마지막
+    from concurrent.futures import ThreadPoolExecutor
+    ks = ("surge", "hero", "fund", "value", "ackman", "hero_us", "etf")
+    with ThreadPoolExecutor(4) as ex:               # 발굴 목록을 동시에 미리 (하나가 느려도 나머지는 먼저 준비)
+        list(ex.map(lambda k: _safe_pick(k), ks))
+    while True:                                     # ⚡ 계속 데워 둠 — 기한 지난 목록은 뒤에서 새로 (화면은 기다리지 않음)
+        time.sleep(120)
+        for k in ks:
+            _safe_pick(k)
+        try:
+            data()
+        except Exception:
+            pass
+
+
+def _safe_pick(k):
+    try:
         picks(k)
+    except Exception as e:
+        print(f"미리 받기 실패 {k}: {e}", flush=True)
 
 
 # ── 감시 탭: scanner.py 가 쓰는 state/scanner/{kr|us}-날짜.json 을 읽어 보여 줌 ─────────────
@@ -1047,7 +1090,7 @@ PICKS = {"hero_us": (lambda: picks_hero_db("us"), 60), "hero_eu": (lambda: picks
 
 def picks(kind):
     fn, ttl = PICKS.get(kind, PICKS["hero"])
-    return cached("picks:" + kind, ttl, fn)
+    return swr("picks:" + kind, ttl, fn)
 
 
 # ── 종목 상세: 시세·이평선·볼린저·수급·재무·공시·밸류를 한 번에 ─────────────────────
