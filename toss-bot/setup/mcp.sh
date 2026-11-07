@@ -21,3 +21,5 @@ echo "✅ Claude 앱에 넣을 연결 주소 (남에게 보여 주지 마세요)
 echo "   https://$HOST/$SECRET/mcp"
 echo
 echo "   Claude 앱 → 설정 → 커넥터 → 커스텀 커넥터 추가 → 이름 '토스봇', 위 주소 붙여넣기"
+echo
+echo "   (서버에서 Claude Code CLI로 쓸 때)  claude mcp add --transport http tossbot http://127.0.0.1:8765/$SECRET/mcp"
