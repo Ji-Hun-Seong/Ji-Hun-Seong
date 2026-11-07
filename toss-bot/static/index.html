@@ -611,6 +611,7 @@ function detRow(x) {
 }
 
 async function load() {
+  if (document.hidden) return;                            // ⚡ 앱이 뒤로 가 있으면 30초 조회 쉼 (돌아오면 바로 다시)
   try {
     const r = await fetch("api/data", {cache: "no-store"});
     if (!r.ok) throw new Error("HTTP " + r.status);
@@ -792,7 +793,7 @@ async function openStock(q, opt = {}) {
     const a = await (await fetch("api/stock?q=" + encodeURIComponent(q) + (opt.us ? "&us=1" : ""))).json();
     if (a.error) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">${esc(a.error)}</div></div>`; return; }
     cq.value = a.name; cSaveRecent(a.name, a.us ? a.code : a.name, a.us);
-    SD.last = a; SD.tab = "info"; sdRender(a);        // 새 종목은 항상 정보 탭부터
+    SD.last = a; SD.tab = "info"; sdRender(a); sdExtra(a, q, opt);        // 새 종목은 항상 정보 탭부터
   } catch (e) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
 const TABN = {pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "미국", acct: "계좌", det: "공시"};
@@ -846,6 +847,17 @@ function segCard(a) {
       <div style="height:6px;background:var(--bg);border-radius:4px;margin-top:5px"><div style="height:100%;width:${(x.pct / mx * 100).toFixed(1)}%;background:#f97316;border-radius:4px"></div></div></div>`).join("")}
     <div class="tiny mut" style="margin-top:10px">출처: ${G.url ? `<a href="${esc(G.url)}" target="_blank" rel="noopener">${esc(G.src || "")}</a>` : esc(G.src || "")}${a.us ? " · 이름은 자동 번역" : ""}</div></div>`;
 }
+// ⚡ 사업요약(번역)·매출비중(DART/SEC)은 느려서 화면을 먼저 띄우고 나중에 채움
+async function sdExtra(a, q, opt) {
+  if (a.desc != null || a.extra_done) return;
+  let x; try { x = await (await fetch("api/stock-extra?q=" + encodeURIComponent(a.code || q) + ((opt && opt.us) || a.us ? "&us=1" : ""))).json(); } catch (e) { x = {}; }
+  a.desc = (x && x.desc) || {}; a.segments = (x && x.segments) || {}; a.extra_done = true;
+  if (SD.last !== a) return;                             // 그새 다른 종목으로 넘어갔으면 무시
+  const s1 = $("sd-seg"), s2 = $("sd-desc");
+  if (s1) s1.innerHTML = segCard(a);
+  if (s2) { s2.innerHTML = descCard(a);
+    const bz = s2.querySelector(".biz"); if (bz) bz.querySelectorAll(".txt,.more").forEach(e => e.onclick = () => { bz.classList.toggle("open"); const m = bz.querySelector(".more"); if (m) m.textContent = bz.classList.contains("open") ? "접기" : "더 보기"; }); }
+}
 function descCard(a) {
   const D = a.desc || {}, P = a.profile || {};
   const meta = [P.sector, P.industry].filter(Boolean).map(esc).join(" · ");
@@ -898,8 +910,8 @@ function sdRender(a) {
     <div class="pills" id="sd-mcp">${MCR.map(([k, l]) => `<button data-r="${k}" class="${SD.mcr === k ? "act" : ""}">${l}</button>`).join("")}</div></div>
   <div class="card"><h2>📌 투자 지표</h2><div class="kv">${kvs.join("")}</div>${err}</div>
   ${perfCard(a)}
-  ${segCard(a)}
-  ${descCard(a)}
+  <div id="sd-seg">${segCard(a)}</div>
+  <div id="sd-desc">${a.desc === null && !a.extra_done ? `<div class="card biz"><h3>사업요약</h3><div class="tiny mut">불러오는 중…</div></div>` : descCard(a)}</div>
   ${fomoCard(a)}
   ${ctxCard()}
   <div class="card"><h2>👀 한눈에 보기</h2><div class="tally" style="margin:-4px 0 10px">${tally}</div>${sigs}
@@ -1513,7 +1525,7 @@ document.querySelectorAll("#s-seg button").forEach(b => {
     document.querySelectorAll("#s-seg button").forEach(x => x.classList.toggle("act", x === b)); sLoad(); };
 });
 async function sLoad() {
-  if (!$("t-scan").classList.contains("act")) return;
+  if (document.hidden || !$("t-scan").classList.contains("act")) return;
   let a; try { a = await (await fetch("api/scan?m=" + sMkt, {cache: "no-store"})).json(); } catch (e) { return; }
   const us = sMkt === "us", tv = v => us ? "$" + (v >= 1000 ? (v / 1000).toFixed(1) + "B" : Math.round(v) + "M") : Math.round(v).toLocaleString() + "억";
   if (a.error || a.empty) {

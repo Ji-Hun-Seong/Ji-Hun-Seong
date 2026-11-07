@@ -451,8 +451,7 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
         f_fa = ex.submit(safe, "finance", lambda: kr_finance(code, "annual"), {})
         f_fq = ex.submit(safe, "finance_q", lambda: kr_finance(code, "quarter"), {})
         f_dt = ex.submit(safe, "filings", lambda: kr_filings(corp_code), [])
-        f_ds = ex.submit(lambda: _quiet(kr_desc, code))
-        f_sg = ex.submit(lambda: _quiet(_segs_kr, corp_code))
+        # 사업요약·매출비중은 느려서(번역·DART 원문) 화면이 뜬 뒤 extras() 로 따로 받음
         df = f_px.result()
         prof, fl, fa, fq, filings = f_pr.result(), f_fl.result(), f_fa.result(), f_fq.result(), f_dt.result()
     d = indicators(df)
@@ -462,7 +461,7 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
     return clean({
         "us": False, "code": code, "name": prof.get("name") or name or code, "asof": f"{d.index[-1]:%Y-%m-%d}",
         "src": df.attrs.get("src", ""), "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df),
-        "flows": fl[::-1], "flow_sum": fs, "finance": fin, "filings": filings[:30], "desc": f_ds.result(), "segments": f_sg.result(),
+        "flows": fl[::-1], "flow_sum": fs, "finance": fin, "filings": filings[:30], "desc": None, "segments": None,
         "signals": signals(tech, prof, fs, fin, filings),
         "links": {"naver": f"https://m.stock.naver.com/domestic/stock/{code}/total",
                   "dart": f"https://dart.fss.or.kr/dsab007/main.do?option=corp&textCrpNm={name or code}"},
@@ -833,16 +832,12 @@ def us_detail(sym: str, ohlcv=None) -> dict:
     ccy = df.attrs.get("currency") or prof.get("currency") or ccy0
     prof["currency"] = ccy
     fin["unit"] = f"백만 {ccy}"
-    desc = {}
-    try:
-        desc = us_desc(sym, prof.get("summary") or "", prof.get("name") or "")
-    except Exception as e:
-        errs["desc"] = str(e)[:120]
+    desc = None                                                # 사업요약·매출비중은 extras() 로 따로 (화면 먼저)
     prof["name_en"] = prof.get("name") or sym                  # 화면은 전부 한국어로 (원래 영어 이름은 작게)
     prof["name"] = _ko_name(sym, prof["name_en"])
     prof["sector_en"], prof["industry_en"] = prof.get("sector"), prof.get("industry")
     prof["sector"], prof["industry"] = _ko_label(prof.get("sector"), SECTOR_KO), _ko_label(prof.get("industry"), INDUSTRY_KO)
-    segs = _quiet(_segs_us, sym)
+    segs = None
     S = signals(tech, prof, None, fin, None, us=True)
     if prof.get("inst_pct") is not None:
         S.append(_sig("수급", "기관 보유", f"{prof['inst_pct'] * 100:.0f}%", "neu", "발행주식 대비"))
@@ -854,6 +849,20 @@ def us_detail(sym: str, ohlcv=None) -> dict:
                   "holders": holders, "finance": fin, "filings": [], "signals": S, "desc": desc, "segments": segs,
                   "links": {"yahoo": f"https://finance.yahoo.com/quote/{sym}"},
                   "errors": errs, "took": round(time.time() - t0, 2)})
+
+
+def extras(it: dict, prof: dict | None = None) -> dict:
+    """종목 상세의 느린 부분 — 사업요약(번역)·매출비중(DART 원문 / SEC XBRL). 둘을 동시에 받음 (화면은 먼저 뜨고 나중에 채움)"""
+    from concurrent.futures import ThreadPoolExecutor
+    prof = prof or {}
+    with ThreadPoolExecutor(2) as ex:
+        if it.get("us"):
+            f1 = ex.submit(lambda: _quiet(us_desc, it["code"], prof.get("summary") or "", prof.get("name_en") or prof.get("name") or ""))
+            f2 = ex.submit(lambda: _quiet(_segs_us, it["code"]))
+        else:
+            f1 = ex.submit(lambda: _quiet(kr_desc, it["code"]))
+            f2 = ex.submit(lambda: _quiet(_segs_kr, it.get("corp_code")))
+        return {"desc": f1.result(), "segments": f2.result()}
 
 
 def detail(it: dict, us_ohlcv_fn=None) -> dict:

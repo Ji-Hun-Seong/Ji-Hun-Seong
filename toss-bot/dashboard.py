@@ -97,6 +97,7 @@ def cached(key, ttl, fn):
     return val
 
 
+_gzc = {}                                         # 정적 파일 압축본 (경로+ETag → gzip 바이트)
 _bg = {}                                          # 키 → 계산 시작 시각 (같은 계산이 겹쳐 돌지 않게)
 
 
@@ -1070,7 +1071,7 @@ def stock_detail(q, us_hint=None):
         with _lock:
             _cache.pop(key, None)
         return out
-    try:                                          # 🏛️ 대가 10인 체크 — 한국은 DART 10년 재무로 (처음엔 받는 데 시간이 걸려 8초까지만 기다림)
+    try:                                          # 🏛️ 대가 10인 체크 — 한국은 DART 10년 재무로 (처음엔 받는 데 시간이 걸려 3초까지만 기다림)
         import heroes
         dd = None
         if not it.get("us") and it.get("corp_code"):
@@ -1079,7 +1080,7 @@ def stock_detail(q, us_hint=None):
             ex = ThreadPoolExecutor(1)
             fut = ex.submit(dart_fin.build, it["corp_code"])
             try:
-                dd = fut.result(timeout=8)
+                dd = fut.result(timeout=3)
             except TE:
                 dd = None                          # 백그라운드에서 계속 받음 → 다음에 열면 10년 기준
             ex.shutdown(wait=False)
@@ -1103,6 +1104,25 @@ def stock_detail(q, us_hint=None):
                     if kind == "value" and x.get("held"):
                         tags.append("📌 내 계좌 보유")
     return {**out, "tags": tags}
+
+
+def stock_extra(q, us_hint=None):
+    """종목 상세의 느린 부분(사업요약 번역·매출비중) — 화면이 먼저 뜬 뒤 따로 받아 채움. 6시간 캐시"""
+    import data_sources as ds
+    import stock_info as si
+    hits = ds.search(q.strip(), 1)
+    if not hits:
+        return {}
+    it = hits[0]
+    if us_hint and not it.get("us"):
+        it = {"name": q.upper(), "code": q.upper(), "us": True}
+    base = _cache.get("stock:" + it["code"])
+    prof = (base[1].get("profile") if base and isinstance(base[1], dict) else None) or {}
+    out = cached("extra:" + it["code"], 6 * 3600, lambda: si.extras(it, prof))
+    if not (out.get("desc") or out.get("segments")):      # 둘 다 비면 다음에 다시
+        with _lock:
+            _cache.pop("extra:" + it["code"], None)
+    return out
 
 
 def fin_long(q):
@@ -1154,17 +1174,25 @@ class H(BaseHTTPRequestHandler):
         self.end_headers()
         return False
 
-    def _send(self, code, body, ctype):
+    def _send(self, code, body, ctype, cache="no-store", etag=None, gzkey=None):
         b = body if isinstance(body, bytes) else body.encode()
         gz = len(b) > 2048 and "gzip" in (self.headers.get("Accept-Encoding") or "") and not ctype.startswith("image/")
         if gz:                                    # 전체 기간 차트 데이터(수백 KB) → 보통 1/4 크기로
-            import gzip
-            b = gzip.compress(b, 5)
+            hit = _gzc.get(gzkey) if gzkey else None
+            if hit:
+                b = hit
+            else:
+                import gzip
+                b = gzip.compress(b, 6 if gzkey else 5)
+                if gzkey:
+                    _gzc[gzkey] = b                    # 정적 파일은 압축본을 기억 (매번 압축 안 함)
         self.send_response(code)
         self.send_header("Content-Type", ctype)
         if gz:
             self.send_header("Content-Encoding", "gzip")
-        self.send_header("Cache-Control", "no-store")
+        if etag:
+            self.send_header("ETag", etag)
+        self.send_header("Cache-Control", cache)
         self.send_header("Content-Length", str(len(b)))
         self.end_headers()
         self.wfile.write(b)
@@ -1261,6 +1289,13 @@ class H(BaseHTTPRequestHandler):
                 return self._send(200, json.dumps(scan_data(m), ensure_ascii=False, default=str), "application/json; charset=utf-8")
             except Exception as e:
                 return self._send(200, json.dumps({"error": str(e)[:200]}, ensure_ascii=False), "application/json; charset=utf-8")
+        if path == "/api/stock-extra":
+            qs = parse_qs(urlparse(self.path).query)
+            try:
+                out = stock_extra((qs.get("q") or [""])[0], (qs.get("us") or [""])[0] == "1")
+            except Exception as e:
+                out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path in ("/api/picks", "/api/stock"):
             qs = parse_qs(urlparse(self.path).query)
             try:
@@ -1365,7 +1400,17 @@ class H(BaseHTTPRequestHandler):
             return self._send(404, "not found", "text/plain")
         ctype = {".html": "text/html; charset=utf-8", ".json": "application/manifest+json", ".png": "image/png",
                  ".js": "text/javascript"}.get(os.path.splitext(fp)[1], "application/octet-stream")
-        self._send(200, open(fp, "rb").read(), ctype)
+        # ⚡ 정적 파일: 바뀌지 않았으면 304(본문 없이) — 앱을 열 때마다 220KB를 다시 받지 않음
+        st_ = os.stat(fp)
+        etag = f'"{int(st_.st_mtime)}-{st_.st_size}"'
+        cache = "no-cache" if fp.endswith(".html") else "public, max-age=604800"   # html 은 매번 확인, js·아이콘은 7일
+        if self.headers.get("If-None-Match") == etag:
+            self.send_response(304)
+            self.send_header("ETag", etag)
+            self.send_header("Cache-Control", cache)
+            self.end_headers()
+            return
+        self._send(200, open(fp, "rb").read(), ctype, cache=cache, etag=etag, gzkey=fp + etag)
 
     def do_POST(self):
         if not self._auth():

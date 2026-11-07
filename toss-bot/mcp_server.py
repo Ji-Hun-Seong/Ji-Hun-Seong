@@ -140,6 +140,12 @@ def t_my_fund():
 
 def t_stock(query: str):
     d = dash("/api/stock?q=" + urllib.parse.quote(query), timeout=90)
+    if not d.get("error"):                            # 사업요약·매출비중은 따로 받음 (앱과 같은 방식)
+        try:
+            d.update({k: v for k, v in dash("/api/stock-extra?q=" + urllib.parse.quote(d.get("code") or query)
+                                             + ("&us=1" if d.get("us") else ""), timeout=90).items() if v})
+        except Exception:
+            pass
     return trim(d, 12)
 
 
