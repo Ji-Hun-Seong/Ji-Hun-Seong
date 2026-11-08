@@ -60,6 +60,8 @@
     brain: '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>',
     megaphone: '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
     square: '<rect x="3" y="3" width="18" height="18" rx="2"/>',
+    home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v10.5a1.5 1.5 0 0 0 1.5 1.5H10v-6h4v6h3.5a1.5 1.5 0 0 0 1.5-1.5V9"/>',
+    wallet: '<path d="M19 7V5.5A1.5 1.5 0 0 0 17.5 4H5a2 2 0 0 0 0 4h14a1 1 0 0 1 1 1v3"/><path d="M3 6v12a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3"/><path d="M21 12v4h-4a2 2 0 0 1 0-4z"/>',
   };
   const TONE = {alert: "var(--warn)", ban: "var(--up)", check: "var(--ok)", x: "var(--up)", flame: "#f97316", sparkle: "var(--warn)", trophy: "var(--warn)"};
 
@@ -75,7 +77,7 @@
     "🔒": "lock", "🛡️": "shield", "🛡": "shield", "🔎": "search", "🔍": "search", "🌍": "globe", "🔥": "flame",
     "🚨": "flame", "🧩": "pie", "🧭": "compass", "🔄": "refresh", "🔁": "refresh", "⏳": "hourglass", "💸": "coins",
     "💰": "coins", "🪙": "coins", "🔔": "bell", "🏆": "trophy", "🦅": "trophy", "✨": "sparkle", "👍": "thumbup",
-    "👎": "thumbdown", "📏": "ruler", "🗄️": "db", "🗄": "db", "📡": "radio", "👆": "pointer", "📢": "megaphone", "☐": "square",
+    "👎": "thumbdown", "📏": "ruler", "🗄️": "db", "🗄": "db", "📡": "radio", "👆": "pointer", "📢": "megaphone", "☐": "square", "⌂": "home", "◎": "wallet",
   };
   const DOT = {"🟢": "var(--ok)", "🟡": "var(--warn)", "🔴": "var(--up)", "⚪": "var(--sub)", "🟠": "#f97316", "🔵": "var(--blue)", "🔸": "#f97316"};
   const FLAG = {"🇰🇷": "KR", "🇺🇸": "US", "🇪🇺": "EU", "🇨🇳": "CN", "🇯🇵": "JP"};
