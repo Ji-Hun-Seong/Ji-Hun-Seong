@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f6f5f1">
-<title>펀드 제도 룰북</title>
+<title>펀드 제도 브리핑</title>
 <style>
 :root{--bg:#f6f5f1;--card:#fff;--ink:#1b2430;--sub:#5f6b78;--faint:#8d97a3;--line:#e3e0d8;--acc:#174ea6;--acc-soft:#e7eefb;--live:#16794c;--live-soft:#e3f4eb;--sched:#9a5b00;--sched-soft:#fdf0d8;--draft:#7a3fb0;--draft-soft:#f1e8fa;--gov:#b3362b;--gov-soft:#fbe8e6}
 @media(prefers-color-scheme:dark){:root{--bg:#12161c;--card:#1b2129;--ink:#eef1f5;--sub:#a5afbb;--faint:#79848f;--line:#2d3540;--acc:#8ab4ff;--acc-soft:#1f2c44;--live:#58d08f;--live-soft:#17352a;--sched:#f0b75c;--sched-soft:#3a2c14;--draft:#c79cf0;--draft-soft:#30233f;--gov:#f08a80;--gov-soft:#3d2220}}
@@ -32,6 +32,7 @@ label{display:block;font-size:13.5px;color:var(--sub);margin:10px 0 4px}.in{widt
 .res{margin-top:12px;padding:12px;border-radius:10px;background:var(--acc-soft);font-weight:650}.res small{display:block;font-weight:400;color:var(--sub);margin-top:4px}
 .row{display:flex;justify-content:space-between;gap:12px}.top{color:var(--acc);font-size:14px;font-weight:700}
 .note{font-size:13px;color:var(--faint)}
+.rank{display:inline-block;width:22px;font-weight:800;color:var(--acc)}.act{color:var(--acc)!important;font-weight:650;margin-top:6px!important}
 details summary{cursor:pointer}details[open] summary{margin-bottom:8px}
 </style>
 </head>
@@ -40,43 +41,42 @@ details summary{cursor:pointer}details[open] summary{margin-bottom:8px}
 <nav id="nav"></nav>
 <script src="data.js"></script>
 <script src="data2.js"></script>
-<script src="data3.js"></script>
+<script src="data4.js"></script>
 <script>
 const $=s=>document.querySelector(s),app=$("#app"),esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 const SN={live:"시행 중",sched:"일정 확정",draft:"초안·추진",gov:"정부안"},T=window.TOPICS,byId=Object.fromEntries(T.map(x=>[x.id,x]));
-let view="home",cat="all",q="";const TABS=[["home","브리핑"],["book","룰북"],["work","실무"],["tools","계산"],["src","출처"]];
+let view="home",cat="all",q="";const TABS=[["home","브리핑"],["book","이슈"],["work","기획"],["tools","계산"]];
 const chip=s=>`<span class="chip ${s}">${SN[s]}</span>`;
 function go(v,id){view=v;render(id);scrollTo(0,0)}
 function nav(){$("#nav").innerHTML=TABS.map(t=>`<button class="${view===t[0]?"on":""}" data-tab="${t[0]}">${t[1]}</button>`).join("")}
 function card(t){return `<button class="card topic" data-open="${t.id}">${chip(t.status)}<span class="eff">${esc(t.eff)}</span><b>${esc(t.title)}</b><p>${esc(t.one)}</p></button>`}
 function table(t){if(!t)return"";return `<div class="tw"><table><thead><tr>${t.h.map(x=>`<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${t.r.map(r=>`<tr>${r.map(x=>`<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`}
-function home(){const hot=["t1","ria","fees"].map(i=>byId[i]);
-return `<a class="back" href="../">← 자동매매로 돌아가기</a><h1>펀드 제도 룰북</h1><p class="lead">법령·감독규정·협회 규정을 시행 단계별로 읽고, 펀드회계와 판매 운영에 미치는 영향까지 정리했습니다.</p><p class="asof">기준일 ${window.ASOF} · 제도 ${T.length}개 · 출처 ${Object.keys(window.SRC).length}건</p>
-<h2>지금 봐야 할 제도</h2>${hot.map(card).join("")}
-<h2>헷갈리기 쉬운 숫자</h2><div class="card"><div class="tw"><table><thead><tr><th>비율</th><th>어디에 쓰나</th><th>근거</th></tr></thead><tbody>${window.NUMBERS.map(n=>`<tr><td><b>${esc(n.n)}</b></td><td>${esc(n.w)}<br><span class="note">${esc(n.r)}</span></td><td>${esc(n.b)}</td></tr>`).join("")}</tbody></table></div></div>
-<h2>제도 타임라인</h2><div class="card"><div class="tl">${window.TIMELINE.map(x=>`<div class="tli"><div class="d">${x.d} ${chip(x.s)}</div><button data-open="${x.id}"><b>${esc(x.t)}</b></button><span>${esc(x.x)}</span></div>`).join("")}</div></div>
-<h2>직무와 연결하기</h2>${window.JOBMAP.map(m=>`<div class="card"><b>${esc(m.j)}</b><p class="ex" style="margin:4px 0 8px">${esc(m.x)}</p>${m.ids.map(i=>`<button class="top" style="margin-right:12px" data-open="${i}">${esc(byId[i].title)} →</button>`).join("")}</div>`).join("")}
-<p class="note">개인 학습 자료이며 법률·세무 자문이 아닙니다. AI로 공개 자료를 수집·정리한 뒤 조문과 대조했습니다. [분석]·[제안] 표시는 공식 자료가 아닌 작성자 해석입니다.</p>`}
+function home(){const P=window.PRI;
+return `<a class="back" href="../">← 자동매매로 돌아가기</a><h1>펀드 제도 브리핑</h1><p class="lead">은행 펀드 판매사의 제도 기획 관점에서 최신 이슈를 시행 단계와 대응 과제로 정리했습니다.</p><p class="asof">기준일 ${window.ASOF} · 제도 ${T.length}개 · 출처 ${Object.keys(window.SRC).length}건</p>
+<h2>지금 우선순위</h2>${P.map((p,i)=>{const t=byId[p.id];return `<button class="card topic" data-open="${p.id}"><span class="rank">${i+1}</span>${chip(t.status)}<span class="eff">${esc(t.eff)}</span><b>${esc(t.title)}</b><p>${esc(p.why)}</p><p class="act">대응: ${esc(p.act)}</p></button>`}).join("")}
+<h2>대응 달력</h2><div class="card"><div class="tl">${window.CALENDAR.map(x=>`<div class="tli"><div class="d">${esc(x[0])}</div><button data-open="${x[2]}"><b>${esc(x[1])}</b></button></div>`).join("")}</div></div>
+<h2>직무와 연결</h2>${window.JOBMAP.map(m=>`<div class="card"><b>${esc(m.j)}</b><p class="ex" style="margin:4px 0 8px">${esc(m.x)}</p>${m.ids.map(i=>`<button class="top" style="margin-right:12px" data-open="${i}">${esc(byId[i].title)} →</button>`).join("")}</div>`).join("")}
+<h2>헷갈리기 쉬운 비율</h2><div class="card"><div class="tw"><table><thead><tr><th>비율</th><th>어디에 쓰나</th><th>근거</th></tr></thead><tbody>${window.NUMBERS.map(n=>`<tr><td><b>${esc(n.n)}</b></td><td>${esc(n.w)}<br><span class="note">${esc(n.r)}</span></td><td>${esc(n.b)}</td></tr>`).join("")}</tbody></table></div></div>
+<p class="note">개인 학습 자료이며 법률·세무 자문이 아닙니다. 특정 회사의 내부 자료를 사용하지 않았습니다. AI로 공개 자료를 수집·정리한 뒤 주요 내용을 출처와 대조했습니다. [분석]·[제안]은 작성자 의견입니다.</p>`}
 function book(){const s=q.trim().toLowerCase(),L=T.filter(t=>(cat==="all"||t.cat===cat)&&(!s||JSON.stringify(t).toLowerCase().includes(s)));
-return `<h1>룰북</h1><input class="search" id="qi" placeholder="예: 환매, 공정가액, T+1" value="${esc(q)}"><div class="cats">${window.CATS.map(c=>`<button class="${cat===c.k?"on":""}" data-cat="${c.k}">${c.n}</button>`).join("")}</div><div id="list">${L.map(card).join("")||'<p class="note">검색 결과가 없습니다.</p>'}</div>`}
-function detail(id){const t=byId[id];return `<button class="top" data-tab="book">← 룰북</button><p style="margin:12px 0 2px">${chip(t.status)}<span class="eff">${esc(t.eff)}</span></p><h1>${esc(t.title)}</h1><p class="lead">${esc(t.one)}</p><div class="card">${table(t.table)}<h3>제도 내용</h3><ul class="r">${t.rules.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><h3>실무 영향</h3><ul class="r an">${t.impact.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div class="card q"><h3 style="margin-top:0">확인 문제</h3><p>${esc(t.q.p)}</p>${t.q.o.map((o,i)=>`<button data-ans="${i}" data-id="${id}">${esc(o)}</button>`).join("")}<p class="ex" id="ex"></p></div><div class="card src"><h3 style="margin-top:0">근거</h3>${t.s.map(k=>{const r=window.SRC[k];return `<a href="${r.u}" target="_blank" rel="noopener">${esc(r.t)}<small>${esc(r.o)}</small></a>`}).join("")}</div>`}
-function work(){const W=window.WORK,dots=["","·","●","●●"];return `<h1>실무로 옮기기</h1><p class="lead">${esc(W.core)}</p>
-<h2>T+1 업무 시계</h2><div class="card">${table(W.flow)}<p class="note">유관기관 초안의 승인 마감과 거래시간을 결합한 학습 모델입니다.</p><button class="top" data-open="t1">근거 보기 →</button></div>
-<h2>회계 흐름</h2>${W.je.map(j=>`<div class="card"><b>${esc(j.t)}</b><div class="tw"><table><tbody>${j.r.map(r=>`<tr>${r.map(x=>`<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div><p class="ex" style="margin:0">${esc(j.n)}</p></div>`).join("")}<p class="note">${esc(W.jeNote)}</p>
-<h2>부서별 영향</h2><div class="card"><div class="tw"><table><thead><tr><th>제도</th>${W.depts.map(d=>`<th>${d}</th>`).join("")}</tr></thead><tbody>${W.matrix.map(m=>`<tr><td><button class="top" data-open="${m[7]}">${esc(m[0])}</button></td>${m.slice(1,7).map(v=>`<td>${dots[v]}</td>`).join("")}</tr>`).join("")}</tbody></table></div><p class="note">· 참고, ● 영향 있음, ●● 핵심 조치. 작성자 평가입니다.</p></div>
-<h2>요건 정의 샘플</h2>${W.reqs.map(r=>`<div class="card"><span class="chip draft">${r.id}</span><b style="display:block;margin:6px 0">${esc(r.t)}</b><p class="ex"><b>트리거</b> ${esc(r.tr)}</p><p class="ex"><b>규칙</b> ${esc(r.rule)}</p><p class="ex"><b>데이터</b> ${esc(r.data)}</p><p class="ex"><b>테스트</b> ${esc(r.test)}</p>${r.s.map(i=>`<button class="top" style="margin-right:12px" data-open="${i}">${esc(byId[i].title)} →</button>`).join("")}</div>`).join("")}
-<h2>면접 준비</h2>${W.qa.map((x,i)=>`<details class="card"><summary><b>${esc(x.q)}</b></summary><p>${esc(x.a)}</p>${x.me?`<p class="note">내 경험 추가: ${esc(x.me)}</p>`:""}${x.ids.map(id=>`<button class="top" style="margin-right:12px" data-open="${id}">${esc(byId[id].title)} →</button>`).join("")}</details>`).join("")}
-<h2>검증 기록</h2><div class="card"><h3 style="margin-top:0">버전 중 정정</h3>${W.fixes.map(f=>`<p class="ex"><s>${esc(f.b)}</s><br>→ ${esc(f.a)}</p>`).join("")}<h3>아직 확인 중</h3><ul class="r">${W.pending.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><h3>모니터링 경로</h3><div class="tw"><table><tbody>${W.monitor.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</tbody></table></div></div>`}
+return `<h1>제도 이슈</h1><input class="search" id="qi" placeholder="예: 비예금, 광고, T+1" value="${esc(q)}"><div class="cats">${window.CATS.map(c=>`<button class="${cat===c.k?"on":""}" data-cat="${c.k}">${c.n}</button>`).join("")}</div><div id="list">${L.map(card).join("")||'<p class="note">검색 결과가 없습니다.</p>'}</div>`}
+function detail(id){const t=byId[id];return `<button class="top" data-tab="book">← 이슈</button><p style="margin:12px 0 2px">${chip(t.status)}<span class="eff">${esc(t.eff)}</span></p><h1>${esc(t.title)}</h1><p class="lead">${esc(t.one)}</p><div class="card">${table(t.table)}<h3>제도 내용</h3><ul class="r">${t.rules.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><h3>판매사 대응</h3><ul class="r an">${t.impact.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div class="card q"><h3 style="margin-top:0">확인 문제</h3><p>${esc(t.q.p)}</p>${t.q.o.map((o,i)=>`<button data-ans="${i}" data-id="${id}">${esc(o)}</button>`).join("")}<p class="ex" id="ex"></p></div><div class="card src"><h3 style="margin-top:0">근거</h3>${t.s.map(k=>{const r=window.SRC[k];return `<a href="${r.u}" target="_blank" rel="noopener">${esc(r.t)}<small>${esc(r.o)}</small></a>`}).join("")}</div>`}
+function work(){const W=window.WORK,dots=["","·","●","●●"];const links=a=>a.map(i=>`<button class="top" style="margin-right:12px" data-open="${i}">${esc(byId[i].title)} →</button>`).join("");return `<h1>제도 기획</h1><p class="lead">제도를 확인하는 데서 끝내지 않고, 서비스 요건과 의사결정으로 옮기는 방법입니다.</p>
+<h2>단계별 대응 원칙</h2><div class="card">${table(W.frame)}</div>
+<h2>비즈니스 인사이트</h2>${W.insights.map(x=>`<div class="card"><b>${esc(x.t)}</b><p class="ex">${esc(x.x)}</p>${links(x.ids)}</div>`).join("")}
+<h2>유관부서 영향</h2><div class="card"><div class="tw"><table><thead><tr><th>제도</th>${W.depts.map(d=>`<th>${d}</th>`).join("")}</tr></thead><tbody>${W.matrix.map(m=>`<tr><td><button class="top" data-open="${m[7]}">${esc(m[0])}</button></td>${m.slice(1,7).map(v=>`<td>${dots[v]}</td>`).join("")}</tr>`).join("")}</tbody></table></div><p class="note">· 참고, ● 협업, ●● 주도. 작성자 평가입니다.</p></div>
+<h2>프로젝트 요건 샘플</h2>${W.reqs.map(r=>`<div class="card"><span class="chip draft">${r.id}</span><b style="display:block;margin:6px 0">${esc(r.t)}</b><p class="ex"><b>트리거</b> ${esc(r.tr)}</p><p class="ex"><b>규칙</b> ${esc(r.rule)}</p><p class="ex"><b>데이터</b> ${esc(r.data)}</p><p class="ex"><b>테스트</b> ${esc(r.test)}</p>${links(r.s)}</div>`).join("")}
+<h2>면접 준비</h2>${W.qa.map(x=>`<details class="card"><summary><b>${esc(x.q)}</b></summary><p>${esc(x.a)}</p>${x.me?`<p class="note">내 경험 추가: ${esc(x.me)}</p>`:""}${links(x.ids)}</details>`).join("")}
+<h2>검증 기록</h2><div class="card"><h3 style="margin-top:0">정정</h3>${W.fixes.map(f=>`<p class="ex"><s>${esc(f.b)}</s><br>→ ${esc(f.a)}</p>`).join("")}<h3>확인 중</h3><ul class="r">${W.pending.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><h3>모니터링 경로</h3><div class="tw"><table><tbody>${W.monitor.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</tbody></table></div></div>`}
 function tools(){return `<h1>계산·점검</h1><div class="card"><h3 style="margin-top:0">결제주기 전환 비교</h3><label>주식 매매일</label><input class="in" id="d" type="date" value="2028-03-06"><div class="res" id="dr"></div></div>
 <div class="card"><h3 style="margin-top:0">기준가격 오류 재공고 판정</h3><label>펀드 구분</label><select class="in" id="nt"><option value=".002">국내 지분증권 투자 증권펀드</option><option value=".003">해외 지분증권 투자 증권펀드</option><option value=".0005">MMF</option><option value=".001">그 밖의 펀드</option></select><label>공고 기준가</label><input class="in" id="n1" type="number" value="1000"><label>정정 기준가</label><input class="in" id="n2" type="number" value="1002.5"><div class="res" id="nr"></div></div>
 <div class="card"><h3 style="margin-top:0">RIA 공제 예시</h3><label>양도일</label><input class="in" id="r0" type="date" value="2026-11-20"><label>양도소득금액(원)</label><input class="in" id="r1" type="number" value="10000000"><label>RIA 양도가액(원, 최대 5,000만)</label><input class="in" id="r2" type="number" value="50000000"><label>RIA 밖 해외자산 순매수액(원)</label><input class="in" id="r3" type="number" value="0"><label>순매수 시기</label><select class="in" id="r4"><option value="1">1~5월</option><option value=".8">6~7월</option><option value=".5" selected>8~12월</option></select><div class="res" id="rr"></div><p class="note">단순 예시입니다. 실제 신고는 조특법 제91조의26, 시행령 제93조의12와 세무 전문가 확인이 필요합니다.</p></div>`}
-function src(){const a=Object.values(window.SRC).sort((x,y)=>x.o.localeCompare(y.o,"ko"));return `<h1>출처</h1><p class="lead">공식 자료를 우선했고, 언론·증권사 자료는 해당 항목의 시행 상태와 함께 표시했습니다.</p><div class="card src">${a.map(r=>`<a href="${r.u}" target="_blank" rel="noopener">${esc(r.t)}<small>${esc(r.o)}</small></a>`).join("")}</div>`}
 function addB(d,n){const x=new Date(d+"T00:00:00");let c=0;while(c<n){x.setDate(x.getDate()+1);if(x.getDay()%6)c++}return x}
 const fmt=x=>`${x.getMonth()+1}/${x.getDate()}(${"일월화수목금토"[x.getDay()]})`;
 function calc(){const d=$("#d");if(!d)return;const v=d.value;if(v){const t=new Date(v+"T00:00:00");$("#dr").innerHTML=`현행 T+2 결제 ${fmt(addB(v,2))} · 펀드 승인 ${fmt(addB(v,1))} 16:00<br>전환 후 T+1 결제 ${fmt(addB(v,1))} · 펀드 승인 ${fmt(t)} 22:00<small>주말만 제외하고 공휴일은 반영하지 않습니다. 전환 일정은 초안입니다.</small>`}
 const a=+$("#n1").value,b=+$("#n2").value,l=+$("#nt").value,g=a?Math.abs(b-a)/a:0;$("#nr").innerHTML=`차이 ${(g*100).toFixed(3)}% / 기준 ${(l*100).toFixed(3)}% → ${g>l?"재공고·보고 대상":"범위 이내, 단 기준가 변경과 투자자 조치는 필요"}`;
 const rd=$("#r0").value,m=rd<="2026-05-31"?1:rd<="2026-07-31"?.8:rd<="2026-12-31"?.5:0,ga=+$("#r1").value,pay=Math.min(+$("#r2").value,5e7),net=+$("#r3").value,w=+$("#r4").value,adj=pay&&m?Math.min(1,Math.max(0,1-net*w/(pay*m))):0,ded=Math.max(0,Math.min(ga*m*adj,ga-25e5));$("#rr").innerHTML=`공제율 ${m*100}% × 조정비율 ${(adj*100).toFixed(0)}% = 최종 ${(m*adj*100).toFixed(0)}%<br>공제 예상 ${Math.round(ded).toLocaleString()}원`}
-function render(id){nav();app.innerHTML=id?detail(id):({home,book,work,tools,src})[view]();calc()}
+function render(id){nav();app.innerHTML=id?detail(id):({home,book,work,tools})[view]();calc()}
 document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.tab)return go(b.dataset.tab);if(b.dataset.open){view="book";render(b.dataset.open);scrollTo(0,0);return}if(b.dataset.cat){cat=b.dataset.cat;render();return}if(b.dataset.ans){const t=byId[b.dataset.id],i=+b.dataset.ans;b.parentNode.querySelectorAll("[data-ans]").forEach(x=>{x.classList.remove("ok","no");if(+x.dataset.ans===t.q.a)x.classList.add("ok")});if(i!==t.q.a)b.classList.add("no");$("#ex").textContent=t.q.e}});
 document.addEventListener("input",e=>{if(e.target.id==="qi"){q=e.target.value;const p=e.target.selectionStart;render();const n=$("#qi");n.focus();n.setSelectionRange(p,p);return}calc()});
 render();
