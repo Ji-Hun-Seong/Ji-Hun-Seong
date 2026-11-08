@@ -234,7 +234,7 @@ def pub_cached() -> dict:
 # · 내 펀드는 소개 페이지 약속대로 기준가·수익률만 (보유 종목·매매내역 빼고, profile.json show_my_fund=false 면 통째로 숨김)
 PUB_STATIC = {"", "index.html", "kchart.js", "icons.js", "manifest.json", "icon-180.png", "icon-512.png", "chart.umd.min.js",
               "masterroad/index.html", "masterroad/data1.js", "masterroad/data2.js", "masterroad/data3.js",
-              "fundrule/index.html", "fundrule/data.js", "fundrule/data2.js", "fundrule/data3.js"}
+              "fundrule/index.html", "fundrule/data.js", "fundrule/data2.js", "fundrule/data4.js"}
 PUB_API = {"/api/data", "/api/radar", "/api/scan", "/api/stock", "/api/stock-extra", "/api/picks", "/api/search",
            "/api/chart", "/api/fin", "/api/doc", "/api/orderbook", "/api/mini"}
 PUB_BLOCKED = {"/api/trade", "/api/fills", "/api/reserve", "/api/ob-stream", "/api/order", "/api/stop"}
