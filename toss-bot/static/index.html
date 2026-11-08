@@ -252,6 +252,8 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 .ironbar.debt{background:var(--r-bg);color:var(--r-fg)}.ironbar.fomo{background:var(--y-bg);color:var(--y-fg)}
 .fomo-alert{background:var(--y-bg);border:1px solid var(--y-bd)}.fomo-alert h2{color:var(--y-fg)}.fomo-alert .small{line-height:1.6;color:var(--y-fg2)}
 .more{background:none;border:0;color:var(--blue);font-size:13px;padding:8px 0 0;font-family:inherit}
+.vtbl input.vin{width:100%;min-width:52px;padding:6px 5px;border:1px solid var(--line,#ddd);border-radius:8px;background:transparent;color:inherit;font:inherit;font-size:14px;text-align:right}
+.vtbl td:first-child{min-width:78px;font-size:13px}.vtbl td,.vtbl th{padding-left:4px;padding-right:4px}
 </style>
 </head>
 <body>
@@ -926,6 +928,7 @@ function sdRender(a) {
   <div class="sdp" data-noswipe data-p="hero">${heroCard(a) || `<div class="card"><div class="empty">대가 채점 정보 없음</div></div>`}</div>
   <div class="sdp" data-noswipe data-p="flow">${a.us ? usHolders(a) : flowCard(a)}</div>
   <div class="sdp" data-noswipe data-p="fin">${finCard(a)}</div>
+  <div class="sdp" data-noswipe data-p="val"><div id="sd-val"></div></div>
   ${a.us ? "" : `<div class="sdp" data-noswipe data-p="news">${filingCard(a) + researchCard(a)}</div>`}
   <div class="sdp" data-noswipe data-p="bot"><div id="sd-bb"><div class="card"><h2>🤖 자동매매 전략 판정</h2><div class="tiny mut" style="margin-bottom:10px">자사주 공시 · 볼린저(책 기법) · 외국인 수급 세 조건 확인</div>
     <button class="stopbtn on" id="sd-bb-btn">판정 불러오기</button></div></div></div>
@@ -971,7 +974,7 @@ function sdSwipe(a) {
   });
 }
 // 종목 상세 세부 탭 — 📈 차트 / 📒 호가 / 👀 요약 / 🏛️ 대가 / 수급 / 📊 재무 / 📄 공시·리포트(한국) / 🤖 전략
-const SDTABS = a => [["info", "정보"], ["ob", "호가"], ["chart", "차트"], ["fin", "재무"], ["flow", a.us ? "보유" : "수급"], ["hero", "대가"]]
+const SDTABS = a => [["info", "정보"], ["ob", "호가"], ["chart", "차트"], ["fin", "재무"], ["val", "밸류"], ["flow", a.us ? "보유" : "수급"], ["hero", "대가"]]
   .concat(a.us ? [] : [["news", "공시"]]).concat([["bot", "전략"]]);
 // 정보 탭 미니 차트 — 지표 없이 캔들만, 화면 안 최고/최저 표시 (토스 정보 화면처럼)
 const MCR = [["1M", "1달"], ["3M", "3달"], ["1Y", "1년"], ["5Y", "5년"]];
@@ -1011,6 +1014,7 @@ function sdTab(a, scroll) {
   if (SD.tab === "info") { miniChart(a); perfDraw(a); }
   if (SD.tab === "flow") flowChart(a);
   if (SD.tab === "fin") { finChart(a); finLong(a); }
+  if (SD.tab === "val") valRender(a);
   const t = $("sd-tabs"); if (scroll && t && t.getBoundingClientRect().top < 0) t.scrollIntoView({block: "start"});
 }
 
@@ -1070,6 +1074,88 @@ function finCard(a) {
   return `<div class="card"><h2>📊 재무제표 <span class="tiny mut">(${a.finance && a.finance.unit || ""} · E = 증권사 추정)</span></h2>
     <div class="minis" id="sd-fin">${[["annual", "연간"], ["quarter", "분기"], ...(a.us ? [] : [["long", "📜 장기(2013~)"], ["full", "📑 전체 재무제표"]])].map(([k, l]) => `<button data-f="${k}" class="${SD.fin === k ? "act" : ""}">${l}</button>`).join("")}</div>
     <canvas id="sd-fc" style="margin-bottom:10px"></canvas>${finTable(a)}</div>`;
+}
+// ── 🔭 시나리오 밸류에이션 (다모다란식 내러티브 밸류에이션) ──
+// 시장 규모 × 침투율 × 점유율(또는 현재 매출 × 성장률) → N년 뒤 매출 → 영업이익률 → 순이익 × 적정 PER → 미래 시총 → 할인 → 주당 적정가
+// 참고: 2024.05 카바나(CVNA) 리포트의 '침투율·점유율별 목표가' 방식. 입력값은 종목별로 이 폰에 저장.
+const VAL_TAX = 0.22;
+function valBase(a) {
+  const P = a.profile || {}, f = (a.finance || {}).annual || {}, ps = f.periods || [], rw = f.rows || {}, act = ps.map((p, i) => [p, i]).filter(([p]) => !p.est).map(([, i]) => i);
+  const rev = (rw["매출액"] || []), mg = (rw["영업이익률"] || []);
+  const last = act.filter(i => rev[i] != null).pop(), first = act.filter(i => rev[i] != null)[0];
+  const rev0 = last != null ? rev[last] : null;
+  let m0 = last != null ? (mg[last] != null ? mg[last] : (rw["영업이익"] || [])[last] != null && rev0 ? rw["영업이익"][last] / rev0 * 100 : null) : null;
+  const yrs = last != null && first != null ? last - first : 0;
+  const hist = yrs > 0 && rev[first] > 0 && rev0 > 0 ? (Math.pow(rev0 / rev[first], 1 / yrs) - 1) * 100 : null;
+  const mcap = a.us ? (P.mcap_usd != null ? P.mcap_usd / 1e6 : null) : P.mcap_eok;
+  return {rev0, m0, hist, mcap, price: (a.tech || {}).close, unit: a.us ? "백만 " + (a.ccy || "USD") : "억원"};
+}
+function valState(a) {
+  const k = "val:" + a.code; let st = null; try { st = JSON.parse(localStorage.getItem(k) || "null"); } catch (e) {}
+  if (st) return st;
+  const B = valBase(a), g = Math.max(0, Math.min(40, B.hist == null ? 8 : B.hist)), m = Math.max(3, B.m0 == null || B.m0 <= 0 ? 10 : B.m0);
+  const r1 = v => Math.round(v * 10) / 10, pe = a.us ? [15, 22, 30] : [8, 12, 18];
+  return {mode: "g", n: 5, disc: 10, rev0: B.rev0 || 0, tam: B.rev0 ? Math.round(B.rev0 * 20) : 0, tamg: 2, pen: 100,
+    sc: [{g: r1(g * .5), sh: 0, m: r1(m * .8), pe: pe[0]}, {g: r1(g), sh: 0, m: r1(m), pe: pe[1]}, {g: r1(g * 1.5), sh: 0, m: r1(m * 1.2), pe: pe[2]}].map((x, i) => ({...x, sh: B.rev0 ? r1(B.rev0 / Math.max(1, B.rev0 * 20) * 100 * [1, 2, 4][i]) : 5}))};
+}
+function valCalc(st, B) {
+  return st.sc.map(x => {
+    const rev = st.mode === "g" ? st.rev0 * Math.pow(1 + x.g / 100, st.n) : st.tam * Math.pow(1 + st.tamg / 100, st.n) * (st.pen / 100) * (x.sh / 100);
+    const op = rev * x.m / 100, ni = op * (1 - VAL_TAX), fut = ni * x.pe, pv = fut / Math.pow(1 + st.disc / 100, st.n);
+    const mult = B.mcap ? pv / B.mcap : null, per = mult != null && B.price ? B.price * mult : null;
+    const cagr = B.mcap && fut > 0 ? (Math.pow(fut / B.mcap, 1 / st.n) - 1) * 100 : null;
+    return {rev, op, ni, fut, pv, mult, per, cagr};
+  });
+}
+function valRender(a) {
+  const el = $("sd-val"); if (!el) return;
+  const B = valBase(a), st = valState(a), R = valCalc(st, B), CC = a.ccy || "USD";
+  const big = v => v == null || !isFinite(v) ? "-" : a.us ? curBig(v * 1e6, CC) : eokFmt(v), px = v => v == null || !isFinite(v) ? "-" : a.us ? cur(v, CC) : fmtN(v) + "원";
+  const inp = (key, v, i, step = "any") => `<input class="vin" type="number" inputmode="decimal" step="${step}" data-k="${key}"${i != null ? ` data-i="${i}"` : ""} value="${v ?? ""}">`;
+  const names = ["🐢 보수", "🙂 기본", "🚀 낙관"];
+  // 지금 시총이 반영한 것 (기본 시나리오 이익률·PER·할인율 기준 역산)
+  const b = st.sc[1], need = B.mcap ? B.mcap * Math.pow(1 + st.disc / 100, st.n) / (b.pe * b.m / 100 * (1 - VAL_TAX)) : null;
+  const needG = need && st.rev0 > 0 ? (Math.pow(need / st.rev0, 1 / st.n) - 1) * 100 : null;
+  const needSh = need && st.tam > 0 ? need / (st.tam * Math.pow(1 + st.tamg / 100, st.n) * st.pen / 100) * 100 : null;
+  const row = (l, f, cls = "") => `<tr><td>${l}</td>${R.map((r, i) => `<td class="${cls}">${f(r, i)}</td>`).join("")}</tr>`;
+  el.innerHTML = `<div class="card"><h2>🔭 시나리오 밸류에이션</h2>
+    <div class="tiny mut" style="margin:-4px 0 10px;line-height:1.6">시장·점유율·이익률을 가정해 <b>${st.n}년 뒤 적정 시가총액</b>을 그려 보고, 지금 가격과 비교해요(다모다란식 내러티브 밸류에이션). 숫자는 직접 고칠 수 있고 이 폰에 저장돼요. 투자 권유가 아닌 생각 정리용이에요.</div>
+    <div class="minis" id="val-mode"><button data-m="g" class="${st.mode === "g" ? "act" : ""}">📈 성장률로</button><button data-m="s" class="${st.mode === "s" ? "act" : ""}">🌍 시장 점유율로</button></div>
+    <div class="kv" style="margin-top:10px">
+      <div><small>현재 시총</small><b>${big(B.mcap)}</b></div><div><small>최근 매출</small><b>${big(B.rev0)}</b></div><div><small>최근 영업이익률</small><b>${B.m0 != null ? fmtN(B.m0, 1) + "%" : "-"}</b></div>
+      <div><small>과거 매출 성장(연)</small><b>${B.hist != null ? fmtN(B.hist, 1) + "%" : "-"}</b></div></div>
+    <table class="tbl vtbl" style="margin-top:10px"><tbody>
+      <tr><td>기간(년)</td><td colspan="3">${inp("n", st.n, null, 1)}</td></tr>
+      <tr><td>할인율 %</td><td colspan="3">${inp("disc", st.disc)}</td></tr>
+      ${st.mode === "g" ? `<tr><td>시작 매출 <span class="tiny mut">${B.unit}</span></td><td colspan="3">${inp("rev0", st.rev0)}</td></tr>`
+        : `<tr><td>시장 규모(TAM) <span class="tiny mut">${B.unit}</span></td><td colspan="3">${inp("tam", st.tam)}</td></tr>
+           <tr><td>시장 성장률 %/년</td><td colspan="3">${inp("tamg", st.tamg)}</td></tr>
+           <tr><td>침투율 % <span class="tiny mut">(예: 온라인 비중)</span></td><td colspan="3">${inp("pen", st.pen)}</td></tr>`}
+    </tbody></table>
+    <div class="scroll"><table class="tbl vtbl" style="margin-top:10px"><thead><tr><th></th>${names.map(n => `<th>${n}</th>`).join("")}</tr></thead><tbody>
+      ${st.mode === "g" ? `<tr><td>매출 성장률 %/년</td>${st.sc.map((x, i) => `<td>${inp("g", x.g, i)}</td>`).join("")}</tr>` : `<tr><td>점유율 %</td>${st.sc.map((x, i) => `<td>${inp("sh", x.sh, i)}</td>`).join("")}</tr>`}
+      <tr><td>영업이익률 %</td>${st.sc.map((x, i) => `<td>${inp("m", x.m, i)}</td>`).join("")}</tr>
+      <tr><td>적정 PER(배)</td>${st.sc.map((x, i) => `<td>${inp("pe", x.pe, i)}</td>`).join("")}</tr>
+      ${row(`${st.n}년 뒤 매출`, r => big(r.rev))}
+      ${row("순이익(세후)", r => big(r.ni))}
+      ${row(`${st.n}년 뒤 시총`, r => big(r.fut))}
+      ${row("지금 가치(할인)", r => `<b>${big(r.pv)}</b>`)}
+      ${row("주당 적정가", r => `<b>${px(r.per)}</b>`)}
+      ${row("지금 대비", r => r.mult == null ? "-" : `<b class="${r.mult >= 1 ? "up" : "dn"}">x${fmtN(r.mult, 2)}</b>`)}
+      ${row("연 기대수익률", r => r.cagr == null ? "-" : `<span class="${cls(r.cagr)}">${fmtN(r.cagr, 1)}%</span>`)}
+    </tbody></table></div>
+    <div class="tiny mut" style="margin-top:6px">순이익 = 영업이익 × (1 − ${VAL_TAX * 100}%) 단순 가정 · 연 기대수익률 = ${st.n}년 뒤 시총이 맞을 때 지금 시총 대비 연환산</div></div>
+    <div class="card"><h2>🧭 지금 가격이 반영한 것</h2>
+      ${need ? `<div class="small" style="line-height:1.7">🙂 기본 시나리오 이익률 ${fmtN(b.m, 1)}% · PER ${fmtN(b.pe, 1)}배 · 할인율 ${fmtN(st.disc, 1)}%라면, 지금 시총은 <b>${st.n}년 뒤 매출 ${big(need)}</b>를 이미 가정하고 있어요.
+        ${needG != null ? `<br>→ 지금 매출에서 <b>매년 ${fmtN(needG, 1)}%</b> 성장해야 하는 수준` : ""}${st.mode === "s" && needSh != null ? `<br>→ 시장 규모 대비 <b>점유율 ${fmtN(needSh, 1)}%</b>에 해당` : ""}</div>
+        <div class="tiny mut" style="margin-top:8px">이 숫자가 '무난하다' 싶으면 기대가 크지 않은 가격, '너무 높다' 싶으면 기대가 이미 많이 반영된 가격이에요.</div>` : `<div class="empty">시총·재무 데이터가 부족해요</div>`}</div>
+    <div class="card"><details><summary class="small"><b>📚 이 방식의 사례 — 카바나(CVNA) 2024.05 리포트</b></summary>
+      <div class="tiny mut" style="line-height:1.7;margin-top:8px">중고차 시장 $840B × 온라인 침투율 × 카바나 점유율로 매출을 그리고 목표가를 냈어요: 침투율 10%·점유율 70% → TP $347(x2.45), 50%·25% → $621, 50%·50% → $1,242. 그리고 "지금 시총은 침투율 3.5%·점유율 70% 정도는 무난하다고 본 것"이라고 역산했어요.<br>
+      결과: 리포트 무렵(2024.05, 1분기 실적 급등 직후) 주가는 약 $115~120였고, 2026.01.22 사상 최고 종가 $478.45까지 올라 보수 시나리오 $347은 넘었지만 $621·$1,242에는 못 미쳤어요. 2026.05 5:1 액면분할 이후 주가는 $70대(분할 전 기준 약 $350~390)예요.</div></details></div>`;
+  const save = () => { try { localStorage.setItem("val:" + a.code, JSON.stringify(st)); } catch (e) {} };
+  el.querySelectorAll(".vin").forEach(n => n.onchange = () => { const v = parseFloat(n.value); if (!isFinite(v)) return; const k = n.dataset.k;
+    if (n.dataset.i != null) st.sc[+n.dataset.i][k] = v; else st[k] = k === "n" ? Math.max(1, Math.min(30, Math.round(v))) : v; save(); valRender(a); });
+  el.querySelectorAll("#val-mode button").forEach(b => b.onclick = () => { st.mode = b.dataset.m; save(); valRender(a); });
 }
 function filingCard(a) {
   const f = a.filings || [];
