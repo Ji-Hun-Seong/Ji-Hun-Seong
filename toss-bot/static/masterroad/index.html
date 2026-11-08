@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>마스터로드 — 주식·트레이딩 0부터 마스터까지</title>
+<style>
+:root{--bg:#0b1020;--bg2:#111834;--card:#151d3b;--card2:#1b2550;--line:#26315f;--txt:#eef2ff;--sub:#9aa6cf;--sub2:#6f7bab;--acc:#2ee6a8;--acc2:#1fc48d;--acc-soft:rgba(46,230,168,.14);--gold:#ffc83d;--gold-soft:rgba(255,200,61,.15);--up:#ff5a6a;--dn:#4d8dff;--bad:#ff6b7a;--bad-soft:rgba(255,107,122,.14);--ok:#2ee6a8;--chip:#1e2852}
+:root[data-theme=light]{--bg:#f3f5fb;--bg2:#e9edf8;--card:#fff;--card2:#f4f6fc;--line:#dde3f2;--txt:#141a33;--sub:#5b6488;--sub2:#8a93b5;--acc:#0fb886;--acc2:#0a9a70;--acc-soft:rgba(15,184,134,.12);--gold:#e2a400;--gold-soft:rgba(226,164,0,.14);--chip:#eef1f9;--bad:#e5484d;--bad-soft:rgba(229,72,77,.1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+#app{max-width:560px;margin:0 auto;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 10px) 18px calc(env(safe-area-inset-bottom) + 100px)}
+#app.full{padding-bottom:calc(env(safe-area-inset-bottom) + 110px)}
+.ic{width:1.2em;height:1.2em;vertical-align:-.22em;flex:0 0 auto}
+.mut{color:var(--sub)}.sm{font-size:13.5px}.xs{font-size:12px}
+.row{display:flex;align-items:center;gap:10px}.between{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;border-radius:16px;font-weight:800;font-size:17px;background:var(--acc);color:#04261b}
+.btn:active{transform:scale(.99)}.btn.ghost{background:var(--chip);color:var(--txt)}.btn[disabled]{opacity:.4;pointer-events:none}
+.bar{height:8px;border-radius:99px;background:var(--chip);overflow:hidden}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),#7cf5cf);border-radius:99px;transition:width .5s}
+.backhome{display:inline-block;padding:6px 2px 8px;color:var(--sub);font-weight:700;font-size:14px;text-decoration:none}
+/* 헤더 */
+.hero{background:radial-gradient(120% 140% at 100% 0%,#2a3a8a 0%,var(--card) 55%);border:1px solid var(--line);border-radius:24px;padding:18px;margin:6px 0 4px}
+:root[data-theme=light] .hero{background:radial-gradient(120% 140% at 100% 0%,#dfe7ff 0%,var(--card) 55%)}
+.brand{font-weight:900;font-size:15px;letter-spacing:.02em;color:var(--acc);display:flex;align-items:center;gap:6px}
+.rank{font-size:24px;font-weight:900;letter-spacing:-.03em;margin:6px 0 2px}
+.pills{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border-radius:99px;padding:6px 12px;font-weight:700;font-size:13.5px}
+.pill.gold{background:var(--gold-soft);color:var(--gold)}.pill.acc{background:var(--acc-soft);color:var(--acc)}
+/* 로드맵 */
+.lvh{display:flex;align-items:center;gap:12px;margin:26px 0 6px;padding:14px 16px;border-radius:18px;background:var(--bg2);border:1px solid var(--line)}
+.lvh .n{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-weight:900;background:var(--acc-soft);color:var(--acc);flex:0 0 auto;font-size:15px}
+.lvh b{display:block;font-size:17px}.lvh small{color:var(--sub);font-size:13px}
+.lvh.lock{opacity:.6}
+.path{position:relative;padding:6px 0}
+.node{display:flex;flex-direction:column;align-items:center;width:150px;margin:6px 0;position:relative;z-index:1}
+.node .c{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:var(--chip);border:3px solid var(--line);color:var(--sub2);box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.node .c svg{width:30px;height:30px}
+.node.done .c{background:var(--acc);border-color:var(--acc2);color:#04261b}
+.node.cur .c{background:var(--gold);border-color:#e0a800;color:#2b2100;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 6px 0 rgba(0,0,0,.25),0 0 0 0 rgba(255,200,61,.5)}50%{box-shadow:0 6px 0 rgba(0,0,0,.25),0 0 0 12px rgba(255,200,61,0)}}
+.node .t{font-size:13px;font-weight:700;text-align:center;margin-top:8px;line-height:1.35;color:var(--sub)}
+.node.done .t,.node.cur .t{color:var(--txt)}
+.node .start{position:absolute;top:-30px;background:var(--gold);color:#2b2100;font-weight:900;font-size:12px;padding:4px 10px;border-radius:9px}
+.node .start::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-bottom:0;border-top-color:var(--gold)}
+svg.pathline{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+/* 탭바 */
+nav.tab{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-top:1px solid var(--line);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+nav.tab::after{content:"";position:absolute;left:0;right:0;top:100%;height:120px;background:var(--bg2)}
+nav.tab .in{max-width:560px;margin:0 auto;display:flex}
+nav.tab button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 9px;font-size:12px;font-weight:700;color:var(--sub2)}
+nav.tab button svg{width:26px;height:26px}nav.tab button.on{color:var(--acc)}
+/* 레슨 */
+.lhead{display:flex;align-items:center;gap:12px;margin:4px 0 14px}
+.lhead .bar{flex:1;height:12px}
+.x{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;color:var(--sub)}
+.slide{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 20px;min-height:44dvh}
+.slide .k{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--acc);background:var(--acc-soft);padding:5px 10px;border-radius:8px;margin-bottom:12px}
+.slide .k.warn{color:var(--gold);background:var(--gold-soft)}.slide .k.bad{color:var(--bad);background:var(--bad-soft)}
+.slide h2{font-size:22px;line-height:1.4;margin:0 0 12px;letter-spacing:-.03em}
+.slide p{font-size:17.5px;line-height:1.85;margin:0}.slide b{color:var(--acc)}
+:root[data-theme=light] .slide b{color:#08805d}
+.slide ul{margin:0;padding-left:20px}.slide li{font-size:16.5px;line-height:1.75;margin:8px 0}
+.dots{display:flex;gap:6px;justify-content:center;margin:14px 0 0}.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--acc);width:18px;border-radius:9px}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:12px 18px calc(env(safe-area-inset-bottom) + 12px);z-index:20}
+.dock .in{max-width:524px;margin:0 auto;display:flex;gap:10px}
+.dock .back{width:64px;height:54px;border-radius:16px;background:var(--chip);display:grid;place-items:center;flex:0 0 auto}
+.q{font-size:19px;font-weight:800;line-height:1.5;margin:6px 2px 16px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:2px solid var(--line);border-radius:16px;padding:14px;margin:10px 0;background:var(--card);font-weight:600;font-size:16px;line-height:1.45}
+.opt .k{width:30px;height:30px;border-radius:9px;background:var(--chip);display:grid;place-items:center;font-weight:800;color:var(--sub);flex:0 0 auto;font-size:14px}
+.opt.sel{border-color:var(--acc)}.opt.sel .k{background:var(--acc);color:#04261b}
+.opt.ok{border-color:var(--ok);background:var(--acc-soft)}.opt.ok .k{background:var(--ok);color:#04261b}
+.opt.no{border-color:var(--bad);background:var(--bad-soft)}.opt.no .k{background:var(--bad);color:#fff}
+.fb{border-radius:16px;padding:14px 16px;margin-top:12px;font-size:15px;line-height:1.65}
+.fb b{display:block;font-size:16px;margin-bottom:2px}.fb.ok{background:var(--acc-soft)}.fb.ok b{color:var(--ok)}.fb.no{background:var(--bad-soft)}.fb.no b{color:var(--bad)}
+.chart{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:8px;margin:6px 0}
+.chart svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--sub);margin:6px 4px 0}.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.big{text-align:center;margin:20px 0}.big .s{font-size:54px;font-weight:900;color:var(--acc);letter-spacing:-.04em}
+.xpchip{display:inline-block;background:var(--gold-soft);color:var(--gold);font-weight:900;padding:8px 16px;border-radius:99px;font-size:18px}
+h1.pg{font-size:22px;margin:12px 2px 4px;font-weight:900;letter-spacing:-.03em}.pgsub{color:var(--sub);font-size:14px;margin:0 2px 14px}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat3 div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center}
+.stat3 b{display:block;font-size:22px;font-weight:900}.stat3 small{color:var(--sub);font-size:12px}
+.menu{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:10px 0;width:100%;text-align:left}
+.menu .t{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--acc-soft);color:var(--acc);flex:0 0 auto}
+.menu .t svg{width:24px;height:24px}.menu b{display:block;font-size:16.5px}.menu small{color:var(--sub);font-size:13.5px}
+.ladder div{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);font-size:15px}
+.ladder div:last-child{border-bottom:0}.ladder .on{color:var(--acc);font-weight:800}.ladder .lk{color:var(--sub2)}
+.set>*{display:flex;align-items:center;gap:12px;padding:15px 4px;width:100%;text-align:left;border-bottom:1px solid var(--line);font-size:15.5px}
+.set>*:last-child{border-bottom:0}.set .v{margin-left:auto;color:var(--sub)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.modal .box{background:var(--card);width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:22px 20px calc(env(safe-area-inset-bottom) + 18px);max-height:86dvh;overflow:auto}
+.modal h3{margin:0 0 8px;font-size:19px}
+textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:12px;padding:10px;font:12.5px/1.5 ui-monospace,Menlo,monospace;background:var(--bg2);color:var(--txt)}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 100px);transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:14px;font-size:14.5px;font-weight:600;z-index:60;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90%}
+.toast.on{opacity:1}
+.disc{color:var(--sub2);font-size:13px;line-height:1.7;text-align:center;margin:18px 6px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="tab" id="tab"></nav>
+<div class="toast" id="toast"></div>
+<script src="data1.js"></script>
+<script src="data2.js"></script>
+<script src="data3.js"></script>
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const DAY = 864e5;
+const dkey = (t = new Date()) => `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const IP = {
+  map: '<path d="M14.1 6 9.9 4 4.6 6.2A1 1 0 0 0 4 7.1v12.3a1 1 0 0 0 1.4.9L9.9 18l4.2 2 5.3-2.2a1 1 0 0 0 .6-.9V4.6a1 1 0 0 0-1.4-.9z"/><path d="M9.9 4v14M14.1 6v14"/>',
+  candle: '<path d="M7 3v4M7 15v6M17 3v2M17 13v8"/><rect x="5" y="7" width="4" height="8" rx="1"/><rect x="15" y="5" width="4" height="8" rx="1"/>',
+  refresh: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>', user: '<circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  star: '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>', play: '<path d="M6 3v18l15-9z" fill="currentColor"/>',
+  left: '<path d="m15 18-6-6 6-6"/>', flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>', trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.7V17c0 .6-.5 1-1 1.2C7.8 18.8 7 20.2 7 22M14 14.7V17c0 .6.5 1 1 1.2 1.2.5 2 2 2 3.8M18 2H6v7a6 6 0 0 0 12 0z"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>', book: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
+  alert: '<path d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3"/><path d="M12 9v4M12 17h.01"/>', bulb: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/>',
+  chart: '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>', moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>', export: '<path d="M12 3v12M8 7l4-4 4 4M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>',
+  import: '<path d="M12 15V3M8 11l4 4 4-4M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>', trash: '<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>', list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'
+};
+const ic = (n, cls = "ic", sw = 2) => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IP[n] || ""}</svg>`;
+
+/* ── 저장 ── */
+const KEY = "masterroad-v1";
+let S; try { S = Object.assign({xp: 0, done: {}, ans: {}, days: {}, drill: {n: 0, c: 0, best: 0}, theme: "dark"}, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { S = {xp: 0, done: {}, ans: {}, days: {}, drill: {n: 0, c: 0, best: 0}, theme: "dark"}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+const RANKS = [[0, "주린이"], [80, "새내기 개미"], [200, "차트 입문자"], [380, "지표 해석가"], [600, "패턴 헌터"], [900, "기업 분석가"], [1250, "전략가"], [1650, "리스크 매니저"], [2100, "트레이더"], [2600, "마스터"]];
+const rankOf = xp => { let i = 0; RANKS.forEach((r, k) => { if (xp >= r[0]) i = k; }); return i; };
+function addXP(n) { const before = rankOf(S.xp); S.xp += n; S.days[dkey()] = (S.days[dkey()] || 0) + 1; save(); const after = rankOf(S.xp); if (after > before) setTimeout(() => sheet(`<div style="text-align:center"><div style="color:var(--gold)">${ic("trophy", "ic", 2).replace('class="ic"', 'class="ic" style="width:64px;height:64px"')}</div><h3 style="font-size:24px;margin:10px 0 4px">등급 상승!</h3><p class="mut">이제 <b style="color:var(--acc)">${RANKS[after][1]}</b>이에요.</p><button class="btn" data-close style="margin-top:16px">계속하기</button></div>`), 300); }
+function streak() { let n = 0, t = new Date(); if (!S.days[dkey()]) t = new Date(Date.now() - DAY); while (S.days[dkey(t)]) { n++; t = new Date(t - DAY); } return n; }
+const INTERVAL = [0, 1, 3, 7, 14, 30];
+function record(qid, ok) { const a = S.ans[qid] || {n: 0, c: 0, box: 0, due: 0}; a.n++; if (ok) a.c++; a.ok = ok; a.box = ok ? Math.min(a.box + 1, 5) : 0; a.due = Date.now() + (ok ? INTERVAL[a.box] * DAY : 0); S.ans[qid] = a; save(); }
+const allQ = () => MR.lessons.flatMap(l => l.qs.map(q => ({...q, lid: l.id})));
+const qById = id => allQ().find(q => q.id === id);
+const dueList = () => allQ().filter(q => S.ans[q.id] && S.ans[q.id].due <= Date.now()).map(q => q.id);
+const lessonIdx = id => MR.lessons.findIndex(l => l.id === id);
+const nextLesson = () => MR.lessons.find(l => !S.done[l.id]);
+const unlocked = l => { const i = lessonIdx(l.id); return i === 0 || MR.lessons.slice(0, i).every(x => S.done[x.id]) || S.done[l.id]; };
+
+/* ── 차트 생성기 ── */
+const PAT = {
+  uptrend: {name: "상승추세", d: "고점과 저점이 계속 높아지는 흐름", k: [[0, .15], [.22, .38], [.3, .3], [.52, .58], [.6, .5], [.82, .78], [.88, .72], [1, .92]]},
+  downtrend: {name: "하락추세", d: "고점과 저점이 계속 낮아지는 흐름", k: [[0, .9], [.22, .64], [.3, .72], [.52, .44], [.6, .52], [.82, .24], [.88, .3], [1, .1]]},
+  range: {name: "박스권(횡보)", d: "지지와 저항 사이를 오가는 흐름", k: [[0, .5], [.1, .72], [.22, .3], [.36, .73], [.5, .29], [.64, .72], [.78, .3], [.9, .7], [1, .5]], sr: [.29, .73]},
+  doubleBottom: {name: "이중바닥(W)", d: "비슷한 저점 두 번 후 넥라인 돌파", k: [[0, .85], [.28, .18], [.46, .55], [.66, .19], [.85, .58], [1, .82]], neck: .56, vol: [.28, .66, .87]},
+  doubleTop: {name: "이중천정(M)", d: "비슷한 고점 두 번 후 넥라인 이탈", k: [[0, .15], [.28, .82], [.46, .45], [.66, .81], [.85, .42], [1, .18]], neck: .44, vol: [.28, .66, .87]},
+  headShoulders: {name: "헤드앤숄더", d: "왼어깨·머리·오른어깨 후 넥라인 이탈", k: [[0, .2], [.16, .6], [.27, .4], [.45, .9], [.62, .41], [.77, .6], [.88, .38], [1, .15]], neck: .4, vol: [.16, .45, .9]},
+  ascTriangle: {name: "상승 삼각형", d: "수평 고점 + 높아지는 저점, 위로 돌파", k: [[0, .2], [.14, .7], [.28, .35], [.42, .7], [.55, .48], [.68, .7], [.78, .58], [.88, .7], [1, .95]], top: .7, vol: [.95]},
+  goldenCross: {name: "골든크로스", d: "단기 이평선이 장기 이평선을 상향 돌파", k: [[0, .75], [.45, .2], [.6, .3], [1, .85]], ma: true},
+  deadCross: {name: "데드크로스", d: "단기 이평선이 장기 이평선을 하향 돌파", k: [[0, .25], [.45, .82], [.6, .7], [1, .15]], ma: true},
+  hammer: {name: "망치형(하락 끝 반전 후보)", d: "하락 끝 긴 아래꼬리 캔들", k: [[0, .9], [.35, .65], [.45, .7], [.8, .35], [1, .2]], last: "hammer"},
+  bullEngulf: {name: "상승 장악형", d: "하락 끝 양봉이 전날 음봉을 감쌈", k: [[0, .85], [.4, .6], [.5, .65], [1, .2]], last: "engulf"},
+  breakout: {name: "박스권 돌파", d: "저항선을 거래량과 함께 돌파", k: [[0, .3], [.12, .55], [.24, .33], [.38, .56], [.52, .34], [.66, .56], [.78, .4], [.9, .5], [.94, .72], [1, .9]], sr: [.33, .57], vol: [.94, .97, 1]},
+  squeeze: {name: "변동성 수축 후 돌파", d: "밴드가 좁아진 뒤 큰 움직임", k: [[0, .5], [.08, .85], [.16, .2], [.24, .78], [.32, .3], [.42, .62], [.52, .45], [.62, .55], [.72, .48], [.8, .53], [.86, .5], [.93, .75], [1, .95]], vol: [.93, 1]},
+  pullback: {name: "상승 중 눌림목", d: "상승추세 중 이평선 근처까지 쉬었다 반등", k: [[0, .1], [.5, .75], [.65, .52], [.75, .55], [1, .9]], ma: true}
+};
+const DRILL = ["uptrend", "downtrend", "range", "doubleBottom", "doubleTop", "headShoulders", "ascTriangle", "goldenCross", "deadCross", "hammer", "bullEngulf", "breakout"];
+function rng(seed) { let h = 2166136261 ^ seed; return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 1e6) / 1e6; }; }
+function gen(p, seed = Math.floor(Math.random() * 1e9)) {
+  const P = PAT[p], r = rng(seed), N = 64, W = 26, T = N + W, base = 100, amp = 40, out = [];
+  const at = x => { const k = P.k; for (let i = 1; i < k.length; i++) if (x <= k[i][0]) { const [x0, y0] = k[i - 1], [x1, y1] = k[i]; return y0 + (y1 - y0) * (x - x0) / (x1 - x0); } return k[k.length - 1][1]; };
+  let prev = base + at(0) * amp;
+  for (let i = 0; i < T; i++) {
+    const x = Math.max(0, (i - W) / (N - 1)), tgt = base + at(x) * amp + (i < W ? Math.sin(i / 3) * 1.2 : 0);
+    const c = tgt + (r() - .5) * 2.4, o = prev + (r() - .5) * 1.4;
+    const h = Math.max(o, c) + r() * 1.3, l = Math.min(o, c) - r() * 1.3;
+    let v = 60 + r() * 50; (P.vol || []).forEach(vx => { if (Math.abs(x - vx) < .025 && i >= W) v *= 2.6 + r(); });
+    out.push({o, h, l, c, v}); prev = c;
+  }
+  const L = out.length - 1;
+  if (P.last === "hammer") { const pc = out[L - 1].c, o = pc - .6, c = o + .5; out[L] = {o, c, h: c + .3, l: o - 6, v: out[L].v * 2}; }
+  if (P.last === "engulf") { const p2 = out[L - 1], o1 = p2.c + .4; out[L - 1] = {o: o1, c: o1 - 1.6, h: o1 + .4, l: o1 - 2, v: p2.v}; const o = o1 - 2.2, c = o1 + 1.4; out[L] = {o, c, h: c + .4, l: o - .4, v: out[L].v * 2.2}; }
+  const lines = [];
+  if (P.sr) P.sr.forEach((y, i) => lines.push({y: base + y * amp, c: i ? "var(--up)" : "var(--dn)", t: i ? "저항" : "지지"}));
+  if (P.neck != null) lines.push({y: base + P.neck * amp, c: "var(--gold)", t: "넥라인"});
+  if (P.top != null) lines.push({y: base + P.top * amp, c: "var(--up)", t: "저항"});
+  return {all: out, view: W, lines};
+}
+const sma = (a, n) => a.map((_, i) => i < n - 1 ? null : a.slice(i - n + 1, i + 1).reduce((s, x) => s + x, 0) / n);
+const ema = (a, n) => { const k = 2 / (n + 1), o = []; a.forEach((x, i) => o.push(i ? x * k + o[i - 1] * (1 - k) : x)); return o; };
+function rsi(a, n = 14) { const o = []; let g = 0, l = 0; for (let i = 1; i < a.length; i++) { const d = a[i] - a[i - 1]; if (i <= n) { g += Math.max(d, 0); l += Math.max(-d, 0); o[i] = i === n ? 100 - 100 / (1 + g / (l || 1e-9)) : null; if (i === n) { g /= n; l /= n; } } else { g = (g * (n - 1) + Math.max(d, 0)) / n; l = (l * (n - 1) + Math.max(-d, 0)) / n; o[i] = 100 - 100 / (1 + g / (l || 1e-9)); } } return o; }
+function drawChart(spec, data) {
+  const d = data || gen(spec.p), all = d.all, cl = all.map(x => x.c), V = d.view, C = all.slice(V), N = C.length, P = PAT[spec.p];
+  const showMA = spec.ma || P.ma, showBB = spec.bb, sub = spec.rsi ? "rsi" : spec.macd ? "macd" : null;
+  const Wd = 340, padR = 34, pH = 190, vH = 42, sH = sub ? 70 : 0, H = pH + vH + sH + 14, cw = (Wd - padR - 6) / N;
+  const m5 = sma(cl, 5).slice(V), m20 = sma(cl, 20).slice(V);
+  const sd = cl.map((_, i) => { if (i < 19) return null; const s = cl.slice(i - 19, i + 1), m = s.reduce((a, b) => a + b, 0) / 20; return Math.sqrt(s.reduce((a, b) => a + (b - m) ** 2, 0) / 20); }).slice(V);
+  let hi = Math.max(...C.map(x => x.h)), lo = Math.min(...C.map(x => x.l));
+  if (showBB) C.forEach((_, i) => { if (sd[i] != null) { hi = Math.max(hi, m20[i] + 2 * sd[i]); lo = Math.min(lo, m20[i] - 2 * sd[i]); } });
+  d.lines.forEach(l => { hi = Math.max(hi, l.y); lo = Math.min(lo, l.y); });
+  const pad = (hi - lo) * .06; hi += pad; lo -= pad;
+  const Y = v => 6 + (hi - v) / (hi - lo) * (pH - 12), X = i => 4 + i * cw + cw / 2;
+  const vmax = Math.max(...C.map(x => x.v));
+  let s = `<svg viewBox="0 0 ${Wd} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  for (let g = 0; g <= 3; g++) { const yy = 6 + g * (pH - 12) / 3, val = hi - g * (hi - lo) / 3; s += `<line x1="0" x2="${Wd - padR}" y1="${yy}" y2="${yy}" stroke="var(--line)" stroke-width=".6"/><text x="${Wd - padR + 4}" y="${yy + 4}" font-size="9" fill="var(--sub2)">${Math.round(val * 100)}</text>`; }
+  if (showBB) { const up = C.map((_, i) => sd[i] == null ? null : [X(i), Y(m20[i] + 2 * sd[i])]).filter(Boolean), dn = C.map((_, i) => sd[i] == null ? null : [X(i), Y(m20[i] - 2 * sd[i])]).filter(Boolean);
+    s += `<path d="M${up.map(p => p.join(",")).join("L")}L${dn.reverse().map(p => p.join(",")).join("L")}Z" fill="rgba(124,140,255,.12)" stroke="rgba(124,140,255,.6)" stroke-width="1"/>`; }
+  C.forEach((k, i) => { const up = k.c >= k.o, col = up ? "var(--up)" : "var(--dn)", x = X(i), bw = Math.max(1.6, cw * .62);
+    s += `<line x1="${x}" x2="${x}" y1="${Y(k.h)}" y2="${Y(k.l)}" stroke="${col}" stroke-width="1"/><rect x="${x - bw / 2}" y="${Y(Math.max(k.o, k.c))}" width="${bw}" height="${Math.max(1, Math.abs(Y(k.o) - Y(k.c)))}" fill="${col}"/>`;
+    s += `<rect x="${x - bw / 2}" y="${pH + vH - k.v / vmax * (vH - 4)}" width="${bw}" height="${k.v / vmax * (vH - 4)}" fill="${col}" opacity=".55"/>`; });
+  const pl = (arr, col, w = 1.6) => { const pts = arr.map((v, i) => v == null ? null : `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).filter(Boolean); return pts.length ? `<polyline points="${pts.join(" ")}" fill="none" stroke="${col}" stroke-width="${w}"/>` : ""; };
+  if (showMA) s += pl(m5, "#ffc83d") + pl(m20, "#c084fc");
+  if (showBB) s += pl(m20, "rgba(124,140,255,.9)", 1.2);
+  d.lines.forEach(l => { s += `<line x1="0" x2="${Wd - padR}" y1="${Y(l.y)}" y2="${Y(l.y)}" stroke="${l.c}" stroke-width="1.4" stroke-dasharray="5 4"/><text x="6" y="${Y(l.y) - 4}" font-size="10" font-weight="700" fill="${l.c}">${l.t}</text>`; });
+  if (spec.trend) { const lows = C.map((k, i) => [i, k.l]); const a = lows.slice(0, N / 2).reduce((m, p) => p[1] < m[1] ? p : m), b = lows.slice(N / 2).reduce((m, p) => p[1] < m[1] ? p : m); const sl = (b[1] - a[1]) / (b[0] - a[0]);
+    s += `<line x1="${X(0)}" y1="${Y(a[1] - sl * a[0])}" x2="${X(N - 1)}" y2="${Y(a[1] + sl * (N - 1 - a[0]))}" stroke="var(--acc)" stroke-width="1.6" stroke-dasharray="6 4"/><text x="${X(N - 1) - 52}" y="${Y(a[1] + sl * (N - 1 - a[0])) + 14}" font-size="10" font-weight="700" fill="var(--acc)">추세선</text>`; }
+  s += `<line x1="0" x2="${Wd - padR}" y1="${pH + vH}" y2="${pH + vH}" stroke="var(--line)"/><text x="${Wd - padR + 4}" y="${pH + 14}" font-size="9" fill="var(--sub2)">거래량</text>`;
+  if (sub === "rsi") { const R = rsi(cl).slice(V), y0 = pH + vH + 14, Yr = v => y0 + (100 - v) / 100 * (sH - 6);
+    s += `<rect x="0" y="${Yr(70)}" width="${Wd - padR}" height="${Yr(30) - Yr(70)}" fill="rgba(124,140,255,.08)"/><line x1="0" x2="${Wd - padR}" y1="${Yr(70)}" y2="${Yr(70)}" stroke="var(--up)" stroke-dasharray="3 3" stroke-width=".8"/><line x1="0" x2="${Wd - padR}" y1="${Yr(30)}" y2="${Yr(30)}" stroke="var(--dn)" stroke-dasharray="3 3" stroke-width=".8"/>`;
+    s += `<polyline points="${R.map((v, i) => v == null ? "" : `${X(i).toFixed(1)},${Yr(v).toFixed(1)}`).join(" ")}" fill="none" stroke="#ffc83d" stroke-width="1.5"/><text x="${Wd - padR + 4}" y="${Yr(70) + 3}" font-size="9" fill="var(--sub2)">70</text><text x="${Wd - padR + 4}" y="${Yr(30) + 3}" font-size="9" fill="var(--sub2)">30</text><text x="4" y="${y0 + 8}" font-size="9" fill="var(--sub2)">RSI(14)</text>`; }
+  if (sub === "macd") { const e12 = ema(cl, 12), e26 = ema(cl, 26), M = cl.map((_, i) => e12[i] - e26[i]), Sg = ema(M, 9), m = M.slice(V), sg = Sg.slice(V), mx = Math.max(...m.map(Math.abs), ...sg.map(Math.abs)) || 1, y0 = pH + vH + 14, mid = y0 + (sH - 6) / 2, Ym = v => mid - v / mx * (sH - 10) / 2;
+    m.forEach((v, i) => { const hst = v - sg[i]; s += `<rect x="${X(i) - cw * .3}" y="${Math.min(Ym(hst), mid)}" width="${cw * .6}" height="${Math.abs(Ym(hst) - mid)}" fill="${hst >= 0 ? "var(--up)" : "var(--dn)"}" opacity=".5"/>`; });
+    s += `<line x1="0" x2="${Wd - padR}" y1="${mid}" y2="${mid}" stroke="var(--line)"/><polyline points="${m.map((v, i) => `${X(i).toFixed(1)},${Ym(v).toFixed(1)}`).join(" ")}" fill="none" stroke="#ffc83d" stroke-width="1.5"/><polyline points="${sg.map((v, i) => `${X(i).toFixed(1)},${Ym(v).toFixed(1)}`).join(" ")}" fill="none" stroke="#c084fc" stroke-width="1.3"/><text x="4" y="${y0 + 8}" font-size="9" fill="var(--sub2)">MACD</text>`; }
+  s += "</svg>";
+  const lg = [showMA ? `<span><i style="background:#ffc83d"></i>5일선</span><span><i style="background:#c084fc"></i>20일선</span>` : "", showBB ? `<span><i style="background:rgba(124,140,255,.9)"></i>볼린저밴드</span>` : "", sub === "rsi" ? `<span><i style="background:#ffc83d"></i>RSI</span>` : "", sub === "macd" ? `<span><i style="background:#ffc83d"></i>MACD</span><span><i style="background:#c084fc"></i>시그널</span>` : "", `<span><i style="background:var(--up)"></i>양봉</span><span><i style="background:var(--dn)"></i>음봉</span>`].join("");
+  return `<div class="chart">${s}<div class="legend">${lg}</div></div>`;
+}
+
+/* ── 화면 이동 ── */
+const TABS = [["road", "로드맵", "map"], ["drill", "차트 훈련", "candle"], ["review", "복습", "refresh"], ["me", "프로필", "user"]];
+let V = {tab: "road", stack: []};
+const cur = () => V.stack[V.stack.length - 1];
+const go = t => { V.tab = t; V.stack = []; render(); scrollTo(0, 0); };
+const push = v => { V.stack.push(v); render(); scrollTo(0, 0); };
+const pop = () => { V.stack.pop(); render(); };
+function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 1800); }
+function sheet(html) { const m = document.createElement("div"); m.className = "modal"; m.innerHTML = `<div class="box">${html}</div>`; m.onclick = e => { if (e.target === m) m.remove(); }; document.body.appendChild(m); m.querySelectorAll("[data-close]").forEach(b => b.onclick = () => m.remove()); return m; }
+function render() {
+  document.documentElement.dataset.theme = S.theme;
+  const c = cur(), app = $("#app"), tab = $("#tab");
+  app.className = c ? "full" : ""; tab.style.display = c ? "none" : "";
+  tab.innerHTML = `<div class="in">${TABS.map(([k, l, i]) => `<button data-tab="${k}" class="${V.tab === k ? "on" : ""}">${ic(i)}${l}</button>`).join("")}</div>`;
+  app.innerHTML = c ? VIEW[c.v](c) : VIEW[V.tab]();
+  document.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => go(b.dataset.tab));
+  document.querySelectorAll("[data-act]").forEach(b => b.onclick = e => { e.stopPropagation(); ACT[b.dataset.act](b.dataset.arg, b); });
+  if (!c && V.tab === "road") requestAnimationFrame(drawPaths);
+}
+const dock = (inner, back) => `<div class="dock"><div class="in">${back ? `<button class="back" data-act="back">${ic("left")}</button>` : ""}${inner}</div></div>`;
+function optBtn(i, o, pick, ans, act) { let cls = ""; if (ans != null) { if (i === ans) cls = "ok"; else if (i === pick) cls = "no"; } else if (i === pick) cls = "sel";
+  return `<button class="opt ${cls}" data-act="${act}" data-arg="${i}" ${ans != null ? "disabled" : ""}><span class="k">${ans != null && i === ans ? ic("check") : ans != null && i === pick ? ic("x") : i + 1}</span><span>${esc(o)}</span></button>`; }
+
+const VIEW = {};
+/* 로드맵 */
+VIEW.road = () => {
+  const ri = rankOf(S.xp), next = RANKS[ri + 1], base = RANKS[ri][0], ratio = next ? (S.xp - base) / (next[0] - base) : 1;
+  const tot = MR.lessons.length, dn = MR.lessons.filter(l => S.done[l.id]).length, nx = nextLesson();
+  const zig = [0, 1, 2, 1];
+  return `<a class="backhome" href="../">← 자동매매로 돌아가기</a><div class="hero"><div class="between"><span class="brand">${ic("bolt")} MASTER ROAD</span><span class="mut sm">${dn}/${tot} 레슨</span></div>
+    <div class="rank">${RANKS[ri][1]}</div><div class="mut sm">${next ? `다음 등급 '${next[1]}'까지 ${next[0] - S.xp} XP` : "최고 등급 달성!"}</div>
+    <div class="bar" style="margin-top:10px"><i style="width:${Math.max(3, ratio * 100)}%"></i></div>
+    <div class="pills"><span class="pill gold">${ic("star")} ${S.xp} XP</span><span class="pill">${ic("flame")} ${streak()}일 연속</span><span class="pill acc">${ic("candle")} 훈련 ${S.drill.c}회 정답</span></div>
+    ${nx ? `<button class="btn" data-act="open" data-arg="${nx.id}" style="margin-top:14px">${ic("play")} 이어서: ${esc(nx.t)}</button>` : ""}</div>
+  ${MR.levels.map(lv => { const ls = MR.lessons.filter(l => l.lv === lv.id), d = ls.filter(l => S.done[l.id]).length, open = ls.some(unlocked);
+    return `<div class="lvh ${open ? "" : "lock"}"><span class="n">Lv.${lv.id}</span><span style="flex:1"><b>${esc(lv.name)} · ${esc(lv.title)}</b><small>${esc(lv.desc)} · ${d}/${ls.length}</small></span>${d === ls.length ? `<span style="color:var(--acc)">${ic("trophy")}</span>` : open ? "" : `<span class="mut">${ic("lock")}</span>`}</div>
+      <div class="path">${ls.map((l, i) => { const st = S.done[l.id] ? "done" : nx && l.id === nx.id ? "cur" : unlocked(l) ? "open" : "lock", pos = zig[i % 4];
+        return `<div style="display:flex;justify-content:${["flex-start", "center", "flex-end"][pos]};padding:0 8px"><button class="node ${st}" data-act="open" data-arg="${l.id}">${st === "cur" ? `<span class="start">시작</span>` : ""}<span class="c">${ic(st === "done" ? "check" : st === "lock" ? "lock" : l.chart ? "candle" : "book", "", 2.4)}</span><span class="t">${esc(l.t)}</span></button></div>`; }).join("")}</div>`; }).join("")}
+  <p class="disc">마스터로드는 투자 공부용 교육 앱이에요. 특정 종목 매수·매도 권유가 아니며, 모든 투자 판단과 손익의 책임은 본인에게 있어요.</p>`;
+};
+function drawPaths() { document.querySelectorAll(".path").forEach(p => { p.querySelector("svg.pathline")?.remove(); const cs = [...p.querySelectorAll(".node .c")], pr = p.getBoundingClientRect(); if (cs.length < 2) return;
+  const pts = cs.map(c => { const r = c.getBoundingClientRect(); return [r.left + r.width / 2 - pr.left, r.top + r.height / 2 - pr.top]; });
+  const svg = `<svg class="pathline" viewBox="0 0 ${pr.width} ${pr.height}"><path d="M${pts.map(p => p.join(",")).join(" L")}" fill="none" stroke="var(--line)" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 12"/></svg>`;
+  p.insertAdjacentHTML("afterbegin", svg); }); }
+window.addEventListener("resize", () => { if (!cur() && V.tab === "road") drawPaths(); });
+
+/* 레슨 */
+function slidesOf(l) {
+  const sl = l.cards.map((c, i) => ({k: i === 0 ? "개념" : "개념 " + (i + 1), h: i === 0 ? l.t : "", body: `<p>${c}</p>`}));
+  if (l.chart) sl.splice(1, 0, {k: "차트로 보기", kc: "warn", h: PAT[l.chart.p].name, body: drawChart(l.chart) + `<p class="mut sm" style="margin-top:8px">${esc(PAT[l.chart.p].d)} · 차트는 학습용으로 만든 가상 데이터예요.</p>`});
+  sl.push({k: "예시", kc: "warn", h: "이렇게 적용해요", body: `<p>${esc(l.ex)}</p>`});
+  sl.push({k: "함정", kc: "bad", h: "자주 하는 실수", body: `<ul>${l.traps.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`});
+  sl.push({k: "요약", h: "한 줄 정리", body: `<ul>${l.sum.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`});
+  return sl;
+}
+VIEW.lesson = c => {
+  const l = MR.lessons.find(x => x.id === c.lid), sl = slidesOf(l), total = sl.length + l.qs.length;
+  const head = step => `<div class="lhead"><button class="x" data-act="back">${ic("x")}</button><div class="bar"><i style="width:${step / total * 100}%"></i></div><span class="mut sm" style="font-weight:700">${Math.min(step + 1, total)}/${total}</span></div>`;
+  if (c.i < sl.length) { const s = sl[c.i];
+    return head(c.i) + `<div class="slide"><span class="k ${s.kc || ""}">${s.k}</span>${s.h ? `<h2>${esc(s.h)}</h2>` : ""}${s.body}</div><div class="dots">${sl.map((_, i) => `<i class="${i === c.i ? "on" : ""}"></i>`).join("")}</div>
+      ${dock(`<button class="btn" data-act="lnext">${c.i === sl.length - 1 ? "퀴즈 풀기" : "다음"}</button>`, c.i > 0)}`; }
+  const qi = c.i - sl.length;
+  if (qi >= l.qs.length) { const gain = c.gain || 0;
+    return `<div class="big"><div style="color:var(--gold)">${ic("trophy", "ic", 2).replace('class="ic"', 'class="ic" style="width:72px;height:72px"')}</div><h2 style="margin:10px 0 6px">레슨 완료!</h2><p class="mut">퀴즈 ${c.ok}/${l.qs.length} 정답</p><span class="xpchip">+${gain} XP</span></div>
+      <div class="card"><b>핵심 정리</b><ul style="padding-left:20px;margin:8px 0 0">${l.sum.map(t => `<li style="margin:6px 0">${esc(t)}</li>`).join("")}</ul></div>
+      ${dock(`<button class="btn ghost" data-act="back">로드맵</button>${nextLesson() ? `<button class="btn" data-act="openNext">다음 레슨</button>` : ""}`)}`; }
+  const q = l.qs[qi];
+  return head(c.i) + `<span class="pill acc" style="margin-bottom:4px">퀴즈 ${qi + 1}/${l.qs.length}</span><div class="q">${esc(q.q)}</div>${q.o.map((o, i) => optBtn(i, o, c.pick, c.shown ? q.a : null, "lpick")).join("")}
+    ${c.shown ? `<div class="fb ${c.pick === q.a ? "ok" : "no"}"><b>${c.pick === q.a ? "정답! +5 XP" : "정답은 " + (q.a + 1) + "번"}</b>${esc(q.e)}</div>` : ""}
+    ${dock(`<button class="btn" data-act="${c.shown ? "lqnext" : "lqcheck"}" ${c.pick == null ? "disabled" : ""}>${c.shown ? "계속" : "확인"}</button>`)}`;
+};
+
+/* 차트 훈련 */
+VIEW.drill = () => { if (!V.dr) newDrill(); const d = V.dr, p = PAT[d.p];
+  return `<h1 class="pg">차트 훈련</h1><div class="pgsub">이 차트는 어떤 모양일까요? 매번 새 차트가 나와요.</div>
+  <div class="row" style="margin-bottom:8px"><span class="pill acc">${ic("bolt")} 연속 ${d.streak}</span><span class="pill">최고 ${S.drill.best}</span><span class="pill">${S.drill.n ? Math.round(S.drill.c / S.drill.n * 100) : 0}% 정답률</span></div>
+  ${drawChart({p: d.p, ma: d.p.includes("Cross")}, d.data)}
+  ${d.opts.map((k, i) => optBtn(i, PAT[k].name, d.pick, d.shown ? d.opts.indexOf(d.p) : null, "dpick")).join("")}
+  ${d.shown ? `<div class="fb ${d.opts[d.pick] === d.p ? "ok" : "no"}"><b>${d.opts[d.pick] === d.p ? "정답! +2 XP" : "정답: " + p.name}</b>${esc(p.d)}.</div>` : ""}
+  <div style="height:8px"></div>${d.shown ? `<button class="btn" data-act="dnext">다음 차트</button>` : `<button class="btn" data-act="dcheck" ${d.pick == null ? "disabled" : ""}>확인</button>`}`; };
+const CLASH = [["uptrend", "goldenCross", "pullback"], ["downtrend", "deadCross", "hammer", "bullEngulf"], ["range", "breakout", "ascTriangle"], ["hammer", "bullEngulf"]];
+const clash = (a, b) => CLASH.some(g => g.includes(a) && g.includes(b));
+function newDrill() { const pool = DRILL, p = pool[Math.floor(Math.random() * pool.length)], others = shuffle(pool.filter(k => k !== p && !clash(k, p))).slice(0, 3);
+  V.dr = {p, data: gen(p), opts: shuffle([p, ...others]), pick: null, shown: false, streak: V.dr ? V.dr.streak : 0}; }
+
+/* 복습 */
+VIEW.review = () => { const due = dueList(), wrong = allQ().filter(q => S.ans[q.id] && !S.ans[q.id].ok), answered = Object.keys(S.ans).length;
+  const lvAcc = MR.levels.map(lv => { let n = 0, c = 0; MR.lessons.filter(l => l.lv === lv.id).forEach(l => l.qs.forEach(q => { const a = S.ans[q.id]; if (a) { n += a.n; c += a.c; } })); return {lv, a: n ? c / n : null}; });
+  return `<h1 class="pg">복습</h1><div class="pgsub">틀린 문제는 바로, 맞힌 문제는 1·3·7·14·30일 뒤에 다시 나와요.</div>
+  <button class="menu" data-act="rdue"><span class="t">${ic("refresh")}</span><span><b>오늘의 복습</b><small>${due.length}문제 대기 중</small></span></button>
+  <button class="menu" data-act="rwrong"><span class="t" style="background:var(--bad-soft);color:var(--bad)">${ic("alert")}</span><span><b>틀린 문제만</b><small>${wrong.length}문제</small></span></button>
+  <button class="menu" data-act="rmix"><span class="t" style="background:var(--gold-soft);color:var(--gold)">${ic("target")}</span><span><b>배운 범위 랜덤 10문제</b><small>완료한 레슨에서 출제</small></span></button>
+  <div class="card"><div class="between"><b>단계별 정답률</b><span class="mut sm">푼 문제 ${answered}/${allQ().length}</span></div>
+    ${lvAcc.map(x => `<div class="between" style="margin:10px 0 4px"><span class="sm">Lv.${x.lv.id} ${esc(x.lv.name)}</span><b class="sm" style="color:${x.a == null ? "var(--sub2)" : x.a < .6 ? "var(--bad)" : "var(--acc)"}">${x.a == null ? "—" : Math.round(x.a * 100) + "%"}</b></div><div class="bar" style="height:6px"><i style="width:${(x.a || 0) * 100}%;${x.a != null && x.a < .6 ? "background:var(--bad)" : ""}"></i></div>`).join("")}</div>`; };
+VIEW.play = c => { if (c.i >= c.ids.length) { const ok = c.res.filter(Boolean).length;
+    return `<div class="big"><div class="s">${ok}/${c.ids.length}</div><p class="mut">${esc(c.title)} 완료</p><span class="xpchip">+${ok * 3} XP</span></div>${dock(`<button class="btn" data-act="back">완료</button>`)}`; }
+  const q = qById(c.ids[c.i]), l = MR.lessons.find(x => x.id === q.lid);
+  return `<div class="lhead"><button class="x" data-act="back">${ic("x")}</button><div class="bar"><i style="width:${c.i / c.ids.length * 100}%"></i></div><span class="mut sm" style="font-weight:700">${c.i + 1}/${c.ids.length}</span></div>
+  <span class="pill" style="margin-bottom:4px">Lv.${l.lv} · ${esc(l.t)}</span><div class="q">${esc(q.q)}</div>${q.o.map((o, i) => optBtn(i, o, c.pick, c.shown ? q.a : null, "ppick")).join("")}
+  ${c.shown ? `<div class="fb ${c.pick === q.a ? "ok" : "no"}"><b>${c.pick === q.a ? "정답!" : "정답은 " + (q.a + 1) + "번"}</b>${esc(q.e)}</div>` : ""}
+  ${dock(`<button class="btn" data-act="${c.shown ? "pnext" : "pcheck"}" ${c.pick == null ? "disabled" : ""}>${c.shown ? "계속" : "확인"}</button>`)}`; };
+
+/* 프로필 */
+VIEW.me = () => { const ri = rankOf(S.xp), dn = MR.lessons.filter(l => S.done[l.id]).length; let n = 0, c = 0; Object.values(S.ans).forEach(a => { n += a.n; c += a.c; });
+  return `<h1 class="pg">프로필</h1><div class="pgsub">${RANKS[ri][1]} · ${S.xp} XP</div>
+  <div class="stat3"><div><b>${dn}</b><small>완료 레슨</small></div><div><b>${n ? Math.round(c / n * 100) : 0}%</b><small>퀴즈 정답률</small></div><div><b>${streak()}</b><small>연속 학습일</small></div></div>
+  <div class="card"><b>등급 사다리</b><div class="ladder" style="margin-top:6px">${RANKS.map((r, i) => `<div class="${i === ri ? "on" : i > ri ? "lk" : ""}">${ic(i <= ri ? "check" : "lock")}<span style="flex:1">${r[1]}</span><span class="sm">${r[0]} XP</span></div>`).join("")}</div></div>
+  <div class="card"><div class="set">
+    <button data-act="theme">${ic("moon")}<span>화면 테마</span><span class="v">${S.theme === "dark" ? "다크" : "라이트"}</span></button>
+    <button data-act="exp">${ic("export")}<span>학습 기록 내보내기</span></button>
+    <button data-act="imp">${ic("import")}<span>학습 기록 가져오기</span></button>
+    <button data-act="reset" style="color:var(--bad)">${ic("trash")}<span>기록 초기화</span></button></div></div>
+  <p class="disc">학습 기록은 이 기기 브라우저에만 저장돼요.<br>교육용 콘텐츠이며 투자 권유가 아니에요. 차트는 학습용 가상 데이터예요.</p>`; };
+
+/* ── 동작 ── */
+const ACT = {
+  back: () => pop(),
+  open: id => { const l = MR.lessons.find(x => x.id === id); const start = () => push({v: "lesson", lid: id, i: 0, pick: null, shown: false, ok: 0, gain: 0});
+    if (unlocked(l)) return start();
+    const m = sheet(`<h3>아직 앞 레슨이 남았어요</h3><p class="mut sm">순서대로 배우는 걸 추천하지만, 미리 볼 수도 있어요.</p><div style="display:flex;gap:10px;margin-top:14px"><button class="btn ghost" data-close>닫기</button><button class="btn" id="pk">미리 보기</button></div>`);
+    m.querySelector("#pk").onclick = () => { m.remove(); start(); }; },
+  openNext: () => { V.stack.pop(); ACT.open(nextLesson().id); },
+  lnext: () => { cur().i++; render(); scrollTo(0, 0); },
+  lpick: i => { const c = cur(); if (!c.shown) { c.pick = +i; render(); } },
+  lqcheck: () => { const c = cur(), l = MR.lessons.find(x => x.id === c.lid), q = l.qs[c.i - slidesOf(l).length], ok = c.pick === q.a; record(q.id, ok); if (ok) { c.ok++; c.gain += 5; } c.shown = true; render(); },
+  lqnext: () => { const c = cur(), l = MR.lessons.find(x => x.id === c.lid); c.i++; c.pick = null; c.shown = false;
+    if (c.i - slidesOf(l).length >= l.qs.length) { const first = !S.done[l.id]; if (first) { c.gain += 20; S.done[l.id] = Date.now(); } else c.gain = Math.round(c.gain / 5); addXP(c.gain); }
+    render(); scrollTo(0, 0); },
+  dpick: i => { if (!V.dr.shown) { V.dr.pick = +i; render(); } },
+  dcheck: () => { const d = V.dr, ok = d.opts[d.pick] === d.p; d.shown = true; S.drill.n++; if (ok) { S.drill.c++; d.streak++; S.drill.best = Math.max(S.drill.best, d.streak); addXP(2); } else { d.streak = 0; save(); } render(); },
+  dnext: () => { newDrill(); render(); scrollTo(0, 0); },
+  rdue: () => { const d = shuffle(dueList()).slice(0, 20); d.length ? push({v: "play", title: "오늘의 복습", ids: d, i: 0, res: []}) : toast("오늘 복습할 문제가 없어요"); },
+  rwrong: () => { const w = allQ().filter(q => S.ans[q.id] && !S.ans[q.id].ok).map(q => q.id); w.length ? push({v: "play", title: "틀린 문제", ids: shuffle(w), i: 0, res: []}) : toast("틀린 문제가 없어요"); },
+  rmix: () => { const ids = MR.lessons.filter(l => S.done[l.id]).flatMap(l => l.qs.map(q => q.id)); ids.length ? push({v: "play", title: "랜덤 10문제", ids: shuffle(ids).slice(0, 10), i: 0, res: []}) : toast("먼저 레슨을 하나 끝내 주세요"); },
+  ppick: i => { const c = cur(); if (!c.shown) { c.pick = +i; render(); } },
+  pcheck: () => { const c = cur(), q = qById(c.ids[c.i]), ok = c.pick === q.a; record(q.id, ok); c.res[c.i] = ok; c.shown = true; render(); },
+  pnext: () => { const c = cur(); c.i++; c.pick = null; c.shown = false; if (c.i >= c.ids.length) addXP(c.res.filter(Boolean).length * 3); render(); scrollTo(0, 0); },
+  theme: () => { S.theme = S.theme === "dark" ? "light" : "dark"; save(); render(); },
+  exp: () => { const t = JSON.stringify({app: "masterroad", v: 1, S}); const m = sheet(`<h3>학습 기록 내보내기</h3><p class="mut sm">복사해서 다른 기기의 '가져오기'에 붙여 넣으세요.</p><textarea readonly id="ex">${esc(t)}</textarea><div style="display:flex;gap:10px;margin-top:12px"><button class="btn ghost" data-close>닫기</button><button class="btn" id="cp">복사</button></div>`);
+    m.querySelector("#cp").onclick = async () => { try { await navigator.clipboard.writeText(t); toast("복사했어요"); } catch (e) { m.querySelector("#ex").select(); toast("길게 눌러 복사해 주세요"); } }; },
+  imp: () => { const m = sheet(`<h3>학습 기록 가져오기</h3><p class="mut sm">지금 기록을 덮어써요.</p><textarea id="im"></textarea><div style="display:flex;gap:10px;margin-top:12px"><button class="btn ghost" data-close>취소</button><button class="btn" id="go">가져오기</button></div>`);
+    m.querySelector("#go").onclick = () => { try { const j = JSON.parse(m.querySelector("#im").value); if (j.app !== "masterroad") throw 0; S = Object.assign(S, j.S); save(); m.remove(); render(); toast("가져왔어요"); } catch (e) { toast("형식이 맞지 않아요"); } }; },
+  reset: () => { const m = sheet(`<h3>모든 기록을 지울까요?</h3><p class="mut sm">XP·레슨·퀴즈 기록이 사라지고 되돌릴 수 없어요.</p><div style="display:flex;gap:10px;margin-top:14px"><button class="btn ghost" data-close>취소</button><button class="btn" id="rs" style="background:var(--bad);color:#fff">지우기</button></div>`);
+    m.querySelector("#rs").onclick = () => { S = {xp: 0, done: {}, ans: {}, days: {}, drill: {n: 0, c: 0, best: 0}, theme: S.theme}; save(); m.remove(); render(); toast("초기화했어요"); }; }
+};
+render();
+</script>
+</body>
+</html>
