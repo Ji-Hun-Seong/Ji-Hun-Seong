@@ -254,6 +254,29 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 .more{background:none;border:0;color:var(--blue);font-size:13px;padding:8px 0 0;font-family:inherit}
 .vtbl input.vin{width:100%;min-width:52px;padding:6px 5px;border:1px solid var(--line,#ddd);border-radius:8px;background:transparent;color:inherit;font:inherit;font-size:14px;text-align:right}
 .vtbl td:first-child{min-width:78px;font-size:13px}.vtbl td,.vtbl th{padding-left:4px;padding-right:4px}
+
+/* 🖥️ PC 화면 (토스증권 웹처럼) — 폭 1024px 이상: 아래 메뉴 → 왼쪽 메뉴, 넓은 화면은 카드 2단 */
+@media (min-width:1024px){
+  body{max-width:none;padding:24px 32px 40px 236px}
+  body>header,body>section,body>.banner,body>.foot{max-width:1180px;margin-left:auto;margin-right:auto}
+  nav{top:0;right:auto;width:204px;flex-direction:column;justify-content:flex-start;border-top:0;border-right:1px solid var(--line);padding:84px 12px 20px}
+  nav::after{display:none}
+  nav div{flex-direction:column;gap:2px}
+  nav button{flex:none;display:flex;align-items:center;gap:12px;text-align:left;font-size:15px;font-weight:600;padding:11px 14px;border-radius:12px;cursor:pointer}
+  nav button b{display:inline-flex;font-size:18px;margin:0;width:22px;justify-content:center}
+  nav button:hover{background:var(--line)}
+  nav button.act{background:var(--line)}
+  #t-home.act,#t-kr.act,#t-us.act,#t-acct.act,#t-det.act{columns:2;column-gap:14px}
+  #t-home .card,#t-kr .card,#t-us .card,#t-acct .card,#t-det .card{break-inside:avoid}
+  canvas{max-height:280px}
+  #tbar{left:236px;bottom:16px;max-width:520px}
+  #tv{left:auto;width:min(760px,100vw);box-shadow:-12px 0 40px rgba(0,0,0,.18)}
+  [data-stock],[data-sc]{cursor:pointer}
+  [data-stock]:hover,[data-sc]:hover{background:color-mix(in srgb,var(--line) 55%,transparent);border-radius:10px}
+}
+/* 🖱️ 마우스를 종목 위에 올리면 바로 뜨는 미니 차트 */
+#hov{position:fixed;z-index:120;width:260px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);pointer-events:none;display:none;font-variant-numeric:tabular-nums}
+#hov.on{display:block}#hov .hn{font-weight:700;font-size:14px}#hov .hp{font-size:18px;font-weight:700;margin-top:2px}#hov svg{display:block;width:100%;height:70px;margin-top:6px}
 </style>
 </head>
 <body>
@@ -2190,6 +2213,55 @@ document.addEventListener("click", e => {
   const k = docKind(a.href), id = docId(a.href);
   if (k && id) { e.preventDefault(); openDoc(k, id, a.textContent.replace(/^📄\s*/, "").replace(/^(공시 )?원문$/, "").trim(), null); }
 }, true);
+
+// ── 🖱️ PC: 종목 위에 마우스를 올리면 미니 차트 (토스증권 웹처럼) ─────────
+// 가벼운 api/mini(최근 3달 종가만)를 부르고 브라우저에도 기억 → 같은 종목은 즉시. 0.4초 넘게 머물면 종목 상세도 미리 받아 둠(누르면 빨리 열림)
+(function () {
+  if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const box = document.createElement("div"); box.id = "hov"; document.body.appendChild(box);
+  const memo = new Map(), pre = new Set();
+  let cur = null, tShow = 0, tPre = 0, mx = 0, my = 0;
+  const get = (q, us) => {
+    const k = q + "|" + us;
+    if (!memo.has(k)) memo.set(k, fetch(`api/mini?q=${encodeURIComponent(q)}&us=${us}`).then(r => r.json()).catch(() => ({error: "실패"})));
+    return memo.get(k);
+  };
+  const spark = c => {
+    const v = c.filter(x => x != null); if (v.length < 2) return "";
+    const lo = Math.min(...v), hi = Math.max(...v), W = 232, H = 70, n = c.length - 1;
+    const pts = c.map((x, i) => x == null ? null : `${(i / n * W).toFixed(1)},${(H - 4 - (x - lo) / ((hi - lo) || 1) * (H - 8)).toFixed(1)}`).filter(Boolean).join(" ");
+    const col = v[v.length - 1] >= v[0] ? "var(--up)" : "var(--dn)";
+    return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline fill="none" stroke="${col}" stroke-width="1.8" points="${pts}"/></svg>`;
+  };
+  const place = () => { const w = 260, h = box.offsetHeight || 150;
+    box.style.left = Math.min(mx + 18, innerWidth - w - 8) + "px"; box.style.top = Math.min(my + 14, innerHeight - h - 8) + "px"; };
+  const show = async el => {
+    const q = el.dataset.stock || el.dataset.sc, us = el.dataset.us === "1" ? 1 : 0;
+    box.innerHTML = `<div class="hn">${esc(el.textContent.trim().split(/\s+/)[0] || q)}</div><div class="tiny mut">불러오는 중…</div>`; box.classList.add("on"); place();
+    const d = await get(q, us);
+    if (cur !== el) return;
+    if (d.error) { box.innerHTML = `<div class="tiny mut">${esc(d.error)}</div>`; return; }
+    const f = x => d.us ? Number(x).toLocaleString(undefined, {maximumFractionDigits: 2}) : Math.round(x).toLocaleString();
+    box.innerHTML = `<div class="hn">${esc(d.name)} <span class="tiny mut">${esc(d.code)}</span></div>
+      <div class="hp">${f(d.close)}${d.us ? "" : "원"} <span class="${d.chg >= 0 ? "up" : "dn"}" style="font-size:14px">${d.chg >= 0 ? "+" : ""}${(d.chg * 100).toFixed(2)}%</span></div>
+      ${spark(d.closes || [])}<div class="tiny mut" style="margin-top:4px">최근 3개월 · ${esc(d.asof || "")} · 누르면 상세</div>`;
+    place();
+  };
+  document.addEventListener("mouseover", e => {
+    const el = e.target.closest("[data-stock],[data-sc]");
+    if (el === cur) return;
+    cur = el; clearTimeout(tShow); clearTimeout(tPre);
+    if (!el) { box.classList.remove("on"); return; }
+    tShow = setTimeout(() => show(el), 120);
+    tPre = setTimeout(() => {                                 // 오래 머물면 상세 미리 받기 (서버 캐시를 데움)
+      const q = el.dataset.stock || el.dataset.sc;
+      if (!pre.has(q) && pre.size < 40) { pre.add(q); fetch("api/stock?q=" + encodeURIComponent(q) + (el.dataset.us === "1" ? "&us=1" : "")).catch(() => {}); }
+    }, 400);
+  });
+  document.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; if (box.classList.contains("on")) place(); }, {passive: true});
+  document.addEventListener("click", () => { box.classList.remove("on"); cur = null; }, true);
+  addEventListener("scroll", () => box.classList.remove("on"), {passive: true});
+})();
 </script>
 </body>
 </html>

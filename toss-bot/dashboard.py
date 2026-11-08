@@ -407,6 +407,33 @@ def chart_lookup(q):
     return out
 
 
+def mini_chart(q, us_hint=False):
+    """🖱️ 마우스 올렸을 때 미니 차트용 — 최근 3개월 종가만 (가볍게, 서버 캐시)"""
+    import data_sources as ds
+    q = (q or "").strip()
+    if not q:
+        return {"error": "종목 없음"}
+    hits = ds.search(q, 1)
+    it = hits[0] if hits else None
+    if us_hint and (not it or not it.get("us")):
+        it = {"name": q.upper(), "code": q.upper(), "us": True}
+    if not it:
+        return {"error": f"'{q}' 종목을 찾지 못했습니다"}
+
+    def build():
+        df, _ = chart_ohlcv(it["code"], bool(it.get("us")))
+        c = df["close"].tail(64)
+        return {"name": it["name"], "code": it["code"], "us": bool(it.get("us")), "asof": f"{c.index[-1]:%m-%d}",
+                "close": float(c.iloc[-1]), "chg": float(c.iloc[-1] / c.iloc[-2] - 1),
+                "closes": [round(float(v), 4) for v in c]}
+    key = "mini:" + it["code"]
+    out = cached(key, min(chart_ttl(), 300), build)
+    if isinstance(out, dict) and out.get("error") and not out.get("stale"):
+        with _lock:
+            _cache.pop(key, None)
+    return out
+
+
 def warm_up():
     """대시보드 시작 시 종목 목록을 미리 받아 둠 → 첫 검색이 느리지 않게"""
     try:
@@ -1345,6 +1372,13 @@ class H(BaseHTTPRequestHandler):
                 return self._send(200, json.dumps(scan_data(m), ensure_ascii=False, default=str), "application/json; charset=utf-8")
             except Exception as e:
                 return self._send(200, json.dumps({"error": str(e)[:200]}, ensure_ascii=False), "application/json; charset=utf-8")
+        if path == "/api/mini":
+            qs = parse_qs(urlparse(self.path).query)
+            try:
+                out = mini_chart((qs.get("q") or [""])[0], (qs.get("us") or [""])[0] == "1")
+            except Exception as e:
+                out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/stock-extra":
             qs = parse_qs(urlparse(self.path).query)
             try:
