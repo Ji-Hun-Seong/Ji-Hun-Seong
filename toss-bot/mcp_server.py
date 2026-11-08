@@ -15,6 +15,7 @@ import json
 import os
 import sys
 import urllib.parse
+import urllib.error
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -225,6 +226,98 @@ def pub_cached() -> dict:
         return _pub["d"]
 
 
+
+# ── 📱 공개 앱 (/app/) — 대시보드 화면을 그대로, 보기 전용으로 ─────────────
+# https://<Funnel 주소>/app/ 에서 누구나 대시보드와 똑같은 화면(종목 검색·차트·수급·재무·밸류·공시·리포트·발굴·감시·자동·펀드)을 씀.
+# · 대시보드에 'X-Toss-Public: 1' 을 붙여 넘겨서 항상 👀 보기 전용 → 계좌 탭·긴급 정지·주문 화면이 숨겨짐
+# · 아래 목록에 있는 '읽기' 주소만 넘기고, 주문·체결내역·예약·실시간 호가 스트림·POST 는 아예 안 넘김(404/403)
+# · 내 펀드는 소개 페이지 약속대로 기준가·수익률만 (보유 종목·매매내역 빼고, profile.json show_my_fund=false 면 통째로 숨김)
+PUB_STATIC = {"", "index.html", "kchart.js", "icons.js", "manifest.json", "icon-180.png", "icon-512.png", "chart.umd.min.js"}
+PUB_API = {"/api/data", "/api/radar", "/api/scan", "/api/stock", "/api/stock-extra", "/api/picks", "/api/search",
+           "/api/chart", "/api/fin", "/api/doc", "/api/orderbook"}
+PUB_BLOCKED = {"/api/trade", "/api/fills", "/api/reserve", "/api/ob-stream", "/api/order", "/api/stop"}
+_pub_sem = threading.BoundedSemaphore(int(os.environ.get("PUB_MAX_CONC", "12")))   # 한꺼번에 몰려도 서버가 버티게
+_ob_cache = {}                                    # 호가: 같은 종목은 3초 동안 같은 답 (토스 API 아끼기)
+
+
+def _show_my_fund() -> bool:
+    try:
+        with open(os.path.join(PUB_DIR, "profile.json"), encoding="utf-8") as f:
+            return json.load(f).get("show_my_fund", True) is not False
+    except Exception:
+        return True
+
+
+def pub_proxy(rest: str, query: str):
+    """(상태코드, 본문, content-type, cache-control) — rest 는 /app/ 뒤 경로"""
+    rest = rest.lstrip("/")
+    api = "/" + rest if rest.startswith("api/") else None
+    if api is None and rest not in PUB_STATIC:
+        return 404, b"not found", "text/plain", None
+    if api is not None:
+        if api in PUB_BLOCKED:
+            return 403, json.dumps({"error": "공개 화면에서는 쓸 수 없는 기능이에요 (주문·체결·예약)"}, ensure_ascii=False).encode(), "application/json; charset=utf-8", None
+        if api not in PUB_API:
+            return 404, b"not found", "text/plain", None
+    query = urllib.parse.quote(query, safe="=&%+")    # 브라우저가 안 바꾼 한글 등도 안전하게
+    url = DASH + "/" + (rest if rest != "index.html" else "") + ("?" + query if query else "")
+    ck = None
+    if api == "/api/orderbook":
+        ck = query
+        hit = _ob_cache.get(ck)
+        if hit and time.time() - hit[0] < 3:
+            return 200, hit[1], "application/json; charset=utf-8", "no-store"
+    if not _pub_sem.acquire(timeout=20):
+        return 503, json.dumps({"error": "지금 사람이 많아요 — 잠시 뒤 다시 시도"}, ensure_ascii=False).encode(), "application/json; charset=utf-8", None
+    try:
+        req = urllib.request.Request(url, headers={"X-Toss-Public": "1"})
+        pw = os.environ.get("DASH_PASSWORD")
+        if pw:
+            req.add_header("Authorization", "Basic " + base64.b64encode(f"public:{pw}".encode()).decode())
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                code, body = r.status, r.read()
+                ctype, cache = r.headers.get("Content-Type") or "application/octet-stream", r.headers.get("Cache-Control")
+        except urllib.error.HTTPError as e:
+            code, body, ctype, cache = e.code, e.read(), e.headers.get("Content-Type") or "text/plain", None
+        except Exception as e:
+            code, ctype, cache = 502, "application/json; charset=utf-8", None
+            body = json.dumps({"error": f"대시보드 연결 실패 — {type(e).__name__}"}, ensure_ascii=False).encode()
+    finally:
+        _pub_sem.release()
+    if api == "/api/picks" and "k=fund" in query and code == 200:
+        try:
+            d = json.loads(body.decode("utf-8"))
+            m = d.get("mine")
+            if isinstance(m, dict):
+                if not _show_my_fund():
+                    d["mine"] = {"empty": True, "note": "공개 화면에서는 내 계좌 펀드를 보여 주지 않아요"}
+                elif not m.get("empty"):
+                    d["mine"] = {**{k: v for k, v in m.items() if k not in ("holdings", "trades", "divs")}, "public": True}
+            body = json.dumps(d, ensure_ascii=False, default=str).encode("utf-8")
+        except Exception:
+            pass
+    if api == "/api/data" and code == 200:          # 혹시 몰라 한 번 더: 계좌·비율은 공개 화면에 절대 안 보냄
+        try:
+            d = json.loads(body.decode("utf-8"))
+            d.update(account={"hidden": True}, mix={"hidden": True}, viewer=True, public=True)
+            body = json.dumps(d, ensure_ascii=False, default=str).encode("utf-8")
+        except Exception:
+            pass
+    if ck is not None and code == 200:
+        _ob_cache[ck] = (time.time(), body)
+        if len(_ob_cache) > 500:
+            _ob_cache.clear()
+    if rest == "manifest.json" and code == 200:   # 홈 화면에 추가하면 /app/ 으로 열리게
+        try:
+            mf = json.loads(body.decode("utf-8"))
+            mf.update(start_url="/app/", scope="/app/")
+            body = json.dumps(mf, ensure_ascii=False).encode("utf-8")
+        except Exception:
+            pass
+    return code, body, ctype, cache
+
+
 S = lambda **p: {"type": "object", "properties": p, "additionalProperties": False}
 TOOLS = {
     "market_surge": (t_market_surge, "한국 급등주: 다음 날 급등 후보 순위, 그날 실제 급등주와 재료, 장중 지금 막 오르기 시작한 종목. 날짜를 주면 그날 기준.",
@@ -298,8 +391,10 @@ class H(BaseHTTPRequestHandler):
     def _ok_path(self):
         return SECRET and self.path.split("?")[0].rstrip("/") == f"/{SECRET}/mcp"
 
-    def _send(self, code, body=b"", ctype="application/json"):
+    def _send(self, code, body=b"", ctype="application/json", cache=None):
         self.send_response(code)
+        if cache:
+            self.send_header("Cache-Control", cache)
         if body:
             self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
@@ -317,6 +412,13 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, f.read(), "text/html; charset=utf-8")
             except OSError:
                 return self._send(404)
+        if path == "/app":                            # 📱 공개 앱 — 끝에 / 가 있어야 상대 주소(api/…)가 /app/api/… 로 감
+            self.send_response(301); self.send_header("Location", "/app/"); self.send_header("Content-Length", "0"); self.end_headers()
+            return
+        if path.startswith("/app/") or path == "/api/doc":   # 화면 안에서 /api/doc 만 절대 주소로 부름
+            q = self.path.split("?", 1)[1] if "?" in self.path else ""
+            code, body, ctype, cache = pub_proxy(path[len("/app/"):] if path.startswith("/app/") else "api/doc", q)
+            return self._send(code, body, ctype, cache)
         if path == "/pub/data":
             try:
                 body = json.dumps(pub_cached(), ensure_ascii=False, default=str).encode("utf-8")

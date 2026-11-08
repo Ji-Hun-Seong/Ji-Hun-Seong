@@ -1201,6 +1201,12 @@ class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
+    def _role(self):
+        """🌐 공개 주소(Funnel → mcp_server.py 의 /app)로 들어온 요청은 서버 안(localhost)에서 와도 무조건 보기 전용"""
+        if self.headers.get("X-Toss-Public") == "1":
+            return "viewer", "🌐 공개 주소"
+        return role_info(self.client_address[0])
+
     def _auth(self):
         pw = os.environ.get("DASH_PASSWORD")
         if not pw:
@@ -1346,7 +1352,7 @@ class H(BaseHTTPRequestHandler):
                     k, dd = (qs.get("k") or ["surge"])[0], (qs.get("d") or [""])[0]
                     if k == "surge" and re.fullmatch(r"\d{4}-\d{2}-\d{2}", dd):
                         out = cached("picks:surge:" + dd, 900, lambda: picks_surge(dd))
-                    elif k == "fund" and role_of(self.client_address[0]) == "viewer":   # 보기 전용: 내 펀드 금액·주수 숨김
+                    elif k == "fund" and self._role()[0] == "viewer":   # 보기 전용: 내 펀드 금액·주수 숨김
                         out = cached("picks:fund:viewer", 120, lambda: __import__("fund_sim").summary(viewer=True))
                     else:
                         out = picks(k)
@@ -1402,7 +1408,7 @@ class H(BaseHTTPRequestHandler):
             J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False, default=str), "application/json; charset=utf-8")
             if code and not re.fullmatch(r"[0-9A-Z.\-]{1,12}", code):
                 return J(400, {"error": "종목 코드가 올바르지 않습니다"})
-            if role_of(self.client_address[0]) == "viewer":
+            if self._role()[0] == "viewer":
                 return J(403, {"error": "보기 전용"})
             import manual_trade as mt
             if not mt.enabled()[0]:
@@ -1423,7 +1429,7 @@ class H(BaseHTTPRequestHandler):
             ok, why = mt.enabled()
             if not ok:
                 return J(200, {"error": why, "disabled": True})
-            if path == "/api/trade" and role_of(self.client_address[0]) == "viewer":
+            if path == "/api/trade" and self._role()[0] == "viewer":
                 return J(403, {"error": "보기 전용"})
             try:
                 return J(200, mt.orderbook(code) if path == "/api/orderbook" else {**mt.info(code), "enabled": True})
@@ -1432,7 +1438,7 @@ class H(BaseHTTPRequestHandler):
         if path == "/api/data":
             try:
                 d = data()
-                role, why = role_info(self.client_address[0])
+                role, why = self._role()
                 d = {**(for_viewer(d) if role == "viewer" else {**d, "viewer": False}), "role_why": why}
                 return self._send(200, json.dumps(d, ensure_ascii=False, default=str), "application/json; charset=utf-8")
             except Exception as e:
@@ -1458,7 +1464,7 @@ class H(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self._auth():
             return
-        if role_of(self.client_address[0]) == "viewer":   # 보기 전용은 아무것도 바꿀 수 없음
+        if self._role()[0] == "viewer":   # 보기 전용은 아무것도 바꿀 수 없음
             return self._send(403, json.dumps({"error": "보기 전용"}, ensure_ascii=False), "application/json; charset=utf-8")
         if self.path in ("/api/order", "/api/order/cancel", "/api/order/modify", "/api/reserve/cancel"):   # 💸 실제 주문 — 주인만(위에서 보기 전용 차단)
             J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False, default=str), "application/json; charset=utf-8")

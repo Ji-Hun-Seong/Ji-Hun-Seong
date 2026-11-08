@@ -85,7 +85,8 @@ function render() {
   const us = (D.funds || []).filter(f => f.market === "us"), kr = (D.funds || []).filter(f => f.market !== "us");
   document.getElementById("app").innerHTML = `
   <div class="head"><span class="badge">조회 전용 · 투자 연구 노트</span><h1>${esc(p.name || "")}<br><span style="font-size:22px;font-weight:700">${esc(p.headline || "")}</span></h1>
-    ${(p.intro || []).map(t => `<p>${esc(t)}</p>`).join("")}<div class="links">${(p.links || []).map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")}</div></div>
+    ${(p.intro || []).map(t => `<p>${esc(t)}</p>`).join("")}<div class="links"><a href="/app/" style="background:var(--pri);color:#fff;padding:9px 16px;border-radius:99px">📱 앱 직접 써 보기 →</a>${(p.links || []).map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")}</div>
+    <p class="sub" style="margin-top:8px">종목 검색·차트·수급·재무·밸류·공시·리포트·발굴·감시를 똑같이 쓸 수 있어요 (주문 기능만 빠진 보기 전용)</p></div>
   ${P.iron ? `<section><h2>🧭 이렇게 투자합니다</h2><p class="sub">감이 아니라 규칙으로. 앱은 이 원칙을 매일 자동으로 적용해요.</p>
     <div class="iron"><b>어떤 상황에서도 지키는 철칙</b><ul>${P.iron.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
     <div style="margin:14px 0 6px;font-weight:700">${esc(P.mix || "")}</div><div class="mix"><i></i><i></i></div><div class="sub">장기 투자 90% · 단기 매매 10%</div>
