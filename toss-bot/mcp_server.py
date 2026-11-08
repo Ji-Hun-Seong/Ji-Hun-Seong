@@ -156,6 +156,75 @@ def t_news_radar(limit: int = 15):
     return trim(d, limit)
 
 
+# ── 🌐 공개 소개 페이지 (조회 전용) ─────────────────────────────
+# https://<Funnel 주소>/ 로 누구나 볼 수 있는 페이지. 계좌 금액·주수·매매내역·주문 기능은 아예 보내지 않음.
+# 글은 public/profile.json 에서 고침. 데이터는 10분 캐시.
+import threading
+import time
+PUB_DIR = os.path.join(HERE, "public")
+_pub = {"t": 0.0, "d": None}
+_pub_lock = threading.Lock()
+
+
+def _thin(hist, n=260):
+    """그래프용으로 점 개수 줄이기"""
+    if len(hist) <= n:
+        return hist
+    k = len(hist) / n
+    return [hist[int(i * k)] for i in range(n)] + [hist[-1]]
+
+
+def pub_data() -> dict:
+    out, errs = {}, {}
+    try:
+        with open(os.path.join(PUB_DIR, "profile.json"), encoding="utf-8") as f:
+            prof = json.load(f)
+    except Exception as e:
+        prof, errs["profile"] = {}, str(e)[:120]
+    out["profile"] = {k: v for k, v in prof.items() if not k.startswith("_")}
+    try:
+        sys.path.insert(0, os.path.join(HERE, "chartpage"))
+        import heroes
+        P = heroes.PRINCIPLES
+        out["principles"] = {"mix": P["mix"]["text"], "iron": P["iron"], "portfolio": P["portfolio"],
+                             "rules": [{"who": w, "title": t, "text": x} for w, t, x in P["rules"]]}
+        out["heroes"] = [pick(h, ("name", "icon", "motto", "style")) for h in heroes.hero_meta()]
+    except Exception as e:
+        errs["principles"] = f"{type(e).__name__}: {str(e)[:120]}"
+    ranks = {}
+    for m in ("kr", "us"):
+        for sty in ("value", "growth"):
+            try:
+                r = t_hero_rank(m, sty, 10)
+                ranks[f"{m}_{sty}"] = {"asof": r.get("asof"), "items": [pick(x, ("name", "code", "industry", "about", "per", "pbr", "yield", sty, "grade"))
+                                                                     for x in r.get("items", []) if isinstance(x, dict)]}
+            except Exception as e:
+                errs[f"rank_{m}_{sty}"] = f"{type(e).__name__}: {str(e)[:120]}"
+    out["ranks"] = ranks
+    try:
+        d = dash("/api/picks?k=fund")
+        out["funds"] = [{**pick(f, ("name", "desc", "inception", "market", "bench_name", "ret", "bench_ret")),
+                         "hist": _thin(f.get("hist") or []),
+                         "holdings": [pick(h, ("name", "weight")) for h in (f.get("holdings") or [])[:10]]}
+                        for f in d.get("funds", [])]
+        m = d.get("mine") or {}
+        if prof.get("show_my_fund", True) and m.get("hist"):   # 내 계좌: 기준가·수익률만 (금액·종목·주수·매매내역 없음)
+            out["mine"] = {**pick(m, ("inception", "ret", "bench_ret")), "hist": _thin(m["hist"])}
+    except Exception as e:
+        errs["funds"] = f"{type(e).__name__}: {str(e)[:120]}"
+    out["updated"] = time.strftime("%Y-%m-%d %H:%M")
+    if errs:
+        out["errors"] = errs
+    return out
+
+
+def pub_cached() -> dict:
+    with _pub_lock:
+        if not _pub["d"] or time.time() - _pub["t"] > 600:
+            _pub["d"], _pub["t"] = pub_data(), time.time()
+        return _pub["d"]
+
+
 S = lambda **p: {"type": "object", "properties": p, "additionalProperties": False}
 TOOLS = {
     "market_surge": (t_market_surge, "한국 급등주: 다음 날 급등 후보 순위, 그날 실제 급등주와 재료, 장중 지금 막 오르기 시작한 종목. 날짜를 주면 그날 기준.",
@@ -239,7 +308,22 @@ class H(BaseHTTPRequestHandler):
             self.wfile.write(body)
 
     def do_GET(self):                                 # 서버 → 클라이언트 스트림은 안 씀
-        self._send(405 if self._ok_path() else 404)
+        if self._ok_path():
+            return self._send(405)
+        path = self.path.split("?")[0]
+        if path in ("/", "/index.html"):               # 🌐 공개 소개 페이지 (조회 전용)
+            try:
+                with open(os.path.join(PUB_DIR, "index.html"), "rb") as f:
+                    return self._send(200, f.read(), "text/html; charset=utf-8")
+            except OSError:
+                return self._send(404)
+        if path == "/pub/data":
+            try:
+                body = json.dumps(pub_cached(), ensure_ascii=False, default=str).encode("utf-8")
+            except Exception as e:
+                body = json.dumps({"error": f"{type(e).__name__}: {str(e)[:120]}"}, ensure_ascii=False).encode("utf-8")
+            return self._send(200, body, "application/json; charset=utf-8")
+        self._send(404)
 
     def do_DELETE(self):
         self._send(405 if self._ok_path() else 404)

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>투자 연구 노트 — 조회 전용</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--txt:#191f28;--sub:#6b7684;--line:#e8ebee;--pri:#3182f6;--pri-soft:#e8f3ff;--up:#f04452;--dn:#3182f6;--ok:#0f9d58;--chip:#f2f4f6;--gold:#b7791f}
+@media (prefers-color-scheme:dark){:root{--bg:#101215;--card:#1a1d22;--txt:#eef0f3;--sub:#9aa3ad;--line:#2a2f36;--pri-soft:#1c2a40;--chip:#23272e}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+.wrap{max-width:760px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 20px) 18px 60px}
+.badge{display:inline-block;font-size:12.5px;font-weight:700;color:var(--pri);background:var(--pri-soft);padding:5px 10px;border-radius:99px}
+h1{font-size:30px;line-height:1.3;margin:14px 0 6px;letter-spacing:-.03em}
+.head p{color:var(--sub);margin:8px 0}
+.links a{display:inline-block;margin:6px 8px 0 0;font-weight:700;color:var(--pri);text-decoration:none;font-size:14.5px}
+section{background:var(--card);border-radius:22px;padding:22px 20px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+section h2{font-size:20px;margin:0 0 4px;letter-spacing:-.02em}
+.sub{color:var(--sub);font-size:14px;margin:0 0 14px}
+.iron{background:#fff5f5;border:1px solid #ffd9dc;border-radius:16px;padding:14px 16px;margin:10px 0}
+@media (prefers-color-scheme:dark){.iron{background:#2a1a1d;border-color:#4a2a2f}}
+.iron b{display:block;font-size:13px;color:var(--up);margin-bottom:4px}
+.iron li{margin:4px 0;font-weight:600}
+ul{padding-left:20px;margin:6px 0}
+.rule{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.rule:first-of-type{border-top:0}
+.rule .w{flex:0 0 92px;font-weight:800;font-size:14px}.rule .w small{display:block;color:var(--sub);font-weight:600;font-size:12px}
+.rule .t{font-size:15px}
+.mix{display:flex;height:12px;border-radius:99px;overflow:hidden;margin:8px 0 4px}.mix i:first-child{background:var(--pri);flex:9}.mix i:last-child{background:#ffb020;flex:1}
+.kpi{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.kpi div{background:var(--chip);border-radius:14px;padding:10px 14px;min-width:120px}.kpi small{display:block;color:var(--sub);font-size:12.5px}.kpi b{font-size:20px}
+.up{color:var(--up)}.dn{color:var(--dn)}
+svg.lc{width:100%;height:auto;display:block}
+.lg{display:flex;gap:14px;font-size:12.5px;color:var(--sub);margin-top:4px}.lg i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.hold{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.hold span{background:var(--chip);border-radius:99px;padding:4px 10px;font-size:13px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}.tabs button{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:99px;padding:7px 13px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.tabs button.on{background:var(--txt);color:var(--card);border-color:var(--txt)}
+.st{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid var(--line)}.st:first-child{border-top:0}
+.st .n{width:26px;font-weight:800;color:var(--sub);flex:0 0 auto}.st .m{flex:1;min-width:0}.st .m b{font-size:15.5px}.st .m small{display:block;color:var(--sub);font-size:13px;line-height:1.5}
+.st .s{text-align:right;flex:0 0 auto}.st .s b{font-size:18px;color:var(--pri)}.st .s small{display:block;color:var(--sub);font-size:12px}
+.heroes{display:flex;flex-wrap:wrap;gap:8px}.heroes span{background:var(--chip);border-radius:12px;padding:6px 10px;font-size:13px}
+.built div{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.built div:first-child{border-top:0}.built b{flex:0 0 110px;font-size:14.5px}.built span{font-size:14.5px;color:var(--sub)}
+.foot{color:var(--sub);font-size:12.5px;line-height:1.7;text-align:center;margin-top:24px}
+.load{color:var(--sub);text-align:center;padding:40px 0}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><div class="load">불러오는 중…</div></div>
+<script>
+"use strict";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const pct = v => v == null ? "-" : (v > 0 ? "+" : "") + Number(v).toFixed(2) + "%";
+const cls = v => v > 0 ? "up" : v < 0 ? "dn" : "";
+let D, RK = "kr_value";
+function line(hist, h = 170) {
+  if (!hist || hist.length < 2) return `<div class="sub">아직 기록이 쌓이는 중이에요</div>`;
+  const W = 640, P = 30, xs = hist.map(r => r.nav), bs = hist.map(r => r.bench).filter(v => v != null), all = xs.concat(bs);
+  const hi = Math.max(...all), lo = Math.min(...all), pad = (hi - lo) * .1 || 5, H = hi + pad, L = lo - pad;
+  const X = i => P + i / (hist.length - 1) * (W - P - 6), Y = v => 8 + (H - v) / (H - L) * (h - 30);
+  const path = k => hist.map((r, i) => r[k] == null ? "" : `${i ? "L" : "M"}${X(i).toFixed(1)},${Y(r[k]).toFixed(1)}`).join("");
+  return `<svg class="lc" viewBox="0 0 ${W} ${h}"><line x1="${P}" x2="${W}" y1="${Y(1000)}" y2="${Y(1000)}" stroke="var(--line)" stroke-dasharray="4 4"/>
+    <text x="0" y="${Y(1000) + 4}" font-size="11" fill="var(--sub)">1000</text>
+    <path d="${path("bench")}" fill="none" stroke="#adb5bd" stroke-width="2"/><path d="${path("nav")}" fill="none" stroke="var(--pri)" stroke-width="2.6"/>
+    <text x="${P}" y="${h - 4}" font-size="11" fill="var(--sub)">${esc(hist[0].d)}</text><text x="${W}" y="${h - 4}" font-size="11" fill="var(--sub)" text-anchor="end">${esc(hist[hist.length - 1].d)}</text></svg>`;
+}
+function fund(f, bench) {
+  return `<div class="kpi"><div><small>설정 이후 수익률</small><b class="${cls(f.ret)}">${pct(f.ret)}</b></div><div><small>${esc(bench)}</small><b class="${cls(f.bench_ret)}">${pct(f.bench_ret)}</b></div>
+    <div><small>설정일</small><b style="font-size:16px">${esc(f.inception || "-")}</b></div></div>${line(f.hist)}
+    <div class="lg"><span><i style="background:var(--pri)"></i>기준가</span><span><i style="background:#adb5bd"></i>${esc(bench)} (설정일 = 1000)</span></div>`;
+}
+function ranks() {
+  const r = (D.ranks || {})[RK] || {}, sty = RK.split("_")[1], us = RK.startsWith("us");
+  const tabs = [["kr_value", "🇰🇷 가치주"], ["kr_growth", "🇰🇷 성장주"], ["us_value", "🇺🇸 가치주"], ["us_growth", "🇺🇸 성장주"]];
+  return `<div class="tabs">${tabs.map(([k, l]) => `<button data-rk="${k}" class="${RK === k ? "on" : ""}">${l}</button>`).join("")}</div>
+    ${(r.items || []).length ? r.items.map((x, i) => `<div class="st"><span class="n">${i + 1}</span><span class="m"><b>${esc(x.name)}</b>
+      <small>${esc([x.industry, x.per ? "PER " + Number(x.per).toFixed(1) : "", x.pbr ? "PBR " + Number(x.pbr).toFixed(2) : ""].filter(Boolean).join(" · "))}</small>${x.about ? `<small>${esc(x.about)}</small>` : ""}</span>
+      <span class="s"><b>${x[sty] != null ? Math.round(x[sty]) : "-"}</b><small>/100${x.grade ? " · " + esc(String(x.grade).replace(/^\S+\s/, "")) : ""}</small></span></div>`).join("")
+      : `<div class="sub">${us ? "미국 종목 채점이 아직 준비 중이에요" : "채점 데이터를 준비 중이에요"}</div>`}
+    ${r.asof ? `<div class="sub" style="margin-top:8px">${esc(r.asof)} 기준 · 점수 = 대가 원칙 규칙 채점(100점)</div>` : ""}`;
+}
+function render() {
+  const p = D.profile || {}, P = D.principles || {};
+  document.title = (p.name ? p.name + " — " : "") + (p.headline || "투자 연구 노트");
+  const us = (D.funds || []).filter(f => f.market === "us"), kr = (D.funds || []).filter(f => f.market !== "us");
+  document.getElementById("app").innerHTML = `
+  <div class="head"><span class="badge">조회 전용 · 투자 연구 노트</span><h1>${esc(p.name || "")}<br><span style="font-size:22px;font-weight:700">${esc(p.headline || "")}</span></h1>
+    ${(p.intro || []).map(t => `<p>${esc(t)}</p>`).join("")}<div class="links">${(p.links || []).map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")}</div></div>
+  ${P.iron ? `<section><h2>🧭 이렇게 투자합니다</h2><p class="sub">감이 아니라 규칙으로. 앱은 이 원칙을 매일 자동으로 적용해요.</p>
+    <div class="iron"><b>어떤 상황에서도 지키는 철칙</b><ul>${P.iron.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+    <div style="margin:14px 0 6px;font-weight:700">${esc(P.mix || "")}</div><div class="mix"><i></i><i></i></div><div class="sub">장기 투자 90% · 단기 매매 10%</div>
+    ${(P.rules || []).map(r => `<div class="rule"><span class="w">${esc(r.title)}<small>${esc(r.who)}</small></span><span class="t">${esc(r.text)}</span></div>`).join("")}
+    <div style="margin-top:12px;font-weight:700">포트폴리오 규칙</div><ul>${(P.portfolio || []).map(t => `<li>${esc(t)}</li>`).join("")}</ul></section>` : ""}
+  ${D.mine ? `<section><h2>📒 내 계좌를 펀드처럼</h2><p class="sub">실제 계좌를 공모펀드처럼 기준가(1,000 시작)로 매일 기록해요. 입출금은 설정·환매로 처리한 시간가중수익률이라 원칙의 성과만 보여요. 금액·종목·매매내역은 공개하지 않아요.</p>${fund(D.mine, "코스피")}</section>` : ""}
+  ${us.concat(kr).map(f => `<section><h2>🏦 ${esc(f.name)}</h2><p class="sub">${esc(f.desc || "대가 원칙 상위 종목을 실제 공모펀드처럼 운용한다고 가정한 모의 펀드예요. 실제 주문은 내지 않아요.")}</p>${fund(f, f.bench_name || "벤치마크")}
+    ${(f.holdings || []).length ? `<div class="hold">${f.holdings.map(h => `<span>${esc(h.name)}${h.weight != null ? " " + Number(h.weight).toFixed(1) + "%" : ""}</span>`).join("")}</div>` : ""}</section>`).join("")}
+  <section><h2>🏛️ 대가 10인 채점 — 지금 원칙에 맞는 종목</h2><p class="sub">가치 5인·성장 5인의 원칙을 숫자 규칙으로 만들어 매일 채점해요. PBR·PER 상한, 매출·순이익 꾸준한 증가, 장기 부적합 제외 같은 거름망을 통과한 종목만 보여요. 매수 추천이 아니에요.</p>
+    ${(D.heroes || []).length ? `<div class="heroes" style="margin-bottom:12px">${D.heroes.map(h => `<span>${esc(h.icon || "")} ${esc(h.name)}</span>`).join("")}</div>` : ""}
+    <div id="rk">${ranks()}</div></section>
+  ${(p.built || []).length ? `<section><h2>🛠️ 이 앱을 만든 방법</h2><p class="sub">기획부터 서버 운영까지 직접 했어요.</p><div class="built">${p.built.map(([a, b]) => `<div><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join("")}</div></section>` : ""}
+  <div class="foot">이 페이지는 개인 투자 연구 기록을 보여 주는 조회 전용 화면이며, 특정 종목의 매수·매도 권유가 아니에요.<br>데이터: 금융감독원 DART · 미국 SEC · KRX · Yahoo Finance · 마지막 갱신 ${esc(D.updated || "")}</div>`;
+  document.querySelectorAll("[data-rk]").forEach(b => b.onclick = () => { RK = b.dataset.rk; document.getElementById("rk").innerHTML = ranks(); render(); });
+}
+fetch("pub/data").then(r => r.json()).then(d => { D = d; render(); }).catch(e => { document.getElementById("app").innerHTML = `<div class="load">데이터를 불러오지 못했어요 (${esc(e.message)})</div>`; });
+</script>
+</body>
+</html>
