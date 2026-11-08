@@ -262,6 +262,11 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 <div id="errBanner" class="banner"></div>
 
 <section id="t-home" class="act">
+  <div class="card" id="h-study"><div class="row"><h2 style="margin:0">📚 공부하러 가기</h2><span class="tiny mut">새 창으로 열려요</span></div>
+    <div class="btnrow" style="margin-top:10px">
+      <a class="pri" href="https://claude.ai/artifact/MVb9wb2TW1f1UjqrM9rvGL" target="_blank" rel="noopener">🎓 자문패스<br><span class="tiny" style="opacity:.85;font-weight:500">자격증 문제 풀기</span></a>
+      <a class="pri" href="https://claude.ai/artifact/SWGFCVkLApELRGYbWBBaEx" target="_blank" rel="noopener">🧭 마스터로드<br><span class="tiny" style="opacity:.85;font-weight:500">주식 처음부터 끝까지</span></a>
+    </div></div>
   <div class="card iron" id="h-iron"></div>
   <div class="card" id="h-mix"><div class="row"><h2 style="margin:0">⚖️ 장기 9 : 단기 1</h2><span class="tiny mut">불러오는 중…</span></div></div>
   <div class="card">
@@ -1662,7 +1667,7 @@ async function rLoad(force) {
   }
   RD.ok = true;
   if (R.error) { $("r-out").innerHTML = `<div class="card"><div class="empty small">${esc(R.error)}</div></div>`; return; }
-  const dl = d => d === R.today ? "오늘" : "어제";
+  const dl = d => R.weekend ? `${+d.slice(4, 6)}/${+d.slice(6)}` : d === R.today ? "오늘" : "어제";   // 주말엔 금·목요일 공시라 날짜로
   const chgT = x => x.chg != null ? `<span class="${cls(x.chg)} name">${x.chg >= 0 ? "+" : ""}${x.chg.toFixed(1)}%</span>` : `<span class="tiny mut">${R.market_open ? "+3% 미만" : "-"}</span>`;
   const nws = x => (x.news || []).length ? `<div class="why">📰 ${esc(x.news[0].title)}${x.news_why && x.news_why.length ? ` <span class="tag g">${esc(x.news_why[0].replace("뉴스: ", ""))}</span>` : ""}${(x.news_warn || []).map(w => ` <span class="tag r">${esc(w)}</span>`).join("")}</div>` : "";
   const fil = x => `<div class="tiny" style="margin-top:3px">${x.items.slice(0, 2).map(i => `<a href="javascript:void 0" data-doc="${esc(i.rcept_no)}" data-dt="${esc(i.title)}">📄 ${dl(i.day)} · ${esc(i.title)}</a>`).join("<br>")}</div>`;
@@ -1673,7 +1678,7 @@ async function rLoad(force) {
   const F = R.fresh || [], top = F.filter(x => x.grade === "S" || x.grade === "A");
   const E = R.early || [];
   $("r-out").innerHTML = `
-    <div class="card"><h2>🎯 재료 나왔는데 아직 덜 오른 종목 <span class="tiny mut">${R.time} · 공시 ${fmtN(R.n_filings)}건 확인</span></h2>
+    <div class="card"><h2>🎯 재료 나왔는데 아직 덜 오른 종목 <span class="tiny mut">${R.time} · 공시 ${fmtN(R.n_filings)}건 확인${R.weekend ? ` (주말 — ${dl(R.yday)}·${dl(R.today)} 공시)` : ""}</span></h2>
       ${R.dart_error ? `<div class="tiny up">DART: ${esc(R.dart_error)}</div>` : ""}
       ${top.map(row).join("") || `<div class="empty small">${F.length ? "S·A 등급 없음 — 오늘은 급한 재료가 없어요" : "아직 없음"}</div>`}
       ${F.length > top.length ? `<details style="margin-top:6px"><summary class="small mut">B·C 등급 ${F.length - top.length}개 더 보기</summary>${F.filter(x => !top.includes(x)).map(row).join("")}</details>` : ""}

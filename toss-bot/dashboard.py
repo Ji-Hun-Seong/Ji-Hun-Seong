@@ -631,8 +631,15 @@ def news_radar():
     import candidates as C
     from concurrent.futures import ThreadPoolExecutor
     now = bot.now()
-    today = now.strftime("%Y%m%d")
-    yday = (now - __import__("datetime").timedelta(days=1 if now.weekday() else 3)).strftime("%Y%m%d")
+    import datetime as _dt
+    def _prev_bday(x):                                    # 바로 앞 평일
+        x -= _dt.timedelta(days=1)
+        while x.weekday() >= 5:
+            x -= _dt.timedelta(days=1)
+        return x
+    base = now if now.weekday() < 5 else _prev_bday(now)  # 주말엔 '금요일·목요일' 공시를 보여 줌 (주말엔 공시가 거의 없음)
+    today = base.strftime("%Y%m%d")
+    yday = _prev_bday(base).strftime("%Y%m%d")
     fl, dart_err = [], None
     for d in (today, yday):
         got = cached("dart-list:" + d, 180 if d == today else 3600, lambda d=d: _dart_list(d))
@@ -736,7 +743,7 @@ def news_radar():
         x["explained"] = bool(g) or bool(x.get("news_why"))
     return {"time": now.strftime("%H:%M"), "market_open": market_open, "n_filings": len(fl), "dart_error": dart_err,
             "fresh": [g for g in good if not g["moved"]][:25], "moved": [g for g in good if g["moved"]][:15],
-            "bad": bad[:15], "early": early, "today": today, "yday": yday}
+            "bad": bad[:15], "early": early, "today": today, "yday": yday, "weekend": now.weekday() >= 5}
 
 
 # ── 발굴 탭: 급등 후보 · 💎 아빠 매매일지 DNA 20선(가치주) · 애크먼 TOP10 ─────────────────────────────
