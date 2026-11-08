@@ -15,3 +15,5 @@
 10 16 * * 1-5  cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python chartpage/fund_sim.py run >> state/fund.log 2>&1
 # 🇺🇸 미국 모의 펀드 — 미국 장 마감(한국 05~06시) 뒤, 직전 미국 거래일 기준가
 10 7 * * 2-6  cd $HOME/ji-hun-seong/toss-bot && .venv/bin/python chartpage/fund_sim.py run-us >> state/fund.log 2>&1
+# 🔄 자동 반영 — GitHub 새 코드를 2분마다 받아서 필요한 서비스만 재시작 (기록: state/deploy.log)
+*/2 * * * *  $HOME/ji-hun-seong/toss-bot/setup/auto_deploy.sh
