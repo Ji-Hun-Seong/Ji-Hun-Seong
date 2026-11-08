@@ -361,7 +361,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
   <button data-t="pick"><b>💡</b>발굴</button>
   <button data-t="chart"><b>📈</b>종목</button>
   <button data-t="scan"><b>🔔</b>감시</button>
-  <button data-t="mkt"><b id="mktIco">🇰🇷</b>전략</button>
+  <button data-t="mkt"><b id="mktIco">🤖</b>자동</button>
   <button data-t="acct"><b>◎</b>계좌</button>
 </div></nav>
 
@@ -401,7 +401,7 @@ function mktSync() {
   const on = document.querySelector('nav button[data-t="mkt"]').classList.contains("act");
   $("mktBtn").style.display = on ? "" : "none";
   $("mktBtn").textContent = MKT === "us" ? "🇺🇸 미국" : "🇰🇷 한국";
-  $("mktIco").textContent = MKT === "us" ? "🇺🇸" : "🇰🇷";
+  // 아래 메뉴 '자동' 아이콘은 🤖 고정 (한국/미국은 탭 안에서 고름)
   if (on) document.querySelectorAll("section").forEach(s => s.classList.toggle("act", s.id === "t-" + MKT));
 }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
