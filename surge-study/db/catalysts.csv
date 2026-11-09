@@ -69,13 +69,21 @@ kr,2026-11-06,900100,재료 미확인,신뢰 매체 근거 없음·웹검색 실
 kr,2026-11-09,0013Y0,재료 미확인,"전날 애프터마켓 상한가 결과 기사(이투데이)뿐, 오늘 트리거 없음",
 kr,2026-11-09,005360,자사주·배당,"오늘 DART 기업가치제고계획 자율공시, 세부 내용 미확인",
 kr,2026-11-09,006345,재료 미확인,"우선주 저유동, 신뢰 매체 근거 없음(보통주 임원 장내매수 제목은 판정 제외 매체)",
+kr,2026-11-09,014950,재료 미확인,"제약 업종 일반 기사뿐, 회사 주어 신뢰 제목 없음",
+kr,2026-11-09,016590,재료 미확인,수집된 뉴스·공시 없음,
+kr,2026-11-09,020400,재료 미확인,"뉴스핌 농기계 수출 특징주(30%↑)는 오늘 등락과 달라 날짜 미확인, 9일부터 투자경고 지정",
 kr,2026-11-09,0220W0,M&A·지배구조,"김동선 338만주(270억) 추가 공개매수·지분 37%로 확대, 공개매수신고서 공시 — 차익거래형",
+kr,2026-11-09,025560,재료 미확인,"유안타 리포트 브리핑(뉴스핌)은 날짜 미확인, 나머지는 일반명사 '미래산업' 오탐",
+kr,2026-11-09,032080,자사주·배당,오늘 DART 자기주식취득 신탁계약·기업가치제고계획 공시,
 kr,2026-11-09,032500,재료 미확인,오늘 트리거 미확인. 스페이스X 이통망 수혜주 기사·리포트 브리핑은 날짜 불명 간접 근거,
+kr,2026-11-09,033250,재료 미확인,투자주의 지정(톱스타뉴스)뿐,
 kr,2026-11-09,033540,재료 미확인,"수집 제목·공시 없음, 거래대금 0.6억",
 kr,2026-11-09,036930,재료 미확인,"신뢰 매체는 BNK 리포트(실적 선반영)뿐, 비신뢰 제목 3Q 실적·Y1 Fab 발주. 웹 검색 실패",
 kr,2026-11-09,039030,재료 미확인,"회사 주어 신뢰 제목 없음, 반도체 장비 테마 동반 상승 추정",
 kr,2026-11-09,064290,재료 미확인,회사가 주어인 신뢰 제목 없음,
+kr,2026-11-09,073490,재료 미확인,매일경제 마켓 통신장비 테마 자동 기사뿐(★ 아님),
 kr,2026-11-09,080220,재료 미확인,잡포스트 등 비신뢰 제목만. 웹 검색 실패,
+kr,2026-11-09,086390,정책·테마,"매일경제 특징주: 반도체 장비 테마 동반 상승, 개별 재료 아님",
 kr,2026-11-09,089030,재료 미확인,526억 시설투자 제목은 비신뢰 매체뿐. 웹 검색 실패,
 kr,2026-11-09,092870,재료 미확인,오늘 트리거 미확인(신뢰 매체 최근 기사 없음),
 kr,2026-11-09,101490,재료 미확인,오늘 트리거 미확인. 수집 제목은 투자분석 자동글 1건뿐,
@@ -86,6 +94,7 @@ kr,2026-11-09,179880,재료 미확인,"오늘 트리거 미확인. 반도체 장
 kr,2026-11-09,180640,M&A·지배구조,"호반·조원태 지분 경쟁(연합뉴스), 한진칼우 동반 상한가",https://news.google.com/rss/articles/CBMiWEFVX3lxTE1Wa18xM3FjYWlyUF81UmFEdTc2UXNwRzVKM21zNG1wOS1CSXlnS196TW1pZ2FxQkZKYkNFblAxN1JETF9PY2x2alRQd2FJU3h0NmRwTjJBcjfSAVhBVV95cUxNVmtfMTNxY2FpclBfNVJhRHU3NlFzcEc1SjNtczRtcDktQkl5Z0tfek1taWdhcUJGSmJDRW5QMTdSRExfT2NsdmpUUHdhSVN4dDZkcE4yQXI3?oc=5
 kr,2026-11-09,218410,재료 미확인,오늘 트리거 미확인(신뢰 매체 최근 기사 없음),
 kr,2026-11-09,222800,실적,3Q 영업익 721%↑ 어닝 서프라이즈(뉴시스·조선비즈),https://news.google.com/rss/articles/CBMiiAFBVV95cUxQd1dRS3hfV0JKWWhzYi1hSGNuQ2FRNDlzbUh0RmdRSUp3RlhKQ2JxRUotRTU4Q043b0djaTIzSTBha21oQlFDVTNRWDQ3ZDE2MG1NVzJ2akxuMEl6V3JQVnBqUnRIOVRZclFLdjh4R0x0dnhIN3hqME9oN2h6X1BxYldIYTFPck5t0gGcAUFVX3lxTE5JeW5tT25adVY1VFJYS2h5YjdXdl9Id0pQM20xTE1fcTVZV1JtTi1mYTlRbmlHWHl1MVJkbGZOMmdWRHFGbWdSLXJIb3dCRW5fTm5vMDhsLUM1RUVsZ2lRcXhDWThlSDdwSmpNT0ZRZmh1UnRoTmhBdUE1ZDBNOURtdzlobnFQWFpONHRDRE1fTXhfUG9oREJLNEpieQ?oc=5
+kr,2026-11-09,289080,재료 미확인,"래블업 투자 성과 기사는 비신뢰 매체(뉴스톱), 나머지는 무관 기사",
 kr,2026-11-09,298690,실적,"3Q 영업이익 47억 흑자 전환(매일경제), LCC 업황 기사 동반",https://news.google.com/rss/articles/CBMiVkFVX3lxTE85XzhIX3FuM3EwQTB1Q3hHS2NseFRHSGdDXzdzcTB6WmlJVU1keW5KUjVrai1IeUdSUExRWV9zQnZObHlCa2dCS1FDN0V1RlRfMG5QeFZR?oc=5
 kr,2026-11-09,302440,실적,3분기 매출 1824억(+21%)·영업손실 42% 축소(매경); 발표일이 오늘이 아닐 수 있어 트리거 약함,https://news.google.com/rss/articles/CBMiXEFVX3lxTE5CWkVpNEh3NmJpS2JneWQ0S3pDS3E0UHRUVGJVSVNuYnFFaXIyS1RIaWhiRW94aTFOREMyY1hwekxPSmdvc01fSElpLWFSSXJFVVZJaDhZNDdCWk5T?oc=5
 kr,2026-11-09,323990,임상·허가,"이중표적 CAR-T 고형암 전임상 완전관해·미국면역항암학회 발표(한국경제·히트뉴스), 첨생법 개정 기대 동반",https://news.google.com/rss/articles/CBMiWkFVX3lxTE1Rd3FBU1g0amsweDRJOXF6NHVtSXN4WUxWZk9CSmRjYW55RGxDQlM4SlJrMmc4MVBEZDdPX2RnSzJMLVM3NDFHb3hrR3JDdU1rNnl1WlB4YW9yZw?oc=5
