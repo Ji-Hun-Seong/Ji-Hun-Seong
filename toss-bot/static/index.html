@@ -367,7 +367,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 
 <section id="t-pick">
   <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
-  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 자바</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button><button data-k="screen">🔎 필터</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button><button data-k="screen">🔎 필터</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -1335,7 +1335,7 @@ function finChart(a) {
 // ── 발굴 탭 ──────────────────────────────────────────
 let pKind = "hero"; const PK = {};
 try { pKind = localStorage.getItem("p-kind") || "hero"; } catch (e) {}
-if (!["hero", "surge", "value", "fund", "etf", "screen"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
+if (!["hero", "surge", "fund", "etf", "screen"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
 document.querySelectorAll("#p-seg button").forEach(b => {
   b.classList.toggle("act", b.dataset.k === pKind);
   b.onclick = () => { pKind = b.dataset.k; try { localStorage.setItem("p-kind", pKind); } catch (e) {}
