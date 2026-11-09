@@ -347,7 +347,7 @@ def screen(market: str) -> dict:
         i = ind.get(x.get("code"))
         items.append({**f, "c": x["code"], "n": x["name"] if market == "kr" else short_name(x.get("name")), "u": market != "kr",
                       "ind": (i or {}).get("sector") or x.get("industry"), "per": pos(x.get("per")), "pbr": pos(x.get("pbr")),
-                      "dy": x.get("yield"), "mc": round(x.get("mcap_eok") or mc or 0) or None})
+                      "dy": x.get("yield"), "r5": (x.get("steady") or {}).get("rev5"), "mc": round(x.get("mcap_eok") or mc or 0) or None})
     return {"market": market, "items": items, "n_fin": n_fin, "min_eok": MIN_KR_EOK if market == "kr" else MIN_GL_EOK}
 
 

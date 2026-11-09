@@ -1374,9 +1374,9 @@ const SCR_M = [["per", "PER", "배", "밸류"], ["pbr", "PBR", "배", "밸류"],
   ["rev_g", "매출 증가율 (전년비)", "%", "성장성"], ["op_g", "영업이익 증가율", "%", "성장성"], ["ni_g", "순이익 증가율", "%", "성장성"], ["eg", "EPS 연평균 성장", "%", "성장성"]];
 const SCR_U = Object.fromEntries(SCR_M.map(x => [x[0], x])), SCR_O = {lt: "미만", le: "이하", ge: "이상", gt: "초과"};
 const SCR_P = [["저PER·저PBR", [["per", "lt", 10], ["pbr", "lt", 1]]], ["고ROE·저부채", [["roe", "ge", 15], ["dr", "lt", 100]]], ["고배당", [["dy", "ge", 4], ["streak", "ge", 3]]], ["성장+흑자", [["rev_g", "ge", 15], ["op_g", "ge", 15], ["streak", "ge", 3]]]];
-const SCR = {m: "kr", c: [["per", "lt", 10], ["pbr", "lt", 1]], s: "per", n: 50, d: {}, t: {}, saved: []};
-try { const v = JSON.parse(localStorage.getItem("scr") || "null"); if (v) { SCR.m = v.m || "kr"; SCR.c = v.c || SCR.c; SCR.s = v.s || "per"; SCR.saved = v.saved || []; } } catch (e) {}
-const scrSave = () => { try { localStorage.setItem("scr", JSON.stringify({m: SCR.m, c: SCR.c, s: SCR.s, saved: SCR.saved})); } catch (e) {} };
+const SCR = {m: "kr", c: [["per", "lt", 10], ["pbr", "lt", 1]], s: "per", n: 50, d: {}, t: {}, saved: [], r5: true};
+try { const v = JSON.parse(localStorage.getItem("scr") || "null"); if (v) { SCR.m = v.m || "kr"; SCR.c = v.c || SCR.c; SCR.s = v.s || "per"; SCR.saved = v.saved || []; if (v.r5 === false) SCR.r5 = false; } } catch (e) {}
+const scrSave = () => { try { localStorage.setItem("scr", JSON.stringify({m: SCR.m, c: SCR.c, s: SCR.s, saved: SCR.saved, r5: SCR.r5})); } catch (e) {} };
 const scrOpts = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${k}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
 const scrMetric = v => [...new Set(SCR_M.map(x => x[3]))].map(g => `<optgroup label="${g}">${SCR_M.filter(x => x[3] === g).map(x => `<option value="${x[0]}"${x[0] === v ? " selected" : ""}>${esc(x[1])}</option>`).join("")}</optgroup>`).join("");
 const scrFmt = (k, v) => { if (v == null) return "-"; if (k === "mc") return v >= 10000 ? (v / 10000).toFixed(1) + "조" : fmtN(v) + "억"; const u = SCR_U[k][2]; return (u === "년" ? v : Number(v).toFixed(u === "배" ? 2 : 1)) + (u === "억" ? "" : u); };
@@ -1394,11 +1394,13 @@ async function scrLoad() {
 function scrShell() {
   $("p-out").innerHTML = `<div class="seg" id="scr-mkt" style="margin-top:-4px">${HMKT.map(([k, l]) => `<button data-m="${k}" class="${SCR.m === k ? "act" : ""}">${l}</button>`).join("")}</div>
   <div class="card"><div class="label">조건 <span class="tiny mut">모두 만족하는 종목만</span></div>
+    <label class="row small" style="margin-top:10px;cursor:pointer"><span><b>매출 꾸준히 증가</b> <span class="tiny mut" id="scr-r5t"></span></span><input type="checkbox" id="scr-r5" ${SCR.r5 ? "checked" : ""} style="width:20px;height:20px"></label>
     <div class="chips" style="margin:8px 0 0" id="scr-pre"></div><div id="scr-conds"></div>
     <div class="row" style="margin-top:12px"><button class="tap" id="scr-add" style="background:var(--line);color:var(--txt);border:0;border-radius:10px;padding:9px 14px;font-size:14px;font-family:inherit">＋ 조건 추가</button>
     <button id="scr-keep" style="background:none;color:var(--blue);border:0;font-size:14px;font-family:inherit">내 필터로 저장</button></div></div>
   <div id="scr-res"></div>`;
   document.querySelectorAll("#scr-mkt button").forEach(b => b.onclick = () => { SCR.m = b.dataset.m; SCR.n = 50; scrSave(); document.querySelectorAll("#scr-mkt button").forEach(x => x.classList.toggle("act", x === b)); scrLoad(); });
+  $("scr-r5").onchange = e => { SCR.r5 = e.target.checked; scrChanged(); };
   $("scr-add").onclick = () => { const k = (SCR_M.find(x => !SCR.c.some(c => c[0] === x[0])) || SCR_M[0])[0]; SCR.c.push([k, "lt", ""]); scrChanged(true); };
   $("scr-keep").onclick = () => { const n = (prompt("이 조건의 이름", "내 필터") || "").trim(); if (!n) return; SCR.saved = SCR.saved.filter(x => x[0] !== n).concat([[n, JSON.parse(JSON.stringify(SCR.c))]]); scrSave(); scrPresets(); };
   scrPresets(); scrConds();
@@ -1421,7 +1423,8 @@ function scrConds() {
 function scrChanged(redraw) { SCR.n = 50; scrSave(); if (redraw) scrConds(); if (SCR.d[SCR.m]) scrResult(); }
 function scrResult() {
   const d = SCR.d[SCR.m], act = SCR.c.filter(c => c[2] !== "" && !isNaN(+c[2]));
-  const pass = x => act.every(([k, o, v]) => { const a = x[k]; if (a == null) return false; v = +v; return o === "lt" ? a < v : o === "le" ? a <= v : o === "ge" ? a >= v : a > v; });
+  $("scr-r5t").textContent = SCR.m === "kr" ? "최근 5년 해마다 매출 증가" : "최근 4년 해마다 매출 증가 (해외 데이터 한계)";
+  const pass = x => (!SCR.r5 || x.r5 !== false) && act.every(([k, o, v]) => { const a = x[k]; if (a == null) return false; v = +v; return o === "lt" ? a < v : o === "le" ? a <= v : o === "ge" ? a >= v : a > v; });
   if (![...act.map(c => c[0]), "mc"].includes(SCR.s)) SCR.s = act[0] ? act[0][0] : "mc";
   const asc = ["per", "pbr", "psr", "dr"].includes(SCR.s), S = SCR.s;
   const out = d.items.filter(pass).sort((a, b) => a[S] == null ? 1 : b[S] == null ? -1 : asc ? a[S] - b[S] : b[S] - a[S]);
