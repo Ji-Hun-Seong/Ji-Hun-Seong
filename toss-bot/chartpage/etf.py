@@ -201,6 +201,28 @@ def classify(name: str) -> str:
     return "kr"
 
 
+def pension(name: str, cat: str) -> str:
+    """퇴직연금(DC·IRP) 담을 수 있는 한도 — 이름으로 추정. "100" 적립금 전부 가능 · "70" 위험자산 한도 안에서 · "no" 담을 수 없음
+       100 = 적격 TDF · 채권혼합(주식 50% 이하) · 채권형·금리형 / 70 = 주식형·주식혼합·원자재 현물 등 / no = 레버리지·인버스·합성·선물(파생형)"""
+    n = name.upper()
+    if "합성" in n and cat != "lev" and re.search(r"금리|CD|KOFR|SOFR", n):      # CD·KOFR 금리형은 스왑(합성)이어도 안전자산으로 담음
+        return "100"
+    if cat == "lev" or "합성" in n:
+        return "no"
+    if "TDF" in n:
+        return "100" if "적격" in n else "70"
+    m = re.search(r"TRF\s*(\d{2})(\d{2})", n)
+    if m:
+        return "100" if int(m.group(1)) <= 50 else "70"
+    if re.search(r"채혼합|채권혼합", n):
+        return "100"
+    if "선물" in n:
+        return "no"
+    if "주식혼합" in n or "하이일드" in n:
+        return "70"
+    return "100" if cat == "bond" else "70"
+
+
 CAT_LABEL = {"kr": "국내주식", "foreign": "해외주식", "bond": "채권·혼합", "cmdty": "원자재", "lev": "레버리지·인버스"}
 
 
@@ -273,6 +295,7 @@ def summary():
     # 거르기: 순자산 200억↑ · 상장 1년↑(데이터가 1년 넘게 쌓였을 때만) · 모멘텀 계산 가능
     ok = [x for x in items if (x["net_eok"] or 0) >= MIN_NET / 1e8 and not x["young"] and x["mom"] is not None]
     for x in ok:
+        x["pen"] = pension(x["name"], x["cat"])
         x["ex12"] = _rnd(x["r12"] - k200["r12"]) if x["r12"] is not None and k200.get("r12") is not None else None
     # 같은 기초지수끼리 묶기 — 1년(없으면 모멘텀) 수익 1등만 대표, 나머지 개수 표시
     grp = {}
@@ -287,7 +310,7 @@ def summary():
         reps.append(g[0])
     reps.sort(key=lambda x: -x["mom"])
 
-    out = {**base, "asof": L, "n_all": len(items), "n_ok": len(ok), "items": reps, "bench": bench,
+    out = {**base, "asof": L, "n_all": len(items), "n_ok": len(ok), "items": reps, "more": [x for x in ok if x not in reps], "bench": bench,
            "cats": CAT_LABEL, "bt": _backtest(close, net, last) if n >= 253 + 63 else None}
     return out
 
