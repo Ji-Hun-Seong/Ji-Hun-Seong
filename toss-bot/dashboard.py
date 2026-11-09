@@ -320,6 +320,34 @@ def chart_search(q):
              "exch": c.get("exch")} for c in ds.search(q, 8)]
 
 
+def toss_popular(tag):
+    """🔥 토스증권 '인기' 실시간 TOP 10 — 토스증권 웹 홈 화면이 쓰는 비공식 조회 주소(로그인·키 안 씀), 공식 Open API엔 순위가 없음"""
+    import requests
+    r = requests.post("https://wts-cert-api.tossinvest.com/api/v2/dashboard/wts/overview/ranking", timeout=8,
+                      json={"id": "realtime_stock", "tag": tag, "duration": "realtime", "filters": []},
+                      headers={"Accept": "application/json", "Origin": "https://www.tossinvest.com", "Referer": "https://www.tossinvest.com/",
+                               "User-Agent": "Mozilla/5.0"})
+    r.raise_for_status()
+    res = r.json().get("result") or {}
+    first = lambda d, *ks: next((d[k] for k in ks if isinstance(d, dict) and d.get(k) not in (None, "")), None)
+    items = []
+    for it in (res.get("products") or [])[:10]:
+        p = it["price"] if isinstance(it.get("price"), dict) else it
+        code = str(first(it, "productCode", "code") or "")
+        name = first(it, "name", "productName", "stockName") or code
+        sym = first(it, "symbol", "ticker")
+        close, base = first(p, "close"), first(p, "base")
+        krw, base_krw = first(p, "closeKrw"), first(p, "baseKrw")
+        a, b = (krw, base_krw) if krw and base_krw else (close, base)
+        us = tag == "us"
+        items.append({"name": name, "code": (sym or name) if us else (code[1:] if code[:1] == "A" else code), "us": us,
+                      "krw": krw if us else close, "usd": close if us else None,
+                      "chg": round((a / b - 1) * 100, 2) if a and b else None})
+    if not items:
+        raise ValueError("토스 응답에 종목이 없어요")
+    return {"tag": tag, "items": items, "at": time.strftime("%H:%M")}
+
+
 def chart_ohlcv(code, us):
     """토스 일봉(대시보드와 같은 출처) → 실패하면 야후"""
     import pandas as pd
@@ -1413,6 +1441,10 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 return self._send(200, json.dumps({"error": f"{type(e).__name__}: {str(e)[:200]}"}, ensure_ascii=False),
                                   "application/json; charset=utf-8")
+        if path == "/api/popular":                # 🔥 토스 인기 TOP 10 (종목 탭 첫 화면)
+            tag = "us" if (parse_qs(urlparse(self.path).query).get("m") or ["kr"])[0] == "us" else "kr"
+            out = cached("popular:" + tag, 60, lambda: toss_popular(tag))
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/screen":                 # 🔎 재무 필터 (발굴 탭)
             m = (parse_qs(urlparse(self.path).query).get("m") or ["kr"])[0]
             try:
