@@ -1,7 +1,7 @@
 # 📘 펀드회계 백과 — 펀드회계 실무자를 위한 자산별 회계처리
 
 운용이 아니라 **회계처리와 업무 프로세스** 관점에서 주식·채권·단기자금·파생·외화·부동산·대체자산을 정리한 백과입니다.
-매일 저녁 텔레그램으로 하루치가 도착하고, 같은 내용이 아래 포스팅으로 정리됩니다.
+같은 내용을 토스봇의 **펀드로드** 앱(로드맵·확인 문제·분개 훈련·검색)과 아래 포스팅으로 봅니다. 텔레그램 자동 발송은 중단했습니다.
 
 총 **20일 · 항목 155개** — 항목마다 개념 → 프로세스 → 분개 예시 → 평가·기준가 영향 → 실무 체크포인트 순서
 
@@ -47,6 +47,7 @@ flowchart LR
 
 ## 파일
 
-- `lessons_1.md`, `lessons_2.md` — 원본 (고치면 포스팅·텔레그램이 같이 바뀜)
+- `lessons_1.md`, `lessons_2.md` — 원본 (고친 뒤 `python fund-study/build_app.py`로 앱 데이터 갱신)
+- `toss-bot/static/fundroad/` — 펀드로드 앱 (`quiz.js`는 확인 문제 원본)
 - `posts/` — Day별 포스팅 (`python fund-study/study_bot.py build`)
-- 발송: `.github/workflows/fund-study.yml` (매일 저녁 6시대, 개인 채팅 전용)
+- 발송: `.github/workflows/fund-study.yml` (수동 실행만, 개인 채팅 전용)

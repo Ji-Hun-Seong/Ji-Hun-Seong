@@ -1,12 +1,8 @@
 name: Fund accounting study daily
 
-# 매일 저녁 펀드회계 백과 1일치를 텔레그램 개인 채팅으로 보낸다(그룹방 금지 — study_bot.py에서도 차단).
-# GitHub 예약 실행이 늦게 시작되는 일이 있어 여러 번 걸어 두고, 오늘 이미 보냈으면 건너뛴다.
+# 자동 발송은 중단했다. 같은 내용은 토스봇의 펀드로드 앱(toss-bot/static/fundroad)에서 본다.
+# 필요할 때만 Actions에서 직접 실행하면 텔레그램 개인 채팅으로 보낸다(그룹방 금지 — study_bot.py에서도 차단).
 on:
-  schedule:
-    - cron: "13 9 * * *"    # 한국 18:13
-    - cron: "43 10 * * *"   # 한국 19:43 (예비)
-    - cron: "13 12 * * *"   # 한국 21:13 (예비)
   workflow_dispatch:
     inputs:
       mode:
