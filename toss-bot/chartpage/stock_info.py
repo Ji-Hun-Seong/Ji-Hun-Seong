@@ -453,7 +453,8 @@ def _holdings(j):
             for v in o:
                 walk(v)
     walk(j)
-    return [h for h in best if h["w"] is not None]
+    best = [h for h in best if h["w"] is not None]
+    return best if sum(h["w"] for h in best) > 1 else []
 
 
 def kr_etf(code: str) -> dict:
@@ -466,10 +467,11 @@ def kr_etf(code: str) -> dict:
         except Exception as e:
             keys[path] = f"오류 {type(e).__name__}"
             continue
-        keys[path] = list(j)[:25] if isinstance(j, dict) else type(j).__name__
+        keys[path] = " | ".join(f"{k}:{type(v).__name__}" + (f"[{','.join(list(v[0])[:12])}]" if isinstance(v, list) and v and isinstance(v[0], dict) else
+                                  f"{{{','.join(list(v)[:12])}}}" if isinstance(v, dict) else "") for k, v in j.items()) if isinstance(j, dict) else type(j).__name__
         if out["fee"] is None:
             out["fee"] = E._find_fee(j)
-        h = _holdings(j)
+        h = _holdings({k: v for k, v in j.items() if k not in ("industryCompareInfo", "researches", "dealTrendInfos")} if isinstance(j, dict) else j)
         if len(h) > len(out["holdings"]):
             out["holdings"] = h
         if path == "integration":
