@@ -844,13 +844,13 @@ async function openStock(q, opt = {}) {
   } catch (e) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
 const TABN = {pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "미국", acct: "계좌", det: "공시"};
-const backBtn = () => SD.prev && SD.prev !== "chart" ? `<button class="back" onclick="goTab('${SD.prev}')">‹ ${TABN[SD.prev] || "뒤로"}</button>` : `<button class="back" onclick="cHome()">‹ 인기 종목</button>`;
+const backBtn = () => SD.prev && SD.prev !== "chart" ? `<button class="back" onclick="goTab('${SD.prev}')">‹ ${TABN[SD.prev] || "뒤로"}</button>` : `<button class="back" onclick="cHome()">‹ 종목 홈</button>`;
 // 🔥 종목 탭 첫 화면 — 토스증권 인기 TOP 10 (검색창을 비우거나 아래 '종목'을 한 번 더 누르면 돌아옴)
 let popM = "kr";
 try { if (localStorage.getItem("pop-m") === "us") popM = "us"; } catch (e) {}
 function cHome() {
   SD.prev = null; cq.value = "";
-  $("c-out").innerHTML = `<div class="card" id="c-home"><div class="row"><h2 style="margin:0">🔥 토스증권 인기 TOP 10</h2><span class="tiny mut" id="pop-at"></span></div>
+  $("c-out").innerHTML = `<div class="card" id="c-home"><div class="row"><h2 style="margin:0">🔥 토스증권 <span id="pop-t">인기</span> TOP 10</h2><span class="tiny mut" id="pop-at"></span></div>
     <div class="seg" id="pop-seg" style="margin:10px 0 4px"><button data-m="kr" class="${popM === "kr" ? "act" : ""}">국내</button><button data-m="us" class="${popM === "us" ? "act" : ""}">해외</button></div>
     <div id="pop-list"><div class="empty">불러오는 중…</div></div></div>`;
   document.querySelectorAll("#pop-seg button").forEach(b => b.onclick = () => { popM = b.dataset.m; try { localStorage.setItem("pop-m", popM); } catch (e) {} document.querySelectorAll("#pop-seg button").forEach(x => x.classList.toggle("act", x === b)); popLoad(); });
@@ -860,7 +860,8 @@ async function popLoad() {
   const m = popM; let d;
   try { d = await (await fetch("api/popular?m=" + m, {cache: "no-store"})).json(); } catch (e) { d = {error: e.message}; }
   const L = $("pop-list"); if (!L || m !== popM) return;
-  if (d.error) { L.innerHTML = `<div class="empty">인기 종목을 못 불러왔어요<br><span class="tiny">${esc(d.error)}</span></div>`; return; }
+  if (d.error) { $("c-home").outerHTML = `<div class="card" id="c-home"><div class="empty">종목을 검색하거나 💡발굴·계좌·감시 목록에서 종목을 누르면<br>차트 · 수급 · 재무제표 · 밸류 · 공시 · 리포트를 한 화면에 보여 줍니다.</div></div>`; return; }   // 토스 순위를 못 받으면 카드 자체를 숨김
+  $("pop-t").textContent = d.title || "인기";
   $("pop-at").textContent = d.at ? d.at + " 기준" : "";
   L.innerHTML = d.items.map((x, i) => `<div class="srow tap" data-pi="${i}" style="cursor:pointer;gap:12px"><span style="display:flex;gap:12px;min-width:0"><b style="width:18px;text-align:right;flex:none">${i + 1}</b><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.name)}</span></span><span style="text-align:right;flex:none">${x.krw != null ? fmtN(x.krw) + "원" : x.usd != null ? "$" + fmtN(x.usd, 2) : ""} ${x.chg != null ? `<span class="${x.chg > 0 ? "up" : x.chg < 0 ? "dn" : ""}">${x.chg > 0 ? "+" : ""}${x.chg.toFixed(1)}%</span>` : ""}</span></div>`).join("");
   L.querySelectorAll("[data-pi]").forEach(el => el.onclick = () => { const x = d.items[el.dataset.pi]; openStock(x.code, {us: x.us}); });

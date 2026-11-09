@@ -321,17 +321,29 @@ def chart_search(q):
 
 
 def toss_popular(tag):
-    """🔥 토스증권 '인기' 실시간 TOP 10 — 토스증권 웹 홈 화면이 쓰는 비공식 조회 주소(로그인·키 안 씀), 공식 Open API엔 순위가 없음"""
+    """🔥 토스증권 '인기' TOP 10 — 토스증권 웹 홈 화면이 쓰는 비공식 조회 주소(로그인·키 안 씀), 공식 Open API엔 순위가 없음
+       인기(전체를 받아 국내/해외로 나눔) → 안 되면 토스 거래대금. 둘 다 안 되면 화면에서 카드를 숨김"""
     import requests
-    r = requests.post("https://wts-cert-api.tossinvest.com/api/v2/dashboard/wts/overview/ranking", timeout=8,
-                      json={"id": "realtime_stock", "tag": tag, "duration": "realtime", "filters": []},
-                      headers={"Accept": "application/json", "Origin": "https://www.tossinvest.com", "Referer": "https://www.tossinvest.com/",
-                               "User-Agent": "Mozilla/5.0"})
-    r.raise_for_status()
-    res = r.json().get("result") or {}
+
+    def fetch(rid, t):
+        r = requests.post("https://wts-cert-api.tossinvest.com/api/v2/dashboard/wts/overview/ranking", timeout=8,
+                          json={"id": rid, "tag": t, "duration": "realtime", "filters": []},
+                          headers={"Accept": "application/json", "Origin": "https://www.tossinvest.com", "Referer": "https://www.tossinvest.com/",
+                                   "User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        return (r.json().get("result") or {}).get("products") or []
+
+    is_kr = lambda p: len(str(p.get("productCode") or p.get("code") or "")) == 7 and str(p.get("productCode") or p.get("code"))[0] == "A"
+    title, rows = "인기", []
+    try:
+        rows = [p for p in fetch("realtime_stock", "all") if is_kr(p) == (tag == "kr")]
+    except Exception:
+        pass
+    if len(rows) < 5:
+        title, rows = "거래대금", fetch("biggest_total_amount", tag)
     first = lambda d, *ks: next((d[k] for k in ks if isinstance(d, dict) and d.get(k) not in (None, "")), None)
     items = []
-    for it in (res.get("products") or [])[:10]:
+    for it in rows[:10]:
         p = it["price"] if isinstance(it.get("price"), dict) else it
         code = str(first(it, "productCode", "code") or "")
         name = first(it, "name", "productName", "stockName") or code
@@ -345,7 +357,7 @@ def toss_popular(tag):
                       "chg": round((a / b - 1) * 100, 2) if a and b else None})
     if not items:
         raise ValueError("토스 응답에 종목이 없어요")
-    return {"tag": tag, "items": items, "at": time.strftime("%H:%M")}
+    return {"tag": tag, "title": title, "items": items, "at": time.strftime("%H:%M")}
 
 
 def chart_ohlcv(code, us):
