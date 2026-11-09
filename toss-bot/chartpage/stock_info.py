@@ -454,7 +454,10 @@ def _holdings(j):
                 walk(v)
     walk(j)
     best = [h for h in best if h["w"] is not None]
-    return best if sum(h["w"] for h in best) > 1 else []
+    tot = sum(h["w"] for h in best)
+    if 0 < tot <= 1.01 and all(h["w"] <= 1 for h in best):           # 0.0852 처럼 소수로 오면 % 로
+        best = [{**h, "w": round(h["w"] * 100, 2)} for h in best]
+    return best if sum(h["w"] for h in best) > 0 else []
 
 
 def kr_etf(code: str) -> dict:
@@ -467,7 +470,6 @@ def kr_etf(code: str) -> dict:
         except Exception as e:
             keys[path] = f"오류 {type(e).__name__}"
             continue
-        keys[path + "_lists"] = {k: (",".join(list(v[0])[:15]) if isinstance(v, list) and v and isinstance(v[0], dict) else f"{type(v).__name__}{len(v)}") for k, v in j.items() if isinstance(v, (list, dict))} if isinstance(j, dict) else None
         keys[path] = " | ".join(f"{k}:{type(v).__name__}" + (f"[{','.join(list(v[0])[:12])}]" if isinstance(v, list) and v and isinstance(v[0], dict) else
                                   f"{{{','.join(list(v)[:12])}}}" if isinstance(v, dict) else "") for k, v in j.items()) if isinstance(j, dict) else type(j).__name__
         if out["fee"] is None:
@@ -475,6 +477,16 @@ def kr_etf(code: str) -> dict:
         h = _holdings({k: v for k, v in j.items() if k not in ("industryCompareInfo", "researches", "dealTrendInfos")} if isinstance(j, dict) else j)
         if len(h) > len(out["holdings"]):
             out["holdings"] = h
+        if path == "etfAnalysis" and isinstance(j, dict):
+            top = j.get("etfTop10MajorConstituentAssets") or []
+            if top:
+                out["holdings"] = _holdings({"t": top + [{}] * 0}) or out["holdings"]
+            for key, lab in (("sectorPortfolioList", "sector"), ("countryPortfolioList", "country"), ("assetPortfolioList", "asset")):
+                rows = [[x.get("detailTypeName") or x.get("detailTypeCode"), num(x.get("weight"))] for x in j.get(key) or [] if isinstance(x, dict)]
+                rows = [r for r in rows if r[0] and r[1]]
+                if rows and sum(r[1] for r in rows) <= 1.01:
+                    rows = [[r[0], round(r[1] * 100, 2)] for r in rows]
+                out[lab] = sorted(rows, key=lambda r: -r[1])[:8]
         if path == "integration":
             for x in j.get("totalInfos") or []:
                 k, v = x.get("key"), x.get("value")
@@ -482,7 +494,6 @@ def kr_etf(code: str) -> dict:
                     out["info"].append([k, v])
     out["holdings"].sort(key=lambda h: -h["w"])
     out["holdings"] = out["holdings"][:30]
-    out["src_keys"] = keys                                  # 응답 구조 확인용 (네이버가 바뀌면 여기로 진단)
     try:
         c = E._conn()
         r = c.execute("SELECT idx, net FROM px WHERE code=? ORDER BY d DESC LIMIT 1", (code,)).fetchone()

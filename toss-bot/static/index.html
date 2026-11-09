@@ -1099,7 +1099,8 @@ function etfCard(a) {
   <div class="card"><h2>🧺 구성 종목 비중</h2>
     ${H.length ? `<div class="tiny mut" style="margin:-4px 0 8px">상위 10개 합 ${top.toFixed(1)}% · ${H.length}개 표시</div>` + H.map((h, i) => `<div style="padding:6px 0;border-top:1px solid var(--line)"><div class="row small"><span>${i + 1}. ${esc(h.name)}</span><b>${h.w.toFixed(2)}%</b></div><i style="display:block;height:4px;background:var(--line);border-radius:2px;margin-top:4px"><b style="display:block;height:4px;border-radius:2px;background:var(--blue);width:${h.w / mx * 100}%"></b></i></div>`).join("")
       : `<div class="empty">구성 종목 정보를 못 받았어요</div>`}
-    <div class="tiny mut" style="margin-top:8px">출처: 네이버 증권 (운용사 공시 기준, 하루 늦을 수 있어요)</div></div>`;
+    <div class="tiny mut" style="margin-top:8px">출처: 네이버 증권 (운용사 공시 기준, 하루 늦을 수 있어요)</div></div>
+  ${[["sector", "🏭 업종 비중"], ["country", "🌍 국가 비중"], ["asset", "📦 자산 비중"]].filter(([k]) => (E[k] || []).length).map(([k, t]) => `<div class="card"><h2>${t}</h2>${E[k].map(([n, w]) => `<div style="padding:5px 0"><div class="row small"><span>${esc(n)}</span><b>${w.toFixed(1)}%</b></div><i style="display:block;height:4px;background:var(--line);border-radius:2px;margin-top:3px"><b style="display:block;height:4px;border-radius:2px;background:var(--blue);width:${Math.min(100, w)}%"></b></i></div>`).join("")}</div>`).join("")}`;
 }
 function sdTab(a, scroll) {
   if (!SDTABS(a).some(([k]) => k === SD.tab)) SD.tab = "info";
