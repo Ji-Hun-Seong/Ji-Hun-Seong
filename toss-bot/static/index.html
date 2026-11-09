@@ -86,6 +86,7 @@ canvas.c-big{max-height:none}
 .seg button{flex:1;border:0;background:none;color:var(--sub);padding:9px;border-radius:9px;font-size:14px;font-family:inherit}
 #scr-conds .cd{display:flex;gap:6px;align-items:center;margin-top:8px}#scr-conds select,#scr-conds input,#scr-sort{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:9px 6px;font-size:16px;font-family:inherit;min-width:0}#scr-conds .m{flex:1 1 40%}#scr-conds input{flex:0 0 70px;width:70px;text-align:right}#scr-conds .o{flex:0 0 66px}#scr-conds .x{background:none;border:0;color:var(--sub);font-size:18px;padding:4px}
 #scr-pre button,#scr-pre .rchip{background:var(--bg)}#scr-pre .rchip button{background:none}
+.cf{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}.cf small{color:var(--sub);font-size:12px;margin-left:3px}.cf b{flex:none;font-variant-numeric:tabular-nums}.cf-h{margin-top:4px}.cf-h b{font-size:26px}
 #p-seg button{padding-left:2px;padding-right:2px;font-size:13px;white-space:nowrap}
 .seg button.act{background:var(--line);color:var(--txt);font-weight:700}
 .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sub);margin-right:6px;vertical-align:middle}
@@ -1648,16 +1649,27 @@ function pRender(d) {
     pItems = hs.concat(d.more || []);
     const styBar = (two ? `<div class="seg" id="h-sort" style="margin-top:8px">${[["value", `💎 가치주 ${d.items.filter(isV).length}`], ["growth", `🚀 성장주 ${d.items.filter(isG).length}`], ["all", "전체"]].map(([k, l]) => `<button data-s="${k}" class="${sk === k ? "act" : ""}">${l}</button>`).join("")}</div>` : "")
       + `<div class="seg sm" id="h-size" style="margin-top:6px">${[["all", "전체 크기"], ["big", "대형 10조↑"], ["mid", "중소형 10조↓"]].map(([k, l]) => `<button data-z="${k}" class="${szk === k ? "act" : ""}">${l}</button>`).join("")}</div>`;
-    head = hMktBar() + styBar + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 10인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${fmtN(d.n_pool)}종목</div>
+    // 이 목록에 남는 조건을 한눈에 — 위에서부터 차례로 걸렀을 때 남는 종목 수
+    const revN = glob ? 4 : 5;
+    const revOk = x => !x.steady || x.steady.rev5 !== false, niOk = x => !x.steady || x.steady.ok !== false;
+    const COND = sk === "value" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], [`PER ${perMax}배 이하`, perOk], ["PBR 2배 이하 <small>자본잠식 제외</small>", pbrOk], [`버핏 점수 ${BUF_MIN}점 이상 <small>20점 만점</small>`, bufOk], ["장기 부적합 등급 제외", x => x.vgrade !== "no"], ["가치 점수 ≥ 성장 점수 <small>성향이 가치 쪽</small>", x => x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1)]]
+      : sk === "growth" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], ["PBR 10배 이하 <small>자본잠식 제외</small>", gPbrOk], [`린치 점수 ${LYN_MIN}점 이상 <small>20점 만점</small>`, lynOk], ["장기 부적합 등급 제외", x => x.ggrade !== "no"], ["성장 점수 > 가치 점수 <small>성향이 성장 쪽</small>", x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1)]] : null;
+    if (szk !== "all" && COND) COND.push([szk === "big" ? "시가총액 10조 이상" : "시가총액 10조 미만", inSize]);
+    let hLeft = d.items;
+    const condRows = (COND || []).map(([l, f]) => { hLeft = hLeft.filter(f); return `<div class="cf"><span>✅ ${l}</span><b>${fmtN(hLeft.length)}개</b></div>`; }).join("");
+    const condCard = COND ? `<div class="card"><div class="label">${sk === "value" ? "💎 가치주" : "🚀 성장주"} 선정 기준</div>
+      <div class="cf-h"><b>${fmtN(tabItems.length)}개</b> <span class="mut">통과</span> <span class="tiny mut">/ 채점 ${fmtN(d.items.length)}개</span></div>
+      <div class="tiny mut" style="margin:2px 0 6px">아래 조건을 <b>모두</b> 만족한 종목만 남겨요 · 오른쪽은 위에서부터 거르며 남은 수</div>${condRows}</div>`
+      : `<div class="card"><div class="label">전체 보기</div><div class="small" style="margin-top:4px;line-height:1.6">거르는 조건 없이 <b>채점한 ${fmtN(d.items.length)}개를 전부</b> 보여 줘요. 매출이 줄어든 종목도 포함돼요.</div></div>`;
+    head = hMktBar() + styBar + condCard + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 10인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${fmtN(d.n_pool)}종목</div>
       ${(() => { const P = d.progress; if (!P) return ""; const busy = P.fresh < P.pool;
         return `<div class="small" style="margin-top:8px;padding:8px 10px;background:var(--bg);border-radius:10px">🗄️ DB: 채점 ${fmtN(P.scored)}/${fmtN(P.pool)}종목 · 오늘 최신 ${fmtN(P.fresh)}${busy ? ` · 🔄 ${esc(P.worker || "")}` : " · ✅ 전부 최신"}${!d.items.length ? "<br>아직 채점된 종목이 없어요 — 서버가 시총 큰 종목부터 채점 중이라 잠시 뒤 하나씩 늘어나요" : ""}${P.error ? `<br><span class="up">⚠️ ${esc(P.error)}</span>` : ""}</div>`; })()}
-      <div class="small" style="margin-top:6px;line-height:1.6">💎 <b>가치</b> 버핏·그레이엄·멍거·애크먼·클라만 · 🚀 <b>성장</b> 린치·피셔·드러켄밀러·템플턴·로 프라이스 — 각 100점, 등급은 높은 쪽 · 핵심은 5명 중 3명↑ 동의</div>
-      ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 버핏·그레이엄·멍거·애크먼·클라만 점수 순" : "🚀 성장주 — 린치·피셔·드러켄밀러·템플턴·로 프라이스 점수 순"}</b> <span class="tiny mut">${"매출 " + (glob ? "4" : "5") + "년 연속 증가 · 순이익 꾸준히 증가(최근 4년) · "}${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다 · PBR 2.0 초과·마이너스, PER " + perMax + " 초과, 버핏 " + BUF_MIN + "점(20점 중) 미만은 제외" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다 · PBR 10 초과·마이너스, 린치 " + LYN_MIN + "점(20점 중) 미만은 제외"}</span></div>` : ""}
       <div class="tally" id="h-grade">${[["core", "g", "🟢 핵심"], ["sat", "y", "🟡 위성"], ["watch", "", "⚪ 관찰"]].concat(sk === "all" ? [["no", "r", "🔴 부적합"]] : []).map(([g, c, l]) =>
         `<span class="tag ${c}" data-g="${g}" style="cursor:pointer;${hGrade === g ? "outline:2px solid currentColor;font-weight:700" : hGrade ? "opacity:.45" : ""}">${l} ${(sk === "all" ? G : TG)[g] || 0}</span>`).join("")}</div>
       <div class="tiny mut" style="margin-top:4px">${hGrade ? `${GL[hGrade]}만 보는 중 — 다시 누르면 전체` : "등급을 누르면 그 등급만 볼 수 있어요"} · 🟢 핵심 = 장기 바구니의 중심 · 🟡 위성 = 핵심 주변에 조금씩 곁들이는 종목</div>
+      <details style="margin-top:8px"><summary class="tiny mut">채점 방식 자세히</summary><div class="tiny mut" style="margin-top:6px;line-height:1.6">💎 가치 = 버핏·그레이엄·멍거·애크먼·클라만 · 🚀 성장 = 린치·피셔·드러켄밀러·템플턴·로 프라이스 — 각 100점, 등급은 높은 쪽 · 핵심은 5명 중 3명↑ 동의</div>
       ${S ? `<div class="tiny mut" style="margin-top:6px">위성 이상: 💎 가치형 ${S.value} · 🚀 성장형 ${S.growth} · 둘 다 ${S.both}</div>` : ""}
-      <div class="tiny mut" style="margin-top:8px">${glob ? "야후 재무 기준 — 공시·수급 항목은 채점에서 제외 · " : ""}${`후보 = ${glob ? "그 나라 시총 2조원(약 14억 달러)↑ 전 종목" : "코스피 시총 2,000억↑ 전 종목(스팩·우선주 제외)"} + 가치주 후보·대표 종목 + 📌 내 계좌 · 서버가 매일 한 바퀴 다시 채점해 DB에 저장`} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></div>`;
+      <div class="tiny mut" style="margin-top:8px">${glob ? "야후 재무 기준 — 공시·수급 항목은 채점에서 제외 · " : ""}${`후보 = ${glob ? "그 나라 시총 2조원(약 14억 달러)↑ 전 종목" : "코스피 시총 2,000억↑ 전 종목(스팩·우선주 제외)"} + 가치주 후보·대표 종목 + 📌 내 계좌 · 서버가 매일 한 바퀴 다시 채점해 DB에 저장`} · 장기 바구니(90%)를 채울 종목을 고르는 용도</div></details></div>`;
     rows = hs.slice(0, 50).map((x, i) => `<div class="prow" ${open(i)}><div class="row"><div><span class="rk">${sk === "all" ? x.rank : i + 1}</span><span class="name">${esc(x.name)}</span>${x.code ? `<span class="tkr">${esc(x.code)}</span>` : ""}${x.held ? " 📌" : ""}
         <span class="tag ${GCLS[gk(x)]}">${esc(sk === "all" ? x.grade.label : GL[gk(x)] || "")}</span>${sk === "all" && x.style ? ` <span class="tiny">${x.style === "both" ? "💎🚀" : x.style === "value" ? "💎" : "🚀"}</span>` : ""}</div><div style="text-align:right"><span class="score">${Math.round(key(x) < 0 ? 0 : key(x))}</span><span class="tiny mut">점</span></div></div>
       ${x.industry || x.about || x.product ? `<div class="small" style="margin-top:4px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${x.industry ? `<b>${esc(x.industry)}</b>` : ""}${x.industry && (x.about || x.product) ? " · " : ""}${x.about || x.product ? `<span class="mut">${esc(x.about || x.product)}</span>` : ""}</div>` : ""}
