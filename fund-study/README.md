@@ -51,3 +51,4 @@ flowchart LR
 - `toss-bot/static/fundroad/` — 펀드로드 앱 (`quiz.js`는 확인 문제 원본)
 - `posts/` — Day별 포스팅 (`python fund-study/study_bot.py build`)
 - 발송: `.github/workflows/fund-study.yml` (수동 실행만, 개인 채팅 전용)
+- 심화 글: `deep-study/` (매일 한 주제씩 추가)

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import base64
 import json
+import re
 import os
 import sys
 import urllib.parse
@@ -235,7 +236,8 @@ def pub_cached() -> dict:
 PUB_STATIC = {"", "index.html", "kchart.js", "icons.js", "manifest.json", "icon-180.png", "icon-512.png", "chart.umd.min.js",
               "masterroad/index.html", "masterroad/data1.js", "masterroad/data2.js", "masterroad/data3.js",
               "fundrule/index.html", "fundrule/data.js", "fundrule/data2.js", "fundrule/data4.js",
-              "fundroad/index.html", "fundroad/data.js", "fundroad/quiz.js"}
+              "fundroad/index.html", "fundroad/data.js", "fundroad/quiz.js", "deep.js"}
+PUB_DEEP = re.compile(r"^(?:fundroad|masterroad)/deep/(?:index|topics/[\w-]+)\.json$")   # 매일 쌓이는 심화 글
 PUB_API = {"/api/data", "/api/radar", "/api/scan", "/api/stock", "/api/stock-extra", "/api/picks", "/api/search",
            "/api/chart", "/api/fin", "/api/doc", "/api/orderbook", "/api/mini"}
 PUB_BLOCKED = {"/api/trade", "/api/fills", "/api/reserve", "/api/ob-stream", "/api/order", "/api/stop"}
@@ -255,7 +257,7 @@ def pub_proxy(rest: str, query: str):
     """(상태코드, 본문, content-type, cache-control) — rest 는 /app/ 뒤 경로"""
     rest = rest.lstrip("/")
     api = "/" + rest if rest.startswith("api/") else None
-    if api is None and rest not in PUB_STATIC:
+    if api is None and rest not in PUB_STATIC and not PUB_DEEP.match(rest):
         return 404, b"not found", "text/plain", None
     if api is not None:
         if api in PUB_BLOCKED:
