@@ -1,0 +1,6183 @@
+{
+ "date": "2026-11-09",
+ "context": {
+  "n_gainers_list": 250,
+  "n_surge": 80,
+  "asof": "2026-11-09T16:04-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-09",
+   "code": "FRVO",
+   "name": "Fervo Energy Company",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 3354405376,
+   "chg": 26.024368227710816,
+   "gap": 0.553711984644889,
+   "high_chg": 26.91030317867158,
+   "close_pos": 0.9685039665718373,
+   "upper_wick": 0.8859349509607557,
+   "limit_up": false,
+   "tv": 272606025.0414133,
+   "vol_ratio": 2.6040892799488637,
+   "close": 11.380000114440918,
+   "pctb": 0.45827902437143947,
+   "bw": 0.5662733229830208,
+   "bw_pctile": 0.7714285714285715,
+   "squeeze": false,
+   "rsi14": 49.55185241174605,
+   "ma5_gap": 0.04296603601967819,
+   "ma20_gap": -0.02362547550727856,
+   "ma60_gap": -0.3447024849835094,
+   "ma120_gap": -0.5854200818255395,
+   "ma_aligned": false,
+   "ret5": 0.09057971306611035,
+   "ret20": -0.3432727466930042,
+   "ret60": -0.5556102426875894,
+   "from_high": -0.7882766844101512,
+   "from_low": 0.18193715847864222,
+   "vol_ratio_prev": 0.9988938523953541,
+   "tv20_avg": 86986678.35123777,
+   "tv_prev": 81585144.58742142,
+   "prev_chg": 0.15917840528759153,
+   "up_days": 1,
+   "prev_close_pos": 0.9454541829007989,
+   "fr": null,
+   "price": 9.029999732971191,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02",
+     "items_kr": "실적 발표",
+     "url": "https://www.sec.gov/Archives/edgar/data/1853868/000162828026071911/frvo-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Fervo Energy Company (FRVO) stock price, news, quote and history - Yahoo Finance Australia",
+     "date": "Mon, 09 Nov 2026 13:07:50 GMT"
+    },
+    {
+     "title": "Why Is Fervo Energy Stock Gaining Monday? - Benzinga",
+     "date": "Mon, 09 Nov 2026 15:51:53 GMT"
+    },
+    {
+     "title": "Fervo Energy Q3: Much More Enticing After The Share Price Collapse (Upgrade) (NASDAQ:FRVO) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 18:44:00 GMT"
+    },
+    {
+     "title": "FRVO News Today | Why did Fervo Energy stock go up today? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 21:59:39 GMT"
+    },
+    {
+     "title": "Fervo Energy (FRVO) Q3 Earnings Beat EPS Estimates but Revenue M - GuruFocus",
+     "date": "Mon, 09 Nov 2026 13:32:13 GMT"
+    },
+    {
+     "title": "Fervo Energy Reports Third Quarter 2026 Results - Stock Titan",
+     "date": "Mon, 09 Nov 2026 12:00:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "PRAX",
+   "name": "Praxis Precision Medicines, Inc",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 9296518144,
+   "chg": 19.937326949433732,
+   "gap": 3.090561645684775,
+   "high_chg": 20.73337604314014,
+   "close_pos": 0.9605640199573277,
+   "upper_wick": 0.7960490937064006,
+   "limit_up": false,
+   "tv": 355749477.9142151,
+   "vol_ratio": 2.2457918190608317,
+   "close": 332.9700012207031,
+   "pctb": 0.7122375087178138,
+   "bw": 0.23253692523838404,
+   "bw_pctile": 0.38333333333333336,
+   "squeeze": false,
+   "rsi14": 57.32761426726805,
+   "ma5_gap": 0.006234125107602573,
+   "ma20_gap": 0.049353057697495206,
+   "ma60_gap": -0.09015085276641621,
+   "ma120_gap": -0.10347002225846091,
+   "ma_aligned": false,
+   "ret5": -0.029063049597656376,
+   "ret20": 0.06834453462158718,
+   "ret60": -0.24653964730107103,
+   "from_high": -0.29304816275170786,
+   "from_low": 0.7339328840102357,
+   "vol_ratio_prev": 0.6474983020149423,
+   "tv20_avg": 124211243.81614685,
+   "tv_prev": 87339250.46386719,
+   "prev_chg": 0.05723751471460048,
+   "up_days": 1,
+   "prev_close_pos": 0.9253149792360057,
+   "fr": null,
+   "price": 277.6199951171875,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1689548/000168954826000089/prax-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1689548/000168954826000086/prax-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Praxis Precision Medicines, Inc. (PRAX) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Mon, 09 Nov 2026 12:32:47 GMT"
+    },
+    {
+     "title": "$PRAX ($PRAX) Releases Q3 2026 Earnings - Moomoo",
+     "date": "Mon, 09 Nov 2026 12:36:11 GMT"
+    },
+    {
+     "title": "Praxis Precision Medicines Provides Corporate Update and Reports Third Quarter 2026 Financial Results - Stock Titan",
+     "date": "Mon, 09 Nov 2026 12:00:00 GMT"
+    },
+    {
+     "title": "Praxis Precision Medicines (NASDAQ:PRAX) Narrows Q3 Loss Ahead of Two FDA Decisions - ChartMill",
+     "date": "Mon, 09 Nov 2026 13:30:26 GMT"
+    },
+    {
+     "title": "PRAX Jun 2027 350.000 put (PRAX270617P00350000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 17:24:17 GMT"
+    },
+    {
+     "title": "PRAX Mar 2028 145.000 call (PRAX280317C00145000) Stock Historical Prices & Data - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 12:42:57 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "QXO",
+   "name": "QXO, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 14296621056,
+   "chg": 19.204145612203206,
+   "gap": 9.429058471865659,
+   "high_chg": 22.14532329599401,
+   "close_pos": 0.802233523713161,
+   "upper_wick": 2.9411776837908126,
+   "limit_up": false,
+   "tv": 580583206.7694597,
+   "vol_ratio": 2.133752514479146,
+   "close": 13.779999732971191,
+   "pctb": 0.7278639850945946,
+   "bw": 0.22090461230568892,
+   "bw_pctile": 0.475,
+   "squeeze": false,
+   "rsi14": 62.50000000000001,
+   "ma5_gap": -0.024472554130835045,
+   "ma20_gap": 0.05033620528575078,
+   "ma60_gap": -0.04369283920438127,
+   "ma120_gap": -0.16863936241802246,
+   "ma_aligned": false,
+   "ret5": 0.047101490902214715,
+   "ret20": 0.06938020082210072,
+   "ret60": -0.2236400165833008,
+   "from_high": -0.5813111132173385,
+   "from_low": 0.1513944684799713,
+   "vol_ratio_prev": 0.6953001907340797,
+   "tv20_avg": 216952548.37256908,
+   "tv_prev": 161356797.8570938,
+   "prev_chg": -0.006872845476499134,
+   "up_days": 0,
+   "prev_close_pos": 0.803922778594322,
+   "fr": null,
+   "price": 11.5600004196167,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "7.01,9.01",
+     "items_kr": "IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1236275/000095014226002986/eh260853599_8k.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1236275/000162828026071846/qxo-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Why Did QXO Stock Soar Monday? - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 16:40:54 GMT"
+    },
+    {
+     "title": "Why Did QXO Stock Soar Monday? - The Motley Fool",
+     "date": "Mon, 09 Nov 2026 16:20:00 GMT"
+    },
+    {
+     "title": "Why Is QXO Stock Surging Monday? - Benzinga",
+     "date": "Mon, 09 Nov 2026 17:40:12 GMT"
+    },
+    {
+     "title": "QXO's Brad Jacobs to Lead $1B Investment in New Venture - LBM Journal",
+     "date": "Mon, 09 Nov 2026 16:08:09 GMT"
+    },
+    {
+     "title": "Brad Jacobs Launches New $1B Acquisition Venture, Gives Update on QXO Performance - National Association of Wholesaler-Distributors",
+     "date": "Mon, 09 Nov 2026 16:42:03 GMT"
+    },
+    {
+     "title": "QXO (QXO) Stock May Still Look Like A Bargain After $1 Billion Platform Launch - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 22:10:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "CECO",
+   "name": "CECO Environmental Corp.",
+   "market": "TXSE",
+   "sector": "",
+   "mcap": 3045631232,
+   "chg": 18.96591418248792,
+   "gap": 39.57904278063946,
+   "high_chg": 37.268362518255294,
+   "close_pos": 0.07030791103088153,
+   "upper_wick": -2.310680262384152,
+   "limit_up": false,
+   "tv": 213505344.0,
+   "vol_ratio": 3.8398832848578937,
+   "close": 52.0,
+   "pctb": 0.16124797187911857,
+   "bw": 0.540596288889264,
+   "bw_pctile": 0.9583333333333334,
+   "squeeze": false,
+   "rsi14": 34.89034626329027,
+   "ma5_gap": -0.031164122066728472,
+   "ma20_gap": -0.18312808925586022,
+   "ma60_gap": -0.34135482439484055,
+   "ma120_gap": -0.41006043106583756,
+   "ma_aligned": false,
+   "ret5": -0.13445546367380878,
+   "ret20": -0.33591614574392337,
+   "ret60": -0.43100755977459815,
+   "from_high": -0.568253654614951,
+   "from_low": 0.17658135367838468,
+   "vol_ratio_prev": 2.270415314990588,
+   "tv20_avg": 54861060.80287933,
+   "tv_prev": 99116793.9239502,
+   "prev_chg": 0.1606478826758755,
+   "up_days": 1,
+   "prev_close_pos": 0.979674339735871,
+   "fr": null,
+   "price": 43.709999084472656,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/3197/000119312526453470/ceco-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/3197/000119312526452685/ceco-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Ceco Environmental Stock: Why It’s Up So Much After Earnings Today - Barron's",
+     "date": "Mon, 09 Nov 2026 18:07:00 GMT"
+    },
+    {
+     "title": "CECO: Q3 Earnings Snapshot - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 12:22:18 GMT"
+    },
+    {
+     "title": "CECO Environmental Projects 2027 Revenue of Up to $2.3 Billion - Benzinga",
+     "date": "Mon, 09 Nov 2026 18:17:48 GMT"
+    },
+    {
+     "title": "CECO Environmental Corp. - Common Stock (NYSE:CECO) Stock Quote - FinancialContent",
+     "date": "Mon, 09 Nov 2026 19:43:36 GMT"
+    },
+    {
+     "title": "CECO Environmental Corp (CECO) Reports Strong Q3 2026 Results, H - GuruFocus",
+     "date": "Mon, 09 Nov 2026 21:02:53 GMT"
+    },
+    {
+     "title": "Ceco Environmental Stock: AI’s Power Crunch Is Making It a Winner - Barron's",
+     "date": "Mon, 09 Nov 2026 18:07:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "WRBY",
+   "name": "Warby Parker Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 3755543296,
+   "chg": 18.563577814810216,
+   "gap": 1.687599344195445,
+   "high_chg": 23.62637584739653,
+   "close_pos": 0.776816477114294,
+   "upper_wick": 5.062798032586318,
+   "limit_up": false,
+   "tv": 343704869.2738724,
+   "vol_ratio": 3.1066796462206834,
+   "close": 30.209999084472656,
+   "pctb": 0.6322956106690637,
+   "bw": 0.21023409733473272,
+   "bw_pctile": 0.39166666666666666,
+   "squeeze": false,
+   "rsi14": 52.17006117876184,
+   "ma5_gap": 0.07374627958512292,
+   "ma20_gap": 0.0278130482903578,
+   "ma60_gap": 0.013363009876346199,
+   "ma120_gap": -0.01009782275578297,
+   "ma_aligned": false,
+   "ret5": 0.03535143885851122,
+   "ret20": 0.007114636782759698,
+   "ret60": -0.01545593630221842,
+   "from_high": -0.17806453089560237,
+   "from_low": 0.5670356201457774,
+   "vol_ratio_prev": 1.4622100030994225,
+   "tv20_avg": 89976130.34615517,
+   "tv_prev": 129823145.66764832,
+   "prev_chg": -0.023006149663533648,
+   "up_days": 0,
+   "prev_close_pos": 0.0271606240651644,
+   "fr": null,
+   "price": 25.479999542236328,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1504776/000195004726010873/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1504776/000195004726010851/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1504776/000195004726010848/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Why is Warby Parker (WRBY) stock soaring today - TradingView",
+     "date": "Mon, 09 Nov 2026 17:35:48 GMT"
+    },
+    {
+     "title": "Warby Parker jumps 22%, continues earnings-inspired rally (WRBY:NYSE) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 20:35:00 GMT"
+    },
+    {
+     "title": "Warby Parker (WRBY) Shares Surge to 52-Week High After Q3 Earnin - GuruFocus",
+     "date": "Mon, 09 Nov 2026 21:02:52 GMT"
+    },
+    {
+     "title": "Warby Parker Stock Hits 52-Week High on Smart-Glasses Buzz - Benzinga",
+     "date": "Mon, 09 Nov 2026 18:11:24 GMT"
+    },
+    {
+     "title": "David Gilboa proposes selling 75,402 Warby Parker (WRBY) shares. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 21:37:50 GMT"
+    },
+    {
+     "title": "WRBY Jan 2028 40.000 put (WRBY280121P00040000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 05:07:54 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "FLY",
+   "name": "Firefly Aerospace Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 4069606656,
+   "chg": 17.100188814649897,
+   "gap": 2.5433519851079778,
+   "high_chg": 17.100188814649897,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "tv": 210812717.48873138,
+   "vol_ratio": 2.582445503275759,
+   "close": 24.309999465942383,
+   "pctb": 1.00551414452092,
+   "bw": 0.3169328755507051,
+   "bw_pctile": 0.2,
+   "squeeze": false,
+   "rsi14": 62.66134211221681,
+   "ma5_gap": 0.20138889417788142,
+   "ma20_gap": 0.1602140514545698,
+   "ma60_gap": -0.010513679864423198,
+   "ma120_gap": -0.18522999649970917,
+   "ma_aligned": false,
+   "ret5": 0.15751328949320453,
+   "ret20": 0.03800001144409171,
+   "ret60": -0.2245050476694651,
+   "from_high": -0.6660768724414775,
+   "from_low": 0.4371755394581518,
+   "vol_ratio_prev": 4.701193672793223,
+   "tv20_avg": 61057049.56983566,
+   "tv_prev": 276600015.0495529,
+   "prev_chg": 0.3680395366028997,
+   "up_days": 1,
+   "prev_close_pos": 0.9737420262805113,
+   "fr": null,
+   "price": 20.760000228881836,
+   "filings": [],
+   "news": [
+    {
+     "title": "Strength Seen in Firefly Aerospace (FLY): Can Its 36.8% Jump Turn into More Strength? - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 09:32:00 GMT"
+    },
+    {
+     "title": "Firefly Aerospace Stock Skyrockets Off Lows Before Earnings - Schaeffer's Investment Research",
+     "date": "Mon, 09 Nov 2026 17:55:29 GMT"
+    },
+    {
+     "title": "What's Going On With Firefly Aerospace Stock Monday? - Benzinga",
+     "date": "Mon, 09 Nov 2026 12:11:09 GMT"
+    },
+    {
+     "title": "Stock Market Races Higher; Nasdaq Jumps Nearly 3% As Chip Stocks Fly, Leave Nvidia In The Dust - Investor's Business Daily",
+     "date": "Mon, 09 Nov 2026 23:07:00 GMT"
+    },
+    {
+     "title": "FLY Feb 2027 8.000 put (FLY270219P00008000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 07:27:35 GMT"
+    },
+    {
+     "title": "DraftKings Faces Three Analyst Downgrades — JPMorgan Says It’s ‘Increasingly Difficult To Recommend’ The Stock - TradingView",
+     "date": "Mon, 09 Nov 2026 11:14:51 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "COHR",
+   "name": "Coherent Corp.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 44353122304,
+   "chg": 16.793737509888416,
+   "gap": 2.4324477468970374,
+   "high_chg": 18.97204620830839,
+   "close_pos": 0.869484216775378,
+   "upper_wick": 2.178308698419974,
+   "limit_up": false,
+   "tv": 3361253533.441162,
+   "vol_ratio": 1.6931295553837682,
+   "close": 225.19000244140625,
+   "pctb": 0.2069521613095624,
+   "bw": 0.5221152843491363,
+   "bw_pctile": 0.875,
+   "squeeze": false,
+   "rsi14": 38.822051755996135,
+   "ma5_gap": -0.0010879733309693274,
+   "ma20_gap": -0.15300475562575766,
+   "ma60_gap": -0.29907154528569724,
+   "ma120_gap": -0.378354453381089,
+   "ma_aligned": false,
+   "ret5": -0.08325413254019365,
+   "ret20": -0.38324483216015104,
+   "ret60": -0.4107814348157405,
+   "from_high": -0.5617954600941051,
+   "from_low": 0.478377551491979,
+   "vol_ratio_prev": 1.929501830055722,
+   "tv20_avg": 1942502904.3201447,
+   "tv_prev": 3128592863.38501,
+   "prev_chg": 0.13577994696995366,
+   "up_days": 1,
+   "prev_close_pos": 0.8280216614183054,
+   "fr": null,
+   "price": 192.80999755859375,
+   "filings": [],
+   "news": [
+    {
+     "title": "Coherent Corp. (COHR) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 13:43:43 GMT"
+    },
+    {
+     "title": "Coherent Corp. (COHR) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Mon, 09 Nov 2026 18:33:33 GMT"
+    },
+    {
+     "title": "Coherent continues rebound, rises 19% (COHR:NYSE) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 20:44:00 GMT"
+    },
+    {
+     "title": "Coherent Corp (COHR) Shares Surge Nearly 19% in Strong Rebound o - GuruFocus",
+     "date": "Mon, 09 Nov 2026 21:02:53 GMT"
+    },
+    {
+     "title": "Coherent Rallies as Strong Earnings, Higher Guidance, and AI Optics Momentum Lift Shares - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 16:20:00 GMT"
+    },
+    {
+     "title": "Marvell Vs. Coherent: Now I’m Buying Only One (NYSE:COHR) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 12:40:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "MPWR",
+   "name": "Monolithic Power Systems, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 67692425216,
+   "chg": 16.599754472992643,
+   "gap": 1.6430949528326355,
+   "high_chg": 17.313776214396846,
+   "close_pos": 0.9544358200204421,
+   "upper_wick": 0.7140217414041963,
+   "limit_up": false,
+   "tv": 2307276477.314209,
+   "vol_ratio": 1.5371781830287785,
+   "close": 1388.050048828125,
+   "pctb": 0.322206013885428,
+   "bw": 0.17906998651499473,
+   "bw_pctile": 0.475,
+   "squeeze": false,
+   "rsi14": 45.15866322384855,
+   "ma5_gap": -0.03298028427199606,
+   "ma20_gap": -0.03183756669598359,
+   "ma60_gap": -0.06817223587097987,
+   "ma120_gap": -0.12233332868619395,
+   "ma_aligned": false,
+   "ret5": -0.017488889670252084,
+   "ret20": -0.14127642278140917,
+   "ret60": -0.126314704968012,
+   "from_high": -0.3054973979521892,
+   "from_low": 0.42879083975974774,
+   "vol_ratio_prev": 1.1519986193274974,
+   "tv20_avg": 1320119796.6308594,
+   "tv_prev": 1430313589.5996094,
+   "prev_chg": 0.052155135442768286,
+   "up_days": 1,
+   "prev_close_pos": 0.580594075293857,
+   "fr": null,
+   "price": 1190.43994140625,
+   "filings": [],
+   "news": [
+    {
+     "title": "Monolithic Power Systems rises 17%, its fifth gain in seven sessions (MPWR:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 20:53:00 GMT"
+    },
+    {
+     "title": "Monolithic Power Systems (MPWR) Surges Nearly 17% Amid Strong Se - GuruFocus",
+     "date": "Mon, 09 Nov 2026 22:02:59 GMT"
+    },
+    {
+     "title": "MPWR jumps as investors appear to keep rewarding a strong Q3 beat and AI-data-center growth outlook - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 16:20:00 GMT"
+    },
+    {
+     "title": "Monolithic Power Systems (NASDAQ:MPWR) Shares Up 13.3% - Here's Why - MarketBeat",
+     "date": "Mon, 09 Nov 2026 18:33:42 GMT"
+    },
+    {
+     "title": "Monolithic Power Systems, Inc. $MPWR Stock Sold by Pictet Asset Management Holding SA - MarketBeat",
+     "date": "Mon, 09 Nov 2026 10:54:27 GMT"
+    },
+    {
+     "title": "Monolithic Power Systems, Inc. (NASDAQ: MPWR) Stock Analysis: P/E of 65.7 and a 5.22% Gain - Kalkine India",
+     "date": "Mon, 09 Nov 2026 11:17:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "VSAT",
+   "name": "ViaSat, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 10244899840,
+   "chg": 16.293982579092024,
+   "gap": 2.51758682790717,
+   "high_chg": 17.99843343896177,
+   "close_pos": 0.8957938400292339,
+   "upper_wick": 1.7044508598697372,
+   "limit_up": false,
+   "tv": 336080868.47190857,
+   "vol_ratio": 1.6901845573260974,
+   "close": 74.37000274658203,
+   "pctb": 0.4041889032546624,
+   "bw": 0.3969774743049603,
+   "bw_pctile": 0.8083333333333333,
+   "squeeze": false,
+   "rsi14": 53.581212997531495,
+   "ma5_gap": -0.05809054507053513,
+   "ma20_gap": -0.038034847196352306,
+   "ma60_gap": -0.09571257702072222,
+   "ma120_gap": -0.11547876597421791,
+   "ma_aligned": false,
+   "ret5": -0.1696961367149522,
+   "ret20": -0.1119289145144432,
+   "ret60": -0.22858866603306183,
+   "from_high": -0.31258732019707347,
+   "from_low": 1.1953313630393017,
+   "vol_ratio_prev": 1.743940421857654,
+   "tv20_avg": 178415757.14258194,
+   "tv_prev": 289322593.4516907,
+   "prev_chg": 0.07696193352340863,
+   "up_days": 1,
+   "prev_close_pos": 0.7370239824286372,
+   "fr": null,
+   "price": 63.95000076293945,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/797721/000119312526452035/vsat-20260930.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Why Viasat (VSAT) stock is up today - TradingView",
+     "date": "Mon, 09 Nov 2026 20:00:49 GMT"
+    },
+    {
+     "title": "Billionaires’ Sentiment Steady Towards Viasat, Inc. (VSAT) - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 21:40:24 GMT"
+    },
+    {
+     "title": "Viasat Rallies on NASA Award and Post-Earnings Analyst Support - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 21:22:00 GMT"
+    },
+    {
+     "title": "Viasat (NASDAQ:VSAT) Price Target Cut to $120.00 by Analysts at JPMorgan Chase & Co. - MarketBeat",
+     "date": "Mon, 09 Nov 2026 20:45:26 GMT"
+    },
+    {
+     "title": "NASA chose Viasat to plan a commercial relay as it gradually retires its satellite fleet. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 13:00:00 GMT"
+    },
+    {
+     "title": "Viasat (NASDAQ:VSAT) Shares Up 13.9% - Should You Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 17:03:01 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Contract·Partnership",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "FPS",
+   "name": "Forgent Power Solutions, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 7209056768,
+   "chg": 16.016431789275188,
+   "gap": 5.133470346504931,
+   "high_chg": 16.683778626141056,
+   "close_pos": 0.9486148932897868,
+   "upper_wick": 0.6673468368658776,
+   "limit_up": false,
+   "tv": 254623989.09784698,
+   "vol_ratio": 0.9933151537112614,
+   "close": 22.600000381469727,
+   "pctb": 0.06834174887730647,
+   "bw": 0.7050091000646089,
+   "bw_pctile": 0.975,
+   "squeeze": false,
+   "rsi14": 31.70212923844393,
+   "ma5_gap": -0.1290351476449556,
+   "ma20_gap": -0.30432299515947314,
+   "ma60_gap": -0.4054722338950154,
+   "ma120_gap": -0.5144606764016828,
+   "ma_aligned": false,
+   "ret5": -0.2452537797243589,
+   "ret20": -0.5133649728635217,
+   "ret60": -0.48136318343990825,
+   "from_high": -0.7048484917842981,
+   "from_low": 0.10243347244636847,
+   "vol_ratio_prev": 1.3577717141362375,
+   "tv20_avg": 296150012.4104786,
+   "tv_prev": 288422821.2223053,
+   "prev_chg": 0.06974192869930329,
+   "up_days": 1,
+   "prev_close_pos": 0.819004622517425,
+   "fr": null,
+   "price": 19.479999542236328,
+   "filings": [],
+   "news": [
+    {
+     "title": "Forgent Power Solutions (NYSE:FPS) Stock Jumps 11.9% - Here's Why - MarketBeat",
+     "date": "Mon, 09 Nov 2026 18:03:38 GMT"
+    },
+    {
+     "title": "FPS Dec 2026 37.000 call (FPS261204C00037000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 01:43:28 GMT"
+    },
+    {
+     "title": "FPS Dec 2026 36.000 put (FPS261211P00036000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 01:01:04 GMT"
+    },
+    {
+     "title": "FPS Dec 2026 19.000 call (FPS261224C00019000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 02:28:21 GMT"
+    },
+    {
+     "title": "FPS.NB (FPS) Stock News Today - TradingKey",
+     "date": "Mon, 09 Nov 2026 08:33:26 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "UI",
+   "name": "Ubiquiti Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 41469571072,
+   "chg": 15.66020538673014,
+   "gap": 3.231896005092505,
+   "high_chg": 16.215157461203656,
+   "close_pos": 0.955597822684543,
+   "upper_wick": 0.5549520744735121,
+   "limit_up": false,
+   "tv": 113388843.34881592,
+   "vol_ratio": 1.8720439236995527,
+   "close": 685.6799926757812,
+   "pctb": 0.541196982274361,
+   "bw": 0.19129583546788576,
+   "bw_pctile": 0.7916666666666666,
+   "squeeze": false,
+   "rsi14": 50.24507102913555,
+   "ma5_gap": 0.07650518685995489,
+   "ma20_gap": 0.0078808111429296,
+   "ma60_gap": 0.012994541220707978,
+   "ma120_gap": 0.035472515086955925,
+   "ma_aligned": false,
+   "ret5": 0.05148902896823504,
+   "ret20": -0.0980540603483746,
+   "ret60": 0.01687826218776811,
+   "from_high": -0.4610496167068282,
+   "from_low": 0.18513486563218562,
+   "vol_ratio_prev": 2.01385189131593,
+   "tv20_avg": 51682087.09503174,
+   "tv_prev": 100842088.56811523,
+   "prev_chg": 0.15293662540166353,
+   "up_days": 1,
+   "prev_close_pos": 0.6966860534756512,
+   "fr": null,
+   "price": 592.8400268554688,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1511737/000151173726000076/ui-20261106.htm"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1511737/000151173726000074/ubnt-20260930.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "UI Maintained by BWS Financial -- Price Target Steady at $980 - GuruFocus",
+     "date": "Mon, 09 Nov 2026 22:51:52 GMT"
+    },
+    {
+     "title": "AMD, Tesla among market cap stock movers on Monday - Investing.com",
+     "date": "Mon, 09 Nov 2026 21:04:05 GMT"
+    },
+    {
+     "title": "Barclays Issues Positive Forecast for Ubiquiti (NYSE:UI) Stock Price - MarketBeat",
+     "date": "Mon, 09 Nov 2026 16:53:02 GMT"
+    },
+    {
+     "title": "UI Maintained by Barclays -- Price Target Raised to $537 - GuruFocus",
+     "date": "Mon, 09 Nov 2026 17:06:27 GMT"
+    },
+    {
+     "title": "Stock Market S&P 500: Futures Edge Up After 165,000 October Jobs - JournalArta",
+     "date": "Mon, 09 Nov 2026 14:33:14 GMT"
+    },
+    {
+     "title": "Ubiquiti (NYSE:UI) Shares Climb 12.7% on Strong Earnings - MarketBeat",
+     "date": "Mon, 09 Nov 2026 19:27:52 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "TTD",
+   "name": "The Trade Desk, Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 7058830848,
+   "chg": 15.46790373391882,
+   "gap": 6.573854661512746,
+   "high_chg": 18.252123750782555,
+   "close_pos": 0.7662339833800572,
+   "upper_wick": 2.7842200168637348,
+   "limit_up": false,
+   "tv": 1297531255.9521103,
+   "vol_ratio": 6.011680656370697,
+   "close": 14.930000305175781,
+   "pctb": 0.6807272008272467,
+   "bw": 0.11644487949239614,
+   "bw_pctile": 0.03333333333333333,
+   "squeeze": true,
+   "rsi14": 58.190713493261555,
+   "ma5_gap": 0.004193870937527766,
+   "ma20_gap": 0.021044757121326807,
+   "ma60_gap": -0.014506727105468298,
+   "ma120_gap": -0.19128108325833815,
+   "ma_aligned": false,
+   "ret5": 0.05207488570457719,
+   "ret20": 0.07036427043361715,
+   "ret60": -0.11195055408410681,
+   "from_high": -0.7158241691170157,
+   "from_low": 0.11273669815132448,
+   "vol_ratio_prev": 1.0067736365408866,
+   "tv20_avg": 183144012.44925022,
+   "tv_prev": 185607568.3807373,
+   "prev_chg": 0.009367672258255189,
+   "up_days": 1,
+   "prev_close_pos": 0.7575759327225963,
+   "fr": null,
+   "price": 12.930000305175781,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1671933/000167193326000116/ttd-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,8.01,9.01",
+     "items_kr": "실적 발표, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1671933/000167193326000115/ttd-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Why The Trade Desk Stock Skyrocketed Today - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 17:00:08 GMT"
+    },
+    {
+     "title": "Why The Trade Desk Stock Skyrocketed Today - The Motley Fool",
+     "date": "Mon, 09 Nov 2026 16:40:00 GMT"
+    },
+    {
+     "title": "The Trade Desk (NASDAQ:TTD) beats expectations in strong Q3 2026, stock jumps 21.8% - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 21:13:13 GMT"
+    },
+    {
+     "title": "What's Going On With The Trade Desk Stock Monday? - Benzinga",
+     "date": "Mon, 09 Nov 2026 14:38:38 GMT"
+    },
+    {
+     "title": "Earnings Flash (TTD) The Trade Desk, Inc. Posts Q3 Adjusted EPS $0.33 per Share - www.marketscreener.com",
+     "date": "Mon, 09 Nov 2026 21:03:15 GMT"
+    },
+    {
+     "title": "Stocks making big moves after hours: QMCO, TTWO, TTD - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 21:55:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "LGN",
+   "name": "Legence Corp.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 5283403776,
+   "chg": 15.227517102240595,
+   "gap": 4.299536974202889,
+   "high_chg": 16.624863543589985,
+   "close_pos": 0.906519778231807,
+   "upper_wick": 1.3973464413494052,
+   "limit_up": false,
+   "tv": 81435455.1336174,
+   "vol_ratio": 1.296521374041893,
+   "close": 32.15999984741211,
+   "pctb": 0.012714741575684562,
+   "bw": 0.5981722329124545,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 29.15601242596098,
+   "ma5_gap": -0.13333748080776353,
+   "ma20_gap": -0.29148051109699513,
+   "ma60_gap": -0.4430846215596006,
+   "ma120_gap": -0.5575009652663339,
+   "ma_aligned": false,
+   "ret5": -0.28122589412059196,
+   "ret20": -0.45837375298705685,
+   "ret60": -0.5586654157709257,
+   "from_high": -0.7397377784231375,
+   "from_low": 0.16778243903287682,
+   "vol_ratio_prev": 2.370073646356243,
+   "tv20_avg": 72024809.85490799,
+   "tv_prev": 117079658.35990906,
+   "prev_chg": 0.0983864626136397,
+   "up_days": 1,
+   "prev_close_pos": 0.7125503478013764,
+   "fr": null,
+   "price": 27.90999984741211,
+   "filings": [],
+   "news": [
+    {
+     "title": "Top LGN (LGN) Competitors 2026 - MarketBeat",
+     "date": "Mon, 09 Nov 2026 17:54:14 GMT"
+    },
+    {
+     "title": "LGN Nov 2026 45.000 call (LGN261120C00045000) interactive stock chart - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 20:01:45 GMT"
+    },
+    {
+     "title": "LGN (NASDAQ:LGN) Shares Climb 12.4% - Should You Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 18:43:54 GMT"
+    },
+    {
+     "title": "LGN,MGM,NEXT,SNPS,AI,RAPP,PLSE,INSM,PKG | Stock Prices | Quote Comparison - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 17:00:49 GMT"
+    },
+    {
+     "title": "LGN Nov 2026 30.000 put (LGN261120P00030000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 12:23:06 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "IMVT",
+   "name": "Immunovant, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 7260327424,
+   "chg": 15.132658812072307,
+   "gap": 8.090400451366264,
+   "high_chg": 16.639370486251437,
+   "close_pos": 0.8357145679241093,
+   "upper_wick": 1.5067116741791295,
+   "limit_up": false,
+   "tv": 139835317.82032013,
+   "vol_ratio": 2.847145336458464,
+   "close": 35.150001525878906,
+   "pctb": 1.0269616884561779,
+   "bw": 0.12107172516641979,
+   "bw_pctile": 0.175,
+   "squeeze": false,
+   "rsi14": 63.636360386217476,
+   "ma5_gap": 0.04361798697953878,
+   "ma20_gap": 0.06380016071799899,
+   "ma60_gap": -0.12492653182468427,
+   "ma120_gap": -0.14993930374264974,
+   "ma_aligned": false,
+   "ret5": 0.04662326385994131,
+   "ret20": 0.00196919509823279,
+   "ret60": -0.2699665014482532,
+   "from_high": -0.3278291079386356,
+   "from_low": 0.42463836919647124,
+   "vol_ratio_prev": 1.9851392726458068,
+   "tv20_avg": 40202113.81580353,
+   "tv_prev": 81157900.82530975,
+   "prev_chg": 0.07537870176134476,
+   "up_days": 1,
+   "prev_close_pos": 0.9647577499676507,
+   "fr": null,
+   "price": 30.530000686645508,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "S-3ASR",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1764013/000176401326000124/imvt-formsx3asr2026v1.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1764013/000176401326000122/imvt-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1764013/000176401326000121/imvt-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "What Immunovant (IMVT) Said on Its Q2 Earnings Call - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 16:15:13 GMT"
+    },
+    {
+     "title": "Why Is Immunovant Stock Soaring Today? - Immunovant (NASDAQ:IMVT) - Benzinga",
+     "date": "Mon, 09 Nov 2026 17:23:43 GMT"
+    },
+    {
+     "title": "IMMUNOVANT ($IMVT) Releases Q2 2027 Earnings - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 12:36:00 GMT"
+    },
+    {
+     "title": "Immunovant (IMVT) Jumped, What Is Driving Attention Today? - Simply Wall St",
+     "date": "Mon, 09 Nov 2026 13:30:42 GMT"
+    },
+    {
+     "title": "IMVT Nov 2026 38.000 call (IMVT261120C00038000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 02:18:45 GMT"
+    },
+    {
+     "title": "Immunovant stock: IMVT-1402 RA result sets up FDA path decision - ad-hoc-news.de",
+     "date": "Mon, 09 Nov 2026 23:03:55 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "STRL",
+   "name": "Sterling Infrastructure, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 8866172928,
+   "chg": 14.971127682539942,
+   "gap": 4.3627871449081645,
+   "high_chg": 16.1220973477157,
+   "close_pos": 0.913344529811532,
+   "upper_wick": 1.150969665175753,
+   "limit_up": false,
+   "tv": 363019523.789978,
+   "vol_ratio": 1.107308877313532,
+   "close": 290.6700134277344,
+   "pctb": 0.03142268441647627,
+   "bw": 0.7169375213301566,
+   "bw_pctile": 0.95,
+   "squeeze": false,
+   "rsi14": 22.257622226338682,
+   "ma5_gap": -0.14438681950146393,
+   "ma20_gap": -0.33594065918599014,
+   "ma60_gap": -0.4561938569951506,
+   "ma120_gap": -0.5771827645073471,
+   "ma_aligned": false,
+   "ret5": -0.269116230673752,
+   "ret20": -0.5071734750015229,
+   "ret60": -0.5429531788299491,
+   "from_high": -0.748607897974038,
+   "from_low": 0.05623331667590703,
+   "vol_ratio_prev": 1.558002170940412,
+   "tv20_avg": 399627252.7732849,
+   "tv_prev": 419125008.14208984,
+   "prev_chg": 0.034705783389639366,
+   "up_days": 1,
+   "prev_close_pos": 0.35875109254169885,
+   "fr": null,
+   "price": 252.82000732421875,
+   "filings": [],
+   "news": [
+    {
+     "title": "Sterling Infrastructure (NASDAQ:STRL): A Case for Affordable Growth - ChartMill",
+     "date": "Mon, 09 Nov 2026 12:30:43 GMT"
+    },
+    {
+     "title": "Zacks Value Investor Highlights: MU, SNDK, SANM, STRL and FIX - TradingView",
+     "date": "Mon, 09 Nov 2026 09:07:00 GMT"
+    },
+    {
+     "title": "Sterling Infrastructure (NASDAQ:STRL) Shares Up 11.6% - Here's What Happened - MarketBeat",
+     "date": "Mon, 09 Nov 2026 17:03:03 GMT"
+    },
+    {
+     "title": "Sterling Infrastructure, Inc. $STRL Stock Sold by Calamos Advisors LLC - MarketBeat",
+     "date": "Mon, 09 Nov 2026 08:54:00 GMT"
+    },
+    {
+     "title": "STRL Nov 2026 270.000 call (STRL261120C00270000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 00:40:05 GMT"
+    },
+    {
+     "title": "Zacks Value Investor Highlights: MU, SNDK, SANM, STRL and FIX - Zacks Investment Research",
+     "date": "Mon, 09 Nov 2026 09:30:56 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "PL",
+   "name": "Planet Labs PBC",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 5228495872,
+   "chg": 14.501989379791791,
+   "gap": 2.3904397304817637,
+   "high_chg": 15.258963607560672,
+   "close_pos": 0.947945053721917,
+   "upper_wick": 0.7569742277688831,
+   "limit_up": false,
+   "tv": 157029969.99943256,
+   "vol_ratio": 1.2832869856048026,
+   "close": 14.369999885559082,
+   "pctb": 0.2027102461104728,
+   "bw": 0.2816812619346362,
+   "bw_pctile": 0.225,
+   "squeeze": false,
+   "rsi14": 43.45088307943061,
+   "ma5_gap": -0.004600238076684526,
+   "ma20_gap": -0.0837409530358394,
+   "ma60_gap": -0.2624155069920693,
+   "ma120_gap": -0.46778809644229,
+   "ma_aligned": false,
+   "ret5": -0.0682999300709648,
+   "ret20": -0.26949941980187553,
+   "ret60": -0.49292928522283386,
+   "from_high": -0.7575347643410991,
+   "from_low": 0.19296574568806868,
+   "vol_ratio_prev": 1.0969333218842439,
+   "tv20_avg": 116661891.98806286,
+   "tv_prev": 116233081.76651001,
+   "prev_chg": 0.10378191003101822,
+   "up_days": 1,
+   "prev_close_pos": 1.0,
+   "fr": null,
+   "price": 12.550000190734863,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1836833/000119312526451910/xslF345X06/ownership.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Planet Labs PBC (PL) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 16:07:25 GMT"
+    },
+    {
+     "title": "Planet Labs Stock Rallies 13%: What's Happening Today? - Benzinga",
+     "date": "Mon, 09 Nov 2026 16:17:15 GMT"
+    },
+    {
+     "title": "Planet Labs PBC (PL) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 22:38:33 GMT"
+    },
+    {
+     "title": "Planet Labs PBC (NYSE:PL) Shares Climb 12.1% - Here's Why - MarketBeat",
+     "date": "Mon, 09 Nov 2026 18:03:40 GMT"
+    },
+    {
+     "title": "A new rocket deal gives Planet flexibility to set satellite launch dates - Stock Titan",
+     "date": "Mon, 09 Nov 2026 14:03:00 GMT"
+    },
+    {
+     "title": "Planet Labs CEO Says Geopolitical Shifts, AI Are Reshaping Space Business: ‘Defense Is Really What’s Driving The Biggest Boom Right Now’ - TradingView",
+     "date": "Mon, 09 Nov 2026 06:17:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "ASTS",
+   "name": "AST SpaceMobile, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 14356388864,
+   "chg": 14.104538510151365,
+   "gap": 3.587998087577793,
+   "high_chg": 18.156199867942814,
+   "close_pos": 0.7794741540417826,
+   "upper_wick": 4.0516613577914455,
+   "limit_up": false,
+   "tv": 985297280.8780823,
+   "vol_ratio": 1.5042515606946834,
+   "close": 36.88999938964844,
+   "pctb": 0.06378594331375836,
+   "bw": 0.4570711469992518,
+   "bw_pctile": 0.5416666666666666,
+   "squeeze": false,
+   "rsi14": 30.70388733432415,
+   "ma5_gap": -0.058148315816650475,
+   "ma20_gap": -0.19938085922677706,
+   "ma60_gap": -0.40556919403917013,
+   "ma120_gap": -0.5184748202374752,
+   "ma_aligned": false,
+   "ret5": -0.21088599297581756,
+   "ret20": -0.3656430543655548,
+   "ret60": -0.5479585661559317,
+   "from_high": -0.758478995341088,
+   "from_low": 0.172226320539828,
+   "vol_ratio_prev": 1.7340637273077866,
+   "tv20_avg": 708875810.3255653,
+   "tv_prev": 1056114470.8145142,
+   "prev_chg": 0.07052983491076947,
+   "up_days": 1,
+   "prev_close_pos": 0.8512548337444843,
+   "fr": null,
+   "price": 32.33000183105469,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1780312/000119312526453759/asts-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,7.01,9.01",
+     "items_kr": "실적 발표, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1780312/000119312526453758/asts-20261109.htm"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "8-K",
+     "items": "7.01,9.01",
+     "items_kr": "IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1780312/000149315226050513/form8-k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "AST SpaceMobile Sales Were Weak. That Doesn’t Matter. - Barron's",
+     "date": "Mon, 09 Nov 2026 22:25:00 GMT"
+    },
+    {
+     "title": "AST SpaceMobile Is Gunning for Space, and a New Space Force Win Could Be the Fuel ASTS Stock Needs - Barchart.com",
+     "date": "Mon, 09 Nov 2026 16:22:50 GMT"
+    },
+    {
+     "title": "AST SpaceMobile Stocks Surge 17.29% on Rakuten Japan Satellite Venture - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 18:27:58 GMT"
+    },
+    {
+     "title": "AST SpaceMobile Stock Slides After Posting Q3 Double-Miss - Benzinga",
+     "date": "Mon, 09 Nov 2026 21:42:58 GMT"
+    },
+    {
+     "title": "AST SpaceMobile (ASTS) Misses Revenue Estimates - Stocks Down Under",
+     "date": "Mon, 09 Nov 2026 22:44:57 GMT"
+    },
+    {
+     "title": "AST SpaceMobile (ASTS) Reports Q3 Loss, Posts 187% Revenue Growt - GuruFocus",
+     "date": "Mon, 09 Nov 2026 22:02:59 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "SGRY",
+   "name": "Surgery Partners, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 3408738560,
+   "chg": 14.008620228977197,
+   "gap": 11.249994039535727,
+   "high_chg": 17.349135716236507,
+   "close_pos": 0.46735418613888385,
+   "upper_wick": 3.3405154872593226,
+   "limit_up": false,
+   "tv": 450945613.35734177,
+   "vol_ratio": 2.67608185688779,
+   "close": 26.450000762939453,
+   "pctb": 0.7486163211105767,
+   "bw": 0.859583786043628,
+   "bw_pctile": 0.9416666666666667,
+   "squeeze": false,
+   "rsi14": 94.92063966217525,
+   "ma5_gap": 0.00190018247319923,
+   "ma20_gap": 0.213706558572468,
+   "ma60_gap": 0.47540467593411373,
+   "ma120_gap": 0.5028016169017016,
+   "ma_aligned": true,
+   "ret5": -0.00043077647253730866,
+   "ret20": 0.6702663923325411,
+   "ret60": 0.5273206980795737,
+   "from_high": -0.007274286272534125,
+   "from_low": 1.0333042132512755,
+   "vol_ratio_prev": 0.49736409645442625,
+   "tv20_avg": 139503906.8142271,
+   "tv_prev": 72251762.37602234,
+   "prev_chg": 0.0012948073606700028,
+   "up_days": 4,
+   "prev_close_pos": 0.5000158947134183,
+   "fr": null,
+   "price": 23.200000762939453,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1638833/000163883326000090/sgry-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "DEFA14A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1638833/000110465926124583/tm2628254d6_defa14a.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "DEFA14A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1638833/000110465926124577/tm2629312d3_defa14a.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1638833/000163883326000089/sgry-20261109.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "DEFA14A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1638833/000110465926124243/tm2629312d1_8k.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "1.01,7.01,9.01",
+     "items_kr": "계약 체결, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1638833/000110465926124236/tm2629312d1_8k.htm"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1638833/000127417326000226/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Why is Surgery Partners (SGRY) stock rocketing higher today - TradingView",
+     "date": "Mon, 09 Nov 2026 15:50:47 GMT"
+    },
+    {
+     "title": "Surgery Partners boosts HealthSpan buyout offer to $25 per share (update) (SGRY:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 16:07:00 GMT"
+    },
+    {
+     "title": "A $25-a-share cash merger deal for Surgery Partners carries a value of up to about $6 billion. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 21:10:00 GMT"
+    },
+    {
+     "title": "Surgery Partners (SGRY) Releases Q3 2026 Earnings: Revenue Misses and Net Loss Widens - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 22:35:00 GMT"
+    },
+    {
+     "title": "SGRY Nov 2026 27.500 put (SGRY261120P00027500) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 10:55:10 GMT"
+    },
+    {
+     "title": "SGRY Deal Alert: Surgery Partners $23.50 per Share Merger - GlobeNewswire",
+     "date": "Mon, 09 Nov 2026 10:36:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A",
+    "Contract·Partnership"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "OKLO",
+   "name": "Oklo Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 5241572864,
+   "chg": 13.970280348671448,
+   "gap": 0.8067963490997254,
+   "high_chg": 17.735038408576287,
+   "close_pos": 0.8224988410572002,
+   "upper_wick": 3.7647580599048416,
+   "limit_up": false,
+   "tv": 534100355.31641006,
+   "vol_ratio": 1.9401279449494504,
+   "close": 26.84000015258789,
+   "pctb": 0.253989028997356,
+   "bw": 0.4603245005798861,
+   "bw_pctile": 0.8916666666666667,
+   "squeeze": false,
+   "rsi14": 38.57584677148387,
+   "ma5_gap": 0.05246688470814109,
+   "ma20_gap": -0.11324487736396494,
+   "ma60_gap": -0.3279429480808853,
+   "ma120_gap": -0.46021936813912256,
+   "ma_aligned": false,
+   "ret5": -0.06732676288869122,
+   "ret20": -0.3213256853235408,
+   "ret60": -0.49300325403115763,
+   "from_high": -0.7994720815097885,
+   "from_low": 0.2705691627156199,
+   "vol_ratio_prev": 2.650051244025969,
+   "tv20_avg": 266073738.39925766,
+   "tv_prev": 585796811.0221863,
+   "prev_chg": 0.22656241152435896,
+   "up_days": 1,
+   "prev_close_pos": 0.8485322326206508,
+   "fr": null,
+   "price": 23.549999237060547,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1849056/000162828026071319/oklo-20260930.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Should You Buy Oklo Stock While It's Under $30? - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 21:34:02 GMT"
+    },
+    {
+     "title": "Should You Buy Oklo Stock While It's Under $30? - The Motley Fool",
+     "date": "Mon, 09 Nov 2026 21:14:00 GMT"
+    },
+    {
+     "title": "NuScale Is Still Down 61% in 2026: Did Today Mark the Bottom for SMR Stock? - 24/7 Wall St.",
+     "date": "Mon, 09 Nov 2026 20:02:00 GMT"
+    },
+    {
+     "title": "Oklo Secures U.S. Forging Capacity for Future Aurora Expansion - TradingView",
+     "date": "Mon, 09 Nov 2026 18:20:55 GMT"
+    },
+    {
+     "title": "Oklo Posts Higher Q3 Net Loss, Aurora-ID Construction Moves Toward Structural Work - Benzinga",
+     "date": "Mon, 09 Nov 2026 15:43:54 GMT"
+    },
+    {
+     "title": "OKLO Maintains Buy Rating -- Price Target Lowered to $66.00 by C - GuruFocus",
+     "date": "Mon, 09 Nov 2026 20:16:41 GMT"
+    }
+   ],
+   "catalysts": [
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "DPC",
+   "name": "DPC Holdings PLC",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 4889633792,
+   "chg": 13.724804591209395,
+   "gap": 4.239052412255839,
+   "high_chg": 13.933287467719047,
+   "close_pos": 0.9798653207704404,
+   "upper_wick": 0.20848287650965017,
+   "limit_up": false,
+   "tv": 50405835.79502106,
+   "vol_ratio": 0.8082894211995886,
+   "close": 32.72999954223633,
+   "pctb": 0.4386145135969692,
+   "bw": 0.3660191618292439,
+   "bw_pctile": 0.7763157894736842,
+   "squeeze": false,
+   "rsi14": 43.05616472048504,
+   "ma5_gap": -0.007791485489592076,
+   "ma20_gap": -0.022468264281717776,
+   "ma60_gap": -0.24713225617621704,
+   "ma120_gap": null,
+   "ma_aligned": false,
+   "ret5": 0.05113227059133729,
+   "ret20": -0.2569067640896825,
+   "ret60": -0.4269215454582468,
+   "from_high": -0.4972925644254059,
+   "from_low": 0.15120002746582029,
+   "vol_ratio_prev": 0.7803326287922457,
+   "tv20_avg": 56061273.26570511,
+   "tv_prev": 42076361.00387573,
+   "prev_chg": 0.05886682720768932,
+   "up_days": 1,
+   "prev_close_pos": 0.8474579558775133,
+   "fr": null,
+   "price": 28.780000686645508,
+   "filings": [],
+   "news": [
+    {
+     "title": "DPC Holdings PLC (DPC) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 08:42:13 GMT"
+    },
+    {
+     "title": "DPC Holdings PLC (DPC) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Sun, 08 Nov 2026 21:15:41 GMT"
+    },
+    {
+     "title": "DPC Holdings (NYSE:DPC) - Stock Analysis - Simply Wall St",
+     "date": "Sun, 08 Nov 2026 21:58:12 GMT"
+    },
+    {
+     "title": "DPC Holdings (DPC) Stock Sees Modest Fair Value Cut As Analysts Weigh Competition - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 02:14:00 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "ALAB",
+   "name": "Astera Labs, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 37904990208,
+   "chg": 13.717155619720355,
+   "gap": 4.346910489374967,
+   "high_chg": 15.384612922756101,
+   "close_pos": 0.8714629252831417,
+   "upper_wick": 1.6674573030357316,
+   "limit_up": false,
+   "tv": 1551875058.0096436,
+   "vol_ratio": 1.4981999495420575,
+   "close": 216.8699951171875,
+   "pctb": 0.005121049912586757,
+   "bw": 0.583641756424897,
+   "bw_pctile": 0.8333333333333334,
+   "squeeze": false,
+   "rsi14": 27.89486501866132,
+   "ma5_gap": -0.0976493474150919,
+   "ma20_gap": -0.2888320196467268,
+   "ma60_gap": -0.3638518446883613,
+   "ma120_gap": -0.4121372275095032,
+   "ma_aligned": false,
+   "ret5": -0.2628140791843231,
+   "ret20": -0.44271058275368425,
+   "ret60": -0.4091641135290216,
+   "from_high": -0.6181798491216686,
+   "from_low": 0.9482072520477938,
+   "vol_ratio_prev": 1.4297533909948603,
+   "tv20_avg": 1211137991.6963959,
+   "tv_prev": 1267153568.6096191,
+   "prev_chg": 0.06262888180037218,
+   "up_days": 1,
+   "prev_close_pos": 0.7017657285301823,
+   "fr": null,
+   "price": 190.7100067138672,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1736297/000148439426000017/xslF345X06/form4-11092026_091116.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "144/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1736297/000197325126000043/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Astera Labs rallies 14% on tech stock surge (ALAB:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 21:13:00 GMT"
+    },
+    {
+     "title": "Astera Labs Stock Is Surging Monday: What's Going On? - Benzinga",
+     "date": "Mon, 09 Nov 2026 17:50:30 GMT"
+    },
+    {
+     "title": "Nasdaq-100 Gains 3% with Astera Labs (ALAB) Leading Tech Rotatio - GuruFocus",
+     "date": "Mon, 09 Nov 2026 17:25:52 GMT"
+    },
+    {
+     "title": "Astera Labs (NASDAQ:ALAB) Stock Price Up 13.7% - Time to Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 22:27:22 GMT"
+    },
+    {
+     "title": "Astera Labs Is Increasing Their Revenue Per Accelerator (Rating Upgrade) (ALAB) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 16:26:00 GMT"
+    },
+    {
+     "title": "Astera Labs Stock Drops 26% in a Week Despite Strong Earnings. Is It a Buy Now? - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 11:24:55 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "MXL",
+   "name": "MaxLinear, Inc",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 5070656512,
+   "chg": 13.68442354712236,
+   "gap": 1.9520111397226314,
+   "high_chg": 15.026432175257032,
+   "close_pos": 0.9128137550833236,
+   "upper_wick": 1.3420086281346566,
+   "limit_up": false,
+   "tv": 143905686.31725693,
+   "vol_ratio": 0.6654767337388258,
+   "close": 55.90999984741211,
+   "pctb": 0.039624781743221725,
+   "bw": 0.6373965153782911,
+   "bw_pctile": 0.875,
+   "squeeze": false,
+   "rsi14": 30.2949045932683,
+   "ma5_gap": -0.10789435979079942,
+   "ma20_gap": -0.2934415598833907,
+   "ma60_gap": -0.3455972816801375,
+   "ma120_gap": -0.3855572180157786,
+   "ma_aligned": false,
+   "ret5": -0.271083453158662,
+   "ret20": -0.48856074841691655,
+   "ret60": -0.35838226580372057,
+   "from_high": -0.6166796637928686,
+   "from_low": 2.8512136681464426,
+   "vol_ratio_prev": 0.8499529230505863,
+   "tv20_avg": 262361693.8084221,
+   "tv_prev": 161157943.00003052,
+   "prev_chg": 0.10990744258519203,
+   "up_days": 1,
+   "prev_close_pos": 0.8678759728227301,
+   "fr": null,
+   "price": 49.18000030517578,
+   "filings": [],
+   "news": [
+    {
+     "title": "MaxLinear (NASDAQ:MXL) Stock Jumps 13.6% - Should You Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 18:03:40 GMT"
+    },
+    {
+     "title": "MaxLinear, Inc (NASDAQ:MXL) Stock Now Rated \"Moderate Buy\" by Wall Street Brokerages - MarketBeat",
+     "date": "Mon, 09 Nov 2026 07:46:09 GMT"
+    },
+    {
+     "title": "MaxLinear, Inc. (MXL.MX) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 10:50:06 GMT"
+    },
+    {
+     "title": "MaxLinear Surges 11.0% Amid Sector-Wide Rally - AlphaStreet",
+     "date": "Mon, 09 Nov 2026 15:41:40 GMT"
+    },
+    {
+     "title": "MXL Nov 2026 30.000 put (MXL261120P00030000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 04:42:15 GMT"
+    },
+    {
+     "title": "MXL Dec 2026 14.000 call (MXL261218C00014000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 22:30:23 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "LASR",
+   "name": "nLIGHT, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2516295680,
+   "chg": 13.650706376173094,
+   "gap": 0.7101537467460339,
+   "high_chg": 16.27143948633025,
+   "close_pos": 0.837885795573033,
+   "upper_wick": 2.620733110157158,
+   "limit_up": false,
+   "tv": 83627508.76811218,
+   "vol_ratio": 1.6993958871151853,
+   "close": 43.209999084472656,
+   "pctb": 0.7021910858414159,
+   "bw": 0.24507226517567127,
+   "bw_pctile": 0.36666666666666664,
+   "squeeze": false,
+   "rsi14": 56.185369472687796,
+   "ma5_gap": 0.10119910277825883,
+   "ma20_gap": 0.04955142740548424,
+   "ma60_gap": -0.04911369159767698,
+   "ma120_gap": -0.29498699087537916,
+   "ma_aligned": false,
+   "ret5": 0.02396981858459224,
+   "ret20": -0.011954238304180631,
+   "ret60": -0.24488576742846968,
+   "from_high": -0.5627371846787362,
+   "from_low": 0.35543677332905044,
+   "vol_ratio_prev": 2.541345491836823,
+   "tv20_avg": 40942547.54207611,
+   "tv_prev": 100342385.20812988,
+   "prev_chg": 0.29584186298684023,
+   "up_days": 1,
+   "prev_close_pos": 0.8547012634152968,
+   "fr": null,
+   "price": 38.02000045776367,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1124796/000195917326007883/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1124796/000112479626000043/lasr-20260930.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "nLIGHT, Inc. (LASR) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 13:09:55 GMT"
+    },
+    {
+     "title": "nLight (NASDAQ:LASR) Stock Price Up 15.4% - Still a Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 20:45:24 GMT"
+    },
+    {
+     "title": "LASR Nov 2026 34.000 put (LASR261120P00034000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 01:48:24 GMT"
+    },
+    {
+     "title": "LASR Nov 2026 50.000 call (LASR261120C00050000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 20:14:23 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "ALMR",
+   "name": "Alamar Biosciences, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2212295680,
+   "chg": 13.51159008418037,
+   "gap": 2.174690292132375,
+   "high_chg": 14.01069665621717,
+   "close_pos": 0.9610571859837703,
+   "upper_wick": 0.49910657203678593,
+   "limit_up": false,
+   "tv": 21421633.702659607,
+   "vol_ratio": 0.8354785632237435,
+   "close": 31.84000015258789,
+   "pctb": 0.44104317760153755,
+   "bw": 0.41067496470169823,
+   "bw_pctile": 0.6666666666666666,
+   "squeeze": false,
+   "rsi14": 53.779697375060024,
+   "ma5_gap": -0.008903979585721977,
+   "ma20_gap": -0.024212090957412835,
+   "ma60_gap": -0.08647298610489318,
+   "ma120_gap": 0.017585519952897144,
+   "ma_aligned": false,
+   "ret5": -0.08333336969346472,
+   "ret20": 0.11001182148545552,
+   "ret60": -0.14793436217377498,
+   "from_high": -0.2918455237354871,
+   "from_low": 0.4880635898890895,
+   "vol_ratio_prev": 0.6420518838271657,
+   "tv20_avg": 23113611.666316986,
+   "tv_prev": 15040409.590911865,
+   "prev_chg": 0.04236341122677745,
+   "up_days": 1,
+   "prev_close_pos": 0.9444442089692048,
+   "fr": null,
+   "price": 28.049999237060547,
+   "filings": [],
+   "news": [
+    {
+     "title": "Alamar Biosciences: Recurring Revenue Potential At A High Premium (NASDAQ:ALMR) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 13:15:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "VSH",
+   "name": "Vishay Intertechnology, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 4050884096,
+   "chg": 13.445013180614351,
+   "gap": 0.9020578963862436,
+   "high_chg": 14.28264071099532,
+   "close_pos": 0.9369952380981728,
+   "upper_wick": 0.8376275303809577,
+   "limit_up": false,
+   "tv": 99648151.44426727,
+   "vol_ratio": 0.9652335301002168,
+   "close": 26.40999984741211,
+   "pctb": 0.035798555651928625,
+   "bw": 0.350841039334383,
+   "bw_pctile": 0.49166666666666664,
+   "squeeze": false,
+   "rsi14": 37.04433027283645,
+   "ma5_gap": -0.060380994271826194,
+   "ma20_gap": -0.16286091719559914,
+   "ma60_gap": -0.2497502133235322,
+   "ma120_gap": -0.4012627808796341,
+   "ma_aligned": false,
+   "ret5": -0.1293941329128131,
+   "ret20": -0.31609870562528875,
+   "ret60": -0.3013205012045147,
+   "from_high": -0.6648913159985995,
+   "from_low": 0.9779099219396941,
+   "vol_ratio_prev": 0.9565230802449143,
+   "tv20_avg": 106525647.22476959,
+   "tv_prev": 86629538.55514526,
+   "prev_chg": 0.05722071765160175,
+   "up_days": 1,
+   "prev_close_pos": 0.660919779624713,
+   "fr": null,
+   "price": 23.280000686645508,
+   "filings": [],
+   "news": [
+    {
+     "title": "Vishay Intertechnology (NYSE:VSH) Stock Price Up 12.8% - Still a Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 19:05:55 GMT"
+    },
+    {
+     "title": "Vishay Intertechnology to Showcase Passive and Semiconductor Solutions for the All-Electric Society at electronica 2026 - Stock Titan",
+     "date": "Mon, 09 Nov 2026 16:00:00 GMT"
+    },
+    {
+     "title": "Trading the Move, Not the Narrative: (VSH) Edition - Stock Traders Daily",
+     "date": "Mon, 09 Nov 2026 15:34:01 GMT"
+    },
+    {
+     "title": "Vishay Intertechnology, Power Integrations, and Penguin Solutions shares are soaring, what you need to know - TradingView",
+     "date": "Mon, 09 Nov 2026 17:35:53 GMT"
+    },
+    {
+     "title": "VSH Nov 2026 28.000 call (VSH261120C00028000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 09:11:58 GMT"
+    },
+    {
+     "title": "Vishay Intertechnology to Showcase Power and Sensing Solutions for AI, E-Mobility and Industrial Applications at electronica 2026 - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 16:10:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "FDA·Clinical",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "TTMI",
+   "name": "TTM Technologies, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 7937937920,
+   "chg": 13.261162850000318,
+   "gap": 1.3231051347968537,
+   "high_chg": 15.102988793129857,
+   "close_pos": 0.8717950355838783,
+   "upper_wick": 1.8418259431295245,
+   "limit_up": false,
+   "tv": 253339617.2779541,
+   "vol_ratio": 0.5789935895283866,
+   "close": 75.33000183105469,
+   "pctb": 0.10781938315988655,
+   "bw": 0.6332468800988219,
+   "bw_pctile": 0.875,
+   "squeeze": false,
+   "rsi14": 33.43162207846912,
+   "ma5_gap": -0.07707035145757068,
+   "ma20_gap": -0.2483471520492333,
+   "ma60_gap": -0.4009951695175127,
+   "ma120_gap": -0.512432909338493,
+   "ma_aligned": false,
+   "ret5": -0.19809500628822518,
+   "ret20": -0.45037599403266737,
+   "ret60": -0.5210973516860697,
+   "from_high": -0.7028548380818415,
+   "from_low": 0.1996753929244932,
+   "vol_ratio_prev": 0.9014064598204821,
+   "tv20_avg": 494629833.54969025,
+   "tv_prev": 339307426.89819336,
+   "prev_chg": 0.06894890439346191,
+   "up_days": 1,
+   "prev_close_pos": 0.5354065355877173,
+   "fr": null,
+   "price": 66.51000213623047,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1116942/000119312526452897/xslF345X06/ownership.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "TTM Technologies, Inc. (TTMI) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 11:58:40 GMT"
+    },
+    {
+     "title": "Why is TTM Technologies (TTMI) stock rocketing higher today - TradingView",
+     "date": "Mon, 09 Nov 2026 20:00:49 GMT"
+    },
+    {
+     "title": "TTM Technologies (TTMI) director Franklin bought 5,000 shares for $310K at $61.92 - Quantisnow",
+     "date": "Mon, 09 Nov 2026 16:45:05 GMT"
+    },
+    {
+     "title": "TTM Technologies (NASDAQ:TTMI) Stock Price Up 13.2% Following Insider Buying Activity - MarketBeat",
+     "date": "Mon, 09 Nov 2026 17:33:20 GMT"
+    },
+    {
+     "title": "TTM Technologies, Inc. (TTMI) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 18:09:25 GMT"
+    },
+    {
+     "title": "At $61.92 each, a director bought 5,000 TTM Technologies (TTMI) shares. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 15:52:52 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "AMD",
+   "name": "Advanced Micro Devices, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 834115600384,
+   "chg": 13.259392680905702,
+   "gap": 5.422680750078346,
+   "high_chg": 14.729196256961764,
+   "close_pos": 0.859484651224439,
+   "upper_wick": 1.4698035760560435,
+   "limit_up": false,
+   "tv": 25866855673.67282,
+   "vol_ratio": 1.8436921228747727,
+   "close": 508.5799865722656,
+   "pctb": 0.10484137771697559,
+   "bw": 0.37557882084597466,
+   "bw_pctile": 0.85,
+   "squeeze": false,
+   "rsi14": 38.850058798807005,
+   "ma5_gap": -0.020828949876339098,
+   "ma20_gap": -0.14841320940417824,
+   "ma60_gap": -0.16192946260542007,
+   "ma120_gap": -0.13839860559302997,
+   "ma_aligned": false,
+   "ret5": -0.11045954951749215,
+   "ret20": -0.2615687772191615,
+   "ret60": -0.0703298079416339,
+   "from_high": -0.3181072780983043,
+   "from_low": 1.3857188695816989,
+   "vol_ratio_prev": 1.7577419699276906,
+   "tv20_avg": 13958267628.170624,
+   "tv_prev": 20513045670.34912,
+   "prev_chg": 0.11038579456522979,
+   "up_days": 1,
+   "prev_close_pos": 0.5939630472435141,
+   "fr": null,
+   "price": 449.0400085449219,
+   "filings": [],
+   "news": [
+    {
+     "title": "AMD Stock Rises On Google Cloud Deal, Wall Street Upgrade - Investor's Business Daily",
+     "date": "Mon, 09 Nov 2026 21:39:00 GMT"
+    },
+    {
+     "title": "AMD Stock Could Jump 34%. No, It’s Got Nothing to Do With the Nvidia Turmoil. - Barron's",
+     "date": "Mon, 09 Nov 2026 18:02:00 GMT"
+    },
+    {
+     "title": "AMD shares are primed for a comeback, says Oppenheimer - CNBC",
+     "date": "Mon, 09 Nov 2026 11:54:06 GMT"
+    },
+    {
+     "title": "AMD Stock Jumps as Google Taps Its Chips for a New AI System - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 17:01:51 GMT"
+    },
+    {
+     "title": "Stock Market Today, Nov. 9: AMD Jumps on Oppenheimer Upgrade and Google Cloud Chip Selection - The Motley Fool",
+     "date": "Mon, 09 Nov 2026 22:10:00 GMT"
+    },
+    {
+     "title": "4 stocks to watch on Monday: AMD, NVDA, NRG, and RTX - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 14:03:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Analyst",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "RDW",
+   "name": "Redwire Corporation",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2039287296,
+   "chg": 13.037442099998774,
+   "gap": 0.9708761621500361,
+   "high_chg": 13.80027573224265,
+   "close_pos": 0.9531912182401011,
+   "upper_wick": 0.7628336322438739,
+   "limit_up": false,
+   "tv": 160931563.21742058,
+   "vol_ratio": 1.582085348876804,
+   "close": 8.149999618530273,
+   "pctb": 0.09715479731087268,
+   "bw": 0.33839319995909034,
+   "bw_pctile": 0.23333333333333334,
+   "squeeze": false,
+   "rsi14": 40.39938449178896,
+   "ma5_gap": -0.02751549804387432,
+   "ma20_gap": -0.13632007722614203,
+   "ma60_gap": -0.29265181604567714,
+   "ma120_gap": -0.38582978795882295,
+   "ma_aligned": false,
+   "ret5": -0.1406436539796918,
+   "ret20": -0.2473903866840783,
+   "ret60": -0.4537878680054038,
+   "from_high": -0.7293543467216228,
+   "from_low": 0.48049285576507894,
+   "vol_ratio_prev": 1.2213975193860744,
+   "tv20_avg": 102014029.15222645,
+   "tv_prev": 107392229.56819534,
+   "prev_chg": 0.16478190169589935,
+   "up_days": 1,
+   "prev_close_pos": 0.9722224675088436,
+   "fr": null,
+   "price": 7.210000038146973,
+   "filings": [],
+   "news": [
+    {
+     "title": "META_TITLE_QUOTE - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 22:43:56 GMT"
+    },
+    {
+     "title": "Redwire Corporation (RDW) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 14:39:33 GMT"
+    },
+    {
+     "title": "Redwire: The Strongest Demand We've Seen (NYSE:RDW) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 20:32:00 GMT"
+    },
+    {
+     "title": "Redwire (NYSE:RDW) Posts Earnings Results, Beats Estimates By $0.04 EPS - MarketBeat",
+     "date": "Mon, 09 Nov 2026 03:38:14 GMT"
+    },
+    {
+     "title": "Redwire Corp (Derivatives) USD (RDW-USD) Latest Stock News & Headlines - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 07:52:11 GMT"
+    },
+    {
+     "title": "Redwire Corporation (RDW): An Opportunity For Patient Investors As Backlog Grows - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 21:43:34 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "SMTC",
+   "name": "Semtech Corporation",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 10867768320,
+   "chg": 12.828212364320635,
+   "gap": 2.3641143910961837,
+   "high_chg": 13.98604562216823,
+   "close_pos": 0.9003751412026907,
+   "upper_wick": 1.1578332578475912,
+   "limit_up": false,
+   "tv": 337776840.7980194,
+   "vol_ratio": 0.7397778078160029,
+   "close": 116.44999694824219,
+   "pctb": 0.08175375218870365,
+   "bw": 0.5705857289635772,
+   "bw_pctile": 0.9083333333333333,
+   "squeeze": false,
+   "rsi14": 34.640523621892314,
+   "ma5_gap": -0.07103382382796541,
+   "ma20_gap": -0.23864534019368944,
+   "ma60_gap": -0.3189938630095108,
+   "ma120_gap": -0.3006951231760162,
+   "ma_aligned": false,
+   "ret5": -0.18974720277988355,
+   "ret20": -0.4489589033484854,
+   "ret60": -0.22735441181526928,
+   "from_high": -0.4890341290279059,
+   "from_low": 0.7121765291063686,
+   "vol_ratio_prev": 1.0503617519641772,
+   "tv20_avg": 526470104.6805954,
+   "tv_prev": 416772297.30300903,
+   "prev_chg": 0.12748523107088805,
+   "up_days": 1,
+   "prev_close_pos": 0.943609162731266,
+   "fr": null,
+   "price": 103.20999908447266,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/88941/000195917326007805/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Semtech Jumps as Raised Outlook and Long-Term Data Center Targets Lift Sentiment - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 21:22:00 GMT"
+    },
+    {
+     "title": "Quarterly results from Semtech are due after markets close Nov. 23. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 14:00:00 GMT"
+    },
+    {
+     "title": "Semtech (NASDAQ:SMTC) Shares Climb 12.6% - Still a Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 18:33:32 GMT"
+    },
+    {
+     "title": "Semtech Corporation (SMTC) Stock Forecasts - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 07:46:36 GMT"
+    },
+    {
+     "title": "Price-Driven Insight from (SMTC) for Rule-Based Strategy - Stock Traders Daily",
+     "date": "Mon, 09 Nov 2026 12:46:01 GMT"
+    },
+    {
+     "title": "One SIM can connect devices to local mobile networks across regions. Semtech manages it remotely. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 08:00:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "VIA",
+   "name": "Via Transportation, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 3622794496,
+   "chg": 12.804872375524766,
+   "gap": -7.211031634882914,
+   "high_chg": 19.24707870250135,
+   "close_pos": 0.7745825064616308,
+   "upper_wick": 6.442206326976583,
+   "limit_up": false,
+   "tv": 60475845.86564255,
+   "vol_ratio": 2.315048009968482,
+   "close": 42.54999923706055,
+   "pctb": 0.7982746109140935,
+   "bw": 0.24257025718212458,
+   "bw_pctile": 0.4666666666666667,
+   "squeeze": false,
+   "rsi14": 71.74111935136916,
+   "ma5_gap": 0.005330510674289357,
+   "ma20_gap": 0.07235254908032962,
+   "ma60_gap": 0.23908441138118697,
+   "ma120_gap": 0.5668736084461985,
+   "ma_aligned": true,
+   "ret5": 0.03370785107313834,
+   "ret20": 0.16527656673935054,
+   "ret60": 0.4309560071061036,
+   "from_high": -0.2816605898607508,
+   "from_low": 1.9127414499045923,
+   "vol_ratio_prev": 1.277755028705615,
+   "tv20_avg": 21854556.14030838,
+   "tv_prev": 28836940.93322754,
+   "prev_chg": -0.0002649965983172464,
+   "up_days": 0,
+   "prev_close_pos": 0.7793106714126737,
+   "fr": null,
+   "price": 37.720001220703125,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1603015/000160301526000034/via-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1603015/000160301526000033/via-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Why Via Transportation Stock Rocked the Market Today - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 21:58:45 GMT"
+    },
+    {
+     "title": "Why Via Transportation Stock Rocked the Market Today - The Motley Fool",
+     "date": "Mon, 09 Nov 2026 21:38:00 GMT"
+    },
+    {
+     "title": "Why Via Transportation Stock Rocked the Market Today - The Globe and Mail",
+     "date": "Mon, 09 Nov 2026 22:15:13 GMT"
+    },
+    {
+     "title": "Via Transportation Shares Jump 14% as Q3 Revenue Tops Estimates and Q4 Profit Looms - BigGo Finance",
+     "date": "Mon, 09 Nov 2026 22:25:00 GMT"
+    },
+    {
+     "title": "Weekly Recap: Leverage rises, target reaffirmed and cash raised via shares - TradingView",
+     "date": "Mon, 09 Nov 2026 11:00:00 GMT"
+    },
+    {
+     "title": "Via Announces Third Quarter 2026 Results - Stock Titan",
+     "date": "Mon, 09 Nov 2026 12:00:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "COHU",
+   "name": "Cohu, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2054488064,
+   "chg": 12.756559192770855,
+   "gap": 3.4294612555517023,
+   "high_chg": 14.572608730512604,
+   "close_pos": 0.8506096666155758,
+   "upper_wick": 1.8160495377417647,
+   "limit_up": false,
+   "tv": 59633641.89662933,
+   "vol_ratio": 0.9428846892841458,
+   "close": 43.400001525878906,
+   "pctb": 0.046253865706069514,
+   "bw": 0.5422267034992387,
+   "bw_pctile": 0.925,
+   "squeeze": false,
+   "rsi14": 33.00928355336252,
+   "ma5_gap": -0.10807800906500198,
+   "ma20_gap": -0.2460332706237207,
+   "ma60_gap": -0.3116747365934551,
+   "ma120_gap": -0.30753036268904765,
+   "ma_aligned": false,
+   "ret5": -0.24217363684473248,
+   "ret20": -0.4355477298664101,
+   "ret60": -0.3402468018889878,
+   "from_high": -0.49167985924512925,
+   "from_low": 0.8241706626825078,
+   "vol_ratio_prev": 1.0184643368278565,
+   "tv20_avg": 71978876.58901215,
+   "tv_prev": 55602656.424713135,
+   "prev_chg": 0.10286532938761761,
+   "up_days": 1,
+   "prev_close_pos": 0.7992574808520535,
+   "fr": null,
+   "price": 38.4900016784668,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "DEF 14A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/21535/000143774926035662/cohu20261028_def14a.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Cohu Stock Returns To Profit As Revenue Outlook Rises - Simply Wall St",
+     "date": "Sun, 08 Nov 2026 21:19:00 GMT"
+    },
+    {
+     "title": "Precision Trading with Cohu Inc. (COHU) Risk Zones - Stock Traders Daily",
+     "date": "Mon, 09 Nov 2026 00:44:02 GMT"
+    },
+    {
+     "title": "COHU May 2027 85.000 call (COHU270521C00085000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 05:08:49 GMT"
+    },
+    {
+     "title": "Cohu (COHU) Prepares to Unveil Mid-Term Financial Plans at Novem - GuruFocus",
+     "date": "Mon, 09 Nov 2026 20:49:39 GMT"
+    },
+    {
+     "title": "COHU May 2027 40.000 call (COHU270521C00040000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 05:01:31 GMT"
+    },
+    {
+     "title": "Form DEF 14A COHU For: 9 November By Investing.com - Investing.com Canada",
+     "date": "Mon, 09 Nov 2026 12:29:18 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "TER",
+   "name": "Teradyne, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 38406688768,
+   "chg": 12.730271571761541,
+   "gap": 2.339380303813665,
+   "high_chg": 13.406197745010818,
+   "close_pos": 0.9410115650675401,
+   "upper_wick": 0.6759261732492774,
+   "limit_up": false,
+   "tv": 1315490412.0,
+   "vol_ratio": 1.2150228234764846,
+   "close": 246.0,
+   "pctb": 0.021306925212462677,
+   "bw": 0.6079335023495024,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 19.878799437885917,
+   "ma5_gap": -0.09998269350704436,
+   "ma20_gap": -0.29101355750603985,
+   "ma60_gap": -0.3896393624998955,
+   "ma120_gap": -0.4085675276308557,
+   "ma_aligned": false,
+   "ret5": -0.2046506356225355,
+   "ret20": -0.4580808453614842,
+   "ret60": -0.46843026634341167,
+   "from_high": -0.5527453842249435,
+   "from_low": 0.44020588085717893,
+   "vol_ratio_prev": 1.2479807380742332,
+   "tv20_avg": 1288358581.1030579,
+   "tv_prev": 1151437836.44104,
+   "prev_chg": 0.025759121867255708,
+   "up_days": 1,
+   "prev_close_pos": 0.2795746467389651,
+   "fr": null,
+   "price": 218.22000122070312,
+   "filings": [],
+   "news": [
+    {
+     "title": "Here's How Much $1000 Invested In Teradyne 20 Years Ago Would Be Worth Today - Benzinga",
+     "date": "Mon, 09 Nov 2026 22:46:01 GMT"
+    },
+    {
+     "title": "Teradyne (NASDAQ:TER): Affordable Growth at a Reasonable Valuation - ChartMill",
+     "date": "Mon, 09 Nov 2026 11:51:06 GMT"
+    },
+    {
+     "title": "A new test system checks the boards that help robots sense, think and move - Stock Titan",
+     "date": "Mon, 09 Nov 2026 08:00:00 GMT"
+    },
+    {
+     "title": "Trading the Move, Not the Narrative: (TER) Edition - Stock Traders Daily",
+     "date": "Mon, 09 Nov 2026 14:02:01 GMT"
+    },
+    {
+     "title": "Teradyne (TER) Upgraded to Strong Buy: Here's Why - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 16:00:03 GMT"
+    },
+    {
+     "title": "Teradyne, Inc. (TEY.F) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 16:45:10 GMT"
+    }
+   ],
+   "catalysts": [
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "AVAV",
+   "name": "AeroVironment, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 6452196352,
+   "chg": 12.593115182000902,
+   "gap": 1.7825420971592232,
+   "high_chg": 13.972150545353523,
+   "close_pos": 0.9061273724120398,
+   "upper_wick": 1.3790353633526142,
+   "limit_up": false,
+   "tv": 219963149.85381317,
+   "vol_ratio": 1.1737751009457738,
+   "close": 126.95999908447266,
+   "pctb": 0.1855701210430906,
+   "bw": 0.2312522044060161,
+   "bw_pctile": 0.20833333333333334,
+   "squeeze": false,
+   "rsi14": 45.96546436055386,
+   "ma5_gap": -0.018932270312519206,
+   "ma20_gap": -0.07271260263990209,
+   "ma60_gap": -0.20523545326374704,
+   "ma120_gap": -0.2696587516143364,
+   "ma_aligned": false,
+   "ret5": -0.10585995091197609,
+   "ret20": -0.1775946201278239,
+   "ret60": -0.40474050310911025,
+   "from_high": -0.7237966879700417,
+   "from_low": 0.12310757392932592,
+   "vol_ratio_prev": 1.0962153490715763,
+   "tv20_avg": 178328969.65370178,
+   "tv_prev": 180303243.41583252,
+   "prev_chg": 0.10462382556430083,
+   "up_days": 1,
+   "prev_close_pos": 0.9328302347435141,
+   "fr": null,
+   "price": 112.76000213623047,
+   "filings": [],
+   "news": [
+    {
+     "title": "Will AeroVironment (AVAV) Beat Estimates Again in Its Next Earnings Report? - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 16:10:02 GMT"
+    },
+    {
+     "title": "AeroVironment (NASDAQ:AVAV) Stock Jumps 13.6% - Still a Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 20:02:36 GMT"
+    },
+    {
+     "title": "Credit Expansion Could Change The Case For AeroVironment Stock - Simply Wall St",
+     "date": "Sun, 08 Nov 2026 15:30:07 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "VIAV",
+   "name": "Viavi Solutions Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 7864589312,
+   "chg": 12.328768224575937,
+   "gap": 1.0994086415155202,
+   "high_chg": 13.435191246374977,
+   "close_pos": 0.9103078371887657,
+   "upper_wick": 1.1064230217990458,
+   "limit_up": false,
+   "tv": 310286521.19853973,
+   "vol_ratio": 1.4502463657962215,
+   "close": 31.979999542236328,
+   "pctb": 0.21939975242452142,
+   "bw": 0.5008594422733528,
+   "bw_pctile": 0.9083333333333333,
+   "squeeze": false,
+   "rsi14": 36.97478933872245,
+   "ma5_gap": 0.0024647914850151054,
+   "ma20_gap": -0.1405412835024189,
+   "ma60_gap": -0.23499618819843582,
+   "ma120_gap": -0.3049712498938004,
+   "ma_aligned": false,
+   "ret5": -0.04846259222065674,
+   "ret20": -0.3737351542737113,
+   "ret60": -0.33775300763445215,
+   "from_high": -0.5288763996429096,
+   "from_low": 0.8355898706138822,
+   "vol_ratio_prev": 2.126343260793673,
+   "tv20_avg": 212868615.0424385,
+   "tv_prev": 373691516.9872284,
+   "prev_chg": 0.08250951099785953,
+   "up_days": 1,
+   "prev_close_pos": 0.670588076898336,
+   "fr": null,
+   "price": 28.469999313354492,
+   "filings": [],
+   "news": [
+    {
+     "title": "Viavi Solutions Inc. (VIAV) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 13:14:47 GMT"
+    },
+    {
+     "title": "VIAVI shares jump after strong preliminary Q1 results, upbeat outlook, and new $500 million buyback - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 21:22:00 GMT"
+    },
+    {
+     "title": "Viavi Solutions Inc. $VIAV Shares Acquired by Kornitzer Capital Management Inc. KS - MarketBeat",
+     "date": "Sun, 08 Nov 2026 11:14:40 GMT"
+    },
+    {
+     "title": "Weekly Recap: Q1 earnings and $500 million share repurchase - TradingView",
+     "date": "Mon, 09 Nov 2026 11:00:00 GMT"
+    },
+    {
+     "title": "VIAV Nov 2026 15.000 put (VIAV261120P00015000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 18:01:09 GMT"
+    },
+    {
+     "title": "Is Viavi Solutions (VIAV) Undervalued After Its Profit Swing And Fresh Revenue Guidance? - Simply Wall St",
+     "date": "Sun, 08 Nov 2026 14:22:38 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A",
+    "Guidance·Buyback"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "LEU",
+   "name": "Centrus Energy Corp.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2419368960,
+   "chg": 12.179730448965076,
+   "gap": 2.686429473212182,
+   "high_chg": 13.030597592393534,
+   "close_pos": 0.9268086553447156,
+   "upper_wick": 0.8508671434284618,
+   "limit_up": false,
+   "tv": 128923918.11636353,
+   "vol_ratio": 1.127112975861963,
+   "close": 117.33999633789062,
+   "pctb": 0.41418908873694876,
+   "bw": 0.45732141577497015,
+   "bw_pctile": 0.9083333333333333,
+   "squeeze": false,
+   "rsi14": 45.770759472035564,
+   "ma5_gap": 0.09694197262814286,
+   "ma20_gap": -0.03924316742775902,
+   "ma60_gap": -0.2742167810066207,
+   "ma120_gap": -0.3399253254930542,
+   "ma_aligned": false,
+   "ret5": 0.012682714173515075,
+   "ret20": -0.2656557379858999,
+   "ret60": -0.45469714065163347,
+   "from_high": -0.6973379727233255,
+   "from_low": 0.23261840350919782,
+   "vol_ratio_prev": 1.40754173555923,
+   "tv20_avg": 105833690.96729279,
+   "tv_prev": 138019697.98660278,
+   "prev_chg": 0.17488486923853452,
+   "up_days": 1,
+   "prev_close_pos": 0.8327349763094434,
+   "fr": null,
+   "price": 104.5999984741211,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1065059/000162828026071509/xslF345X06/wk-form4_1793989125.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "3",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1065059/000162828026071472/xslF345X06/wk-form3_1793984419.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "LEU Nov 2026 115.000 put (LEU261120P00115000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 11:08:57 GMT"
+    },
+    {
+     "title": "Why Centrus Energy Stock Crashed 26% in October - The Globe and Mail",
+     "date": "Sun, 08 Nov 2026 19:31:55 GMT"
+    },
+    {
+     "title": "LEU Nov 2026 70.000 put (LEU261120P00070000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 05:59:12 GMT"
+    },
+    {
+     "title": "What Centrus Energy (LEU) Said on Its Q3 Earnings Call - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 04:14:00 GMT"
+    },
+    {
+     "title": "Centrus Energy (NYSE: LEU) Stock Surges 10% As Dual Analyst Upgrades Overshadow Weak Earnings Miss - Foreign Policy Journal",
+     "date": "Sun, 08 Nov 2026 17:13:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "TWST",
+   "name": "Twist Bioscience Corporation",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 8973201408,
+   "chg": 12.045695266232004,
+   "gap": 2.798242592763711,
+   "high_chg": 14.442420368076746,
+   "close_pos": 0.8297056310317096,
+   "upper_wick": 2.396725101844742,
+   "limit_up": false,
+   "tv": 225929281.52667236,
+   "vol_ratio": 0.7101620612127258,
+   "close": 135.33999633789062,
+   "pctb": 0.06522426702210776,
+   "bw": 0.37984205916291064,
+   "bw_pctile": 0.375,
+   "squeeze": false,
+   "rsi14": 43.27427302988749,
+   "ma5_gap": -0.07556786129346871,
+   "ma20_gap": -0.1651461096883864,
+   "ma60_gap": -0.18990607327190334,
+   "ma120_gap": 0.020040074273765196,
+   "ma_aligned": false,
+   "ret5": -0.20938603298447256,
+   "ret20": -0.24402302016303168,
+   "ret60": -0.035916673055449766,
+   "from_high": -0.4502298610693931,
+   "from_low": 4.184120380716623,
+   "vol_ratio_prev": 0.8475418523276266,
+   "tv20_avg": 339938770.6465149,
+   "tv_prev": 248247609.8815918,
+   "prev_chg": 0.0014924160870979364,
+   "up_days": 1,
+   "prev_close_pos": 0.29791685651857863,
+   "fr": null,
+   "price": 120.79000091552734,
+   "filings": [],
+   "news": [
+    {
+     "title": "Twist Bioscience’s CEO and CFO will appear in live webcasts, with replays available for 30 days. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 13:00:00 GMT"
+    },
+    {
+     "title": "TWST Nov 2026 185.000 put (TWST261120P00185000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 03:05:44 GMT"
+    },
+    {
+     "title": "Weekly Recap: Agilent deal and Bear Cave valuation, competition risks - TradingView",
+     "date": "Mon, 09 Nov 2026 11:00:00 GMT"
+    },
+    {
+     "title": "TWST Dec 2026 140.000 put (TWST261218P00140000) Interactive Stock Chart - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 18:45:08 GMT"
+    },
+    {
+     "title": "HIMS, TGTX, SMMT, LQDA: 8 Biotech Stock Catalysts To Watch This Week - Stocktwits",
+     "date": "Mon, 09 Nov 2026 08:26:00 GMT"
+    },
+    {
+     "title": "TWST Nov 2026 125.000 put (TWST261120P00125000) Interactive Stock Chart - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 02:56:23 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "FLEX",
+   "name": "Flex Ltd.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 28880750592,
+   "chg": 12.023501771882628,
+   "gap": 4.554315648327978,
+   "high_chg": 14.416735073917009,
+   "close_pos": 0.7819844603296179,
+   "upper_wick": 2.393233302034374,
+   "limit_up": false,
+   "tv": 516531401.22076416,
+   "vol_ratio": 0.916922940294096,
+   "close": 78.16999816894531,
+   "pctb": 0.13834584447172235,
+   "bw": 0.5611253779116802,
+   "bw_pctile": 0.85,
+   "squeeze": false,
+   "rsi14": 36.275112002949875,
+   "ma5_gap": -0.09623106324670316,
+   "ma20_gap": -0.2029333246941344,
+   "ma60_gap": -0.3322882166263935,
+   "ma120_gap": -0.42057467586561037,
+   "ma_aligned": false,
+   "ret5": -0.19310827855440627,
+   "ret20": -0.41767505872462607,
+   "ret60": -0.43861627460909325,
+   "from_high": -0.5818051149223842,
+   "from_low": 0.31486714114494974,
+   "vol_ratio_prev": 0.8156046777055207,
+   "tv20_avg": 617812728.4528351,
+   "tv_prev": 400167358.9996338,
+   "prev_chg": 0.04570650785148467,
+   "up_days": 1,
+   "prev_close_pos": 0.5174213202827392,
+   "fr": null,
+   "price": 69.77999877929688,
+   "filings": [],
+   "news": [
+    {
+     "title": "Flex, JELD-WEN, Graham Corporation, Coherent, and Planet Labs shares skyrocket, what you need to know - TradingView",
+     "date": "Mon, 09 Nov 2026 20:00:43 GMT"
+    },
+    {
+     "title": "FLEX Nov 2026 115.000 put (FLEX261120P00115000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 08:18:59 GMT"
+    },
+    {
+     "title": "Flex Jumps as Spin-Off Momentum and Growth Outlook Stay in Focus - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 17:34:00 GMT"
+    },
+    {
+     "title": "Flex (NASDAQ:FLEX) Shares Up 11.3% - Here's Why - MarketBeat",
+     "date": "Mon, 09 Nov 2026 17:02:59 GMT"
+    },
+    {
+     "title": "What Makes Celestica a Buy Despite the Recent Stock Price Slump? - TradingView",
+     "date": "Mon, 09 Nov 2026 14:10:00 GMT"
+    },
+    {
+     "title": "Stock market climbs despite pressure from Nvidia drop - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 14:43:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "ONTO",
+   "name": "Onto Innovation Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 9522366464,
+   "chg": 11.980606332573629,
+   "gap": 3.739609749070061,
+   "high_chg": 13.795590343778908,
+   "close_pos": 0.8237104866562547,
+   "upper_wick": 1.814984011205277,
+   "limit_up": false,
+   "tv": 253029121.44508362,
+   "vol_ratio": 1.079197391397903,
+   "close": 194.0399932861328,
+   "pctb": 0.1305650546419053,
+   "bw": 0.5096470235529209,
+   "bw_pctile": 0.8916666666666667,
+   "squeeze": false,
+   "rsi14": 33.902320018211924,
+   "ma5_gap": -0.045688869413620714,
+   "ma20_gap": -0.18828142029818895,
+   "ma60_gap": -0.3391728645448109,
+   "ma120_gap": -0.3759882642200192,
+   "ma_aligned": false,
+   "ret5": -0.14034830340318594,
+   "ret20": -0.4116728363919815,
+   "ret60": -0.4870641317197254,
+   "from_high": -0.5516224121237687,
+   "from_low": 0.4252930547312037,
+   "vol_ratio_prev": 1.0868508777164878,
+   "tv20_avg": 255114999.9106598,
+   "tv_prev": 220897342.44384766,
+   "prev_chg": 0.11084039154605008,
+   "up_days": 1,
+   "prev_close_pos": 0.8011557879361988,
+   "fr": null,
+   "price": 173.27999877929688,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/704532/000119312526453859/onto-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/704532/000119312526453582/onto-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Onto Innovation Inc. (ONTO) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Mon, 09 Nov 2026 05:27:45 GMT"
+    },
+    {
+     "title": "Onto Innovation (ONTO) Reports Strong Q3 Results, Shares Rise 6% - GuruFocus",
+     "date": "Mon, 09 Nov 2026 22:21:03 GMT"
+    },
+    {
+     "title": "Onto Innovation Q3 2026 Earnings Call Transcript - Benzinga",
+     "date": "Mon, 09 Nov 2026 22:22:32 GMT"
+    },
+    {
+     "title": "Cantor Fitzgerald reiterates Onto Innovation stock rating on growth outlook - Investing.com",
+     "date": "Mon, 09 Nov 2026 14:24:49 GMT"
+    },
+    {
+     "title": "Onto Innovation (ONTO) Stock Rises on Q3 2026 Earnings - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 22:54:00 GMT"
+    },
+    {
+     "title": "$430 million to $450 million is Onto Innovation's fourth-quarter revenue forecast. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 21:05:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "SDGR",
+   "name": "Schrodinger, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2497760000,
+   "chg": 11.97183008504139,
+   "gap": -0.10059952918806125,
+   "high_chg": 13.076800269766387,
+   "close_pos": 0.9228079645143806,
+   "upper_wick": 1.10497018472499,
+   "limit_up": false,
+   "tv": 88118879.5892334,
+   "vol_ratio": 1.551209218805564,
+   "close": 33.38999938964844,
+   "pctb": 0.8789235649406395,
+   "bw": 0.3793213810438449,
+   "bw_pctile": 0.75,
+   "squeeze": false,
+   "rsi14": 67.95283921550109,
+   "ma5_gap": 0.0613610260221249,
+   "ma20_gap": 0.1437338099633405,
+   "ma60_gap": 0.20856777147919714,
+   "ma120_gap": 0.4828566360851645,
+   "ma_aligned": true,
+   "ret5": 0.09874725001644502,
+   "ret20": 0.09310846569817444,
+   "ret60": 0.6153846789682049,
+   "from_high": -0.11722910679616916,
+   "from_low": 1.7245317977419221,
+   "vol_ratio_prev": 0.8237421379113448,
+   "tv20_avg": 44784493.8821888,
+   "tv_prev": 42588923.56414795,
+   "prev_chg": 0.036496323265688524,
+   "up_days": 4,
+   "prev_close_pos": 0.547974509030424,
+   "fr": null,
+   "price": 29.81999969482422,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1490978/000195004726010861/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Is Schrödinger (SDGR) Still Below Fair Value After Strong Q3 Revenue Growth? - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 00:20:00 GMT"
+    },
+    {
+     "title": "Schrödinger Surges 11.6% Amid Sector-Wide Rally - AlphaStreet",
+     "date": "Mon, 09 Nov 2026 19:50:47 GMT"
+    },
+    {
+     "title": "Takeda Pharmaceutical Company Limited (TAK) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Sun, 08 Nov 2026 15:09:31 GMT"
+    },
+    {
+     "title": "Structure Therapeutics Inc. (GPCR) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 16:29:47 GMT"
+    },
+    {
+     "title": "Takeda Pharmaceutical Company Limited (TAK) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 17:32:30 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "BE",
+   "name": "Bloom Energy Corporation",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 57298755584,
+   "chg": 11.914106866305119,
+   "gap": 5.19510489184043,
+   "high_chg": 15.348646672110533,
+   "close_pos": 0.6921884953635546,
+   "upper_wick": 3.4345398058054033,
+   "limit_up": false,
+   "tv": 3227460532.362671,
+   "vol_ratio": 0.9206912142791366,
+   "close": 193.8800048828125,
+   "pctb": 0.04580614241429657,
+   "bw": 0.44744507892734237,
+   "bw_pctile": 0.75,
+   "squeeze": false,
+   "rsi14": 36.837921799272536,
+   "ma5_gap": -0.0895713468995133,
+   "ma20_gap": -0.2032268064557492,
+   "ma60_gap": -0.2802907870779947,
+   "ma120_gap": -0.3015386649541577,
+   "ma_aligned": false,
+   "ret5": -0.14731502163470545,
+   "ret20": -0.38238857221688394,
+   "ret60": -0.2666158471005007,
+   "from_high": -0.5068321393327955,
+   "from_low": 1.2885074303452377,
+   "vol_ratio_prev": 1.3379466375769429,
+   "tv20_avg": 3808864601.257477,
+   "tv_prev": 4020103623.4710693,
+   "prev_chg": 0.03414518311138459,
+   "up_days": 1,
+   "prev_close_pos": 0.2515727714890183,
+   "fr": null,
+   "price": 173.24000549316406,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1664703/000159588826000131/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "This beaten-down data center stock could be worth a look, says Mike Khouw - CNBC",
+     "date": "Mon, 09 Nov 2026 19:23:57 GMT"
+    },
+    {
+     "title": "Where Will Apple Stock Be in 5 Years? - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 17:10:00 GMT"
+    },
+    {
+     "title": "Bloom Energy Stock Soars: What's Going On? - Benzinga",
+     "date": "Mon, 09 Nov 2026 15:25:25 GMT"
+    },
+    {
+     "title": "Where Will Apple Stock Be in 5 Years? - The Motley Fool",
+     "date": "Mon, 09 Nov 2026 16:50:00 GMT"
+    },
+    {
+     "title": "Mapping the Market: Alphabet shares may be ready for a corrective rally - Reuters",
+     "date": "Mon, 09 Nov 2026 11:03:18 GMT"
+    },
+    {
+     "title": "Share in Sealiway to be Offered in AKTEM Online Breeding Stock Sale - Thoroughbred Daily News",
+     "date": "Mon, 09 Nov 2026 19:42:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "ONDS",
+   "name": "Ondas Inc",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 3476347136,
+   "chg": 11.902525726414703,
+   "gap": 2.4929689981664893,
+   "high_chg": 14.807871718917953,
+   "close_pos": 0.7947017399816844,
+   "upper_wick": 2.905345992503244,
+   "limit_up": false,
+   "tv": 284330111.4275656,
+   "vol_ratio": 0.9925746478814533,
+   "close": 5.96999979019165,
+   "pctb": 0.1582303245533544,
+   "bw": 0.36893364390651173,
+   "bw_pctile": 0.6666666666666666,
+   "squeeze": false,
+   "rsi14": 42.21267591884365,
+   "ma5_gap": 0.00037503202310684713,
+   "ma20_gap": -0.12609033173927686,
+   "ma60_gap": -0.25613496100591326,
+   "ma120_gap": -0.33499186779896095,
+   "ma_aligned": false,
+   "ret5": -0.155854447272186,
+   "ret20": -0.20728082867354314,
+   "ret60": -0.4012345533657319,
+   "from_high": -0.6508507767421549,
+   "from_low": 0.21942858014787947,
+   "vol_ratio_prev": 0.9398709197636452,
+   "tv20_avg": 293637770.7821655,
+   "tv_prev": 238687368.20669174,
+   "prev_chg": 0.1803097479335387,
+   "up_days": 1,
+   "prev_close_pos": 0.8647061364461267,
+   "fr": null,
+   "price": 5.335000038146973,
+   "filings": [],
+   "news": [
+    {
+     "title": "Ondas Inc. (ONDS) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 19:39:45 GMT"
+    },
+    {
+     "title": "ONDS Stock Rises Overnight: Ondas Bulls Pin Hopes On Potential ‘Short Squeeze’ Ahead Of Earnings - Stocktwits",
+     "date": "Mon, 09 Nov 2026 04:30:24 GMT"
+    },
+    {
+     "title": "Ondas Rallies 13% Ahead of Earnings, AeroVironment Jumps 10% on $315 Million Award; Red Cat Surges 10% - 24/7 Wall St.",
+     "date": "Mon, 09 Nov 2026 16:58:00 GMT"
+    },
+    {
+     "title": "ONDS Stock Rises Overnight: Ondas Bulls Pin Hopes On Potential ‘Short Squeeze’ Ahead Of Earnings - TradingView",
+     "date": "Mon, 09 Nov 2026 04:26:00 GMT"
+    },
+    {
+     "title": "Ondas Inc. (ONDS) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 20:09:33 GMT"
+    },
+    {
+     "title": "Ondas (NASDAQ:ONDS) Shares Up 11.8% - Still a Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 22:43:42 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Contract·Partnership",
+    "Short squeeze·Meme"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "FN",
+   "name": "Fabrinet",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 13070468096,
+   "chg": 11.863784116194598,
+   "gap": 2.1489923499421026,
+   "high_chg": 13.541985014827329,
+   "close_pos": 0.8642119191701131,
+   "upper_wick": 1.6782008986327215,
+   "limit_up": false,
+   "tv": 510809062.48791504,
+   "vol_ratio": 1.1579134228939498,
+   "close": 365.94000244140625,
+   "pctb": 0.3238281217928403,
+   "bw": 0.43396891645026864,
+   "bw_pctile": 0.775,
+   "squeeze": false,
+   "rsi14": 44.20884479268675,
+   "ma5_gap": -0.002512544483747381,
+   "ma20_gap": -0.07645311909456975,
+   "ma60_gap": -0.19573885036350114,
+   "ma120_gap": -0.3222574540698676,
+   "ma_aligned": false,
+   "ret5": -0.0004888742642059629,
+   "ret20": -0.32728056736036193,
+   "ret60": -0.4225317119063863,
+   "from_high": -0.5631801753474013,
+   "from_low": 0.14353129131799625,
+   "vol_ratio_prev": 1.7509132129748597,
+   "tv20_avg": 423844846.59088135,
+   "tv_prev": 653082341.7480469,
+   "prev_chg": 0.11659898119185108,
+   "up_days": 1,
+   "prev_close_pos": 0.9064616569832761,
+   "fr": null,
+   "price": 327.1300048828125,
+   "filings": [],
+   "news": [
+    {
+     "title": "Why Fabrinet (FN) Stock Is Up Today - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 18:33:00 GMT"
+    },
+    {
+     "title": "Fabrinet (NYSE:FN) Stock Price Up 12.6% - What's Next? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 18:33:35 GMT"
+    },
+    {
+     "title": "U.S. Stocks Leap Despite Nvidia Slide - Financial News London",
+     "date": "Mon, 09 Nov 2026 19:29:00 GMT"
+    },
+    {
+     "title": "FN Jan 2029 330.000 put (FN290119P00330000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 02:25:23 GMT"
+    },
+    {
+     "title": "Fabrinet Dropped 33% in a Month Despite a Record Quarter. Time to Sell, or Load Up? - TIKR.com",
+     "date": "Mon, 09 Nov 2026 22:18:09 GMT"
+    },
+    {
+     "title": "FN Jan 2029 185.000 put (FN290119P00185000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 21:05:56 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "AUGO",
+   "name": "Aura Minerals Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 7294532608,
+   "chg": 11.783600880115653,
+   "gap": 4.51041139809194,
+   "high_chg": 11.886404569872045,
+   "close_pos": 0.9860623935838629,
+   "upper_wick": 0.10280368975638585,
+   "limit_up": false,
+   "tv": 86794183.37857819,
+   "vol_ratio": 1.184124233775019,
+   "close": 86.98999786376953,
+   "pctb": 0.4553770432758851,
+   "bw": 0.3832462244243976,
+   "bw_pctile": 0.7416666666666667,
+   "squeeze": false,
+   "rsi14": 41.69532770201805,
+   "ma5_gap": 0.10593185597217358,
+   "ma20_gap": -0.0171015796871703,
+   "ma60_gap": -0.06072063652424686,
+   "ma120_gap": 0.06542717701696588,
+   "ma_aligned": false,
+   "ret5": 0.17517363727402735,
+   "ret20": -0.14727155519176272,
+   "ret60": 0.039679375834990704,
+   "from_high": -0.2946039258384201,
+   "from_low": 1.294898261427246,
+   "vol_ratio_prev": 0.8448759041760417,
+   "tv20_avg": 65714230.45593262,
+   "tv_prev": 57127661.77597046,
+   "prev_chg": 0.0919040740883077,
+   "up_days": 1,
+   "prev_close_pos": 0.9690724183428078,
+   "fr": null,
+   "price": 77.81999969482422,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1468642/000091957426007499/xslSCHEDULE_13G_X02/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1468642/000117184326007236/f6k_110626.htm"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "6-K/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1468642/000117184326007202/f6ka_110426.htm"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1468642/000117184326007198/f6k_110526.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Aura Minerals Stock In Focus After Strong Q3 Results - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 06:16:00 GMT"
+    },
+    {
+     "title": "Is Aura Investments (TASE:AURA) Above Fair Value After Its 258% Run? - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 14:13:44 GMT"
+    },
+    {
+     "title": "Should Value Investors Buy Nexa Resources (NEXA) Stock? - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 13:40:03 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "VIR",
+   "name": "Vir Biotechnology, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2336989696,
+   "chg": 11.7526651526078,
+   "gap": 7.944310106456132,
+   "high_chg": 17.772318341640812,
+   "close_pos": 0.42126032145571196,
+   "upper_wick": 6.019653189033011,
+   "limit_up": false,
+   "tv": 97160331.0045433,
+   "vol_ratio": 4.235126076910038,
+   "close": 13.645000457763672,
+   "pctb": 0.9994405251999966,
+   "bw": 0.21943855949427243,
+   "bw_pctile": 0.675,
+   "squeeze": false,
+   "rsi14": 66.72240930684139,
+   "ma5_gap": 0.06693461881028373,
+   "ma20_gap": 0.10959650940295007,
+   "ma60_gap": 0.12446470324988024,
+   "ma120_gap": 0.21502108589367608,
+   "ma_aligned": true,
+   "ret5": 0.08053095858867687,
+   "ret20": 0.04358976386289948,
+   "ret60": 0.3566666709052191,
+   "from_high": -0.018883058452382362,
+   "from_low": 1.3390805610930276,
+   "vol_ratio_prev": 1.1249373072848192,
+   "tv20_avg": 18555283.198270798,
+   "tv_prev": 23141613.072299957,
+   "prev_chg": 0.1079854383803529,
+   "up_days": 1,
+   "prev_close_pos": 0.7947600362812849,
+   "fr": null,
+   "price": 12.210000038146973,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "7.01,8.01,9.01",
+     "items_kr": "IR 자료, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1706431/000162828026071908/vir-20261108.htm"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "SCHEDULE 13D/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1706431/000101297526001020/xslSCHEDULE_13D_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Vir, A Gilead Rival, Shoots To Two-Year High On Its 'Clean Win' In Hepatitis D Treatment - Investor's Business Daily",
+     "date": "Mon, 09 Nov 2026 21:17:00 GMT"
+    },
+    {
+     "title": "Vir Biotechnology (VIR) Says Its Hepatitis Delta Therapy Met All Phase 3 Endpoints - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 19:13:17 GMT"
+    },
+    {
+     "title": "Vir Biotechnology stock jumps 22% after hepatitis delta Phase 3 trial success - Investing.com",
+     "date": "Mon, 09 Nov 2026 16:04:46 GMT"
+    },
+    {
+     "title": "Biggest stock movers Monday: NVDA, AMD, VIR, and more - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 15:32:00 GMT"
+    },
+    {
+     "title": "Vir Stock Soars After Late-Stage Trial Win. Why Biotech Could Be Headed for the FDA - GuruFocus",
+     "date": "Mon, 09 Nov 2026 14:26:24 GMT"
+    },
+    {
+     "title": "Why Is Vir Biotechnology Stock Trading Higher Today? - Vir Biotechnology (NASDAQ:VIR) - Benzinga",
+     "date": "Mon, 09 Nov 2026 15:18:29 GMT"
+    }
+   ],
+   "catalysts": [
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "UCTT",
+   "name": "Ultra Clean Holdings, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2200891648,
+   "chg": 11.573056644589407,
+   "gap": 2.847555964426962,
+   "high_chg": 12.351076791718185,
+   "close_pos": 0.9284916639246301,
+   "upper_wick": 0.7780201471287795,
+   "limit_up": false,
+   "tv": 54955660.549072266,
+   "vol_ratio": 0.6824921994101472,
+   "close": 45.88999938964844,
+   "pctb": 0.1313496209988187,
+   "bw": 0.503788726254215,
+   "bw_pctile": 0.725,
+   "squeeze": false,
+   "rsi14": 37.328993055843185,
+   "ma5_gap": -0.053263969370310305,
+   "ma20_gap": -0.18572190487013873,
+   "ma60_gap": -0.3752657969763511,
+   "ma120_gap": -0.49443742651903355,
+   "ma_aligned": false,
+   "ret5": -0.1726010495751037,
+   "ret20": -0.4003498576454346,
+   "ret60": -0.5573135351743732,
+   "from_high": -0.7148107008737778,
+   "from_low": 0.9139135182026652,
+   "vol_ratio_prev": 1.1896907216494845,
+   "tv20_avg": 88967552.53879547,
+   "tv_prev": 83062037.15705872,
+   "prev_chg": 0.10564516732728269,
+   "up_days": 1,
+   "prev_close_pos": 0.807174711460003,
+   "fr": null,
+   "price": 41.130001068115234,
+   "filings": [],
+   "news": [
+    {
+     "title": "Why Did Ultra Clean Holdings (UCTT) Stock Jump After Its Latest Update? - Simply Wall St",
+     "date": "Sun, 08 Nov 2026 12:24:29 GMT"
+    },
+    {
+     "title": "UCTT Jan 2028 40.000 call (UCTT280121C00040000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 00:31:48 GMT"
+    },
+    {
+     "title": "Ultra Clean Holdings Surges 12.1% Amid Sector-Wide Rally - AlphaStreet",
+     "date": "Mon, 09 Nov 2026 20:37:25 GMT"
+    },
+    {
+     "title": "UCTT Jan 2028 40.000 call (UCTT280121C00040000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 03:34:06 GMT"
+    },
+    {
+     "title": "Ultra Clean Holdings stock weighs profit rebound against valuation risk - ad-hoc-news.de",
+     "date": "Sun, 08 Nov 2026 12:50:19 GMT"
+    },
+    {
+     "title": "UCTT Jun 2027 40.000 put (UCTT270617P00040000) interactive stock chart – Yahoo Finance - Yahoo Finance Singapore",
+     "date": "Sun, 08 Nov 2026 00:59:58 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "SSMR",
+   "name": "Sunshine Silver Mining & Refini",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2127153792,
+   "chg": 11.529763980347552,
+   "gap": 4.370760389587813,
+   "high_chg": 13.7905038476122,
+   "close_pos": 0.7628457633878121,
+   "upper_wick": 2.260739867264638,
+   "limit_up": false,
+   "tv": 13848271.378469467,
+   "vol_ratio": 1.1265413742038792,
+   "close": 14.800000190734863,
+   "pctb": 0.6418452351763133,
+   "bw": 0.29790048412450815,
+   "bw_pctile": 0.7,
+   "squeeze": false,
+   "rsi14": 58.87354113641113,
+   "ma5_gap": 0.09978454042580798,
+   "ma20_gap": 0.0422557642297785,
+   "ma60_gap": -0.13173388860016577,
+   "ma120_gap": null,
+   "ma_aligned": false,
+   "ret5": 0.08061895328339275,
+   "ret20": -0.1087978407123108,
+   "ret60": -0.18288173369536942,
+   "from_high": -0.3233044342304193,
+   "from_low": 0.24835374552219402,
+   "vol_ratio_prev": 0.5956026626079621,
+   "tv20_avg": 10596238.89280796,
+   "tv_prev": 6465144.223022461,
+   "prev_chg": 0.08238174633165984,
+   "up_days": 1,
+   "prev_close_pos": 0.9618326279052498,
+   "fr": null,
+   "price": 13.270000457763672,
+   "filings": [],
+   "news": [],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "ACMR",
+   "name": "ACM Research, Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 3465047808,
+   "chg": 11.522078725225837,
+   "gap": 3.5642235616085927,
+   "high_chg": 13.539566986972385,
+   "close_pos": 0.82460561725917,
+   "upper_wick": 2.017488261746548,
+   "limit_up": false,
+   "tv": 94535397.75,
+   "vol_ratio": 1.543736976151887,
+   "close": 49.75,
+   "pctb": 0.2426597310634356,
+   "bw": 0.5496485044394442,
+   "bw_pctile": 0.8083333333333333,
+   "squeeze": false,
+   "rsi14": 32.19603141350973,
+   "ma5_gap": 0.023963628842276652,
+   "ma20_gap": -0.141446693953027,
+   "ma60_gap": -0.33887358536124723,
+   "ma120_gap": -0.430788271861286,
+   "ma_aligned": false,
+   "ret5": -0.01891358230181861,
+   "ret20": -0.3749474724170727,
+   "ret60": -0.4505481060608908,
+   "from_high": -0.6492648812480175,
+   "from_low": 0.5674631779833788,
+   "vol_ratio_prev": 1.1887045493476163,
+   "tv20_avg": 62247583.63189697,
+   "tv_prev": 63462186.86828613,
+   "prev_chg": 0.13482571996707193,
+   "up_days": 1,
+   "prev_close_pos": 0.9297753079884659,
+   "fr": null,
+   "price": 44.61000061035156,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1680062/000114036126042540/xslF345X06/form4.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "3",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1680062/000114036126042538/xslF345X06/form3.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1680062/000162828026071670/acmr-20260930.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "ACM Research, Inc. (ACMR) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 16:18:44 GMT"
+    },
+    {
+     "title": "(ACMR) Volatility Zones as Tactical Triggers - Stock Traders Daily",
+     "date": "Mon, 09 Nov 2026 18:00:02 GMT"
+    },
+    {
+     "title": "ACMR Nov 2026 41.000 call (ACMR261113C00041000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 12:41:06 GMT"
+    },
+    {
+     "title": "ACMR Nov 2026 25.000 put (ACMR261127P00025000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 12:42:08 GMT"
+    },
+    {
+     "title": "ACMR Nov 2026 55.000 put (ACMR261127P00055000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 01:02:35 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "AMAT",
+   "name": "Applied Materials, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 294067535872,
+   "chg": 11.36991657654265,
+   "gap": 3.119741778290974,
+   "high_chg": 12.863665435183202,
+   "close_pos": 0.8472647640841438,
+   "upper_wick": 1.4937488586405645,
+   "limit_up": false,
+   "tv": 4061847796.340515,
+   "vol_ratio": 1.3005114643469842,
+   "close": 370.54998779296875,
+   "pctb": 0.07516414529087316,
+   "bw": 0.399981654556928,
+   "bw_pctile": 0.775,
+   "squeeze": false,
+   "rsi14": 31.90963315044398,
+   "ma5_gap": -0.06424722455037202,
+   "ma20_gap": -0.1699265480816632,
+   "ma60_gap": -0.2663282863813101,
+   "ma120_gap": -0.3300069482187541,
+   "ma_aligned": false,
+   "ret5": -0.14706861405257465,
+   "ret20": -0.3437863597385852,
+   "ret60": -0.37755824653458714,
+   "from_high": -0.550177769940521,
+   "from_low": 0.6357915988435727,
+   "vol_ratio_prev": 1.1643905603862712,
+   "tv20_avg": 3328970116.454468,
+   "tv_prev": 3146899043.545532,
+   "prev_chg": 0.042192642821309745,
+   "up_days": 1,
+   "prev_close_pos": 0.1766218174160923,
+   "fr": null,
+   "price": 332.7200012207031,
+   "filings": [],
+   "news": [
+    {
+     "title": "Applied Materials (AMAT) Stock Looks Above Fair Value After Its 127% Run - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 13:10:21 GMT"
+    },
+    {
+     "title": "AMAT Stock Quote Price and Forecast - CNN",
+     "date": "Sun, 08 Nov 2026 20:02:19 GMT"
+    },
+    {
+     "title": "Applied Materials climbs 11% amid broad market rally (AMAT:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 21:24:00 GMT"
+    },
+    {
+     "title": "AMAT to Post Q4 Earnings: Time to Buy, Sell or Hold the Stock? - Zacks Investment Research",
+     "date": "Mon, 09 Nov 2026 13:01:23 GMT"
+    },
+    {
+     "title": "AI Chatbots' Stock Pick Showdown: CEG, AMAT, TTWO - Take-Two Interactive (NASDAQ:TTWO), Constellation Ene - Benzinga",
+     "date": "Mon, 09 Nov 2026 14:52:25 GMT"
+    },
+    {
+     "title": "Can Applied Materials Stock Jump 50%? - Trefis",
+     "date": "Mon, 09 Nov 2026 05:01:58 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "VICR",
+   "name": "Vicor Corporation",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 7545757184,
+   "chg": 11.322160315348295,
+   "gap": 3.6424228396472635,
+   "high_chg": 12.874447014355406,
+   "close_pos": 0.8636363221541924,
+   "upper_wick": 1.5522866990070983,
+   "limit_up": false,
+   "tv": 112929812.80609131,
+   "vol_ratio": 0.5828920106170641,
+   "close": 163.50999450683594,
+   "pctb": 0.1142398793469004,
+   "bw": 0.6711435893041394,
+   "bw_pctile": 0.8166666666666667,
+   "squeeze": false,
+   "rsi14": 39.1659267756215,
+   "ma5_gap": -0.07626125876188494,
+   "ma20_gap": -0.25890043198551915,
+   "ma60_gap": -0.3314717351118689,
+   "ma120_gap": -0.40496910365038374,
+   "ma_aligned": false,
+   "ret5": -0.23135691193852348,
+   "ret20": -0.44796481813212286,
+   "ret60": -0.35192373244631636,
+   "from_high": -0.6161505103210666,
+   "from_low": 0.8293685790008163,
+   "vol_ratio_prev": 1.1460771942039076,
+   "tv20_avg": 231998426.35551453,
+   "tv_prev": 193426278.43017578,
+   "prev_chg": 0.08719465763954792,
+   "up_days": 1,
+   "prev_close_pos": 0.794455482519482,
+   "fr": null,
+   "price": 146.8800048828125,
+   "filings": [],
+   "news": [
+    {
+     "title": "VICR 261120 80.00C (VICR261120C80000) Stock Options Chain | Quotes & News - Moomoo",
+     "date": "Sun, 08 Nov 2026 07:30:38 GMT"
+    },
+    {
+     "title": "Vicor Corporation (NASDAQ:VICR) Stock Now Rated \"Buy\" by Wall Street Analysts - MarketBeat",
+     "date": "Sun, 08 Nov 2026 09:17:03 GMT"
+    },
+    {
+     "title": "VICR Jan 2029 170.000 put (VICR290119P00170000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 01:12:15 GMT"
+    },
+    {
+     "title": "VICR Jan 2029 90.000 put (VICR290119P00090000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 07:24:09 GMT"
+    },
+    {
+     "title": "VICR Jan 2027 290.000 put (VICR270115P00290000) interactive stock chart - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 13:58:18 GMT"
+    },
+    {
+     "title": "9,343 Shares of Vicor Corporation $VICR Purchased by Mirae Asset Global Investments Co. Ltd. - MarketBeat",
+     "date": "Sun, 08 Nov 2026 10:04:18 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "AEIS",
+   "name": "Advanced Energy Industries, Inc",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 8877701120,
+   "chg": 11.314151142798213,
+   "gap": 2.3044559522407138,
+   "high_chg": 12.50951980083721,
+   "close_pos": 0.8831557494333314,
+   "upper_wick": 1.195368658038995,
+   "limit_up": false,
+   "tv": 211260684.23988342,
+   "vol_ratio": 1.2558137412740107,
+   "close": 219.3000030517578,
+   "pctb": 0.10341361454951017,
+   "bw": 0.3969278971134916,
+   "bw_pctile": 0.9,
+   "squeeze": false,
+   "rsi14": 37.51068028203072,
+   "ma5_gap": -0.061428111399336904,
+   "ma20_gap": -0.15741620000070344,
+   "ma60_gap": -0.2608244480771169,
+   "ma120_gap": -0.3282482996107434,
+   "ma_aligned": false,
+   "ret5": -0.11280736434822303,
+   "ret20": -0.31750158661590766,
+   "ret60": -0.40216668872247074,
+   "from_high": -0.5043025530982359,
+   "from_low": 0.10450187755738916,
+   "vol_ratio_prev": 1.3293303424882372,
+   "tv20_avg": 175435615.11238098,
+   "tv_prev": 191474013.66119385,
+   "prev_chg": 0.061133203818001025,
+   "up_days": 1,
+   "prev_close_pos": 0.6752127834735587,
+   "fr": null,
+   "price": 197.00999450683594,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/927003/000177031026000016/xslF345X06/ownership.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Here's Why Advanced Energy (AEIS) Is a Great 'Buy the Bottom' Stock Now - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 13:55:02 GMT"
+    },
+    {
+     "title": "Weekly Recap: Profit growth and record semiconductor revenue, design wins - TradingView",
+     "date": "Mon, 09 Nov 2026 11:00:00 GMT"
+    },
+    {
+     "title": "Wells Fargo & Company (WFC) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 07:17:51 GMT"
+    },
+    {
+     "title": "How (AEIS) Movements Inform Risk Allocation Models - Stock Traders Daily",
+     "date": "Sun, 08 Nov 2026 21:30:02 GMT"
+    },
+    {
+     "title": "Aedifica (OTCPK:AEDF.F) Stock Fair Value Falls As Analysts Split On Real Estate Risks - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 14:08:54 GMT"
+    },
+    {
+     "title": "Eagle Nuclear Energy Corp. (NUCL) May Find a Bottom Soon, Here's Why You Should Buy the Stock Now - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 13:55:02 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "DXPE",
+   "name": "DXP Enterprises, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2429028864,
+   "chg": 11.27381392953537,
+   "gap": 2.5518991921995804,
+   "high_chg": 14.344618272108,
+   "close_pos": 0.739601671017124,
+   "upper_wick": 3.0708043425726315,
+   "limit_up": false,
+   "tv": 37845108.77685547,
+   "vol_ratio": 1.2480834258279343,
+   "close": 156.5399932861328,
+   "pctb": -0.030155663116647344,
+   "bw": 0.31278400238285164,
+   "bw_pctile": 0.8583333333333333,
+   "squeeze": false,
+   "rsi14": 33.82041852568314,
+   "ma5_gap": -0.10474740217513001,
+   "ma20_gap": -0.1658242101955597,
+   "ma60_gap": -0.22372602078143544,
+   "ma120_gap": -0.18583294600846234,
+   "ma_aligned": false,
+   "ret5": -0.19362611909954086,
+   "ret20": -0.22241878123162184,
+   "ret60": -0.2714656228422564,
+   "from_high": -0.32365388136643625,
+   "from_low": 0.6739646732891578,
+   "vol_ratio_prev": 1.686369770580297,
+   "tv20_avg": 32257924.012680054,
+   "tv_prev": 43948429.71191406,
+   "prev_chg": 0.05877924170694482,
+   "up_days": 1,
+   "prev_close_pos": 0.33925245958009836,
+   "fr": null,
+   "price": 140.67999267578125,
+   "filings": [],
+   "news": [
+    {
+     "title": "DXP Enterprises upgraded by Freedom Broker with a new price target - Quantisnow",
+     "date": "Mon, 09 Nov 2026 20:07:46 GMT"
+    },
+    {
+     "title": "DXP Enterprises, Inc. (NASDAQ:DXPE) Stock Has Average Price Target of $183.00 According to Analysts - MarketBeat",
+     "date": "Mon, 09 Nov 2026 21:49:35 GMT"
+    },
+    {
+     "title": "DXPE Q3 2026 deep dive: margin pressures emerge despite double-digit sales growth - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 08:05:36 GMT"
+    },
+    {
+     "title": "DXP Enterprises (DXPE) Could Be 30% Undervalued As Earnings Growth Draws Fresh Attention - Simply Wall St",
+     "date": "Mon, 09 Nov 2026 09:30:21 GMT"
+    },
+    {
+     "title": "Quanex (NX) Stock Still Looks Cheap Following Its 61% Run - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 13:07:18 GMT"
+    },
+    {
+     "title": "DXP Enterprises (NASDAQ:DXPE) Raised to \"Buy\" at Freedom Broker - MarketBeat",
+     "date": "Mon, 09 Nov 2026 20:20:44 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "NVTS",
+   "name": "Navitas Semiconductor Corporati",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 2581882112,
+   "chg": 11.265973353164437,
+   "gap": 1.5098736309484106,
+   "high_chg": 13.472715996995642,
+   "close_pos": 0.8376063917367794,
+   "upper_wick": 2.206742643831206,
+   "limit_up": false,
+   "tv": 170281662.9638977,
+   "vol_ratio": 1.144028986412056,
+   "close": 9.579999923706055,
+   "pctb": 0.38953763368748867,
+   "bw": 0.287348066440876,
+   "bw_pctile": 0.20833333333333334,
+   "squeeze": false,
+   "rsi14": 49.86375706713115,
+   "ma5_gap": 0.01797111189923717,
+   "ma20_gap": -0.03174114737438394,
+   "ma60_gap": -0.21170091384420897,
+   "ma120_gap": -0.40554071527186986,
+   "ma_aligned": false,
+   "ret5": 0.015330203002184906,
+   "ret20": -0.20129871336238414,
+   "ret60": -0.36969255103553955,
+   "from_high": -0.7480245795124958,
+   "from_low": 0.2569342739485898,
+   "vol_ratio_prev": 0.881203088005845,
+   "tv20_avg": 139334480.30145645,
+   "tv_prev": 117654784.3085289,
+   "prev_chg": 0.09541978504108473,
+   "up_days": 1,
+   "prev_close_pos": 0.8965509870530474,
+   "fr": null,
+   "price": 8.609999656677246,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1821769/000110465926124038/xslF345X06/tm2629278-1_4seq1.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1821769/000159588826000147/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Navitas Semiconductor Corporation (NVTS) stock price, news, quote and history - Yahoo Finance Australia",
+     "date": "Sun, 08 Nov 2026 11:54:58 GMT"
+    },
+    {
+     "title": "NVTS Nov 2026 4.000 call (NVTS261113C00004000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 18:35:23 GMT"
+    },
+    {
+     "title": "NVTS Nov 2026 1.000 put (NVTS261113P00001000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 18:41:02 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "FERG",
+   "name": "Ferguson Enterprises Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 50284163072,
+   "chg": 11.22378950366365,
+   "gap": 7.6936225769489885,
+   "high_chg": 13.49700305495718,
+   "close_pos": 0.718057564327026,
+   "upper_wick": 2.273213551293527,
+   "limit_up": false,
+   "tv": 977166518.3157349,
+   "vol_ratio": 2.6316178169166906,
+   "close": 259.92999267578125,
+   "pctb": 0.5703308346389389,
+   "bw": 0.12499145766217622,
+   "bw_pctile": 0.5916666666666667,
+   "squeeze": false,
+   "rsi14": 58.51902672483044,
+   "ma5_gap": -0.027894490214168344,
+   "ma20_gap": 0.008790753540118379,
+   "ma60_gap": 0.025974965113397364,
+   "ma120_gap": 0.013159792818978833,
+   "ma_aligned": true,
+   "ret5": -0.020864738898763946,
+   "ret20": 0.06207964042403136,
+   "ret60": -0.058117033905851545,
+   "from_high": -0.1396702092999742,
+   "from_low": 0.1016828905337821,
+   "vol_ratio_prev": 1.6033322840640396,
+   "tv20_avg": 331340393.757782,
+   "tv_prev": 511849733.31604004,
+   "prev_chg": -0.008274971350513916,
+   "up_days": 0,
+   "prev_close_pos": 0.4261482871752431,
+   "fr": null,
+   "price": 233.6999969482422,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011641/000201164126000044/ferg-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011641/000195917326007848/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011641/000201164126000042/ferg-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Ferguson Enterprises Inc. (FERG) Stock Forecasts - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 20:02:03 GMT"
+    },
+    {
+     "title": "Ferguson Enterprises (FERG) Reports Strong Q3 Revenue Growth, Ra - GuruFocus",
+     "date": "Mon, 09 Nov 2026 19:06:20 GMT"
+    },
+    {
+     "title": "FERGUSON ENTERPRISES ($FERG) Releases Q3 2026 Earnings - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 12:10:00 GMT"
+    },
+    {
+     "title": "Ferguson completed 11 acquisitions this year, with about $1.5 billion in annualized revenue. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 11:45:00 GMT"
+    },
+    {
+     "title": "Ferguson (NYSE:FERG) Shares Gap Up After Earnings Beat - MarketBeat",
+     "date": "Mon, 09 Nov 2026 15:24:30 GMT"
+    },
+    {
+     "title": "Ferguson Enterprises Inc. (FERG) Stock forecasts - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 08:21:36 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "SANM",
+   "name": "Sanmina Corporation",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 8020308480,
+   "chg": 11.107816696931971,
+   "gap": 2.1087108339221006,
+   "high_chg": 14.270865953320877,
+   "close_pos": 0.7551726436124406,
+   "upper_wick": 3.1630492563889097,
+   "limit_up": false,
+   "tv": 230214405.2610016,
+   "vol_ratio": 1.7358076508651086,
+   "close": 149.63999938964844,
+   "pctb": 0.08768447475111368,
+   "bw": 0.4984284793604531,
+   "bw_pctile": 0.9333333333333333,
+   "squeeze": false,
+   "rsi14": 30.747979750346857,
+   "ma5_gap": -0.08049433768385061,
+   "ma20_gap": -0.2055098002665089,
+   "ma60_gap": -0.3058871312857052,
+   "ma120_gap": -0.3605335887786064,
+   "ma_aligned": false,
+   "ret5": -0.18656769512577698,
+   "ret20": -0.3807531873918023,
+   "ret60": -0.34798608507159134,
+   "from_high": -0.5334626711486674,
+   "from_low": 0.140389453140368,
+   "vol_ratio_prev": 1.043503280009207,
+   "tv20_avg": 145632801.88575745,
+   "tv_prev": 122114349.35913086,
+   "prev_chg": 0.034170291747166015,
+   "up_days": 1,
+   "prev_close_pos": 0.4215754720065005,
+   "fr": null,
+   "price": 134.67999267578125,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,8.01,9.01",
+     "items_kr": "실적 발표, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/897723/000089772326000044/sanm-20261027.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "12 Information Technology Stocks Moving In Monday's After-Market Session - Benzinga",
+     "date": "Mon, 09 Nov 2026 21:05:47 GMT"
+    },
+    {
+     "title": "About 27% revenue growth is projected at the midpoint of Sanmina's fiscal 2027 outlook. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 21:01:00 GMT"
+    },
+    {
+     "title": "Sanmina’s (NASDAQ:SANM) Q3 CY2026: strong sales, stock jumps 19.8% - The Chronicle-Journal",
+     "date": "Mon, 09 Nov 2026 21:10:00 GMT"
+    },
+    {
+     "title": "Zacks Value Investor Highlights: MU, SNDK, SANM, STRL and FIX - TradingView",
+     "date": "Mon, 09 Nov 2026 09:07:00 GMT"
+    },
+    {
+     "title": "SANM Nov 2026 320.000 put (SANM261120P00320000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 04:15:16 GMT"
+    },
+    {
+     "title": "SANM Jan 2027 170.000 put (SANM270115P00170000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 04:31:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "TEM",
+   "name": "Tempus AI, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 15401994240,
+   "chg": 11.03221440233002,
+   "gap": 2.0381267063308117,
+   "high_chg": 12.754762076262649,
+   "close_pos": 0.8594423174368508,
+   "upper_wick": 1.7225476739326322,
+   "limit_up": false,
+   "tv": 684515919.6313477,
+   "vol_ratio": 1.2696557308495293,
+   "close": 84.44000244140625,
+   "pctb": 0.7814139470615276,
+   "bw": 0.26618403183543576,
+   "bw_pctile": 0.20833333333333334,
+   "squeeze": false,
+   "rsi14": 62.23360680237299,
+   "ma5_gap": 0.004968694217980962,
+   "ma20_gap": 0.07490789904356121,
+   "ma60_gap": 0.08805161926966054,
+   "ma120_gap": 0.25906344892370203,
+   "ma_aligned": true,
+   "ret5": 0.05303242545441478,
+   "ret20": 0.07218388163757594,
+   "ret60": 0.4008104949213023,
+   "from_high": -0.14636877115446467,
+   "from_low": 0.8653422172644569,
+   "vol_ratio_prev": 0.9835672717504775,
+   "tv20_avg": 458228597.11452484,
+   "tv_prev": 477563599.16381836,
+   "prev_chg": 0.07979558032415657,
+   "up_days": 1,
+   "prev_close_pos": 0.879336990380975,
+   "fr": null,
+   "price": 76.05000305175781,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1717115/000110465926123788/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "TEM Nov 2026 88.000 put (TEM261113P00088000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 10:54:55 GMT"
+    },
+    {
+     "title": "Tempus AI: Q3 Strengthens The Platform Thesis, But Cash Returns Still Need To Catch Up - Seeking Alpha",
+     "date": "Sun, 08 Nov 2026 02:48:00 GMT"
+    },
+    {
+     "title": "TEM Nov 2026 83.000 put (TEM261113P00083000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 10:59:51 GMT"
+    },
+    {
+     "title": "TEM Nov 2026 75.000 put (TEM261113P00075000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 10:10:58 GMT"
+    },
+    {
+     "title": "TEM Nov 2026 52.000 put (TEM261113P00052000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 07:31:54 GMT"
+    },
+    {
+     "title": "TEM Dec 2026 95.000 call (TEM261204C00095000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 01:16:37 GMT"
+    }
+   ],
+   "catalysts": [
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "DIOD",
+   "name": "Diodes Incorporated",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 3955380736,
+   "chg": 11.026368552219834,
+   "gap": 1.8226422202563652,
+   "high_chg": 12.668049346481602,
+   "close_pos": 0.8613533007945895,
+   "upper_wick": 1.6416807942617802,
+   "limit_up": false,
+   "tv": 52023658.52030945,
+   "vol_ratio": 1.08916501083409,
+   "close": 85.88999938964844,
+   "pctb": 0.19177835755803818,
+   "bw": 0.24936809772310267,
+   "bw_pctile": 0.44166666666666665,
+   "squeeze": false,
+   "rsi14": 43.72565909640313,
+   "ma5_gap": -0.006013250607906695,
+   "ma20_gap": -0.07686064465284237,
+   "ma60_gap": -0.1491764060032893,
+   "ma120_gap": -0.18869528147793557,
+   "ma_aligned": false,
+   "ret5": -0.03456878494961202,
+   "ret20": -0.18516959531262356,
+   "ret60": -0.2040333504776869,
+   "from_high": -0.3859829992695183,
+   "from_low": 0.8297067843869526,
+   "vol_ratio_prev": 1.6622823145607633,
+   "tv20_avg": 45591413.92883301,
+   "tv_prev": 68192840.5380249,
+   "prev_chg": 0.13165593797021047,
+   "up_days": 1,
+   "prev_close_pos": 0.9051183603568765,
+   "fr": null,
+   "price": 77.36000061035156,
+   "filings": [],
+   "news": [
+    {
+     "title": "Diodes (DIOD) Stock May Still Sit Below Fair Value Following Record Q3 Revenue - Simply Wall St",
+     "date": "Mon, 09 Nov 2026 11:20:53 GMT"
+    },
+    {
+     "title": "Responsive Playbooks and the DIOD Inflection - Stock Traders Daily",
+     "date": "Mon, 09 Nov 2026 01:52:02 GMT"
+    },
+    {
+     "title": "Diodes Incorporated (NASDAQ:DIOD) Stock Has Consensus Price Target of $129.17 According to Brokerages - MarketBeat",
+     "date": "Sun, 08 Nov 2026 09:17:03 GMT"
+    },
+    {
+     "title": "DIOD Dec 2026 100.000 put (DIOD261218P00100000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 20:22:39 GMT"
+    },
+    {
+     "title": "Power Integrations Surges 11.0% Amid Sector-Wide Rally - AlphaStreet",
+     "date": "Mon, 09 Nov 2026 20:37:26 GMT"
+    },
+    {
+     "title": "DIOD Dec 2026 160.000 call (DIOD261218C00160000) interactive stock chart - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 13:04:02 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "GRDN",
+   "name": "Guardian Pharmacy Services, Inc",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2978901248,
+   "chg": 10.922390032508167,
+   "gap": 0.849258352288329,
+   "high_chg": 10.922390032508167,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "tv": 43848924.60689163,
+   "vol_ratio": 2.1022520288548243,
+   "close": 47.02000045776367,
+   "pctb": 1.073740131103896,
+   "bw": 0.09159748136199242,
+   "bw_pctile": 0.175,
+   "squeeze": false,
+   "rsi14": 57.67918008754273,
+   "ma5_gap": 0.032794072835512944,
+   "ma20_gap": 0.05255315096541624,
+   "ma60_gap": 0.038945106733033974,
+   "ma120_gap": 0.04358956346512999,
+   "ma_aligned": false,
+   "ret5": 0.04177932711512966,
+   "ret20": 0.026889550464528122,
+   "ret60": 0.10218409773084036,
+   "from_high": -0.12290507379185467,
+   "from_low": 0.6093393752499141,
+   "vol_ratio_prev": 2.6527370478983383,
+   "tv20_avg": 17994069.041728973,
+   "tv_prev": 46014344.33746338,
+   "prev_chg": 0.06320543078190011,
+   "up_days": 1,
+   "prev_close_pos": 0.6802505025477166,
+   "fr": null,
+   "price": 42.38999938964844,
+   "filings": [],
+   "news": [
+    {
+     "title": "NBIX vs. GRDN: Which Stock Is the Better Value Option? - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 15:40:03 GMT"
+    },
+    {
+     "title": "Guardian Pharmacy Services (GRDN) Stock Still Looks Cheap As It Rises 44% YTD - Simply Wall St",
+     "date": "Mon, 09 Nov 2026 20:27:55 GMT"
+    },
+    {
+     "title": "Guardian Pharmacy Services Stock Gets A Guidance Lift After Profit Jump - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 18:10:16 GMT"
+    },
+    {
+     "title": "GRDN Apr 2027 35.000 put (GRDN270416P00035000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 04:18:29 GMT"
+    },
+    {
+     "title": "GRDN Nov 2026 50.000 call (GRDN261120C00050000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 03:44:24 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "RKLB",
+   "name": "Rocket Lab Corporation",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 37635731456,
+   "chg": 10.910120499005815,
+   "gap": 2.2611659503297243,
+   "high_chg": 12.474088882518686,
+   "close_pos": 0.8757488056229092,
+   "upper_wick": 1.5639683835128597,
+   "limit_up": false,
+   "tv": 1794383788.3869476,
+   "vol_ratio": 1.5455439711835577,
+   "close": 58.86000061035156,
+   "pctb": 0.4027323527125433,
+   "bw": 0.33762581306783485,
+   "bw_pctile": 0.24166666666666667,
+   "squeeze": false,
+   "rsi14": 52.222510668662046,
+   "ma5_gap": 0.028767487923724078,
+   "ma20_gap": -0.03284006850062293,
+   "ma60_gap": -0.17498154143346256,
+   "ma120_gap": -0.33136226595988394,
+   "ma_aligned": false,
+   "ret5": -0.030330711881900396,
+   "ret20": -0.22196158324087867,
+   "ret60": -0.33745317470923286,
+   "from_high": -0.6485430483786476,
+   "from_low": 0.41256321868257384,
+   "vol_ratio_prev": 1.0636854643234996,
+   "tv20_avg": 1072121089.8424721,
+   "tv_prev": 1097259392.690277,
+   "prev_chg": 0.1539464613603696,
+   "up_days": 1,
+   "prev_close_pos": 0.9954478332925236,
+   "fr": null,
+   "price": 53.06999969482422,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1819994/000181999426000074/rklb-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1819994/000181999426000073/rklb-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Rocket Lab Announces Third Quarter 2026 Financial Results: Posts Record Revenue, $1.2 Billion or 52% Sequential Quarterly Backlog Growth, Positive GAAP Operating Cash Flow, and Guides to Record Revenue and Gross Margin Expansion in Q4 2026 - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 21:05:00 GMT"
+    },
+    {
+     "title": "Rocket Lab Q3: Revenue Beat, EPS Miss, Company Signs $515 Million In Neutron Launch Deals - Benzinga",
+     "date": "Mon, 09 Nov 2026 21:23:35 GMT"
+    },
+    {
+     "title": "Rocket Lab Q3 2026: Record Backlog Jumps 52% as Revenue Surges 73% - 24/7 Wall St.",
+     "date": "Mon, 09 Nov 2026 21:06:21 GMT"
+    },
+    {
+     "title": "Rocket Lab (RKLB) stock price forecast: Record $3.6 bn backlog and Q3 earnings reshape 2027 outlook - Beinsure",
+     "date": "Mon, 09 Nov 2026 22:11:42 GMT"
+    },
+    {
+     "title": "Earnings Flash (RKLB) Rocket Lab Posts Q3 Per-Share Loss $0.12, vs. FactSet Est of $0.07 Loss - marketscreener.com",
+     "date": "Mon, 09 Nov 2026 21:12:32 GMT"
+    },
+    {
+     "title": "Booked work at Rocket Lab reached about $3.6 billion, up 52% since the prior quarter. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 21:05:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "CNH",
+   "name": "CNH Industrial N.V.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 20616593408,
+   "chg": 10.899647313761074,
+   "gap": 5.190306280415391,
+   "high_chg": 14.619373002058577,
+   "close_pos": 0.6090907672220517,
+   "upper_wick": 3.719725688297501,
+   "limit_up": false,
+   "tv": 326015412.63931274,
+   "vol_ratio": 1.6093013395435078,
+   "close": 12.819999694824219,
+   "pctb": 0.5000003231217387,
+   "bw": 0.10212593974862416,
+   "bw_pctile": 0.041666666666666664,
+   "squeeze": true,
+   "rsi14": 56.39098067841383,
+   "ma5_gap": -0.004478097134931414,
+   "ma20_gap": 3.299911122134347e-08,
+   "ma60_gap": -0.05952539323893902,
+   "ma120_gap": 0.01000396550508631,
+   "ma_aligned": false,
+   "ret5": -0.01700678617113882,
+   "ret20": 0.0149253793827675,
+   "ret60": 0.11260828081164198,
+   "from_high": -0.20055322343566906,
+   "from_low": 0.26754392156530593,
+   "vol_ratio_prev": 1.0062000106363638,
+   "tv20_avg": 182298180.55316448,
+   "tv_prev": 188095078.82766724,
+   "prev_chg": 0.02755559285481768,
+   "up_days": 1,
+   "prev_close_pos": 0.9302332286510175,
+   "fr": null,
+   "price": 11.5600004196167,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1567094/000156709426000022/cnhi-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "1.01,7.01,9.01",
+     "items_kr": "계약 체결, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1567094/000119312526452698/d127826d8k.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "7.01,9.01",
+     "items_kr": "IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1567094/000156709426000020/cnhi-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Compared to Estimates, CNH (CNH) Q3 Earnings: A Look at Key Metrics - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 19:00:01 GMT"
+    },
+    {
+     "title": "CNH Industrial, Planet Labs, Ferguson Enterprises And Other Big Stocks Moving Higher On Monday - Benzinga",
+     "date": "Mon, 09 Nov 2026 16:50:24 GMT"
+    },
+    {
+     "title": "CNH Industrial rises on earnings beat; construction divestiture sharpens ag focus (CNH:NYSE) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 14:03:00 GMT"
+    },
+    {
+     "title": "CNH to sell 70% of construction unit to Kobelco arm - Briefs Finance",
+     "date": "Mon, 09 Nov 2026 13:00:00 GMT"
+    },
+    {
+     "title": "CNH Industrial (CNH) Q3 Earnings Beat EPS Estimates but Revenue Misses Expectations - GuruFocus",
+     "date": "Mon, 09 Nov 2026 13:52:20 GMT"
+    },
+    {
+     "title": "CNH Industrial (CNH) Beats Q3 Earnings Estimates - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 11:40:02 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "FDA·Clinical",
+    "Contract·Partnership"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "TSEM",
+   "name": "Tower Semiconductor Ltd.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 17287604224,
+   "chg": 10.885391981125059,
+   "gap": 1.2014046885613805,
+   "high_chg": 12.436291165345326,
+   "close_pos": 0.8807388124288215,
+   "upper_wick": 1.5508991842202742,
+   "limit_up": false,
+   "tv": 601160484.3771973,
+   "vol_ratio": 1.1718069703342977,
+   "close": 152.2899932861328,
+   "pctb": 0.0669121152292677,
+   "bw": 0.5537664693003588,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 29.637771525775364,
+   "ma5_gap": -0.06636215337399087,
+   "ma20_gap": -0.23982954884624907,
+   "ma60_gap": -0.3453765713107029,
+   "ma120_gap": -0.4010183836234008,
+   "ma_aligned": false,
+   "ret5": -0.17503604119103244,
+   "ret20": -0.3995015858238642,
+   "ret60": -0.45704685513005683,
+   "from_high": -0.5707320269742042,
+   "from_low": 0.587378660039475,
+   "vol_ratio_prev": 1.1262446394242618,
+   "tv20_avg": 580113556.9178772,
+   "tv_prev": 502073824.61242676,
+   "prev_chg": 0.04847691104996521,
+   "up_days": 1,
+   "prev_close_pos": 0.46024691757417435,
+   "fr": null,
+   "price": 137.33999633789062,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "SCHEDULE 13G",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/928876/000117891326005059/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "TSEM 261106 162.50C (TSEM261106C162500) Stock Options Chain | Quotes & News - Moomoo",
+     "date": "Sun, 08 Nov 2026 00:35:13 GMT"
+    },
+    {
+     "title": "TSEM Nov 2026 195.000 call (TSEM261127C00195000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 13:06:22 GMT"
+    },
+    {
+     "title": "Weekly Recap: Q3 record revenue and Innolight optics early production - TradingView",
+     "date": "Mon, 09 Nov 2026 11:00:00 GMT"
+    },
+    {
+     "title": "TSEM Nov 2026 185.000 call (TSEM261113C00185000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 01:29:09 GMT"
+    },
+    {
+     "title": "How Record Quarterly Revenue Will Impact Tower Semiconductor Stock - Simply Wall St",
+     "date": "Sun, 08 Nov 2026 04:38:12 GMT"
+    },
+    {
+     "title": "Mon: El Al gains strongly on TA 35 debut - Globes - Israel Business News",
+     "date": "Mon, 09 Nov 2026 17:17:06 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "OUST",
+   "name": "Ouster, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2815500800,
+   "chg": 10.849264907414513,
+   "gap": 0.5891704033416323,
+   "high_chg": 11.783309396686882,
+   "close_pos": 0.9228942464593004,
+   "upper_wick": 0.9340444892723626,
+   "limit_up": false,
+   "tv": 132328770.56298065,
+   "vol_ratio": 1.1316346640675379,
+   "close": 38.56999969482422,
+   "pctb": 0.8493430032957131,
+   "bw": 0.32592251429289465,
+   "bw_pctile": 0.16666666666666666,
+   "squeeze": false,
+   "rsi14": 60.824361408706494,
+   "ma5_gap": 0.11483126225291684,
+   "ma20_gap": 0.11385874998476986,
+   "ma60_gap": -0.03740510004527564,
+   "ma120_gap": -0.11140437406844639,
+   "ma_aligned": false,
+   "ret5": 0.169973047637219,
+   "ret20": -0.127944941396118,
+   "ret60": -0.22900515520864229,
+   "from_high": -0.4545383654246704,
+   "from_low": 1.1216462791639716,
+   "vol_ratio_prev": 1.1506075973591043,
+   "tv20_avg": 94696511.0925293,
+   "tv_prev": 117154758.83483887,
+   "prev_chg": 0.1400720067844614,
+   "up_days": 1,
+   "prev_close_pos": 0.9983831003772766,
+   "fr": null,
+   "price": 34.79499816894531,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1816581/000195004726010805/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "OUST Stock Gets A Retail Boost After Ouster's Record Revenue And Sensor Shipments: ‘Great Guide And Q3’ - Stocktwits",
+     "date": "Mon, 09 Nov 2026 06:39:18 GMT"
+    },
+    {
+     "title": "OUST Earnings Review: More Than Meets the (Robotic) Eye - CMC Markets",
+     "date": "Mon, 09 Nov 2026 16:35:08 GMT"
+    },
+    {
+     "title": "OUST Nov 2026 34.000 call (OUST261113C00034000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 16:51:00 GMT"
+    },
+    {
+     "title": "OUST261127C00035000 Interactive Stock Chart | OUST Nov 2026 35.000 call Stock - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 09:09:31 GMT"
+    },
+    {
+     "title": "OUST Nov 2026 33.000 call (OUST261127C00033000) Interactive Stock Chart - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 03:14:40 GMT"
+    },
+    {
+     "title": "OUST Nov 2026 21.500 put (OUST261113P00021500) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 01:17:11 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "CTRI",
+   "name": "Centuri Holdings, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2277828864,
+   "chg": 10.751097380864927,
+   "gap": 3.043686334517104,
+   "high_chg": 12.518405164466916,
+   "close_pos": 0.8256656090813786,
+   "upper_wick": 1.7673077836019897,
+   "limit_up": false,
+   "tv": 66132021.474472046,
+   "vol_ratio": 1.1524344002405995,
+   "close": 22.559999465942383,
+   "pctb": 0.5018221902941138,
+   "bw": 0.1617133168705998,
+   "bw_pctile": 0.49166666666666664,
+   "squeeze": false,
+   "rsi14": 49.25690360845178,
+   "ma5_gap": -0.009433936888650685,
+   "ma20_gap": 0.0002946724364305542,
+   "ma60_gap": -0.01037235270186354,
+   "ma120_gap": -0.16343534608872945,
+   "ma_aligned": false,
+   "ret5": -0.05211721469583297,
+   "ret20": -0.025358793730645313,
+   "ret60": -0.11779988286616094,
+   "from_high": -0.5261137478190954,
+   "from_low": 0.10078366728169774,
+   "vol_ratio_prev": 1.2177456323536902,
+   "tv20_avg": 51625838.82390022,
+   "tv_prev": 60875747.50804901,
+   "prev_chg": 0.09222526841202527,
+   "up_days": 1,
+   "prev_close_pos": 0.949685587403343,
+   "fr": null,
+   "price": 20.3700008392334,
+   "filings": [],
+   "news": [
+    {
+     "title": "CTRI May 2027 12.500 call (CTRI270521C00012500) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 00:37:53 GMT"
+    },
+    {
+     "title": "Centuri Holdings Stock In Focus After Earnings Beat - Simply Wall St",
+     "date": "Sun, 08 Nov 2026 14:26:44 GMT"
+    },
+    {
+     "title": "CTRI May 2027 7.500 call (CTRI270521C00007500) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Mon, 09 Nov 2026 15:04:49 GMT"
+    },
+    {
+     "title": "CTRI May 2027 7.500 call (CTRI270521C00007500) Seasonal Returns Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 16:12:55 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "LITE",
+   "name": "Lumentum Holdings Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 54062714880,
+   "chg": 10.689010827991341,
+   "gap": 1.6450333110122894,
+   "high_chg": 14.495245436472338,
+   "close_pos": 0.7138868042180297,
+   "upper_wick": 3.8062346084810064,
+   "limit_up": false,
+   "tv": 3533992801.1227417,
+   "vol_ratio": 0.9060735032140174,
+   "close": 596.1599731445312,
+   "pctb": 0.0004023562366183621,
+   "bw": 0.6530305506833874,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 30.1145112401842,
+   "ma5_gap": -0.11404457763104126,
+   "ma20_gap": -0.3262525244269239,
+   "ma60_gap": -0.3977750755721813,
+   "ma120_gap": -0.37547731856378974,
+   "ma_aligned": false,
+   "ret5": -0.3593552765135023,
+   "ret20": -0.5118615165659072,
+   "ret60": -0.38825087938088143,
+   "from_high": -0.528792627423037,
+   "from_low": 1.500998428560881,
+   "vol_ratio_prev": 0.8252197663476325,
+   "tv20_avg": 5080215257.411499,
+   "tv_prev": 2904669873.8342285,
+   "prev_chg": 0.056680427617299856,
+   "up_days": 1,
+   "prev_close_pos": 0.5020495434126498,
+   "fr": null,
+   "price": 538.5900268554688,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "425",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1633978/000119312526453776/d180680d425.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Lumentum rises 11% as recovery continues (LITE:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 21:18:00 GMT"
+    },
+    {
+     "title": "Lumentum Holdings (LITE) Shares Surge Nearly 11% on November 09, - GuruFocus",
+     "date": "Mon, 09 Nov 2026 22:51:52 GMT"
+    },
+    {
+     "title": "Weekly Recap: All-stock Marvell buyout and Q1 revenue growth, Q2 outlook - TradingView",
+     "date": "Mon, 09 Nov 2026 11:00:00 GMT"
+    },
+    {
+     "title": "Lumentum (NASDAQ:LITE) Stock Price Up 10.7% - Time to Buy? - MarketBeat",
+     "date": "Mon, 09 Nov 2026 22:43:43 GMT"
+    },
+    {
+     "title": "Lumentum jumps as takeover talks and strong AI-optics momentum lift shares - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 16:20:00 GMT"
+    },
+    {
+     "title": "Lumentum Holdings Inc. (LITE) Stock Forecasts - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 11:45:16 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "CIEN",
+   "name": "Ciena Corporation",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 38193287168,
+   "chg": 10.657786781571609,
+   "gap": 4.729033458934073,
+   "high_chg": 12.313565075422206,
+   "close_pos": 0.8113295157759985,
+   "upper_wick": 1.655778293850587,
+   "limit_up": false,
+   "tv": 755449873.926239,
+   "vol_ratio": 0.8431015566997604,
+   "close": 269.3299865722656,
+   "pctb": 0.012991524384401544,
+   "bw": 0.5379863747526469,
+   "bw_pctile": 0.95,
+   "squeeze": false,
+   "rsi14": 32.13411577396175,
+   "ma5_gap": -0.0855912535535881,
+   "ma20_gap": -0.26200392427024866,
+   "ma60_gap": -0.3231163172483785,
+   "ma120_gap": -0.4035627208440935,
+   "ma_aligned": false,
+   "ret5": -0.2411137488673185,
+   "ret20": -0.45885673714381603,
+   "ret60": -0.4503263517858803,
+   "from_high": -0.6182177602526922,
+   "from_low": 0.44685529439702565,
+   "vol_ratio_prev": 1.4383632649327682,
+   "tv20_avg": 1067987997.7149963,
+   "tv_prev": 1148167983.1207275,
+   "prev_chg": 0.054503712855250575,
+   "up_days": 1,
+   "prev_close_pos": 0.3418802435267186,
+   "fr": null,
+   "price": 243.38999938964844,
+   "filings": [],
+   "news": [
+    {
+     "title": "Here's How Much $1000 Invested In Ciena 10 Years Ago Would Be Worth Today - Benzinga",
+     "date": "Mon, 09 Nov 2026 21:00:21 GMT"
+    },
+    {
+     "title": "Ciena Corporation $CIEN Shares Acquired by Pictet Asset Management Holding SA - MarketBeat",
+     "date": "Mon, 09 Nov 2026 10:52:43 GMT"
+    },
+    {
+     "title": "Behavioral Patterns of CIEN and Institutional Flows - Stock Traders Daily",
+     "date": "Mon, 09 Nov 2026 00:18:01 GMT"
+    },
+    {
+     "title": "Ciena Corporation $CIEN Stock Acquired by Calamos Advisors LLC - MarketBeat",
+     "date": "Sun, 08 Nov 2026 09:00:44 GMT"
+    },
+    {
+     "title": "CIEN Nov 2026 630.000 call (CIEN261113C00630000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 07:34:31 GMT"
+    },
+    {
+     "title": "Ciena (CIEN) Stock Price Prediction: Bearish momentum meets oversold conditions near support - Blockchain News",
+     "date": "Mon, 09 Nov 2026 20:56:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "ROAD",
+   "name": "Construction Partners, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 4841249280,
+   "chg": 10.52086384357982,
+   "gap": 3.964754530311332,
+   "high_chg": 12.956724488804383,
+   "close_pos": 0.7693255335660533,
+   "upper_wick": 2.4358606452245555,
+   "limit_up": false,
+   "tv": 86230284.88504028,
+   "vol_ratio": 1.3253264460642928,
+   "close": 85.30000305175781,
+   "pctb": 0.12560186405953655,
+   "bw": 0.27124927207899246,
+   "bw_pctile": 0.7583333333333333,
+   "squeeze": false,
+   "rsi14": 43.688093559390715,
+   "ma5_gap": -0.13639923275455046,
+   "ma20_gap": -0.10155522184158239,
+   "ma60_gap": -0.19204396542853852,
+   "ma120_gap": -0.25153253684983023,
+   "ma_aligned": false,
+   "ret5": -0.14053454696775758,
+   "ret20": -0.110931891766476,
+   "ret60": -0.34921371465273465,
+   "from_high": -0.4888741701643988,
+   "from_low": 0.03583409062401599,
+   "vol_ratio_prev": 2.0272869041042245,
+   "tv20_avg": 64878685.36224365,
+   "tv_prev": 111872410.4423523,
+   "prev_chg": -0.0045143619196671425,
+   "up_days": 0,
+   "prev_close_pos": 0.19377930609019112,
+   "fr": null,
+   "price": 77.18000030517578,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1718227/000162828026071708/xslF345X06/wk-form4_1793999890.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1718227/000162828026071706/xslF345X06/wk-form4_1793999883.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1718227/000162828026071705/xslF345X06/wk-form4_1793999877.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1718227/000162828026071704/xslF345X06/wk-form4_1793999871.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1718227/000162828026071702/xslF345X06/wk-form4_1793999864.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1718227/000162828026071701/xslF345X06/wk-form4_1793999858.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Solana's $657M Stock Trading Boom - When Will SOL Pump? - Milk Road",
+     "date": "Mon, 09 Nov 2026 19:45:07 GMT"
+    },
+    {
+     "title": "ROAD261120C00120000 Interactive Stock Chart | ROAD Nov 2026 120.000 call Stock - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 05:27:27 GMT"
+    },
+    {
+     "title": "Rubrik: The Road To Profitability Could Unlock The Next Leg Higher (NYSE:RBRK) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 10:19:00 GMT"
+    },
+    {
+     "title": "ROAD Nov 2026 75.000 call (ROAD261120C00075000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 00:40:15 GMT"
+    },
+    {
+     "title": "ROAD Nov 2026 110.000 call (ROAD261120C00110000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 22:27:16 GMT"
+    },
+    {
+     "title": "ROAD Nov 2026 90.000 put (ROAD261120P00090000) interactive stock chart - Yahoo Finance Australia",
+     "date": "Mon, 09 Nov 2026 03:15:30 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "RGTI",
+   "name": "Rigetti Computing, Inc.",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 4332318208,
+   "chg": 10.468081210521941,
+   "gap": 0.6808504145196181,
+   "high_chg": 12.553194735912566,
+   "close_pos": 0.8424432211248326,
+   "upper_wick": 2.085113525390625,
+   "limit_up": false,
+   "tv": 313060870.71932983,
+   "vol_ratio": 1.6006291365896683,
+   "close": 12.979999542236328,
+   "pctb": 0.5054363323740827,
+   "bw": 0.25474770362803095,
+   "bw_pctile": 0.19166666666666668,
+   "squeeze": false,
+   "rsi14": 50.522192593861575,
+   "ma5_gap": 0.07669750618494442,
+   "ma20_gap": 0.0013848931884563598,
+   "ma60_gap": -0.1896598305360736,
+   "ma120_gap": -0.2954016235473811,
+   "ma_aligned": false,
+   "ret5": 0.04444444444444451,
+   "ret20": -0.16250889353996778,
+   "ret60": -0.36895813800168675,
+   "from_high": -0.6614808323271808,
+   "from_low": 0.27842454787370374,
+   "vol_ratio_prev": 1.9154809116923335,
+   "tv20_avg": 176567096.8585968,
+   "tv_prev": 319997150.0,
+   "prev_chg": 0.19289335481698466,
+   "up_days": 1,
+   "prev_close_pos": 0.9175826133615034,
+   "fr": null,
+   "price": 11.75,
+   "filings": [],
+   "news": [
+    {
+     "title": "Rigetti Computing, Inc. (RGTI) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 20:07:25 GMT"
+    },
+    {
+     "title": "What's Going On With Rigetti Computing Stock Monday? - Benzinga",
+     "date": "Mon, 09 Nov 2026 16:17:11 GMT"
+    },
+    {
+     "title": "Rigetti Pre-Q3 Earnings Analysis: Buy, Sell or Hold the Stock? - TradingView",
+     "date": "Mon, 09 Nov 2026 20:22:22 GMT"
+    },
+    {
+     "title": "RGTI Maintained by B. Riley Securities -- Price Target Lowered t - GuruFocus",
+     "date": "Mon, 09 Nov 2026 17:00:20 GMT"
+    },
+    {
+     "title": "D-Wave and Rigetti Q3 Earnings Tomorrow: Buy the Dip or Stay Cautious? - TradingView",
+     "date": "Mon, 09 Nov 2026 21:24:24 GMT"
+    },
+    {
+     "title": "RGTI 261106 18.00C (RGTI261106C18000) Stock Options Chain | Quotes & News - Moomoo",
+     "date": "Sun, 08 Nov 2026 11:32:02 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "CEG",
+   "name": "Constellation Energy Corporatio",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 97820729344,
+   "chg": 10.458091501821997,
+   "gap": 4.2068411754474955,
+   "high_chg": 11.086220064889684,
+   "close_pos": 0.9487929831476499,
+   "upper_wick": 0.6281285630676986,
+   "limit_up": false,
+   "tv": 1888615707.1490479,
+   "vol_ratio": 1.8479413679549832,
+   "close": 276.0899963378906,
+   "pctb": 0.25919348192200786,
+   "bw": 0.21316430093031066,
+   "bw_pctile": 0.625,
+   "squeeze": false,
+   "rsi14": 43.099852485675996,
+   "ma5_gap": -0.004952348615193558,
+   "ma20_gap": -0.051331353085557474,
+   "ma60_gap": -0.07780884976074398,
+   "ma120_gap": -0.06637561961109162,
+   "ma_aligned": false,
+   "ret5": -0.047374067014450905,
+   "ret20": -0.16143861909472546,
+   "ret60": -0.10296445661759579,
+   "from_high": -0.3435842277705474,
+   "from_low": 0.09325106770809688,
+   "vol_ratio_prev": 1.5316960274532412,
+   "tv20_avg": 964304090.25383,
+   "tv_prev": 1391196688.0142212,
+   "prev_chg": 0.04297935870679326,
+   "up_days": 1,
+   "prev_close_pos": 0.7034255504765514,
+   "fr": null,
+   "price": 249.9499969482422,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1868275/000186827526000119/ceg-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,7.01,9.01",
+     "items_kr": "실적 발표, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1868275/000186827526000116/ceg-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Constellation Energy Corporation (CEG) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 16:57:39 GMT"
+    },
+    {
+     "title": "Following Constellation Energy Earnings, Here's What Barchart Data Says Comes Next for CEG Stock - Barchart.com",
+     "date": "Mon, 09 Nov 2026 19:50:57 GMT"
+    },
+    {
+     "title": "Constellation Energy (NASDAQ:CEG) Stock Surges After Earnings Beat as Google and Amazon Fuel AI Power Boom - Stocks Down Under",
+     "date": "Mon, 09 Nov 2026 16:46:39 GMT"
+    },
+    {
+     "title": "Constellation Energy jumps 10% after earnings beat, guidance hike (CEG:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 22:25:00 GMT"
+    },
+    {
+     "title": "Constellation Energy (CEG) Shares Surge 10% Following Strong Q3 Earnings Beat - GuruFocus",
+     "date": "Mon, 09 Nov 2026 23:14:02 GMT"
+    },
+    {
+     "title": "Nuke Stock Constellation Fueled By Earnings; NRG Hits Gas On Buybacks - Investor's Business Daily",
+     "date": "Mon, 09 Nov 2026 15:58:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech",
+    "Guidance·Buyback"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "EQPT",
+   "name": "EquipmentShare.com Inc",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 4107224320,
+   "chg": 10.422334792169163,
+   "gap": 2.3160772855571166,
+   "high_chg": 12.397817826901104,
+   "close_pos": 0.8333327852445737,
+   "upper_wick": 1.9754830347319345,
+   "limit_up": false,
+   "tv": 37682250.17173767,
+   "vol_ratio": 0.7192554443927048,
+   "close": 16.209999084472656,
+   "pctb": 0.32513336722436137,
+   "bw": 0.3581283652407387,
+   "bw_pctile": 0.6416666666666667,
+   "squeeze": false,
+   "rsi14": 53.19335264878214,
+   "ma5_gap": -0.02626690785593322,
+   "ma20_gap": -0.06262470133109199,
+   "ma60_gap": -0.15363030206682704,
+   "ma120_gap": -0.2114663080383593,
+   "ma_aligned": false,
+   "ret5": -0.14551804165258542,
+   "ret20": -0.026847844345179173,
+   "ret60": -0.31433907474080636,
+   "from_high": -0.5864788646429357,
+   "from_low": 0.12923079270582938,
+   "vol_ratio_prev": 0.9148082900931342,
+   "tv20_avg": 49980663.473210335,
+   "tv_prev": 44671240.9286499,
+   "prev_chg": 0.07388443476553763,
+   "up_days": 1,
+   "prev_close_pos": 0.8809527053313412,
+   "fr": null,
+   "price": 14.680000305175781,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1693736/000169373626000028/eqpt-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "EQPT: EquipmentShare.com Inc filed SEC Form 8-K: Results of... - Quantisnow",
+     "date": "Mon, 09 Nov 2026 22:02:46 GMT"
+    },
+    {
+     "title": "EquipmentShare.com (EQPT) Stock Falls on Q3 2026 Earnings - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 22:21:00 GMT"
+    },
+    {
+     "title": "EQPT Apr 2027 12.500 put (EQPT270416P00012500) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 03:29:56 GMT"
+    },
+    {
+     "title": "EQPT Jan 2028 10.000 call (EQPT280121C00010000) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Sun, 08 Nov 2026 17:06:49 GMT"
+    },
+    {
+     "title": "Earnings Flash (EQPT) EquipmentShare.com Inc Reports Q3 Revenue $1.47B, vs. FactSet Est of $1.31B - www.marketscreener.com",
+     "date": "Mon, 09 Nov 2026 21:06:02 GMT"
+    },
+    {
+     "title": "EQPT280121C00022500 Interactive Stock Chart | EQPT Jan 2028 22.500 call Stock - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 06:40:22 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "LRCX",
+   "name": "Lam Research Corporation",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 276454014976,
+   "chg": 10.412090831663367,
+   "gap": 2.995911399755613,
+   "high_chg": 11.075631948633525,
+   "close_pos": 0.9290287384632921,
+   "upper_wick": 0.6635411169701423,
+   "limit_up": false,
+   "tv": 3690108956.762146,
+   "vol_ratio": 1.2508809801830567,
+   "close": 221.30999755859375,
+   "pctb": 0.10110694186315698,
+   "bw": 0.4916226125229808,
+   "bw_pctile": 0.9333333333333333,
+   "squeeze": false,
+   "rsi14": 27.16685660041125,
+   "ma5_gap": -0.059276274633112025,
+   "ma20_gap": -0.19610484735851597,
+   "ma60_gap": -0.3092444136616248,
+   "ma120_gap": -0.35684002320688424,
+   "ma_aligned": false,
+   "ret5": -0.16172472113352176,
+   "ret20": -0.3713461148425369,
+   "ret60": -0.4052402105777123,
+   "from_high": -0.5428962316045467,
+   "from_low": 0.4792620106376846,
+   "vol_ratio_prev": 1.4171125105802393,
+   "tv20_avg": 3199359297.2348785,
+   "tv_prev": 3597477119.818115,
+   "prev_chg": 0.08228944786334513,
+   "up_days": 1,
+   "prev_close_pos": 0.2129377651953963,
+   "fr": null,
+   "price": 200.44000244140625,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/707549/000149421126000003/xslF345X06/wk-form4_1794251957.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000009/xslF345X06/wk-form4_1794251513.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/707549/000159193326000009/xslF345X06/wk-form4_1794251436.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/707549/000164527026000010/xslF345X06/wk-form4_1794251399.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/707549/000119153426000002/xslF345X06/wk-form4_1794251364.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/707549/000196546226000004/xslF345X06/wk-form4_1794251323.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/707549/000189284126000002/xslF345X06/wk-form4_1794251287.xml"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/707549/000131606526000014/xslF345X06/wk-form4_1794251238.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "LRCX Gains 8% on a $25B Buyback Plan: Is the Stock Worth Holding Now? - The Globe and Mail",
+     "date": "Mon, 09 Nov 2026 19:11:11 GMT"
+    },
+    {
+     "title": "Lam Research gains 10% amid broad semiconductor rally (LRCX:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 21:50:00 GMT"
+    },
+    {
+     "title": "Lam Research Corp Stock (LRCX) Moved Up by 8.41% on Nov 9: Facts Behind the Movement - TradingKey",
+     "date": "Mon, 09 Nov 2026 18:15:50 GMT"
+    },
+    {
+     "title": "Here's How Much $1000 Invested In Lam Research 20 Years Ago Would Be Worth Today - Benzinga",
+     "date": "Mon, 09 Nov 2026 16:15:16 GMT"
+    },
+    {
+     "title": "An 856-share award at $0 per share goes to Lam Research (LRCX) director John M. Dineen. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 19:10:24 GMT"
+    },
+    {
+     "title": "B. Riley Financial Has Lowered Expectations for Lam Research (NASDAQ:LRCX) Stock Price - MarketBeat",
+     "date": "Mon, 09 Nov 2026 15:20:53 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Contract·Partnership",
+    "Guidance·Buyback"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "AGX",
+   "name": "Argan, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 4297059840,
+   "chg": 10.371170731278156,
+   "gap": 2.8360342764639723,
+   "high_chg": 10.381981102195947,
+   "close_pos": 0.9988930342235981,
+   "upper_wick": 0.010810370917792793,
+   "limit_up": false,
+   "tv": 83320410.86791992,
+   "vol_ratio": 0.8559562016235605,
+   "close": 306.2799987792969,
+   "pctb": 0.00251094036758345,
+   "bw": 0.3701152396310952,
+   "bw_pctile": 0.7833333333333333,
+   "squeeze": false,
+   "rsi14": 30.039955445973234,
+   "ma5_gap": -0.08217736108549578,
+   "ma20_gap": -0.18412828251970004,
+   "ma60_gap": -0.29798494189466085,
+   "ma120_gap": -0.4664339695671069,
+   "ma_aligned": false,
+   "ret5": -0.19357178863470037,
+   "ret20": -0.2931916905997368,
+   "ret60": -0.503480125379306,
+   "from_high": -0.6556003723239219,
+   "from_low": 0.09735840968761722,
+   "vol_ratio_prev": 1.2497361884507363,
+   "tv20_avg": 106112228.59695435,
+   "tv_prev": 106809750.0,
+   "prev_chg": 0.062363650234732226,
+   "up_days": 1,
+   "prev_close_pos": 0.3343584041734692,
+   "fr": null,
+   "price": 277.5,
+   "filings": [],
+   "news": [
+    {
+     "title": "AGX Nov 2027 400.000 call (AGX271119C00400000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 07:58:46 GMT"
+    },
+    {
+     "title": "AGX Apr 2027 470.000 put (AGX270416P00470000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 20:05:55 GMT"
+    },
+    {
+     "title": "Elite Wealth Management Inc. Acquires 12,875 Shares of Argan, Inc. $AGX - MarketBeat",
+     "date": "Mon, 09 Nov 2026 09:08:27 GMT"
+    },
+    {
+     "title": "AGX Nov 2026 480.000 put (AGX261120P00480000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 06:54:08 GMT"
+    },
+    {
+     "title": "AGX Nov 2026 380.000 call (AGX261120C00380000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 07:54:23 GMT"
+    },
+    {
+     "title": "AGX Nov 2026 310.000 call (AGX261120C00310000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 22:37:24 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "AXTI",
+   "name": "AXT Inc",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2813746432,
+   "chg": 10.365222913025596,
+   "gap": 1.2731453659622138,
+   "high_chg": 12.30709803487171,
+   "close_pos": 0.8691506051616751,
+   "upper_wick": 1.941875121846117,
+   "limit_up": false,
+   "tv": 453403492.9176979,
+   "vol_ratio": 0.9039664947373194,
+   "close": 42.90999984741211,
+   "pctb": -0.03145832616688016,
+   "bw": 0.5415801691152545,
+   "bw_pctile": 0.35833333333333334,
+   "squeeze": false,
+   "rsi14": 34.850276492999924,
+   "ma5_gap": -0.1269591760075951,
+   "ma20_gap": -0.2878272901631691,
+   "ma60_gap": -0.40822817207574547,
+   "ma120_gap": -0.45753629597675083,
+   "ma_aligned": false,
+   "ret5": -0.2938612404943476,
+   "ret20": -0.4320771021316948,
+   "ret60": -0.4979986752730575,
+   "from_high": -0.7284157580780662,
+   "from_low": 3.606635426674927,
+   "vol_ratio_prev": 0.9789863815837841,
+   "tv20_avg": 626435183.1440544,
+   "tv_prev": 440067180.0895691,
+   "prev_chg": 0.0588235233008183,
+   "up_days": 1,
+   "prev_close_pos": 0.5474865633218111,
+   "fr": null,
+   "price": 38.880001068115234,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "SCHEDULE 13G",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1051627/000159588826000160/xslSCHEDULE_13G_X02/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-06",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1051627/000159588826000130/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Jane Street reports more than 5% of AXT (AXTI) through two subsidiaries. - Stock Titan",
+     "date": "Mon, 09 Nov 2026 21:04:49 GMT"
+    },
+    {
+     "title": "AXTI Nov 2026 40.000 call (AXTI261127C00040000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 07:18:20 GMT"
+    },
+    {
+     "title": "AXTI Nov 2026 81.000 call (AXTI261127C00081000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 02:22:57 GMT"
+    },
+    {
+     "title": "AXTI Dec 2026 40.000 call (AXTI261224C00040000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 06:20:52 GMT"
+    },
+    {
+     "title": "AXTI Nov 2026 28.000 put (AXTI261113P00028000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 03:09:42 GMT"
+    },
+    {
+     "title": "AXTI Nov 2026 81.000 call (AXTI261127C00081000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 02:19:42 GMT"
+    }
+   ],
+   "catalysts": [
+    "Policy·Macro"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "NRG",
+   "name": "NRG Energy, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 20474501120,
+   "chg": 10.318269923983436,
+   "gap": 5.901006943535303,
+   "high_chg": 11.156414511248247,
+   "close_pos": 0.9064477579117632,
+   "upper_wick": 0.838144587264796,
+   "limit_up": false,
+   "tv": 567006316.882782,
+   "vol_ratio": 1.4854483262800255,
+   "close": 97.4000015258789,
+   "pctb": 0.19567941239632644,
+   "bw": 0.27510431491974596,
+   "bw_pctile": 0.9,
+   "squeeze": false,
+   "rsi14": 37.4632674844704,
+   "ma5_gap": -0.00343139319162189,
+   "ma20_gap": -0.08371990676868313,
+   "ma60_gap": -0.15526780894404346,
+   "ma120_gap": -0.2574463439779906,
+   "ma_aligned": false,
+   "ret5": -0.080886912768522,
+   "ret20": -0.1822728543361558,
+   "ret60": -0.2627139798285817,
+   "from_high": -0.5352179522265614,
+   "from_low": 0.10847456653018694,
+   "vol_ratio_prev": 2.4231312412427997,
+   "tv20_avg": 364391457.4440384,
+   "tv_prev": 769544476.9798279,
+   "prev_chg": 0.09608935531381868,
+   "up_days": 1,
+   "prev_close_pos": 0.773609412675054,
+   "fr": null,
+   "price": 88.29000091552734,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1013871/000101387126000025/nrg-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "7.01,9.01",
+     "items_kr": "IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1013871/000110465926124147/tm2629302d1_8k.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02",
+     "items_kr": "실적 발표",
+     "url": "https://www.sec.gov/Archives/edgar/data/1013871/000101387126000022/nrg-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "NRG Energy Reports Third Quarter 2026 Results, Reaffirms 2026 Financial Guidance, and Initiates 2027 Guidance - NRG Energy",
+     "date": "Mon, 09 Nov 2026 13:44:29 GMT"
+    },
+    {
+     "title": "Nuke Stock Constellation Fueled By Earnings; NRG Hits Gas On Buybacks - Investor's Business Daily",
+     "date": "Mon, 09 Nov 2026 15:58:00 GMT"
+    },
+    {
+     "title": "NRG Energy Stocks Surge 9.81% on $4 Billion Gas Plant Sale and Buybacks - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 18:19:33 GMT"
+    },
+    {
+     "title": "NRG Energy Inc. stock outperforms competitors on strong trading day - MarketWatch",
+     "date": "Mon, 09 Nov 2026 21:30:00 GMT"
+    },
+    {
+     "title": "4 stocks to watch on Monday: AMD, NVDA, NRG, and RTX - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 14:03:00 GMT"
+    },
+    {
+     "title": "Why is NRG Energy stock surging today? - Investing.com",
+     "date": "Mon, 09 Nov 2026 13:36:06 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst",
+    "Guidance·Buyback"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "FTAI",
+   "name": "FTAI Aviation Ltd.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 20332670976,
+   "chg": 10.295666011380389,
+   "gap": 4.077212331796343,
+   "high_chg": 11.316355141175748,
+   "close_pos": 0.8751766207444105,
+   "upper_wick": 1.0206891297953518,
+   "limit_up": false,
+   "tv": 424266838.0171356,
+   "vol_ratio": 0.937033336919601,
+   "close": 198.8300018310547,
+   "pctb": 0.6709340339675977,
+   "bw": 0.33011820035271344,
+   "bw_pctile": 0.875,
+   "squeeze": false,
+   "rsi14": 56.043408725995356,
+   "ma5_gap": -0.02111229162155792,
+   "ma20_gap": 0.05642843567241296,
+   "ma60_gap": -0.010790446771961726,
+   "ma120_gap": -0.13647851456360427,
+   "ma_aligned": false,
+   "ret5": -0.03737918428097875,
+   "ret20": 0.06063017772249957,
+   "ret60": -0.16599579290854205,
+   "from_high": -0.4427683878991501,
+   "from_low": 0.23068002137147214,
+   "vol_ratio_prev": 1.4829767626632053,
+   "tv20_avg": 392370933.587265,
+   "tv_prev": 578738821.7163086,
+   "prev_chg": 0.10969533800543152,
+   "up_days": 1,
+   "prev_close_pos": 0.9594354114075203,
+   "fr": null,
+   "price": 180.27000427246094,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "1.01,9.01",
+     "items_kr": "계약 체결, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1590364/000114036126042548/ef20085046_8k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "FTAI Mar 2027 125.000 call (FTAI270319C00125000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 09:15:51 GMT"
+    },
+    {
+     "title": "FTAI Mar 2027 220.000 call (FTAI270319C00220000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 11:05:25 GMT"
+    },
+    {
+     "title": "FTAI Mar 2027 220.000 call (FTAI270319C00220000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 00:28:58 GMT"
+    },
+    {
+     "title": "FTAI Dec 2026 130.000 put (FTAI261211P00130000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 01:49:12 GMT"
+    },
+    {
+     "title": "FTAI Mar 2027 135.000 call (FTAI270319C00135000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 01:09:22 GMT"
+    },
+    {
+     "title": "FTAI Mar 2027 340.000 call (FTAI270319C00340000) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Mon, 09 Nov 2026 03:26:16 GMT"
+    }
+   ],
+   "catalysts": [
+    "Contract·Partnership"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "CRDO",
+   "name": "Credo Technology Group Holding ",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 24976930816,
+   "chg": 10.27300392827395,
+   "gap": 2.979002799976982,
+   "high_chg": 13.592230489632895,
+   "close_pos": 0.726402240181853,
+   "upper_wick": 3.3192265613589504,
+   "limit_up": false,
+   "tv": 1210645701.6996155,
+   "vol_ratio": 0.9883326390154572,
+   "close": 132.88999938964844,
+   "pctb": 0.04394043847995563,
+   "bw": 0.5575641799548177,
+   "bw_pctile": 0.875,
+   "squeeze": false,
+   "rsi14": 34.13035910145024,
+   "ma5_gap": -0.08741878349804988,
+   "ma20_gap": -0.25428247542947724,
+   "ma60_gap": -0.3620937714392979,
+   "ma120_gap": -0.43019243751601954,
+   "ma_aligned": false,
+   "ret5": -0.20186768824452783,
+   "ret20": -0.44350034431804064,
+   "ret60": -0.5469378301414876,
+   "from_high": -0.6095830599221969,
+   "from_low": 0.3934208392872045,
+   "vol_ratio_prev": 1.0653124858433078,
+   "tv20_avg": 1464220998.4349823,
+   "tv_prev": 1161909236.5966797,
+   "prev_chg": 0.07282115349271145,
+   "up_days": 1,
+   "prev_close_pos": 0.5219591531690663,
+   "fr": null,
+   "price": 120.51000213623047,
+   "filings": [],
+   "news": [
+    {
+     "title": "Credo Technology advances 10% amid broad tech rally (CRDO:NASDAQ) - Seeking Alpha",
+     "date": "Mon, 09 Nov 2026 21:48:00 GMT"
+    },
+    {
+     "title": "Credo Technology Group Holding Ltd (CRDO) Shares Rally 10% Amid Tech Sector Upswing - GuruFocus",
+     "date": "Mon, 09 Nov 2026 23:14:02 GMT"
+    },
+    {
+     "title": "Credo (CRDO) Stock May Be 31% Undervalued Following AI Networking Standards News - Simply Wall St",
+     "date": "Mon, 09 Nov 2026 20:27:21 GMT"
+    },
+    {
+     "title": "Credo Technology jumps as investors buy the dip after recent selloff - Quiver Quantitative",
+     "date": "Mon, 09 Nov 2026 17:34:00 GMT"
+    },
+    {
+     "title": "Credo Technology: Recent Drop Turns My Hold Into A Buy (Rating Upgrade) - Seeking Alpha",
+     "date": "Sun, 08 Nov 2026 03:49:00 GMT"
+    },
+    {
+     "title": "Credo Technology (CRDO) Stock Price Prediction: Bearish momentum meets heavy buy-side interest near key support - Blockchain News",
+     "date": "Mon, 09 Nov 2026 18:07:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Analyst",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "ECG",
+   "name": "Everus Construction Group, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 4311347200,
+   "chg": 10.221934708915192,
+   "gap": 3.302870534849456,
+   "high_chg": 11.125330735753526,
+   "close_pos": 0.8917394355774326,
+   "upper_wick": 0.9033960268383381,
+   "limit_up": false,
+   "tv": 66137903.01905823,
+   "vol_ratio": 0.8127808588014962,
+   "close": 84.43000030517578,
+   "pctb": -0.006489642600831935,
+   "bw": 0.4965044280636765,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 31.644556050618917,
+   "ma5_gap": -0.1382995673077485,
+   "ma20_gap": -0.251474350319702,
+   "ma60_gap": -0.3290364147258522,
+   "ma120_gap": -0.40438586243537844,
+   "ma_aligned": false,
+   "ret5": -0.2536295379120258,
+   "ret20": -0.37438748001676925,
+   "ret60": -0.442909102006392,
+   "from_high": -0.5535532132683888,
+   "from_low": 0.08745025297009157,
+   "vol_ratio_prev": 2.0170374621608542,
+   "tv20_avg": 92445062.08381653,
+   "tv_prev": 137297837.26501465,
+   "prev_chg": 0.05742677930028628,
+   "up_days": 1,
+   "prev_close_pos": 0.7951120244714278,
+   "fr": null,
+   "price": 76.5999984741211,
+   "filings": [
+    {
+     "date": "2026-11-06",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2015845/000201584526000061/ecg-20260930.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "AI-Analysis of ECG Data Measured by Smartwatch May Help Detect Reduced Heart Pumping Function - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 15:55:00 GMT"
+    },
+    {
+     "title": "Weekly Recap: Oncology and Alzheimer’s deals and analyst target hikes - TradingView",
+     "date": "Mon, 09 Nov 2026 11:00:00 GMT"
+    },
+    {
+     "title": "Everus Construction Group Stock Earnings Beat Has The Bull Case Changed? - Simply Wall St",
+     "date": "Sun, 08 Nov 2026 21:21:30 GMT"
+    },
+    {
+     "title": "Ecg In Iphone Watch - Electrocardiogram ecg heartbeat rhythm hi res stock photography and images Alamy - auroradesio.it",
+     "date": "Mon, 09 Nov 2026 04:09:11 GMT"
+    },
+    {
+     "title": "Apple Watch 4 Features Ecg - Apple Inc redesigns its stores for 15th anniversary by removing Genius Bars adding trees - auroradesio.it",
+     "date": "Sun, 08 Nov 2026 00:25:52 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "HHH",
+   "name": "Howard Hughes Holdings Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 5111690240,
+   "chg": 10.124784223987149,
+   "gap": 2.470086306479047,
+   "high_chg": 11.610695364365164,
+   "close_pos": 0.8381219805859293,
+   "upper_wick": 1.485911140378007,
+   "limit_up": false,
+   "tv": 122863817.80986786,
+   "vol_ratio": 1.4572123291843488,
+   "close": 85.5999984741211,
+   "pctb": 0.8254563045559647,
+   "bw": 0.20593736502635226,
+   "bw_pctile": 0.8833333333333333,
+   "squeeze": false,
+   "rsi14": 80.86179270677812,
+   "ma5_gap": -0.0009767617349912827,
+   "ma20_gap": 0.06702361379146948,
+   "ma60_gap": 0.13211673708831606,
+   "ma120_gap": 0.1416234781675605,
+   "ma_aligned": true,
+   "ret5": 0.0196772915380381,
+   "ret20": 0.05425199807242165,
+   "ret60": 0.14798411472374018,
+   "from_high": -0.1464806893883055,
+   "from_low": 0.2935597130895664,
+   "vol_ratio_prev": 0.9224854530340815,
+   "tv20_avg": 72416871.10904694,
+   "tv_prev": 69008696.98028564,
+   "prev_chg": -0.0038446165200104465,
+   "up_days": 0,
+   "prev_close_pos": 0.9381188259044324,
+   "fr": null,
+   "price": 77.7300033569336,
+   "filings": [],
+   "news": [
+    {
+     "title": "HHH Q3 Earnings Call Highlights Asset-Light Real Estate Shift - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 14:00:00 GMT"
+    },
+    {
+     "title": "Zacks Industry Outlook Highlights Howard Hughes Holdings and Sky Harbour - TradingView",
+     "date": "Mon, 09 Nov 2026 09:35:00 GMT"
+    },
+    {
+     "title": "Take the Zacks Approach to Beat the Markets: Ulta Beauty, Accenture, HCA in Focus - Zacks Investment Research",
+     "date": "Mon, 09 Nov 2026 11:13:06 GMT"
+    },
+    {
+     "title": "Vantage Corp (VNTG) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Sun, 08 Nov 2026 21:26:59 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "UEC",
+   "name": "Uranium Energy Corp.",
+   "market": "NYSE American",
+   "sector": "",
+   "mcap": 3776355072,
+   "chg": 10.115604068606121,
+   "gap": 3.7572218089327203,
+   "high_chg": 11.849706441959684,
+   "close_pos": 0.796610251681256,
+   "upper_wick": 1.734102373353568,
+   "limit_up": false,
+   "tv": 67072679.17266941,
+   "vol_ratio": 0.814717638646887,
+   "close": 7.619999885559082,
+   "pctb": 0.10509575286838088,
+   "bw": 0.26593305575510207,
+   "bw_pctile": 0.30833333333333335,
+   "squeeze": false,
+   "rsi14": 38.08354116363961,
+   "ma5_gap": -0.029725180402164098,
+   "ma20_gap": -0.10501809317037947,
+   "ma60_gap": -0.29082616750312407,
+   "ma120_gap": -0.33789935482642575,
+   "ma_aligned": false,
+   "ret5": -0.1024643265816243,
+   "ret20": -0.2470075742913883,
+   "ret60": -0.381590675979551,
+   "from_high": -0.6597836762841174,
+   "from_low": 0.1307189878585726,
+   "vol_ratio_prev": 1.0191931128094829,
+   "tv20_avg": 82476044.12742138,
+   "tv_prev": 74665416.82319641,
+   "prev_chg": 0.06790124319835589,
+   "up_days": 1,
+   "prev_close_pos": 0.8000002384185223,
+   "fr": null,
+   "price": 6.920000076293945,
+   "filings": [],
+   "news": [
+    {
+     "title": "Uranium Energy Corp. (UEC) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 08 Nov 2026 11:23:21 GMT"
+    },
+    {
+     "title": "UEC Dec 2026 7.000 put (UEC261224P00007000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 11:48:43 GMT"
+    },
+    {
+     "title": "UEC Dec 2026 9.000 put (UEC261211P00009000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 08:36:57 GMT"
+    },
+    {
+     "title": "UEC Dec 2026 9.000 call (UEC261211C00009000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 09:37:37 GMT"
+    },
+    {
+     "title": "UEC Dec 2026 8.500 call (UEC261204C00008500) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 03:44:55 GMT"
+    },
+    {
+     "title": "Leverage Shares 2X Long UEC Daily ETF (UECG) stock price, news, quote and history - Yahoo Finance - Yahoo Finance Singapore",
+     "date": "Sun, 08 Nov 2026 12:53:56 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "MKSI",
+   "name": "MKS Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 14307815424,
+   "chg": 10.048365130346504,
+   "gap": 3.4846813332087834,
+   "high_chg": 10.480050683272646,
+   "close_pos": 0.9458223067277152,
+   "upper_wick": 0.4316855529261408,
+   "limit_up": false,
+   "tv": 433395769.28897095,
+   "vol_ratio": 1.2341941781502883,
+   "close": 211.58999633789062,
+   "pctb": 0.23427809627392843,
+   "bw": 0.33996832938056315,
+   "bw_pctile": 0.6833333333333333,
+   "squeeze": false,
+   "rsi14": 40.78087785808939,
+   "ma5_gap": -0.004566324107039943,
+   "ma20_gap": -0.09033703168957541,
+   "ma60_gap": -0.2238623020574254,
+   "ma120_gap": -0.34508349775143365,
+   "ma_aligned": false,
+   "ret5": -0.04835670826733518,
+   "ret20": -0.273081269291263,
+   "ret60": -0.37226158572436174,
+   "from_high": -0.5704615379790521,
+   "from_low": 0.42697043516311584,
+   "vol_ratio_prev": 1.676454474678252,
+   "tv20_avg": 346073200.7323456,
+   "tv_prev": 503036012.17803955,
+   "prev_chg": 0.08737697267432498,
+   "up_days": 1,
+   "prev_close_pos": 0.6691607538324552,
+   "fr": null,
+   "price": 192.27000427246094,
+   "filings": [],
+   "news": [
+    {
+     "title": "MKS (MKSI) Beat Q3 Guidance, Is The Stock Still Cheap? - Yahoo Finance",
+     "date": "Sun, 08 Nov 2026 07:06:00 GMT"
+    },
+    {
+     "title": "MKS Instruments (MKSI) Stock Price, Chart & Analysis - www.debelegger.nl",
+     "date": "Mon, 09 Nov 2026 18:04:56 GMT"
+    },
+    {
+     "title": "MKS (MKSI) Stock Looks Below Fair Value On Its 177% Run - Yahoo Finance Singapore",
+     "date": "Sun, 08 Nov 2026 09:11:37 GMT"
+    },
+    {
+     "title": "8,554 MKS Inc. $MKSI Shares Purchased by Sumitomo Mitsui Trust Group Inc. - MarketBeat",
+     "date": "Sun, 08 Nov 2026 10:04:19 GMT"
+    },
+    {
+     "title": "How Mks Instruments Inc. (MKSI) Affects Rotational Strategy Timing - Stock Traders Daily",
+     "date": "Mon, 09 Nov 2026 07:44:02 GMT"
+    },
+    {
+     "title": "MKSI Jan 2027 155.000 call (MKSI270115C00155000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 09 Nov 2026 12:43:52 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-09",
+   "code": "HRI",
+   "name": "Herc Holdings Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 5594410496,
+   "chg": 10.03026852013651,
+   "gap": 2.4680794654101224,
+   "high_chg": 11.576935668849941,
+   "close_pos": 0.8498878130464362,
+   "upper_wick": 1.5466671487134371,
+   "limit_up": false,
+   "tv": 80341354.72021484,
+   "vol_ratio": 0.5984620270110398,
+   "close": 167.17999267578125,
+   "pctb": 0.6233648417920457,
+   "bw": 0.5212183956924754,
+   "bw_pctile": 0.9666666666666667,
+   "squeeze": false,
+   "rsi14": 64.15036018044341,
+   "ma5_gap": -0.04836465216474839,
+   "ma20_gap": 0.06430002492370601,
+   "ma60_gap": 0.05950938760560831,
+   "ma120_gap": 0.04451484268073469,
+   "ma_aligned": false,
+   "ret5": -0.08337350701866575,
+   "ret20": 0.23068203116903696,
+   "ret60": -0.09940136094537022,
+   "from_high": -0.19331033969862854,
+   "from_low": 0.7178067573062346,
+   "vol_ratio_prev": 0.5545229051529601,
+   "tv20_avg": 116238129.42947388,
+   "tv_prev": 67765241.08886719,
+   "prev_chg": 0.014218042303748124,
+   "up_days": 1,
+   "prev_close_pos": 0.3179580899136258,
+   "fr": null,
+   "price": 151.94000244140625,
+   "filings": [],
+   "news": [
+    {
+     "title": "HRI Nov 2026 105.000 put (HRI261120P00105000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 09 Nov 2026 05:23:08 GMT"
+    },
+    {
+     "title": "Does Herc Holdings (HRI) Have the Potential to Rally 25.9% as Wall Street Analysts Expect? - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 13:55:02 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-09",
+   "code": "POWI",
+   "name": "Power Integrations, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2475015680,
+   "chg": 10.009942280197958,
+   "gap": 1.1922587604204171,
+   "high_chg": 12.82911358882204,
+   "close_pos": 0.7700103580483582,
+   "upper_wick": 2.819171308624087,
+   "limit_up": false,
+   "tv": 38728859.8205719,
+   "vol_ratio": 0.9538924735874682,
+   "close": 44.290000915527344,
+   "pctb": -0.04011195058778047,
+   "bw": 0.23014992501201045,
+   "bw_pctile": 0.38333333333333336,
+   "squeeze": false,
+   "rsi14": 39.42229542604246,
+   "ma5_gap": -0.0755029228317956,
+   "ma20_gap": -0.12430672492586836,
+   "ma60_gap": -0.19766437151816263,
+   "ma120_gap": -0.3474235289632599,
+   "ma_aligned": false,
+   "ret5": -0.08207939440768519,
+   "ret20": -0.1803746091818491,
+   "ret60": -0.3538758235561439,
+   "from_high": -0.5584558215970101,
+   "from_low": 0.3046013456016763,
+   "vol_ratio_prev": 1.8139822451384109,
+   "tv20_avg": 41080587.65417099,
+   "tv_prev": 62604297.38998413,
+   "prev_chg": 0.036560199880707245,
+   "up_days": 1,
+   "prev_close_pos": 0.47810167150697364,
+   "fr": null,
+   "price": 40.2599983215332,
+   "filings": [],
+   "news": [
+    {
+     "title": "POWI Apr 2027 70.000 call (POWI270416C00070000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Sun, 08 Nov 2026 04:52:23 GMT"
+    },
+    {
+     "title": "Vishay Intertechnology, Power Integrations, and Penguin Solutions shares are soaring, what you need to know - TradingView",
+     "date": "Mon, 09 Nov 2026 17:35:53 GMT"
+    },
+    {
+     "title": "Power Integrations Surges 11.0% Amid Sector-Wide Rally - AlphaStreet",
+     "date": "Mon, 09 Nov 2026 20:37:26 GMT"
+    },
+    {
+     "title": "Results: Power Integrations, Inc. Beat Earnings Expectations And Analysts Now Have New Forecasts - Moomoo",
+     "date": "Mon, 09 Nov 2026 12:31:58 GMT"
+    },
+    {
+     "title": "Results: Power Integrations, Inc. Exceeded Expectations And The Consensus Has Updated Its Estimates - Simply Wall St",
+     "date": "Mon, 09 Nov 2026 12:39:02 GMT"
+    },
+    {
+     "title": "The top 5 analyst questions from Power Integrations’s Q3 2026 earnings call - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 00:13:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  }
+ ]
+}
