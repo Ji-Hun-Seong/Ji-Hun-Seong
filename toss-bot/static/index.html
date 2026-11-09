@@ -1620,7 +1620,8 @@ function pRender(d) {
     const BUF_MIN = 10;                                   // 버핏 점수 20점 만점 중 절반(10점) 미만이면 가치주 탭에서 제외
     const bufOk = x => !x.heroes || x.heroes.buffett == null || x.heroes.buffett >= BUF_MIN;
     // 매출·순이익 꾸준히 증가 (최근 4년 중 뒷걸음질 1번 이하 + 첫해보다 큼) — 가치주·성장주 탭 공통 · 아직 재채점 전(정보 없음)이면 통과
-    const stOk = x => !x.steady || x.steady.ok !== false;
+    // + 매출 5년 연속 증가(해외는 데이터가 있는 4년) 아니면 제외 — 매출이 줄어 PER만 낮아진 종목 거르기
+    const stOk = x => !x.steady || (x.steady.ok !== false && x.steady.rev5 !== false);
     const gPbrOk = x => x.pbr == null || (x.pbr > 0 && x.pbr <= 10);   // 성장주 탭은 PBR 0 초과 ~ 10배 이하만
     const LYN_MIN = 10;                                   // 린치 점수 20점 만점 중 10점 미만이면 성장주 탭에서 제외
     const lynOk = x => !x.heroes || x.heroes.lynch == null || x.heroes.lynch >= LYN_MIN;
@@ -1641,7 +1642,7 @@ function pRender(d) {
       ${(() => { const P = d.progress; if (!P) return ""; const busy = P.fresh < P.pool;
         return `<div class="small" style="margin-top:8px;padding:8px 10px;background:var(--bg);border-radius:10px">🗄️ DB: 채점 ${fmtN(P.scored)}/${fmtN(P.pool)}종목 · 오늘 최신 ${fmtN(P.fresh)}${busy ? ` · 🔄 ${esc(P.worker || "")}` : " · ✅ 전부 최신"}${!d.items.length ? "<br>아직 채점된 종목이 없어요 — 서버가 시총 큰 종목부터 채점 중이라 잠시 뒤 하나씩 늘어나요" : ""}${P.error ? `<br><span class="up">⚠️ ${esc(P.error)}</span>` : ""}</div>`; })()}
       <div class="small" style="margin-top:6px;line-height:1.6">💎 <b>가치</b> 버핏·그레이엄·멍거·애크먼·클라만 · 🚀 <b>성장</b> 린치·피셔·드러켄밀러·템플턴·로 프라이스 — 각 100점, 등급은 높은 쪽 · 핵심은 5명 중 3명↑ 동의</div>
-      ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 버핏·그레이엄·멍거·애크먼·클라만 점수 순" : "🚀 성장주 — 린치·피셔·드러켄밀러·템플턴·로 프라이스 점수 순"}</b> <span class="tiny mut">${"매출·순이익 꾸준히 증가(최근 4년) · "}${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다 · PBR 2.0 초과·마이너스, PER " + perMax + " 초과, 버핏 " + BUF_MIN + "점(20점 중) 미만은 제외" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다 · PBR 10 초과·마이너스, 린치 " + LYN_MIN + "점(20점 중) 미만은 제외"}</span></div>` : ""}
+      ${sk !== "all" ? `<div class="small" style="margin-top:8px"><b>${sk === "value" ? "💎 가치주 — 버핏·그레이엄·멍거·애크먼·클라만 점수 순" : "🚀 성장주 — 린치·피셔·드러켄밀러·템플턴·로 프라이스 점수 순"}</b> <span class="tiny mut">${"매출 " + (glob ? "4" : "5") + "년 연속 증가 · 순이익 꾸준히 증가(최근 4년) · "}${sk === "value" ? "좋은 회사를 가치보다 싸게 · 가치에 닿으면 판다 · PBR 2.0 초과·마이너스, PER " + perMax + " 초과, 버핏 " + BUF_MIN + "점(20점 중) 미만은 제외" : "경제보다 훨씬 빨리 크는 회사 · 성장이 꺾이면 판다 · PBR 10 초과·마이너스, 린치 " + LYN_MIN + "점(20점 중) 미만은 제외"}</span></div>` : ""}
       <div class="tally" id="h-grade">${[["core", "g", "🟢 핵심"], ["sat", "y", "🟡 위성"], ["watch", "", "⚪ 관찰"]].concat(sk === "all" ? [["no", "r", "🔴 부적합"]] : []).map(([g, c, l]) =>
         `<span class="tag ${c}" data-g="${g}" style="cursor:pointer;${hGrade === g ? "outline:2px solid currentColor;font-weight:700" : hGrade ? "opacity:.45" : ""}">${l} ${(sk === "all" ? G : TG)[g] || 0}</span>`).join("")}</div>
       <div class="tiny mut" style="margin-top:4px">${hGrade ? `${GL[hGrade]}만 보는 중 — 다시 누르면 전체` : "등급을 누르면 그 등급만 볼 수 있어요"} · 🟢 핵심 = 장기 바구니의 중심 · 🟡 위성 = 핵심 주변에 조금씩 곁들이는 종목</div>

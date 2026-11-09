@@ -58,7 +58,7 @@ MKT = {   # 시장별: 매매비용 · 비교지수 · 배당 원천징수
 # ── 종목 고르기: 화면(static/index.html 발굴 › 대가 탭)과 같은 규칙 ─────────────────
 def _ok_steady(x):
     s = x.get("steady") or {}
-    return s.get("ok") is not False
+    return s.get("ok") is not False and s.get("rev5") is not False   # rev5: 매출 5년 연속 증가 (재채점 전이면 통과)
 
 
 def is_value(x, market: str = "kr") -> bool:
