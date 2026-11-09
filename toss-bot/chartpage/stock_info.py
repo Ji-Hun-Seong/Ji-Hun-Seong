@@ -467,6 +467,7 @@ def kr_etf(code: str) -> dict:
         except Exception as e:
             keys[path] = f"오류 {type(e).__name__}"
             continue
+        keys[path + "_lists"] = {k: (",".join(list(v[0])[:15]) if isinstance(v, list) and v and isinstance(v[0], dict) else f"{type(v).__name__}{len(v)}") for k, v in j.items() if isinstance(v, (list, dict))} if isinstance(j, dict) else None
         keys[path] = " | ".join(f"{k}:{type(v).__name__}" + (f"[{','.join(list(v[0])[:12])}]" if isinstance(v, list) and v and isinstance(v[0], dict) else
                                   f"{{{','.join(list(v)[:12])}}}" if isinstance(v, dict) else "") for k, v in j.items()) if isinstance(j, dict) else type(j).__name__
         if out["fee"] is None:
