@@ -255,7 +255,7 @@ VIEW.road = () => {
   const ri = rankOf(S.xp), next = RANKS[ri + 1], base = RANKS[ri][0], ratio = next ? (S.xp - base) / (next[0] - base) : 1;
   const tot = MR.lessons.length, dn = MR.lessons.filter(l => S.done[l.id]).length, nx = nextLesson();
   const zig = [0, 1, 2, 1];
-  return `<a class="backhome" href="../">← 자동매매로 돌아가기</a><div class="hero"><div class="between"><span class="brand">${ic("bolt")} MASTER ROAD</span><span class="mut sm">${dn}/${tot} 레슨</span></div>
+  return `<a class="backhome" href="../">← SJH Capital로 돌아가기</a><div class="hero"><div class="between"><span class="brand">${ic("bolt")} MASTER ROAD</span><span class="mut sm">${dn}/${tot} 레슨</span></div>
     <div class="rank">${RANKS[ri][1]}</div><div class="mut sm">${next ? `다음 등급 '${next[1]}'까지 ${next[0] - S.xp} XP` : "기초 과정 수료. 진짜 공부는 심화 서고에서 이어져요."}</div>
     <div class="bar" style="margin-top:10px"><i style="width:${Math.max(3, ratio * 100)}%"></i></div>
     <div class="pills"><span class="pill gold">${ic("star")} ${S.xp} XP</span><span class="pill">${ic("flame")} ${streak()}일 연속</span><span class="pill acc">${ic("candle")} 훈련 ${S.drill.c}회 정답</span></div>
