@@ -60,6 +60,7 @@ def _conn():
     c.execute("""CREATE TABLE IF NOT EXISTS px(d TEXT, code TEXT, name TEXT, close REAL, nav REAL, net REAL,
                  tv REAL, idx TEXT, PRIMARY KEY(d, code))""")
     c.execute("CREATE TABLE IF NOT EXISTS days(d TEXT PRIMARY KEY, n INTEGER, at TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS fee(code TEXT PRIMARY KEY, fee REAL, at REAL)")
     return c
 
 
@@ -170,6 +171,77 @@ def backfill(verbose=False):
     return True
 
 
+# ── 총보수 (운용·판매·수탁·사무관리 4대 보수 합, 연 %) ── 네이버 증권 ETF 정보, 7일마다 새로
+FEE_KEYS = ("totalfee", "totalfeerate", "fundpay", "totalexpense", "expenseratio", "ter")
+
+
+def _pct(v):
+    m = re.search(r"-?\d+(?:\.\d+)?", str(v).replace(",", "")) if v is not None else None
+    x = float(m.group()) if m else None
+    return x if x is not None and 0 <= x < 3 else None
+
+
+def _find_fee(j):
+    """JSON 어디에 있든 '총보수·펀드보수·totalFee' 값을 찾아 연 % 로"""
+    if isinstance(j, dict):
+        k, v = str(j.get("key") or j.get("title") or j.get("name") or ""), j.get("value")
+        if "보수" in k and "성과" not in k and _pct(v) is not None:
+            return _pct(v)
+        for kk, vv in j.items():
+            if kk.lower().replace("_", "") in FEE_KEYS and not isinstance(vv, (dict, list)) and _pct(vv) is not None:
+                return _pct(vv)
+        for vv in j.values():
+            if isinstance(vv, (dict, list)):
+                r = _find_fee(vv)
+                if r is not None:
+                    return r
+    elif isinstance(j, list):
+        for vv in j:
+            r = _find_fee(vv)
+            if r is not None:
+                return r
+    return None
+
+
+def fetch_fee(code: str):
+    import requests
+    ua = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1"}
+    for path in ("integration", "etfAnalysis"):
+        try:
+            r = requests.get(f"https://m.stock.naver.com/api/stock/{code}/{path}", headers=ua, timeout=8)
+            if r.ok:
+                v = _find_fee(r.json())
+                if v is not None:
+                    return v
+        except Exception:
+            pass
+    return None
+
+
+def refresh_fees():
+    c = _conn()
+    last = c.execute("SELECT MAX(d) FROM days WHERE n > 0").fetchone()[0]
+    if not last:
+        c.close()
+        return
+    codes = [r[0] for r in c.execute("SELECT code FROM px WHERE d=? AND net >= ? ORDER BY net DESC", (last, MIN_NET))]
+    have = dict(c.execute("SELECT code, at FROM fee").fetchall())
+    todo = [k for k in codes if time.time() - (have.get(k) or 0) > 7 * 86400]
+    got = miss = 0
+    for k in todo:
+        v = fetch_fee(k)
+        got, miss = got + (v is not None), miss + (v is None)
+        if not got and miss >= 15:                      # 처음 15개가 다 실패면 주소가 바뀐 것 — 하루 뒤 다시
+            STATUS["fee_msg"] = "네이버에서 총보수를 못 찾음"
+            break
+        with _db_lock:
+            c.execute("INSERT OR REPLACE INTO fee VALUES(?,?,?)", (k, v, time.time() if v is not None else time.time() - 6 * 86400))
+            c.commit()
+        time.sleep(0.3)
+    STATUS["fee_n"] = c.execute("SELECT COUNT(*) FROM fee WHERE fee IS NOT NULL").fetchone()[0]
+    c.close()
+
+
 def worker():
     """대시보드가 켜질 때 뒤에서 계속: 빠진 날 채우기 → 1시간 쉬기 (오류면 30분 뒤 다시)"""
     while True:
@@ -178,6 +250,10 @@ def worker():
         except Exception as e:
             STATUS.update(state="error", msg=f"{type(e).__name__}: {str(e)[:160]}")
             ok = False
+        try:
+            refresh_fees()
+        except Exception as e:
+            STATUS["fee_msg"] = f"{type(e).__name__}: {str(e)[:120]}"
         time.sleep(3600 if ok else 1800)
 
 
@@ -241,6 +317,7 @@ def summary():
         return {**base, "items": [], "empty": True}
     cut = days[max(0, len(days) - 800)]
     px = pd.read_sql("SELECT d, code, name, close, nav, net, tv, idx FROM px WHERE d >= ?", c, params=(cut,))
+    fees = dict(c.execute("SELECT code, fee FROM fee WHERE fee IS NOT NULL").fetchall())
     c.close()
     px = px[px.d.isin(days)]
     close = px.pivot(index="d", columns="code", values="close").sort_index()
@@ -277,7 +354,7 @@ def summary():
         it = {"code": code, "name": name, "cat": classify(name), "active": "액티브" in name,
               "hedge": "(H)" in name, "synth": "합성" in name, "idx": row["idx"] or "",
               "net_eok": _rnd((row["net"] or 0) / 1e8, 0), "tv_eok": _rnd((row["tv"] or 0) / 1e8, 1),
-              "close": row["close"], "nav": row["nav"],
+              "close": row["close"], "nav": row["nav"], "fee": fees.get(code),
               "disc": _rnd((row["close"] / row["nav"] - 1) * 100, 2) if row["nav"] and row["close"] else None,
               "r1": r1, "r3": r3, "r6": r6, "r12": r12, "r36": r36,
               "mom": _rnd(sum(moms) / len(moms)) if len(moms) == 3 or (n < 253 and moms) else None,
@@ -302,6 +379,14 @@ def summary():
     for x in ok:
         key = (x["idx"] or x["code"]) + ("|H" if x["hedge"] else "") + ("|A" if x["active"] else "")
         grp.setdefault(key, []).append(x)
+    # 같은 지수·같은 환헤지 패시브끼리 총보수 비교 — 최저 보수 +0.005%p 안이면 '저보수'
+    for key, g in grp.items():
+        fs = [x["fee"] for x in g if x["fee"] is not None and not x["active"]]
+        lo = min(fs) if fs else None
+        for x in g:
+            x["grp"] = key
+            x["fee_min"] = lo if len(fs) > 1 else None
+            x["cheap"] = x["active"] or x["fee"] is None or lo is None or x["fee"] <= lo + 0.005
     reps = []
     for g in grp.values():
         g.sort(key=lambda x: -(x["r12"] if x["r12"] is not None else x["mom"]))

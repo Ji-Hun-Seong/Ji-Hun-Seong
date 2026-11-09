@@ -125,7 +125,7 @@ def t_etf_rank(category: str = "all", sort: str = "mom", limit: int = 20):
         xs = [x for x in xs if x.get("cat") == category]
     sort = sort if sort in ("mom", "r12", "r36", "r3", "r6", "r1", "eff") else "mom"
     xs = sorted([x for x in xs if x.get(sort) is not None], key=lambda x: -x[sort])[:limit]
-    keys = ("code", "name", "cat", "active", "hedge", "idx", "net_eok", "disc", "r1", "r3", "r6", "r12", "r36", "mom", "vol", "mdd", "ex12", "sibs")
+    keys = ("code", "name", "cat", "active", "hedge", "idx", "net_eok", "disc", "r1", "r3", "r6", "r12", "r36", "mom", "vol", "mdd", "ex12", "sibs", "fee", "fee_min", "cheap")
     return trim({"asof": d.get("asof"), "bench": d.get("bench"), "backtest": d.get("bt"), "items": [pick(x, keys) for x in xs],
                  "설명": "수익률 %(가격 기준, 분배금 제외). mom=3·6·12개월 평균, mdd=1년 최대 낙폭, ex12=KODEX200 대비 1년, net_eok=순자산 억원"}, limit)
 

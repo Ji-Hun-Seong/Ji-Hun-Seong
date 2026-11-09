@@ -1564,8 +1564,8 @@ function fundRender(d) {
   $("p-out").querySelectorAll("[data-sc]").forEach(el => el.onclick = () => openStock(el.dataset.sc, {us: fMkt === "us"}));
 }
 // 📦 ETF — KRX 일별 데이터로 수익률 순위 (chartpage/etf.py) · 설명은 펀드를 처음 보는 사람 기준
-let eCat = "all", eSort = "mom", ePen = "all";
-try { eCat = localStorage.getItem("e-cat") || "all"; eSort = localStorage.getItem("e-sort") || "mom"; ePen = localStorage.getItem("e-pen") || "all"; } catch (e) {}
+let eCat = "all", eSort = "mom", ePen = "all", eLow = true;
+try { eCat = localStorage.getItem("e-cat") || "all"; eSort = localStorage.getItem("e-sort") || "mom"; ePen = localStorage.getItem("e-pen") || "all"; eLow = localStorage.getItem("e-low") !== "0"; } catch (e) {}
 const ETF_GUIDE = `<details class="card" id="e-guide"><summary style="font-size:15px;font-weight:700;color:var(--txt)">📘 ETF가 처음이라면 — 3분 설명 <span class="tiny" style="color:var(--blue)">펼치기</span></summary>
   <div class="small" style="line-height:1.7;margin-top:10px">
   <b>① 펀드란?</b><br>여러 사람의 돈을 한 바구니에 모아 <b>운용사</b>(삼성·미래에셋 등)가 대신 굴리는 상품이에요. 내가 갖는 건 그 바구니의 <b>지분(좌수)</b>이고, 바구니 값이 오르면 내 돈도 늘어요.<br><br>
@@ -1602,11 +1602,14 @@ function etfRender(d) {
     : `<div class="tiny mut" style="margin-top:8px">🧪 과거 검증(상위 10개 vs KODEX 200)은 데이터가 1년 3개월치 쌓이면 나와요</div>`;
   head += `<div class="tiny mut" style="margin-top:8px">전체 ${d.n_all || 0}개 중 순자산 200억↑·상장 1년↑ ${d.n_ok || 0}개 · 수익률은 가격 기준(분배금 제외 — 배당·채권형은 실제보다 낮게 보여요) · 투자 권유 아님</div></div>`;
   const CATS = [["all", "전체"], ["sp", "S&P500"], ["nq", "나스닥100"], ["kr", "🇰🇷 국내주식"], ["foreign", "🌍 해외주식"], ["bond", "🏦 채권·혼합"], ["cmdty", "🪙 원자재"], ["active", "🧑‍💼 액티브"], ["lev", "⚡ 레버리지·인버스"]];
-  const SORTS = [["mom", "모멘텀"], ["r12", "1년"], ["r36", "3년"], ["r3", "3개월"], ["eff", "덜 흔들림"]];
+  const SORTS = [["mom", "모멘텀"], ["r12", "1년"], ["r36", "3년"], ["r3", "3개월"], ["eff", "덜 흔들림"], ["fee", "보수 낮은 순"]];
+  const nFee = [...(d.items || []), ...(d.more || [])].filter(x => x.fee != null).length;
   const chip = (k, l, on, a) => `<span class="tag ${on ? "b" : ""}" data-${a}="${k}" style="cursor:pointer;margin:3px 4px 0 0;${on ? "font-weight:700" : ""}">${l}</span>`;
   head += `<div class="card"><div>${CATS.map(([k, l]) => chip(k, l, eCat === k, "ec")).join("")}</div>
     <div style="margin-top:8px"><span class="tiny mut">퇴직연금 </span>${[["all", "전체"], ["100", "100% 가능"], ["70", "70% 한도"]].map(([k, l]) => chip(k, l, ePen === k, "ep")).join("")}</div>
     ${ePen !== "all" ? `<div class="tiny mut" style="margin-top:6px;line-height:1.6">${ePen === "100" ? "적격 TDF · 채권혼합(주식 50% 이하) · 채권형·금리형 — DC·IRP 적립금 전부 담을 수 있어요. 위험자산 70%를 채운 뒤 남은 30%에도 쓸 수 있어요" : "주식형 ETF 등 — DC·IRP 위험자산 합계가 적립금의 70%를 넘으면 안 돼요"} · 이름으로 추정한 분류라 매수 전 증권사 화면 확인 · DC는 회사 상품 목록에 있어야 해요</div>` : ""}
+    <div style="margin-top:8px"><span class="tiny mut">보수 </span>${[["1", "저보수만"], ["0", "전체"]].map(([k, l]) => chip(k, l, (eLow ? "1" : "0") === k, "el")).join("")}</div>
+    <div class="tiny mut" style="margin-top:6px;line-height:1.6">${nFee ? (eLow ? "같은 지수를 따라가는 패시브 ETF 중 <b>총보수가 가장 낮은 것</b>(차이 0.005%p 이내 포함)만 남겨요 · 액티브는 그대로" : "보수 상관없이 전부") + ` · 총보수 = 운용·판매·수탁·사무관리 4대 보수 합 (네이버 증권, ${fmtN(nFee)}개)` : "총보수 데이터를 받는 중이에요 — 서버가 일주일에 한 번 네이버 증권에서 받아요"}</div>
     <div style="margin-top:8px"><span class="tiny mut">정렬 </span>${SORTS.map(([k, l]) => chip(k, l, eSort === k, "es")).join("")}</div>
     ${eSort === "eff" ? `<div class="tiny mut" style="margin-top:6px">덜 흔들림 = 1년 수익률 ÷ 1년 변동성 — 같은 수익이면 덜 출렁인 쪽이 위</div>` : ""}</div>`;
   // S&P500·나스닥100·퇴직연금 필터는 같은 지수 ETF끼리 비교할 수 있게 대표 1개가 아니라 전부 보여 줌
@@ -1614,17 +1617,24 @@ function etfRender(d) {
   const eMatch = (x, re) => re.test(x.name) || re.test(x.idx || "");
   let xs = (eFull ? [...(d.items || []), ...(d.more || [])] : (d.items || [])).filter(x => eCat === "all" ? x.cat !== "lev" : eCat === "active" ? x.active : eCat === "sp" ? x.cat !== "lev" && eMatch(x, /S&P\s*500/i) : eCat === "nq" ? x.cat !== "lev" && eMatch(x, /나스닥\s*100|NASDAQ[\s-]*100/i) : x.cat === eCat);
   if (ePen !== "all") xs = xs.filter(x => x.pen === ePen);
-  xs = xs.filter(x => x[eSort] != null).sort((a, b) => b[eSort] - a[eSort]).slice(0, 50);
+  if (eLow && nFee) {                    // 대표를 '1년 수익 1등' 대신 '보수 최저'로 바꿔서 다시 고름
+    const pool = [...(d.items || []), ...(d.more || [])].filter(x => x.cheap !== false);
+    const keep = new Set(xs.map(x => x.grp || x.code));
+    xs = pool.filter(x => keep.has(x.grp || x.code) && xs.some(y => (y.grp || y.code) === (x.grp || x.code)));
+    if (!eFull) { const seen = new Map(); xs.forEach(x => { const k = x.grp || x.code, o = seen.get(k); if (!o || (x.fee ?? 9) < (o.fee ?? 9) || ((x.fee ?? 9) === (o.fee ?? 9) && (x.net_eok || 0) > (o.net_eok || 0))) seen.set(k, x); }); xs = [...seen.values()]; }
+  }
+  xs = xs.filter(x => x[eSort] != null).sort((a, b) => eSort === "fee" ? a.fee - b.fee : b[eSort] - a[eSort]).slice(0, 50);
   const CL = d.cats || {};
   const rows = xs.map((x, i) => `<div class="prow" data-ec2="${esc(x.code)}"><div class="row"><div><span class="rk">${i + 1}</span><span class="name">${esc(x.name)}</span><span class="tkr">${esc(x.code)}</span></div>
-      <div style="text-align:right">${pc(x[eSort === "eff" ? "r12" : eSort === "mom" ? "mom" : eSort])}<div class="tiny mut">${eSort === "mom" ? "모멘텀" : eSort === "eff" ? "1년" : ""}</div></div></div>
+      <div style="text-align:right">${eSort === "fee" ? `<b>${x.fee}%</b>` : pc(x[eSort === "eff" ? "r12" : eSort === "mom" ? "mom" : eSort])}<div class="tiny mut">${eSort === "mom" ? "모멘텀" : eSort === "eff" ? "1년" : eSort === "fee" ? "총보수" : ""}</div></div></div>
       <div style="margin-top:4px"><span class="tag ${x.active ? "y" : "g"}">${x.active ? "액티브" : "패시브"}</span><span class="tag">${esc(CL[x.cat] || "")}</span>${x.hedge ? `<span class="tag">환헤지</span>` : ""}${x.synth ? `<span class="tag">합성</span>` : ""}<span class="tag">추가설정 가능</span></div>
       <div class="kv" style="margin-top:6px"><div><small>1개월</small><b>${pc(x.r1)}</b></div><div><small>3개월</small><b>${pc(x.r3)}</b></div><div><small>6개월</small><b>${pc(x.r6)}</b></div>
         <div><small>1년</small><b>${pc(x.r12)}</b></div><div><small>3년</small><b>${pc(x.r36)}</b></div><div><small>최대 낙폭</small><b>${pc(x.mdd)}</b></div></div>
-      <div class="tiny mut" style="margin-top:4px">순자산 ${fmtN(x.net_eok)}억 · 괴리율 ${x.disc != null ? (x.disc > 0 ? "+" : "") + x.disc.toFixed(2) + "%" : "-"} · 변동성 ${x.vol != null ? x.vol + "%" : "-"}${x.ex12 != null ? ` · KODEX 200 대비 1년 ${pc(x.ex12)}` : ""}${x.idx ? ` · 기초지수 ${esc(x.idx)}` : ""}</div>
-      ${x.sibs && !eFull ? `<div class="tiny mut" style="margin-top:2px">같은 지수 ETF ${x.sibs + 1}개 중 1년 수익 1등 (${x.sib_names.map(esc).join(", ")}${x.sibs > 3 ? " 등" : ""})</div>` : ""}</div>`).join("");
+      <div class="tiny mut" style="margin-top:4px">${x.fee != null ? `<b style="color:var(--txt)">총보수 연 ${x.fee}%</b>${x.fee_min != null && !x.active ? (x.fee <= x.fee_min + 0.005 ? ` <span class="tag g">같은 지수 최저</span>` : ` <span class="tag r">최저보다 +${(x.fee - x.fee_min).toFixed(3)}%p</span>`) : ""} · ` : ""}순자산 ${fmtN(x.net_eok)}억 · 괴리율 ${x.disc != null ? (x.disc > 0 ? "+" : "") + x.disc.toFixed(2) + "%" : "-"} · 변동성 ${x.vol != null ? x.vol + "%" : "-"}${x.ex12 != null ? ` · KODEX 200 대비 1년 ${pc(x.ex12)}` : ""}${x.idx ? ` · 기초지수 ${esc(x.idx)}` : ""}</div>
+      ${x.sibs && !eFull && !(eLow && nFee) ? `<div class="tiny mut" style="margin-top:2px">같은 지수 ETF ${x.sibs + 1}개 중 1년 수익 1등 (${x.sib_names.map(esc).join(", ")}${x.sibs > 3 ? " 등" : ""})</div>` : ""}</div>`).join("");
   $("p-out").innerHTML = (gOpen ? ETF_GUIDE.replace('id="e-guide">', 'id="e-guide" open>').replace(">펼치기<", ">접기<") : ETF_GUIDE) + head + `<div class="card">${rows || `<div class="empty">${d.empty ? "아직 받은 데이터가 없어요 — 서버가 KRX에서 받는 중" : "이 분류에 해당하는 ETF가 없어요"}</div>`}</div>`;
   $("p-out").querySelectorAll("[data-ec]").forEach(b => b.onclick = () => { eCat = b.dataset.ec; try { localStorage.setItem("e-cat", eCat); } catch (e) {} etfRender(d); });
+  $("p-out").querySelectorAll("[data-el]").forEach(b => b.onclick = () => { eLow = b.dataset.el === "1"; try { localStorage.setItem("e-low", eLow ? "1" : "0"); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-ep]").forEach(b => b.onclick = () => { ePen = b.dataset.ep; try { localStorage.setItem("e-pen", ePen); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-es]").forEach(b => b.onclick = () => { eSort = b.dataset.es; try { localStorage.setItem("e-sort", eSort); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-ec2]").forEach(el => el.onclick = () => openStock(el.dataset.ec2));
