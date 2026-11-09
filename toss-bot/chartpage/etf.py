@@ -57,6 +57,7 @@ def kst_today():
 def _conn():
     os.makedirs(os.path.dirname(DB), exist_ok=True)
     c = sqlite3.connect(DB, timeout=30)
+    c.execute("PRAGMA journal_mode=WAL")                # 읽기(화면)와 쓰기(수집)가 서로 막지 않게
     c.execute("""CREATE TABLE IF NOT EXISTS px(d TEXT, code TEXT, name TEXT, close REAL, nav REAL, net REAL,
                  tv REAL, idx TEXT, PRIMARY KEY(d, code))""")
     c.execute("CREATE TABLE IF NOT EXISTS days(d TEXT PRIMARY KEY, n INTEGER, at TEXT)")

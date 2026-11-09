@@ -433,6 +433,70 @@ def signals(tech: dict, prof: dict | None = None, fs: dict | None = None, fin: d
 
 
 # ── 한국 종목 상세 ─────────────────────────────────────
+def _holdings(j):
+    """ETF 응답 어디에 있든 '종목명 + 비중' 목록을 찾음 → [{name, code, w}]"""
+    best = []
+
+    def walk(o):
+        nonlocal best
+        if isinstance(o, list) and len(o) >= 3 and all(isinstance(x, dict) for x in o[:3]):
+            x0 = o[0]
+            nk = next((k for k in x0 if re.search(r"name|nm$|종목", k, re.I) and isinstance(x0[k], str)), None)
+            wk = next((k for k in x0 if re.search(r"weight|ratio|rate|비중", k, re.I) and num(x0[k]) is not None), None)
+            if nk and wk and len(o) > len(best):
+                ck = next((k for k in x0 if re.search(r"code|cd$", k, re.I)), None)
+                best = [{"name": x.get(nk), "code": x.get(ck) if ck else None, "w": num(x.get(wk))} for x in o if x.get(nk)]
+        if isinstance(o, dict):
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(j)
+    return [h for h in best if h["w"] is not None]
+
+
+def kr_etf(code: str) -> dict:
+    """ETF 전용 — 총보수·구성 종목 비중·기초지수 (네이버 증권). 재무제표 대신"""
+    import etf as E
+    out, keys = {"fee": None, "holdings": [], "info": []}, {}
+    for path in ("integration", "etfAnalysis"):
+        try:
+            j = _get(f"{NAVER}/{code}/{path}").json()
+        except Exception as e:
+            keys[path] = f"오류 {type(e).__name__}"
+            continue
+        keys[path] = list(j)[:25] if isinstance(j, dict) else type(j).__name__
+        if out["fee"] is None:
+            out["fee"] = E._find_fee(j)
+        h = _holdings(j)
+        if len(h) > len(out["holdings"]):
+            out["holdings"] = h
+        if path == "integration":
+            for x in j.get("totalInfos") or []:
+                k, v = x.get("key"), x.get("value")
+                if k and v not in (None, "", "-") and not re.search(r"PER|PBR|EPS|BPS|배당", str(k)):
+                    out["info"].append([k, v])
+    out["holdings"].sort(key=lambda h: -h["w"])
+    out["holdings"] = out["holdings"][:30]
+    out["src_keys"] = keys                                  # 응답 구조 확인용 (네이버가 바뀌면 여기로 진단)
+    try:
+        c = E._conn()
+        r = c.execute("SELECT idx, net FROM px WHERE code=? ORDER BY d DESC LIMIT 1", (code,)).fetchone()
+        c.close()
+        if r:
+            out["idx"], out["net_eok"] = r[0], round((r[1] or 0) / 1e8)
+    except Exception:
+        pass
+    if out["fee"] is None:
+        try:
+            c = E._conn(); r = c.execute("SELECT fee FROM fee WHERE code=?", (code,)).fetchone(); c.close()
+            out["fee"] = r[0] if r else None
+        except Exception:
+            pass
+    return out
+
+
 def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) -> dict:
     t0 = time.time()
     errs = {}
@@ -444,12 +508,20 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
             errs[key] = f"{type(e).__name__}: {str(e)[:120]}"
             return default
 
+    try:
+        import data_sources as _ds
+        is_etf = any(e["code"] == code for e in _ds.load_etfs())
+    except Exception:
+        is_etf = False
+    if is_etf:
+        corp_code = None
     with ThreadPoolExecutor(6) as ex:
+        f_et = ex.submit(safe, "etf", lambda: kr_etf(code), None) if is_etf else None
         f_px = ex.submit(kr_ohlcv, code, 20000)         # 상장 이후 전체 (차트 '전체' 기간·주/월/년봉용)
         f_pr = ex.submit(safe, "profile", lambda: kr_profile(code), {})
         f_fl = ex.submit(safe, "flows", lambda: kr_flows(code), [])
-        f_fa = ex.submit(safe, "finance", lambda: kr_finance(code, "annual"), {})
-        f_fq = ex.submit(safe, "finance_q", lambda: kr_finance(code, "quarter"), {})
+        f_fa = ex.submit(safe, "finance", lambda: {} if is_etf else kr_finance(code, "annual"), {})
+        f_fq = ex.submit(safe, "finance_q", lambda: {} if is_etf else kr_finance(code, "quarter"), {})
         f_dt = ex.submit(safe, "filings", lambda: kr_filings(corp_code), [])
         # 사업요약·매출비중은 느려서(번역·DART 원문) 화면이 뜬 뒤 extras() 로 따로 받음
         df = f_px.result()
@@ -462,7 +534,7 @@ def kr_detail(code: str, name: str | None = None, corp_code: str | None = None) 
         "us": False, "code": code, "name": prof.get("name") or name or code, "asof": f"{d.index[-1]:%Y-%m-%d}",
         "src": df.attrs.get("src", ""), "profile": prof, "tech": tech, "series": series(d), "ohlc": ohlc(df),
         "flows": fl[::-1], "flow_sum": fs, "finance": fin, "filings": filings[:30], "desc": None, "segments": None,
-        "signals": signals(tech, prof, fs, fin, filings),
+        "signals": signals(tech, prof, fs, fin, filings), "etf": f_et.result() if f_et else None,
         "links": {"naver": f"https://m.stock.naver.com/domestic/stock/{code}/total",
                   "dart": f"https://dart.fss.or.kr/dsab007/main.do?option=corp&textCrpNm={name or code}"},
         "errors": errs, "took": round(time.time() - t0, 2)})
