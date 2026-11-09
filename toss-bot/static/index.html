@@ -86,7 +86,7 @@ canvas.c-big{max-height:none}
 .seg button{flex:1;border:0;background:none;color:var(--sub);padding:9px;border-radius:9px;font-size:14px;font-family:inherit}
 #scr-conds .cd{display:flex;gap:6px;align-items:center;margin-top:8px}#scr-conds select,#scr-conds input,#scr-sort{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:9px 6px;font-size:16px;font-family:inherit;min-width:0}#scr-conds .m{flex:1 1 40%}#scr-conds input{flex:0 0 70px;width:70px;text-align:right}#scr-conds .o{flex:0 0 66px}#scr-conds .x{background:none;border:0;color:var(--sub);font-size:18px;padding:4px}
 #scr-pre button,#scr-pre .rchip{background:var(--bg)}#scr-pre .rchip button{background:none}
-.cf{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}.cf small{color:var(--sub);font-size:12px;margin-left:3px}.cf b{flex:none;font-variant-numeric:tabular-nums}.cf-h{margin-top:4px}.cf-h b{font-size:26px}
+.cf{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}.cf small{color:var(--sub);font-size:12px;margin-left:3px}.cf b{flex:none;font-variant-numeric:tabular-nums}.cf-q{color:var(--blue);font-size:12px;margin-left:4px;cursor:pointer}.hg{margin-top:10px;padding:10px 12px;background:var(--bg);border-radius:10px}.hg summary{font-size:14px}.hgi{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-top:1px solid var(--line);font-size:13px}.hgi span:first-child{flex:none}.hgi span:last-child{text-align:right;font-size:12px}.cf-h{margin-top:4px}.cf-h b{font-size:26px}
 #p-seg button{padding-left:2px;padding-right:2px;font-size:13px;white-space:nowrap}
 .seg button.act{background:var(--line);color:var(--txt);font-weight:700}
 .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sub);margin-right:6px;vertical-align:middle}
@@ -604,6 +604,24 @@ function mixRender(m) {
     <button class="more" onclick="openHero()">🏛️ 나의 투자 원칙 · 대가 채점 보기 ›</button>`;
 }
 
+// 대가 점수 풀이 — chartpage/heroes_core.py 채점 기준을 쉬운 말로 (기준을 바꾸면 여기도 함께)
+const HGUIDE = {
+  buffett: ["🏰 워런 버핏", "좋은 사업을 적당한 값에 — 꾸준히 벌고, 빚이 적고, 값이 합리적인가", [["꾸준한 수익력", "해마다 흑자, 이익 반토막 없음"], ["평균 ROE", "15%↑ 만점 · 7.5%↓ 0점"], ["가장 나빴던 해 ROE", "15%↑ 만점 · 7.5%↓ 0점"], ["빚", "순현금 만점 · 순차입이 순이익 3년치↑ 0점"], ["주주 이익", "FCF ÷ 순이익 100%↑ 만점 · 50%↓ 0점"], ["돈 덜 드는 사업", "설비투자 ÷ 영업현금 40%↓ 만점 · 90%↑ 0점"], ["1달러 테스트", "5년간 남긴 이익 1원당 시총 1원↑ 만점 · 0원↓ 0점"], ["적당한 가격", "이익수익률이 국채의 2배↑ 만점 · 국채 이하 0점"], ["가격 결정력", "최악의 해 영업이익률이 평균의 75%↑ 만점 · 25%↓ 0점"]]],
+  graham: ["🛡️ 벤저민 그레이엄", "망하기 어렵고 싼가 — 방어적 투자자의 안전 기준", [["규모", "연 매출 1조↑ 만점 · 0.25조↓ 0점"], ["유동비율", "200%↑ 만점 · 100%↓ 0점"], ["장기부채", "순유동자산 이하 만점 · 1.5배↑ 0점"], ["이익 안정", "10년 동안 적자 0번"], ["배당 이력", "20년 연속 배당"], ["이익 성장", "10년간 EPS +33%↑ 만점 · 0%↓ 0점"], ["PER", "3년 평균 이익 기준 15배↓ 만점 · 20배↑ 0점"], ["PBR", "1.5배↓ 또는 PER×PBR 22.5↓ 만점"], ["수익력 대비 가격", "5~10년 평균 이익의 20배↓ 만점 · 30배↑ 0점"]]],
+  munger: ["🧠 찰리 멍거", "훌륭한 기업을 공정한 값에 — 오래 높은 수익을 내는가", [["장기 ROE", "평균 18%↑ 만점 · 6%↓ 0점"], ["해자 지속", "ROE 15%↑인 해가 많을수록"], ["복리 재투자", "자본 연 12%↑ 증가 만점 · 4%↓ 0점"], ["이익의 질", "영업현금 ÷ 순이익 110%↑ 만점 · 70%↓ 0점"], ["레버리지", "순현금 만점 · 순차입이 영업이익 3배↑ 0점"], ["희석", "주식 수 안 늘면 만점 · 5%↑ 0점"], ["공정한 가격", "ROE를 반영한 적정 PER 이하 만점 · 1.6배↑ 0점"]]],
+  ackman: ["🎯 빌 애크먼", "단순하고 예측 가능한 회사가 싸고, 값이 오를 계기가 있는가", [["FCF 창출", "플러스인 해가 많을수록"], ["예측 가능성", "매출 10%↑ 감소 0번 만점 · 2번↑ 0점"], ["진입장벽", "영업이익률 15%↑ · 변동폭 5%p↓ 만점"], ["튼튼한 재무", "순현금 만점 · 순차입이 영업이익 4배↑ 0점"], ["매력적 가격", "FCF 수익률 6%↑ 만점 · 2%↓ 0점"], ["촉매", "주주환원 공시 + 저평가 재평가 여지 (해외는 목표가 여력)"]]],
+  klarman: ["🔒 세스 클라만", "잃지 않는 것이 먼저 — 보수적으로 잡은 가치보다 충분히 싼가", [["안전마진", "자산·수익·현금흐름 가치 중간값보다 33%↑ 싸면 만점"], ["5년 평균 FCF 수익률", "10%↑ 만점 · 3%↓ 0점"], ["하방 받침", "PBR 0.7↓ 만점 · 1.5↑ 0점"], ["재무 생존력", "부채비율 50%↓ · 유동비율 150%↑ 만점"], ["소외된 종목", "1년 주가 −10%↓ 만점 · +40%↑ 0점"], ["가치 함정 회피", "매출이 안 줄면 만점 · 연 −5%↓ 0점"]]],
+  lynch: ["🔎 피터 린치", "성장에 비해 싼가 — 회사 유형별로 다른 잣대", [["(이익성장+배당) ÷ PER", "2↑ 만점 · 1↓ 0점"], ["자기 과거 PER", "과거 중간값 이하 만점 · 1.5배↑ 0점"], ["이익 꾸준함", "해마다 EPS가 늘수록"], ["재무", "순차입 ÷ 자본 33%↓ 만점 · 50%↑ 0점"], ["순현금", "시총의 30%↑ 만점"], ["주식 수", "2%↑ 감소 만점 · 5%↑ 증가 0점"], ["과열 아님", "1년 주가 +50%↓ 만점 · +100%↑ 0점"], ["유형별 점검", "고성장·대형우량·저성장·경기순환·회생·자산주마다 2개씩"]]],
+  fisher: ["🌱 필립 피셔", "오래 크는 위대한 회사인가", [["매출 성장", "연 15%↑ 만점 · 5%↓ 0점"], ["이익 성장", "연 15%↑ 만점 · 5%↓ 0점"], ["영업이익률", "평균 20%↑ 만점 · 8%↓ 0점"], ["이익률 개선", "이전보다 +1%p↑ 만점 · −2%p↓ 0점"], ["저원가", "최악의 해 이익률이 평균의 75%↑ 만점 · 30%↓ 0점"], ["희석", "주식 수 +2%↓ 만점 · +10%↑ 0점"], ["내부 자금 성장", "부채비율 안 늘면 만점 · +30%p↑ 0점"], ["가격", "PER이 과거 중간값 이하 만점 · 1.5배↑ 0점"], ["앞으로의 성장", "추정 EPS +15%↑ 만점 · 5%↓ 0점"]]],
+  druckenmiller: ["🦅 스탠리 드러켄밀러", "18개월 뒤 이익이 좋아지고, 주가도 그쪽으로 가는가", [["18개월 뒤 이익", "추정 EPS 연 25%↑ 만점 · 0%↓ 0점"], ["이익 변곡", "분기 이익 +25%↑이면서 빨라지면 만점"], ["가격 흐름", "200일선 +10%↑ 만점 · −5%↓ 0점"], ["주도주", "1년 주가 +30%↑ 만점 · 0%↓ 0점"], ["자본 보존", "1년 최대 낙폭 20%↓ 만점 · 45%↑ 0점"]]],
+  templeton: ["🌍 존 템플턴", "비관이 극에 달한 우량주를 싸게", [["자기 과거보다 싼가", "5년 평균 PER의 70%↓ 만점 · 120%↑ 0점"], ["5년 평균 이익 PER", "10배↓ 만점 · 20배↑ 0점"], ["미래 이익 대비 가격", "5년 뒤 예상 EPS의 8배↓ 만점 · 15배↑ 0점"], ["비관 속에서 사기", "52주 고점 −35%↓ 만점 · −5% 이내 0점"], ["우량주 속 바겐", "해마다 EPS가 늘수록"], ["일시적 비관인가", "이익률이 과거 평균 이상 만점 · −3%p↓ 0점"]]],
+  price: ["📈 T. 로 프라이스", "이익이 계속 새 고점을 내는 장기 성장주", [["장기 이익 성장", "EPS 연 12%↑ 만점 · 3%↓ 0점"], ["사이클마다 새 고점", "최근 3년 최고 EPS가 이전 최고 이상 만점 · 70%↓ 0점"], ["자본이익률", "ROE 평균 18%↑ 만점 · 8%↓ 0점"], ["이익률 유지", "영업이익이 매출만큼 크면 만점 · −5%p↓ 0점"], ["과한 값 안 냄", "PER 25배↓ 만점 · 40배↑ 0점"], ["성장의 계절", "최근 3년 성장이 그 전 이상 만점 · −10%p↓ 0점"]]],
+};
+const heroGuide = keys => `<details id="h-guide" style="margin-top:6px;border-top:1px solid var(--line);padding-top:10px"><summary style="font-size:14px;font-weight:700">대가 점수가 뭔가요? <span class="tiny" style="color:var(--blue)">펼치기</span></summary>
+  <div class="small" style="margin-top:8px;line-height:1.6">유명 투자자가 책·주주서한에서 밝힌 원칙을 재무 숫자로 옮겨 <b>이 앱이 직접 매긴 점수</b>예요. 본인이 평가한 건 아니에요.<br>· 투자자 1명당 <b>20점 만점</b>, 5명을 더해 <b>100점</b><br>· 항목마다 만점 선과 0점 선 사이는 비례해서 점수를 줘요<br>· 데이터가 없는 항목은 절반만 인정 · 금융업에 안 맞는 항목은 빼고 계산</div>
+  ${keys.map(k => { const [n, d, its] = HGUIDE[k]; return `<details class="hg" id="hg-${k}"><summary><b>${n}</b></summary><div class="tiny mut" style="margin:4px 0 6px">${d}</div>${its.map(([a, b]) => `<div class="hgi"><span>${a}</span><span class="mut">${b}</span></div>`).join("")}</details>`; }).join("")}
+</details>`;
+document.addEventListener("click", e => { const b = e.target.closest("[data-hg]"); if (!b) return; e.preventDefault(); e.stopPropagation(); const g = $("h-guide"), h = $("hg-" + b.dataset.hg); if (g) g.open = true; if (h) h.open = true; (h || g)?.scrollIntoView({behavior: "smooth", block: "center"}); });
 function principlesCard(P, heroes, open) {
   if (!P) return "";
   return `<div class="card"><details ${open ? "open" : ""}><summary><div class="row"><h2 style="margin:0">🏛️ 나의 투자 원칙</h2><span class="tiny" style="color:var(--blue)">펼치기/접기</span></div></summary>
@@ -1652,14 +1670,14 @@ function pRender(d) {
     // 이 목록에 남는 조건을 한눈에 — 위에서부터 차례로 걸렀을 때 남는 종목 수
     const revN = glob ? 4 : 5;
     const revOk = x => !x.steady || x.steady.rev5 !== false, niOk = x => !x.steady || x.steady.ok !== false;
-    const COND = sk === "value" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], [`PER ${perMax}배 이하`, perOk], ["PBR 2배 이하 <small>자본잠식 제외</small>", pbrOk], [`버핏 점수 ${BUF_MIN}점 이상 <small>20점 만점</small>`, bufOk], ["장기 부적합 등급 제외", x => x.vgrade !== "no"], ["가치 점수 ≥ 성장 점수 <small>성향이 가치 쪽</small>", x => x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1)]]
-      : sk === "growth" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], ["PBR 10배 이하 <small>자본잠식 제외</small>", gPbrOk], [`린치 점수 ${LYN_MIN}점 이상 <small>20점 만점</small>`, lynOk], ["장기 부적합 등급 제외", x => x.ggrade !== "no"], ["성장 점수 > 가치 점수 <small>성향이 성장 쪽</small>", x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1)]] : null;
+    const COND = sk === "value" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], [`PER ${perMax}배 이하`, perOk], ["PBR 2배 이하 <small>자본잠식 제외</small>", pbrOk], [`버핏 점수 ${BUF_MIN}점 이상 <a data-hg="buffett" class="cf-q">무슨 점수?</a>`, bufOk], ["장기 부적합 등급 제외", x => x.vgrade !== "no"], ["가치 점수 ≥ 성장 점수 <a data-hg='all' class='cf-q'>무슨 점수?</a>", x => x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1)]]
+      : sk === "growth" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], ["PBR 10배 이하 <small>자본잠식 제외</small>", gPbrOk], [`린치 점수 ${LYN_MIN}점 이상 <a data-hg="lynch" class="cf-q">무슨 점수?</a>`, lynOk], ["장기 부적합 등급 제외", x => x.ggrade !== "no"], ["성장 점수 > 가치 점수 <a data-hg='all' class='cf-q'>무슨 점수?</a>", x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1)]] : null;
     if (szk !== "all" && COND) COND.push([szk === "big" ? "시가총액 10조 이상" : "시가총액 10조 미만", inSize]);
     let hLeft = d.items;
     const condRows = (COND || []).map(([l, f]) => { hLeft = hLeft.filter(f); return `<div class="cf"><span>✅ ${l}</span><b>${fmtN(hLeft.length)}개</b></div>`; }).join("");
     const condCard = COND ? `<div class="card"><div class="label">${sk === "value" ? "💎 가치주" : "🚀 성장주"} 선정 기준</div>
       <div class="cf-h"><b>${fmtN(tabItems.length)}개</b> <span class="mut">통과</span> <span class="tiny mut">/ 채점 ${fmtN(d.items.length)}개</span></div>
-      <div class="tiny mut" style="margin:2px 0 6px">아래 조건을 <b>모두</b> 만족한 종목만 남겨요 · 오른쪽은 위에서부터 거르며 남은 수</div>${condRows}</div>`
+      <div class="tiny mut" style="margin:2px 0 6px">아래 조건을 <b>모두</b> 만족한 종목만 남겨요 · 오른쪽은 위에서부터 거르며 남은 수</div>${condRows}${heroGuide(HSTY[sk])}</div>`
       : `<div class="card"><div class="label">전체 보기</div><div class="small" style="margin-top:4px;line-height:1.6">거르는 조건 없이 <b>채점한 ${fmtN(d.items.length)}개를 전부</b> 보여 줘요. 매출이 줄어든 종목도 포함돼요.</div></div>`;
     head = hMktBar() + styBar + condCard + principlesCard(d.principles, d.heroes, false) + `<div class="card"><div class="label">🏛️ 대가 10인 채점 · ${esc(d.market_name || "🇰🇷 한국")} · ${esc(d.asof)} · 후보 ${fmtN(d.n_pool)}종목</div>
       ${(() => { const P = d.progress; if (!P) return ""; const busy = P.fresh < P.pool;
