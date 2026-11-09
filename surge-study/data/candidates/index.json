@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-09",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 868,
+   "top": [
+    "GS건설",
+    "하이록코리아",
+    "롯데칠성"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-06",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 1022,
@@ -9,8 +21,14 @@
     "HJ중공업",
     "웹젠"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 17,
+   "graded": {
+    "avg": -1.75,
+    "up": 4,
+    "n": 10,
+    "hit10": 0,
+    "market_avg": -0.84
+   }
   },
   {
    "date": "2026-11-05",

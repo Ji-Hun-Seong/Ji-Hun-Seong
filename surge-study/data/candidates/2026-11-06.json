@@ -2029,5 +2029,74 @@
   "up": 2,
   "avg": -2.21,
   "market_avg": -2.42
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "034310",
+    "name": "NICE",
+    "score": 81,
+    "next_chg": 0.42
+   },
+   {
+    "code": "097230",
+    "name": "HJ중공업",
+    "score": 64,
+    "next_chg": -6.11
+   },
+   {
+    "code": "069080",
+    "name": "웹젠",
+    "score": 62,
+    "next_chg": 0.8
+   },
+   {
+    "code": "015760",
+    "name": "한국전력",
+    "score": 58,
+    "next_chg": -1.64
+   },
+   {
+    "code": "108490",
+    "name": "로보티즈",
+    "score": 55,
+    "next_chg": -11.01
+   },
+   {
+    "code": "013580",
+    "name": "계룡건설",
+    "score": 54,
+    "next_chg": -1.89
+   },
+   {
+    "code": "302440",
+    "name": "SK바이오사이언스",
+    "score": 51,
+    "next_chg": 5.87
+   },
+   {
+    "code": "029780",
+    "name": "삼성카드",
+    "score": 51,
+    "next_chg": -0.47
+   },
+   {
+    "code": "094170",
+    "name": "동운아나텍",
+    "score": 50,
+    "next_chg": 0.88
+   },
+   {
+    "code": "001740",
+    "name": "SK네트웍스",
+    "score": 49,
+    "next_chg": -4.32
+   }
+  ],
+  "n": 10,
+  "hit10": 0,
+  "up": 4,
+  "avg": -1.75,
+  "market_avg": -0.84
  }
 }
