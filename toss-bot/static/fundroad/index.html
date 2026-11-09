@@ -219,7 +219,7 @@ const VIEW = {};
 VIEW.road = () => {
   const ri = rankOf(S.xp), next = RANKS[ri + 1], base = RANKS[ri][0], ratio = next ? (S.xp - base) / (next[0] - base) : 1;
   const dn = DAYS.filter(d => S.done[d.key]).length, nx = nextDay(), zig = [0, 1, 2, 1];
-  return `<a class="backhome" href="../">← SJH Capital로 돌아가기</a><div class="hero"><div class="between"><span class="brand">${ic("bolt")} FUND ROAD</span><span class="mut sm">${dn}/${DAYS.length} Day</span></div>
+  return `<a class="backhome" href="../">← Invest Atlas로 돌아가기</a><div class="hero"><div class="between"><span class="brand">${ic("bolt")} FUND ROAD</span><span class="mut sm">${dn}/${DAYS.length} Day</span></div>
     <div class="rank">${RANKS[ri][1]}</div><div class="mut sm">${next ? `다음 등급 '${next[1]}'까지 ${next[0] - S.xp} XP` : "기초 과정 수료. 진짜 공부는 심화 서고에서 이어져요."}</div>
     <div class="bar" style="margin-top:10px"><i style="width:${Math.max(3, ratio * 100)}%"></i></div>
     <div class="pills"><span class="pill gold">${ic("star")} ${S.xp} XP</span><span class="pill">${ic("flame")} ${streak()}일 연속</span><span class="pill acc">${ic("target")} 훈련 ${S.drill.c}회 정답</span></div>

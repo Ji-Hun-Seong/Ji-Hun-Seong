@@ -180,12 +180,38 @@ def yahoo_search(q: str, limit: int = 8) -> list[dict]:
     return out
 
 
+def load_etfs() -> list[dict]:
+    """국내 상장 ETF 목록 (DART 목록엔 ETF가 없음) — ETF 탭이 모으는 state/etf.db 의 최신일, 순자산 큰 순. 1시간 캐시"""
+    hit = _MEM.get("etfs")
+    if hit and time.time() - hit[0] < (3600 if hit[1] else 60):
+        return hit[1]
+    out = []
+    try:
+        import sqlite3
+        p = Path(__file__).resolve().parent.parent / "state" / "etf.db"
+        c = sqlite3.connect(f"file:{p}?mode=ro", uri=True, timeout=5)
+        try:
+            rows = c.execute("SELECT code, name FROM px WHERE d = (SELECT MAX(d) FROM days WHERE n > 0) ORDER BY net DESC").fetchall()
+        finally:
+            c.close()
+        out = [{"name": n, "code": k, "corp_code": None, "us": False, "mkt": "🇰🇷 ETF", "etf": True, "_k": n.lower().replace(" ", "")}
+               for k, n in rows if k and n]
+    except Exception as e:
+        print("ETF 목록 실패:", e)
+    _MEM["etfs"] = (time.time(), out)
+    return out
+
+
 def search(q: str, limit: int = 8) -> list[dict]:
-    """한국(DART 목록) → 한글 해외 별칭 → 숫자 코드 규칙(일본·홍콩·중국) → 야후 심볼/검색"""
+    """한국(DART 목록 + ETF) → 한글 해외 별칭 → 숫자 코드 규칙(일본·홍콩·중국) → 야후 심볼/검색"""
     q = q.strip()
     if not q:
         return []
     corps = load_corps()
+    etfs = load_etfs()
+    etf_hit = [e for e in etfs if e["code"].upper() == q.upper()]       # 069500, 0080G0(영문 섞인 새 코드)
+    if etf_hit:
+        return etf_hit
     if re.fullmatch(r"\d{6}", q):
         hit = [c for c in corps if c["code"] == q]
         if hit:
@@ -201,7 +227,19 @@ def search(q: str, limit: int = 8) -> list[dict]:
     exact = [c for c in corps if c["name"].lower().replace(" ", "") == ql]
     starts = [c for c in corps if c["name"].lower().startswith(ql) and c not in exact]
     contains = [c for c in corps if ql in c["name"].lower() and c not in exact and c not in starts]
-    res = (exact + sorted(starts, key=lambda c: len(c["name"])) + contains)[:limit]
+    # ETF: 띄어쓰기 무시 + 단어 모두 포함('tiger 나스닥' → TIGER 미국나스닥100). 순자산 큰 순
+    toks = q.lower().split()
+    em = [e for e in etfs if all(t in e["_k"] for t in toks)]
+    e_exact = [e for e in em if e["_k"] == ql]
+    e_starts = [e for e in em if e["_k"].startswith(toks[0]) and e not in e_exact]
+    e_contains = [e for e in em if e not in e_exact and e not in e_starts]
+    only_inside = bool(e_contains) and not (exact or starts or contains or e_exact or e_starts)
+    exact = exact + e_exact
+    # '반도체'처럼 회사 이름에도 많이 들어가는 말이면 ETF 자리를 몇 칸 남김
+    res = (exact + sorted(starts, key=lambda c: len(c["name"])) + e_starts
+           + contains[:limit - min(3, len(e_contains))] + e_contains)[:limit]
+    if only_inside and re.fullmatch(r"[A-Za-z\-]{1,5}", q):              # 미국 티커가 국내 ETF 이름 속에 있어도 티커를 먼저
+        res = ([_g(q.upper())] + res)[:limit]
     # 한글 해외 별칭 (정확히 같으면 맨 앞, 앞부분 일치는 뒤에)
     ko = [(k, v) for k, v in WORLD_KO.items() if k.lower().replace(" ", "") == ql] + \
          [(k, v) for k, v in WORLD_KO.items() if k.lower().replace(" ", "").startswith(ql) and k.lower().replace(" ", "") != ql]

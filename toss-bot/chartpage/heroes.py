@@ -595,6 +595,36 @@ def about_line(d: dict) -> str | None:
         return None
 
 
+def screen_facts(d: dict) -> dict:
+    """🔎 재무 필터용 숫자 (비율은 %, 시장 무관 / FCF·PSR은 단위가 억원으로 맞는 한국만)"""
+    F = _facts(d)
+    by = F["by"]
+    r = lambda v: round(v, 2) if _ok(v) else None
+    lv = lambda k: _lastv(F.get(k))
+
+    def yoy(k):
+        ys = sorted(y for y in by.get(k, {}) if y.isdigit())
+        if len(ys) < 2 or int(ys[-1]) - int(ys[-2]) != 1 or by[k][ys[-2]] <= 0:
+            return None                                  # 전년이 적자면 증가율이 뜻이 없음
+        return (by[k][ys[-1]] / by[k][ys[-2]] - 1) * 100
+
+    roe3 = _last(F.get("roe"), 3)
+    rev, ni, mc = lv("rev"), lv("ni"), F["mcap_eok"]
+    streak = 0
+    for v in reversed(F.get("ni") or []):
+        if v is None or v <= 0:
+            break
+        streak += 1
+    kr = not F["us"]
+    return {"roe": r(lv("roe")), "roe3": r(sum(roe3) / len(roe3)) if len(roe3) == 3 else None, "opm": r(lv("opm")),
+            "npm": r(ni / rev * 100) if _ok(ni) and _ok(rev) and rev > 0 else None,
+            "dr": r(lv("dr")), "cr": r(lv("cr")), "payout": r(lv("payout")),
+            "rev_g": r(yoy("rev")), "op_g": r(yoy("op")), "ni_g": r(yoy("ni")),
+            "eg": r(F["eg"] * 100) if _ok(F.get("eg")) else None, "streak": streak if F.get("ni") else None,
+            "psr": r(mc / rev) if kr and _ok(mc) and _ok(rev) and rev > 0 else None,
+            "fcfy": r(lv("fcf") / mc * 100) if kr and _ok(lv("fcf")) and _ok(mc) and mc > 0 else None}
+
+
 def board_row(p: dict, market: str = "kr") -> dict:
     """종목 하나 채점 → 목록 한 줄 (실패하면 {"error": ...})"""
     try:
@@ -612,6 +642,7 @@ def board_row(p: dict, market: str = "kr") -> dict:
                 "worst": [c["text"] for h in s["heroes"] for c in h["checks"] if c["ok"] is False][:2],
                 "steady": {k: s["steady"][k] for k in ("ok", "rev", "ni")},
                 "per": P.get("per"), "pbr": P.get("pbr"), "yield": P.get("div_yield"), "mcap_eok": P.get("mcap_eok"),
+                "fin": screen_facts(d),
                 "industry": P.get("industry") or P.get("sector"), "about": about_line(d)}
     except Exception as e:
         return {"code": p["code"], "name": p.get("name") or p["code"], "error": f"{type(e).__name__}: {str(e)[:80]}"}

@@ -45,6 +45,7 @@ REGIONS = {
 # 미국은 정식 거래소만 (장외 OTC·핑크시트에 올라온 외국 회사 GDR — 예: SK hynix — 제외)
 US_EXCH = {"NMS", "NGM", "NCM", "NYQ", "ASE", "PCX", "BTS", "NYS", "NAS"}
 UNI_VER = "2"                                                       # 목록 규칙이 바뀌면 올림 → 7일 안 기다리고 바로 다시 받음
+ROW_VER = "2"                                                       # 채점 줄에 새 칸이 생기면 올림 → 20시간 안 기다리고 다시 채점
 PRIO = {"내 계좌": 0, "아는 회사": 1, "가치주 후보": 2, "대표 종목": 3}
 
 PATH = None
@@ -292,6 +293,10 @@ def score_loop(group, markets, workers):
 
 def start(extras_fn):
     status["running"] = True
+    if meta_get("row_ver") != ROW_VER:                                  # 화면의 기존 점수는 그대로 두고 '다시 할 차례'로만 표시
+        db().execute("UPDATE scores SET scored = MIN(scored, ?) WHERE ok=1", (time.time() - STALE - 1,))
+        db().commit()
+        meta_set("row_ver", ROW_VER)
     threading.Thread(target=universe_loop, args=(extras_fn,), daemon=True).start()
     threading.Thread(target=score_loop, args=("kr", ["kr"], 4), daemon=True).start()
     threading.Thread(target=score_loop, args=("gl", ["us", "eu", "cn", "jp"], 3), daemon=True).start()
@@ -326,6 +331,26 @@ def industry_kr() -> dict:
 
 
 # ── 화면용 읽기 (바로 응답) ─────────────────────────────
+def screen(market: str) -> dict:
+    """🔎 재무 필터 — 종목별 숫자만 가볍게. 조건 계산은 화면에서 (입력할 때마다 바로 반영)"""
+    if market not in MARKETS:
+        market = "kr"
+    rows = db().execute("""SELECT c.row, s.mcap_eok, s.market FROM scores c JOIN stocks s ON s.market=c.market AND s.code=c.code
+                           WHERE c.market=? AND s.active=1 AND c.ok=1""", (market,)).fetchall()
+    ind = industry_kr() if market == "kr" else {}
+    pos = lambda v: v if isinstance(v, (int, float)) and v > 0 else None   # PER·PBR 음수(적자·자본잠식)는 '10 미만'에 걸리면 안 됨
+    items, n_fin = [], 0
+    for row, mc, _ in rows:
+        x = json.loads(row)
+        f = x.get("fin") or {}
+        n_fin += bool(f)
+        i = ind.get(x.get("code"))
+        items.append({**f, "c": x["code"], "n": x["name"] if market == "kr" else short_name(x.get("name")), "u": market != "kr",
+                      "ind": (i or {}).get("sector") or x.get("industry"), "per": pos(x.get("per")), "pbr": pos(x.get("pbr")),
+                      "dy": x.get("yield"), "mc": round(x.get("mcap_eok") or mc or 0) or None})
+    return {"market": market, "items": items, "n_fin": n_fin, "min_eok": MIN_KR_EOK if market == "kr" else MIN_GL_EOK}
+
+
 def board(market: str) -> dict:
     import heroes
     c = db()

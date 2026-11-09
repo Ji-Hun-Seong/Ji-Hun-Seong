@@ -1413,6 +1413,13 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 return self._send(200, json.dumps({"error": f"{type(e).__name__}: {str(e)[:200]}"}, ensure_ascii=False),
                                   "application/json; charset=utf-8")
+        if path == "/api/screen":                 # 🔎 재무 필터 (발굴 탭)
+            m = (parse_qs(urlparse(self.path).query).get("m") or ["kr"])[0]
+            try:
+                out = cached("screen:" + m, 300, lambda: __import__("hero_db").screen(m))
+            except Exception as e:
+                out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/fin":                    # 장기·전체 재무제표 (DART)
             q = (parse_qs(urlparse(self.path).query).get("q") or [""])[0]
             try:

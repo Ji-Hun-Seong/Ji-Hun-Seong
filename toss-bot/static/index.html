@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SJH Capital">
+<meta name="apple-mobile-web-app-title" content="Invest Atlas">
 <meta name="theme-color" content="#0f1720">
 <script>(function(){var m="auto";try{m=localStorage.getItem("theme")||"auto"}catch(e){}var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.dataset.theme=d?"dark":"light";})();</script>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>SJH Capital</title>
+<title>Invest Atlas</title>
 <script src="kchart.js?v=20261105c"></script>
 <script src="icons.js?v=20261108a" defer></script>
 <script src="chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js'"></script>
@@ -84,6 +84,9 @@ a{color:var(--blue);text-decoration:none}
 canvas.c-big{max-height:none}
 .seg{display:flex;background:var(--card);border-radius:12px;padding:4px;margin-bottom:12px}
 .seg button{flex:1;border:0;background:none;color:var(--sub);padding:9px;border-radius:9px;font-size:14px;font-family:inherit}
+#scr-conds .cd{display:flex;gap:6px;align-items:center;margin-top:8px}#scr-conds select,#scr-conds input,#scr-sort{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:9px 6px;font-size:16px;font-family:inherit;min-width:0}#scr-conds .m{flex:1 1 40%}#scr-conds input{flex:0 0 70px;width:70px;text-align:right}#scr-conds .o{flex:0 0 66px}#scr-conds .x{background:none;border:0;color:var(--sub);font-size:18px;padding:4px}
+#scr-pre button,#scr-pre .rchip{background:var(--bg)}#scr-pre .rchip button{background:none}
+#p-seg button{padding-left:2px;padding-right:2px;font-size:13px;white-space:nowrap}
 .seg button.act{background:var(--line);color:var(--txt);font-weight:700}
 .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sub);margin-right:6px;vertical-align:middle}
 .live.on{background:var(--ok);box-shadow:0 0 0 3px rgba(47,191,113,.25)}
@@ -285,7 +288,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 </style>
 </head>
 <body>
-<header><h1>SJH Capital</h1><span><button class="thbtn" id="mktBtn" title="한국·미국 바꾸기" style="display:none">🇰🇷 한국</button><button class="thbtn" id="thBtn" title="화면 테마">🌓 자동</button><span id="mode" class="badge">…</span></span></header>
+<header><h1>Invest Atlas</h1><span><button class="thbtn" id="mktBtn" title="한국·미국 바꾸기" style="display:none">🇰🇷 한국</button><button class="thbtn" id="thBtn" title="화면 테마">🌓 자동</button><span id="mode" class="badge">…</span></span></header>
 <div id="stopBanner" class="banner">⛔ 긴급 정지 중 — 새 주문을 내지 않습니다</div>
 <div id="errBanner" class="banner"></div>
 
@@ -364,7 +367,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 
 <section id="t-pick">
   <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
-  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 자바</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="value">💎 자바</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button><button data-k="screen">🔎 필터</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -1308,7 +1311,7 @@ function finChart(a) {
 // ── 발굴 탭 ──────────────────────────────────────────
 let pKind = "hero"; const PK = {};
 try { pKind = localStorage.getItem("p-kind") || "hero"; } catch (e) {}
-if (!["hero", "surge", "value", "fund", "etf"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
+if (!["hero", "surge", "value", "fund", "etf", "screen"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
 document.querySelectorAll("#p-seg button").forEach(b => {
   b.classList.toggle("act", b.dataset.k === pKind);
   b.onclick = () => { pKind = b.dataset.k; try { localStorage.setItem("p-kind", pKind); } catch (e) {}
@@ -1327,6 +1330,7 @@ function hSetMkt(m) { hMkt = m; try { localStorage.setItem("h-mkt", m); } catch 
 let sDate = null;                                       // 급등: 보고 있는 날짜 (null = 최신)
 const pKey = () => pKind === "hero" && hMkt !== "kr" ? "hero_" + hMkt : pKind === "surge" && sDate ? "surge:" + sDate : pKind;
 async function pLoad(force) {
+  if (pKind === "screen") return scrLoad();
   const k = pKey();
   const bld = PK[k] && PK[k].d.progress && PK[k].d.progress.fresh < PK[k].d.progress.pool;
   if (PK[k] && !force && Date.now() - PK[k].t < (bld ? 30000 : 300000)) return pRender(PK[k].d);
@@ -1339,6 +1343,76 @@ async function pLoad(force) {
 }
 const hMktBar = () => `<div class="seg" id="h-mkt" style="margin-top:-4px">${HMKT.map(([k, l]) => `<button data-m="${k}" class="${hMkt === k ? "act" : ""}">${l}</button>`).join("")}</div>`;
 function hMktBind() { document.querySelectorAll("#h-mkt button").forEach(b => b.onclick = () => hSetMkt(b.dataset.m)); }
+// 🔎 재무 필터 — 내가 정한 조건(PER 10 미만 등)으로 대가 채점 종목(서버 DB)을 거른다. 계산은 화면에서 바로
+const SCR_M = [["per", "PER", "배", "밸류"], ["pbr", "PBR", "배", "밸류"], ["psr", "PSR (한국)", "배", "밸류"], ["dy", "배당수익률", "%", "밸류"], ["fcfy", "FCF 수익률 (한국)", "%", "밸류"], ["mc", "시가총액", "억", "밸류"],
+  ["roe", "ROE", "%", "수익성"], ["roe3", "ROE 3년 평균", "%", "수익성"], ["opm", "영업이익률", "%", "수익성"], ["npm", "순이익률", "%", "수익성"], ["streak", "연속 흑자", "년", "수익성"],
+  ["dr", "부채비율", "%", "안정성"], ["cr", "유동비율", "%", "안정성"], ["payout", "배당성향", "%", "안정성"],
+  ["rev_g", "매출 증가율 (전년비)", "%", "성장성"], ["op_g", "영업이익 증가율", "%", "성장성"], ["ni_g", "순이익 증가율", "%", "성장성"], ["eg", "EPS 연평균 성장", "%", "성장성"]];
+const SCR_U = Object.fromEntries(SCR_M.map(x => [x[0], x])), SCR_O = {lt: "미만", le: "이하", ge: "이상", gt: "초과"};
+const SCR_P = [["저PER·저PBR", [["per", "lt", 10], ["pbr", "lt", 1]]], ["고ROE·저부채", [["roe", "ge", 15], ["dr", "lt", 100]]], ["고배당", [["dy", "ge", 4], ["streak", "ge", 3]]], ["성장+흑자", [["rev_g", "ge", 15], ["op_g", "ge", 15], ["streak", "ge", 3]]]];
+const SCR = {m: "kr", c: [["per", "lt", 10], ["pbr", "lt", 1]], s: "per", n: 50, d: {}, t: {}, saved: []};
+try { const v = JSON.parse(localStorage.getItem("scr") || "null"); if (v) { SCR.m = v.m || "kr"; SCR.c = v.c || SCR.c; SCR.s = v.s || "per"; SCR.saved = v.saved || []; } } catch (e) {}
+const scrSave = () => { try { localStorage.setItem("scr", JSON.stringify({m: SCR.m, c: SCR.c, s: SCR.s, saved: SCR.saved})); } catch (e) {} };
+const scrOpts = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${k}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
+const scrMetric = v => [...new Set(SCR_M.map(x => x[3]))].map(g => `<optgroup label="${g}">${SCR_M.filter(x => x[3] === g).map(x => `<option value="${x[0]}"${x[0] === v ? " selected" : ""}>${esc(x[1])}</option>`).join("")}</optgroup>`).join("");
+const scrFmt = (k, v) => { if (v == null) return "-"; if (k === "mc") return v >= 10000 ? (v / 10000).toFixed(1) + "조" : fmtN(v) + "억"; const u = SCR_U[k][2]; return (u === "년" ? v : Number(v).toFixed(u === "배" ? 2 : 1)) + (u === "억" ? "" : u); };
+async function scrLoad() {
+  const m = SCR.m, fresh = SCR.d[m] && Date.now() - SCR.t[m] < 300000;
+  if ($("scr-conds") && fresh) return;
+  if (!$("scr-conds")) scrShell();
+  if (fresh) return scrResult();
+  $("scr-res").innerHTML = `<div class="card"><div class="empty">불러오는 중…</div></div>`;
+  try { const d = await (await fetch("api/screen?m=" + m, {cache: "no-store"})).json();
+    if (d.error) throw new Error(d.error);
+    SCR.d[m] = d; SCR.t[m] = Date.now(); if (m === SCR.m && $("scr-res")) scrResult(); }
+  catch (e) { if ($("scr-res")) $("scr-res").innerHTML = `<div class="card"><div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
+}
+function scrShell() {
+  $("p-out").innerHTML = `<div class="seg" id="scr-mkt" style="margin-top:-4px">${HMKT.map(([k, l]) => `<button data-m="${k}" class="${SCR.m === k ? "act" : ""}">${l}</button>`).join("")}</div>
+  <div class="card"><div class="label">조건 <span class="tiny mut">모두 만족하는 종목만</span></div>
+    <div class="chips" style="margin:8px 0 0" id="scr-pre"></div><div id="scr-conds"></div>
+    <div class="row" style="margin-top:12px"><button class="tap" id="scr-add" style="background:var(--line);color:var(--txt);border:0;border-radius:10px;padding:9px 14px;font-size:14px;font-family:inherit">＋ 조건 추가</button>
+    <button id="scr-keep" style="background:none;color:var(--blue);border:0;font-size:14px;font-family:inherit">내 필터로 저장</button></div></div>
+  <div id="scr-res"></div>`;
+  document.querySelectorAll("#scr-mkt button").forEach(b => b.onclick = () => { SCR.m = b.dataset.m; SCR.n = 50; scrSave(); document.querySelectorAll("#scr-mkt button").forEach(x => x.classList.toggle("act", x === b)); scrLoad(); });
+  $("scr-add").onclick = () => { const k = (SCR_M.find(x => !SCR.c.some(c => c[0] === x[0])) || SCR_M[0])[0]; SCR.c.push([k, "lt", ""]); scrChanged(true); };
+  $("scr-keep").onclick = () => { const n = (prompt("이 조건의 이름", "내 필터") || "").trim(); if (!n) return; SCR.saved = SCR.saved.filter(x => x[0] !== n).concat([[n, JSON.parse(JSON.stringify(SCR.c))]]); scrSave(); scrPresets(); };
+  scrPresets(); scrConds();
+}
+function scrPresets() {
+  $("scr-pre").innerHTML = SCR_P.map((p, i) => `<button data-p="${i}">${esc(p[0])}</button>`).join("") + SCR.saved.map((p, i) => `<span class="rchip"><button class="rgo" data-s="${i}">⭐ ${esc(p[0])}</button><button class="rdel" data-d="${i}">×</button></span>`).join("");
+  const use = c => { SCR.c = JSON.parse(JSON.stringify(c)); scrChanged(true); };
+  $("scr-pre").querySelectorAll("[data-p]").forEach(b => b.onclick = () => use(SCR_P[b.dataset.p][1]));
+  $("scr-pre").querySelectorAll("[data-s]").forEach(b => b.onclick = () => use(SCR.saved[b.dataset.s][1]));
+  $("scr-pre").querySelectorAll("[data-d]").forEach(b => b.onclick = () => { SCR.saved.splice(+b.dataset.d, 1); scrSave(); scrPresets(); });
+}
+function scrConds() {
+  $("scr-conds").innerHTML = SCR.c.map((c, i) => `<div class="cd" data-i="${i}"><select class="m" aria-label="항목">${scrMetric(c[0])}</select><input type="number" inputmode="decimal" step="any" aria-label="값" value="${esc(String(c[2]))}" placeholder="값"><select class="o" aria-label="조건">${scrOpts(SCR_O, c[1])}</select><button class="x" aria-label="조건 지우기">×</button></div>`).join("") || `<div class="tiny mut" style="margin-top:8px">조건을 추가해 보세요</div>`;
+  $("scr-conds").querySelectorAll(".cd").forEach(r => { const c = SCR.c[r.dataset.i];
+    r.querySelector(".m").onchange = e => { c[0] = e.target.value; scrChanged(); };
+    r.querySelector(".o").onchange = e => { c[1] = e.target.value; scrChanged(); };
+    r.querySelector("input").oninput = e => { c[2] = e.target.value; scrChanged(); };   // 칸을 다시 그리지 않아 입력이 끊기지 않음
+    r.querySelector(".x").onclick = () => { SCR.c.splice(+r.dataset.i, 1); scrChanged(true); }; });
+}
+function scrChanged(redraw) { SCR.n = 50; scrSave(); if (redraw) scrConds(); if (SCR.d[SCR.m]) scrResult(); }
+function scrResult() {
+  const d = SCR.d[SCR.m], act = SCR.c.filter(c => c[2] !== "" && !isNaN(+c[2]));
+  const pass = x => act.every(([k, o, v]) => { const a = x[k]; if (a == null) return false; v = +v; return o === "lt" ? a < v : o === "le" ? a <= v : o === "ge" ? a >= v : a > v; });
+  if (![...act.map(c => c[0]), "mc"].includes(SCR.s)) SCR.s = act[0] ? act[0][0] : "mc";
+  const asc = ["per", "pbr", "psr", "dr"].includes(SCR.s), S = SCR.s;
+  const out = d.items.filter(pass).sort((a, b) => a[S] == null ? 1 : b[S] == null ? -1 : asc ? a[S] - b[S] : b[S] - a[S]);
+  const cols = [...new Set(act.map(c => c[0]))];
+  const missing = d.items.length - d.n_fin;
+  $("scr-res").innerHTML = `<div class="card"><div class="row"><div><span class="name">${fmtN(out.length)}개</span> <span class="tiny mut">/ ${fmtN(d.items.length)}개 중</span></div>
+    <select id="scr-sort" aria-label="정렬">${[...new Set([...cols, "mc"])].map(k => `<option value="${k}"${k === S ? " selected" : ""}>${esc(SCR_U[k][1])} 순</option>`).join("")}</select></div>
+    ${missing ? `<div class="tiny" style="margin-top:6px;color:var(--warn)">⏳ ${fmtN(missing)}개 종목은 재무 숫자를 새로 받는 중이라 ROE·부채비율·증가율 조건에서 빠져요 (서버가 차례로 채우는 중)</div>` : ""}
+    ${out.slice(0, SCR.n).map(x => `<div class="srow small" data-sc="${esc(x.c)}" data-us="${x.u ? 1 : 0}" style="cursor:pointer;gap:10px"><span style="min-width:0"><b>${esc(x.n)}</b><br><span class="tiny mut">${esc(x.ind || "")}${x.ind ? " · " : ""}${scrFmt("mc", x.mc)}</span></span><span class="tiny" style="text-align:right;flex:none">${cols.map(k => `<span class="mut">${esc(SCR_U[k][1].replace(/ \(.*\)/, ""))}</span> ${scrFmt(k, x[k])}`).join("<br>")}</span></div>`).join("") || `<div class="empty">조건에 맞는 종목이 없어요</div>`}
+    ${out.length > SCR.n ? `<button id="scr-more" style="width:100%;margin-top:10px;background:var(--line);color:var(--txt);border:0;border-radius:10px;padding:10px;font-family:inherit">더 보기 (${fmtN(out.length - SCR.n)}개)</button>` : ""}
+    <div class="tiny mut" style="margin-top:10px;line-height:1.6">대상: ${SCR.m === "kr" ? `코스피 시총 ${fmtN(d.min_eok)}억↑` : `시총 ${fmtN(d.min_eok)}억원↑`} 대가 채점 종목 · 값이 없거나 적자·자본잠식(PER·PBR 음수)이면 조건에서 제외 · 재무는 최근 사업연도</div></div>`;
+  $("scr-sort").onchange = e => { SCR.s = e.target.value; scrSave(); scrResult(); };
+  const mo = $("scr-more"); if (mo) mo.onclick = () => { SCR.n += 50; scrResult(); };
+  $("scr-res").querySelectorAll("[data-sc]").forEach(el => el.onclick = () => openStock(el.dataset.sc, {us: el.dataset.us === "1"}));
+}
 let pItems = [];
 // 🏦 대가 TOP 10 모의 펀드 — 실제 공모펀드처럼 매일 기준가 산출 (chartpage/fund_sim.py)
 let fMkt = (() => { try { const v = localStorage.getItem("fund-mkt"); return v === "us" ? "us" : "me"; } catch (e) { return "me"; } })();   // me = 👤 내 펀드(실제 계좌), us = 🇺🇸 미국 모의 펀드
