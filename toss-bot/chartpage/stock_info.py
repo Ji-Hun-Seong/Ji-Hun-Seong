@@ -479,9 +479,12 @@ def kr_etf(code: str) -> dict:
             out["holdings"] = h
         if path == "etfAnalysis" and isinstance(j, dict):
             top = j.get("etfTop10MajorConstituentAssets") or []
-            out["top_raw"] = top[:2] if isinstance(top, list) else str(top)[:200]
-            if top:
-                out["holdings"] = _holdings({"t": top}) or out["holdings"]
+            if isinstance(top, list) and top:                   # 해외 주식형은 비중이 '-' 로 오기도 함 → 이름만이라도
+                hs = [{"name": x.get("itemName"), "code": x.get("itemCode"), "w": num(x.get("etfWeight")), "n": num(x.get("stockCount"))}
+                      for x in top if isinstance(x, dict) and x.get("itemName")]
+                if hs and all(h["w"] is not None for h in hs) and sum(h["w"] for h in hs) <= 1.01:
+                    hs = [{**h, "w": round(h["w"] * 100, 2)} for h in hs]
+                out["holdings"] = hs
             for key, lab in (("sectorPortfolioList", "sector"), ("countryPortfolioList", "country"), ("assetPortfolioList", "asset")):
                 rows = [[x.get("detailTypeName") or x.get("detailTypeCode"), num(x.get("weight"))] for x in j.get(key) or [] if isinstance(x, dict)]
                 rows = [r for r in rows if r[0] and r[1]]
@@ -493,7 +496,7 @@ def kr_etf(code: str) -> dict:
                 k, v = x.get("key"), x.get("value")
                 if k and v not in (None, "", "-") and not re.search(r"PER|PBR|EPS|BPS|배당", str(k)):
                     out["info"].append([k, v])
-    out["holdings"].sort(key=lambda h: -h["w"])
+    out["holdings"].sort(key=lambda h: -(h["w"] or 0))
     out["holdings"] = out["holdings"][:30]
     try:
         c = E._conn()

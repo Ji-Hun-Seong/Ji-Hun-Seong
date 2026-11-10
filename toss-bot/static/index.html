@@ -1088,18 +1088,18 @@ function miniChart(a) {
   lab(hiI, hi, "최고", true); lab(loI, lo, "최저", false);
 }
 const ETF_KO = {IT: "IT", COMMUNICATION: "커뮤니케이션", CONSUMER_DISCRETIONARY: "경기소비재", CONSUMER_STAPLES: "필수소비재", HEALTHCARE: "헬스케어", INDUSTRIALS: "산업재", FINANCIALS: "금융", ENERGY: "에너지", MATERIALS: "소재", UTILITIES: "유틸리티", REAL_ESTATE: "부동산", UNCLASSIFIED: "미분류",
-  US: "미국", CN: "중국", KR: "한국", JP: "일본", TW: "대만", HK: "홍콩", IN: "인도", DE: "독일", GB: "영국", FR: "프랑스", NL: "네덜란드", CA: "캐나다", CH: "스위스", VN: "베트남", MISC: "기타", EQUITY: "주식", BOND: "채권", CASH: "현금", FUND: "펀드", ETC: "기타", COMMODITY: "원자재"};
+  US: "미국", CN: "중국", KR: "한국", JP: "일본", TW: "대만", HK: "홍콩", IN: "인도", DE: "독일", GB: "영국", FR: "프랑스", NL: "네덜란드", CA: "캐나다", CH: "스위스", VN: "베트남", MISC: "기타", EQUITY: "주식", BOND: "채권", CASH: "현금", OTHERS: "기타", FUND: "펀드", ETC: "기타", COMMODITY: "원자재"};
 // ETF 상세 — 재무제표 대신 총보수·구성 종목 비중
 function etfCard(a) {
   const E = a.etf || {}, H = E.holdings || [];
-  const top = H.slice(0, 10).reduce((s, h) => s + (h.w || 0), 0), mx = Math.max(...H.map(h => h.w || 0), 1);
+  const top = H.slice(0, 10).reduce((s, h) => s + (h.w || 0), 0), mx = Math.max(...H.map(h => h.w || 0), 1), hasW = H.some(h => h.w);
   return `<div class="card"><h2>💸 보수</h2>
     ${E.fee != null ? `<div class="row"><span><span class="name" style="font-size:28px">연 ${E.fee}%</span> <span class="tiny mut">총보수</span></span><span class="tiny mut" style="text-align:right">1,000만원 넣으면<br>1년에 약 ${fmtN(Math.round(E.fee * 1e5))}원</span></div>
       <div class="tiny mut" style="margin-top:6px;line-height:1.6">총보수 = 운용·판매·수탁·사무관리 4대 보수 합 · 매일 순자산에서 조금씩 빠져요 · 실제 부담은 기타비용·매매수수료가 더해져 조금 더 커요</div>`
       : `<div class="empty">보수 정보를 못 받았어요</div>`}
     ${E.idx || E.net_eok ? `<div class="tiny mut" style="margin-top:8px">${E.idx ? "기초지수 " + esc(E.idx) : ""}${E.idx && E.net_eok ? " · " : ""}${E.net_eok ? "순자산 " + fmtN(E.net_eok) + "억" : ""}</div>` : ""}</div>
   <div class="card"><h2>🧺 구성 종목 비중</h2>
-    ${H.length ? `<div class="tiny mut" style="margin:-4px 0 8px">상위 10개 합 ${top.toFixed(1)}% · ${H.length}개 표시</div>` + H.map((h, i) => `<div style="padding:6px 0;border-top:1px solid var(--line)"><div class="row small"><span>${i + 1}. ${esc(h.name)}</span><b>${h.w.toFixed(2)}%</b></div><i style="display:block;height:4px;background:var(--line);border-radius:2px;margin-top:4px"><b style="display:block;height:4px;border-radius:2px;background:var(--blue);width:${h.w / mx * 100}%"></b></i></div>`).join("")
+    ${H.length ? `<div class="tiny mut" style="margin:-4px 0 8px">${hasW ? `상위 10개 합 ${top.toFixed(1)}%` : "많이 담은 순 · 해외 종목은 네이버가 종목별 비중을 안 줘서 순서와 보유 주식 수만 보여요"}</div>` + H.map((h, i) => `<div style="padding:6px 0;border-top:1px solid var(--line)"><div class="row small"><span>${i + 1}. ${esc(h.name)}</span><b>${h.w != null ? h.w.toFixed(2) + "%" : h.n != null ? `<span class="tiny mut">${fmtN(h.n)}주</span>` : ""}</b></div>${h.w != null ? `<i style="display:block;height:4px;background:var(--line);border-radius:2px;margin-top:4px"><b style="display:block;height:4px;border-radius:2px;background:var(--blue);width:${h.w / mx * 100}%"></b></i>` : ""}</div>`).join("")
       : `<div class="empty">구성 종목 정보를 못 받았어요</div>`}
     <div class="tiny mut" style="margin-top:8px">출처: 네이버 증권 (운용사 공시 기준, 하루 늦을 수 있어요)</div></div>
   ${[["sector", "🏭 업종 비중"], ["country", "🌍 국가 비중"], ["asset", "📦 자산 비중"]].filter(([k]) => (E[k] || []).length).map(([k, t]) => `<div class="card"><h2>${t}</h2>${E[k].map(([n, w]) => `<div style="padding:5px 0"><div class="row small"><span>${esc(ETF_KO[n] || n)}</span><b>${w.toFixed(1)}%</b></div><i style="display:block;height:4px;background:var(--line);border-radius:2px;margin-top:3px"><b style="display:block;height:4px;border-radius:2px;background:var(--blue);width:${Math.min(100, w)}%"></b></i></div>`).join("")}</div>`).join("")}`;
