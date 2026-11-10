@@ -31,6 +31,13 @@
 {"kv":[["항목","값"]]}   {"donut":{"center":"합계","total":"8,861억","items":[["용도",7650,"7,650억"]]}}
 {"pc":{"badT":"단기 부담","bad":["..."],"goodT":"중장기 기대","good":["..."]}}   {"callout":"한 줄 핵심"}
 ```
+그림 블록(쉬운 설명용, 한눈에 보기 안에 1개 이상 권장):
+```json
+{"ex":{"title":"유상증자란 무엇일까?","l":{"a":"company","t":"기업"},"r":{"a":"investors","t":"투자자"},"top":{"t":"새로운 주식 발행","a":"stock"},"bot":{"t":"자금 확보","a":"money"},"note":"한두 줄 설명"}}
+{"chain":{"title":"흐름 제목","nodes":[{"a":"fund","t":"단계","x":"설명","go":"다음 단계로 가는 화살표 글"}]}}
+```
+그림 이름: company investors person stock bond money coin bank gov fund factory doc cal chartup ticket building. 액터 이름표는 6자 이내로 짧게.
+
 아이콘 이름: users doc coin mega bank up down cal target flag alert check cash building clock bond pct swap key calc bulb x
 
 ## 쓰는 기준 (A부터 Z까지)
