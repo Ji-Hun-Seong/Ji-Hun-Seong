@@ -15,7 +15,7 @@ const dcRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 async function dcLoad() {
   try { const r = await fetch("dict/terms.json?v=" + new Date().toISOString().slice(0, 13)); if (!r.ok) throw 0; const j = await r.json(); dcIndex(j.terms || j); DC.err = ""; }
   catch (e) { DC.err = "백과를 불러오지 못했어요"; DC.list = DC.list || []; }
-  if (!cur() ? V.tab === "dict" : ["dterm", "lesson", "dtopic"].includes(cur().v)) render();
+  if (!cur() ? V.tab === "dict" : ["dterm", "lesson", "dtopic", ...(DC.cfg.linkViews || [])].includes(cur().v)) render();
 }
 function dcIndex(list) {
   DC.list = list; DC.by = {}; DC.id = {};
@@ -121,7 +121,7 @@ function dcAfter() {
   const c = cur(); if (!c || !DC.list) return;
   if (c.v === "dterm") { const root = $(".dterm"); dcLink(root, c.id);
     if (c.hl && !c.done) { c.done = 1; const mk = dcMark(root, c.hl); if (mk) setTimeout(() => mk.scrollIntoView({block: "center"}), 30); } }
-  else if (c.v === "lesson" || c.v === "dtopic") dcLink($(".slide"), null);
+  else if (["lesson", "dtopic", ...(DC.cfg.linkViews || [])].includes(c.v)) dcLink($(".slide"), null);
 }
 function dcOpen(id, hl) { if (!DC.id[id]) return; S.dcRecent = [id, ...(S.dcRecent || []).filter(x => x !== id)].slice(0, 10); save(); push({v: "dterm", id, hl: hl || ""}); }
 
@@ -148,7 +148,7 @@ mark{background:var(--gold-soft);color:inherit;border-radius:4px;padding:0 2px;b
 .dterm .dsec p{font-size:16.5px;line-height:1.85;margin:0 0 12px}.dterm .dsec li{font-size:16px}
 </style>`);
   IP.search = '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>';
-  const at = TABS.findIndex(t => t[0] === "road") + 1; TABS.splice(at, 0, ["dict", "백과", "book"]);
+  const old = TABS.findIndex(t => t[0] === DC.cfg.replaceTab); if (old >= 0) TABS.splice(old, 1, ["dict", "백과", "book"]); else TABS.splice(TABS.findIndex(t => t[0] === "road") + 1, 0, ["dict", "백과", "book"]);
   VIEW.dict = () => { setTimeout(dcBind);
     return `<h1 class="pg">백과사전</h1><div class="pgsub">${DC.list ? `${DC.list.length}개 항목 · ` : ""}용어를 치면 그 항목으로 바로 들어가요. 매일 늘어나요.</div>
     <form class="dcs" id="dcform" autocomplete="off"><input id="dcq" type="search" enterkeyhint="search" placeholder="예: 신주인수권, 배당락일, PER" value="${esc(DC.q)}"></form>${DC.err ? `<p class="mut sm">${DC.err}</p>` : ""}<div id="dcres">${dcResults()}</div>`; };
