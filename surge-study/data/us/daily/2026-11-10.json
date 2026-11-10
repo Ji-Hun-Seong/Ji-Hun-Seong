@@ -1,0 +1,449 @@
+{
+ "date": "2026-11-10",
+ "context": {
+  "n_gainers_list": 87,
+  "n_surge": 5,
+  "asof": "2026-11-10T16:04-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-10",
+   "code": "AAON",
+   "name": "AAON, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 6184847872,
+   "chg": 19.3096920798401,
+   "gap": 13.94942040203524,
+   "high_chg": 27.40575765064641,
+   "close_pos": 0.5838104565785616,
+   "upper_wick": 8.096065570806322,
+   "limit_up": false,
+   "tv": 376662650.71707916,
+   "vol_ratio": 3.675657138674377,
+   "close": 75.01000213623047,
+   "pctb": 0.24521695834722385,
+   "bw": 0.43825768255318814,
+   "bw_pctile": 0.9166666666666666,
+   "squeeze": false,
+   "rsi14": 38.463149951000005,
+   "ma5_gap": 0.041549309838205595,
+   "ma20_gap": -0.111660625388598,
+   "ma60_gap": -0.18601189819868624,
+   "ma120_gap": -0.3501361085446367,
+   "ma_aligned": false,
+   "ret5": -0.07530517859617569,
+   "ret20": -0.25834609624197624,
+   "ret60": -0.28394081154162254,
+   "from_high": -0.5821481049682132,
+   "from_low": 0.18332387856123655,
+   "vol_ratio_prev": 1.4252167978314434,
+   "tv20_avg": 92604478.24426651,
+   "tv_prev": 116190045.02601624,
+   "prev_chg": 0.0993180703194334,
+   "up_days": 2,
+   "prev_close_pos": 0.8694965799682829,
+   "fr": null,
+   "price": 62.869998931884766,
+   "filings": [
+    {
+     "date": "2026-11-10",
+     "form": "8-K",
+     "items": "8.01,9.01",
+     "items_kr": "기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/824142/000082414226000090/aaon-20261110.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/824142/000082414226000088/aaon-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "10-Q/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/824142/000082414226000087/aaon-20260630.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "10-Q/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/824142/000082414226000086/aaon-20260331.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,4.02,7.01",
+     "items_kr": "실적 발표, 4.02, IR 자료",
+     "url": "https://www.sec.gov/Archives/edgar/data/824142/000082414226000083/aaon-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "AAON Stock Soars: AI Infrastructure Firm Guides High After Huge Beat - Investor's Business Daily",
+     "date": "Tue, 10 Nov 2026 17:34:00 GMT"
+    },
+    {
+     "title": "Why Is AAON Stock Skyrocketing Tuesday? - Benzinga",
+     "date": "Tue, 10 Nov 2026 16:28:10 GMT"
+    },
+    {
+     "title": "AAON: Data Center Momentum Isn't Slowing (Rating Upgrade) (NASDAQ:AAON) - Seeking Alpha",
+     "date": "Tue, 10 Nov 2026 20:36:00 GMT"
+    },
+    {
+     "title": "Why is AAON stock surging today? - Investing.com",
+     "date": "Tue, 10 Nov 2026 10:49:32 GMT"
+    },
+    {
+     "title": "AAON Shares Surge 22% Premarket After Q3 Earnings Beat and Higher 2026 Revenue Guidance - Yahoo Finance",
+     "date": "Tue, 10 Nov 2026 11:42:30 GMT"
+    },
+    {
+     "title": "AAON Stocks Soar 22.68% as Data Center Cooling Sales Surge 218% - TradingView",
+     "date": "Tue, 10 Nov 2026 19:43:25 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-10",
+   "code": "CSQR",
+   "name": "Csquare, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2919427584,
+   "chg": 14.73477362507898,
+   "gap": 11.984282048764673,
+   "high_chg": 19.973799251000337,
+   "close_pos": 0.45205497347999896,
+   "upper_wick": 5.239025625921355,
+   "limit_up": false,
+   "tv": 116130639.75426865,
+   "vol_ratio": 3.1157494694240166,
+   "close": 17.520000457763672,
+   "pctb": 0.503961898751514,
+   "bw": 0.32274398655374564,
+   "bw_pctile": 0.8571428571428571,
+   "squeeze": false,
+   "rsi14": 42.17392277852517,
+   "ma5_gap": 0.06307437481782485,
+   "ma20_gap": 0.0012786789973859847,
+   "ma60_gap": -0.11790188631584586,
+   "ma120_gap": null,
+   "ma_aligned": false,
+   "ret5": 0.15332331735184512,
+   "ret20": -0.12140384377957936,
+   "ret60": -0.3279048891173081,
+   "from_high": -0.3502127464781416,
+   "from_low": 0.24146343259945646,
+   "vol_ratio_prev": 1.006927472231118,
+   "tv20_avg": 31857886.502523422,
+   "tv_prev": 31928043.95713806,
+   "prev_chg": 0.06485357707670225,
+   "up_days": 2,
+   "prev_close_pos": 0.7207211154728121,
+   "fr": null,
+   "price": 15.270000457763672,
+   "filings": [
+    {
+     "date": "2026-11-10",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2105398/000210539826000008/csqr-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/2105398/000210539826000007/csqr-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Csquare Stock Surges as Data Center Demand Fuels Revenue Beat, Strong Bookings and Raised Profit Outlook - Benzinga",
+     "date": "Tue, 10 Nov 2026 18:20:06 GMT"
+    },
+    {
+     "title": "Csquare (CSQR) Q3 Revenue Surpasses Expectations Amid Losses; Ma - GuruFocus",
+     "date": "Tue, 10 Nov 2026 14:02:21 GMT"
+    },
+    {
+     "title": "Csquare (NYSE:CSQR) Stock Jumps 16.1% on Analyst Upgrade - MarketBeat",
+     "date": "Tue, 10 Nov 2026 17:09:48 GMT"
+    },
+    {
+     "title": "Fund Update: New $42.3M $CSQR stock position opened by Nuveen, LLC - Quiver Quantitative",
+     "date": "Tue, 10 Nov 2026 13:23:00 GMT"
+    },
+    {
+     "title": "Compared to Estimates, Csquare (CSQR) Q3 Earnings: A Look at Key Metrics - Yahoo Finance",
+     "date": "Mon, 09 Nov 2026 22:00:02 GMT"
+    },
+    {
+     "title": "Csquare, Inc. Common Stock (NYSE:CSQR) Stock Quote - The Chronicle-Journal",
+     "date": "Tue, 10 Nov 2026 06:38:30 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-10",
+   "code": "ACAD",
+   "name": "ACADIA Pharmaceuticals Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 3159313920,
+   "chg": 10.787882949366722,
+   "gap": -0.3636331269235349,
+   "high_chg": 11.454541755445069,
+   "close_pos": 0.94472426349018,
+   "upper_wick": 0.6666588060783617,
+   "limit_up": false,
+   "tv": 116144689.80270386,
+   "vol_ratio": 2.599118034476834,
+   "close": 18.280000686645508,
+   "pctb": -0.32052903561646673,
+   "bw": 0.21385483011804876,
+   "bw_pctile": 0.6333333333333333,
+   "squeeze": false,
+   "rsi14": 26.092229104983574,
+   "ma5_gap": -0.18324916967736704,
+   "ma20_gap": -0.1754740975186858,
+   "ma60_gap": -0.3061979658118571,
+   "ma120_gap": -0.31553020527370923,
+   "ma_aligned": false,
+   "ret5": -0.19394232762697217,
+   "ret20": -0.1499227135645801,
+   "ret60": -0.41572237486789887,
+   "from_high": -0.4670542478059946,
+   "from_low": 0.040353112054028806,
+   "vol_ratio_prev": 6.407942095479176,
+   "tv20_avg": 47542134.46399689,
+   "tv_prev": 200489850.0,
+   "prev_chg": -0.22279791070302013,
+   "up_days": 0,
+   "prev_close_pos": 0.11034488315105823,
+   "fr": null,
+   "price": 16.5,
+   "filings": [
+    {
+     "date": "2026-11-10",
+     "form": "SCHEDULE 13G",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1070494/000009375126000603/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Acadia Pharmaceuticals (ACAD) Stock Still Looks Like A Bargain Today - Yahoo Finance",
+     "date": "Tue, 10 Nov 2026 04:55:41 GMT"
+    },
+    {
+     "title": "Acadia gains after oral arguments in Nuplazid patent row (ACAD) - Seeking Alpha",
+     "date": "Tue, 10 Nov 2026 19:18:00 GMT"
+    },
+    {
+     "title": "ACADIA Pharmaceuticals Inc. (ACAD) Stock Price | Live Quotes & Charts | NASDAQ - Timothy Sykes",
+     "date": "Tue, 10 Nov 2026 22:21:00 GMT"
+    },
+    {
+     "title": "Acadia Pharmaceuticals (ACAD) Cuts 2026 R And D Guidance, Is It Still 46% Undervalued? - Yahoo Finance",
+     "date": "Tue, 10 Nov 2026 01:45:30 GMT"
+    },
+    {
+     "title": "One holder reports 7.65 million Acadia Pharmaceuticals (ACAD) shares. - Stock Titan",
+     "date": "Tue, 10 Nov 2026 11:17:51 GMT"
+    },
+    {
+     "title": "Acadia Pharmaceuticals (ACAD) Shares Rise After Key Patent Court Hearing - GuruFocus",
+     "date": "Tue, 10 Nov 2026 20:45:22 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-10",
+   "code": "CHTR",
+   "name": "Charter Communications, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 24003651584,
+   "chg": 10.610561826864862,
+   "gap": 0.5610563715328976,
+   "high_chg": 11.320221433739519,
+   "close_pos": 0.9501390089190387,
+   "upper_wick": 0.7096596068746638,
+   "limit_up": false,
+   "tv": 586149722.9654541,
+   "vol_ratio": 1.5116125664224693,
+   "close": 134.05999755859375,
+   "pctb": 0.913130028091869,
+   "bw": 0.2152216369744236,
+   "bw_pctile": 0.6583333333333333,
+   "squeeze": false,
+   "rsi14": 60.16008824950806,
+   "ma5_gap": 0.011399079715503024,
+   "ma20_gap": 0.0889145209292217,
+   "ma60_gap": -0.032775531408431036,
+   "ma120_gap": -0.08317665607301095,
+   "ma_aligned": false,
+   "ret5": 0.04898732895850455,
+   "ret20": 0.18266972070744014,
+   "ret60": -0.2143644675462173,
+   "from_high": -0.5230412157839925,
+   "from_low": 0.19869445372977101,
+   "vol_ratio_prev": 1.2401981236025974,
+   "tv20_avg": 325444651.9229126,
+   "tv_prev": 421521469.3862915,
+   "prev_chg": 0.026509674443195408,
+   "up_days": 1,
+   "prev_close_pos": 0.9210518918875509,
+   "fr": null,
+   "price": 121.19999694824219,
+   "filings": [
+    {
+     "date": "2026-11-10",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1091667/000189820326000012/xslF345X06/wk-form4_1794344843.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Charter Communications (CHTR) Stock Surges 11% Amid New Operatin - GuruFocus",
+     "date": "Tue, 10 Nov 2026 22:54:28 GMT"
+    },
+    {
+     "title": "Charter Communications continues recent upswing, rises 11% (CHTR:NASDAQ) - Seeking Alpha",
+     "date": "Tue, 10 Nov 2026 21:14:00 GMT"
+    },
+    {
+     "title": "Charter Communications Inc Stock (CHTR) Moved Up by 10.28% on Nov 10: Facts Behind the Movement - TradingKey",
+     "date": "Tue, 10 Nov 2026 20:15:27 GMT"
+    },
+    {
+     "title": "CHTR Nov 2026 97.000 put (CHTR261127P00097000) Interactive Stock Chart - Yahoo Finance",
+     "date": "Tue, 10 Nov 2026 15:27:04 GMT"
+    },
+    {
+     "title": "Can Charter Communications Stock Hit $170? - Trefis",
+     "date": "Tue, 10 Nov 2026 08:53:52 GMT"
+    },
+    {
+     "title": "Charter Communications (NASDAQ:CHTR) Stock Gets Price Target Boost from Citigroup - MarketBeat",
+     "date": "Tue, 10 Nov 2026 20:10:28 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-10",
+   "code": "MARA",
+   "name": "MARA Holdings, Inc.",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 2835436800,
+   "chg": 10.542173195446015,
+   "gap": -1.2048181523292234,
+   "high_chg": 14.156627652433684,
+   "close_pos": 0.7818183709767403,
+   "upper_wick": 3.6144544569876715,
+   "limit_up": false,
+   "tv": 483827413.6580658,
+   "vol_ratio": 1.7605840574110871,
+   "close": 7.340000152587891,
+   "pctb": 0.2942216017934146,
+   "bw": 0.3987241339452657,
+   "bw_pctile": 0.7916666666666666,
+   "squeeze": false,
+   "rsi14": 42.307689620528386,
+   "ma5_gap": 0.009118532443044058,
+   "ma20_gap": -0.08204881360956473,
+   "ma60_gap": -0.33319944947063773,
+   "ma120_gap": -0.4126146431533909,
+   "ma_aligned": false,
+   "ret5": 0.032659415824779714,
+   "ret20": -0.2966101523686735,
+   "ret60": -0.27826086911452064,
+   "from_high": -0.5958612450911603,
+   "from_low": 0.1669595430073172,
+   "vol_ratio_prev": 1.1739482133866002,
+   "tv20_avg": 270635383.8423753,
+   "tv_prev": 283312194.30327415,
+   "prev_chg": 0.04566928601706932,
+   "up_days": 2,
+   "prev_close_pos": 0.8421050430115353,
+   "fr": null,
+   "price": 6.639999866485596,
+   "filings": [
+    {
+     "date": "2026-11-09",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1507605/000150760526000028/mara-20260930.htm"
+    },
+    {
+     "date": "2026-11-09",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1507605/000150760526000026/mara-20261109.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "MARA Holdings, Inc. (MARA) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 10 Nov 2026 11:53:50 GMT"
+    },
+    {
+     "title": "MARA Holdings Buyback Boosts Shares: What Investors Need to Know - Benzinga",
+     "date": "Tue, 10 Nov 2026 17:01:01 GMT"
+    },
+    {
+     "title": "Rosenblatt cuts MARA Holdings stock price target on market conditions - Investing.com",
+     "date": "Tue, 10 Nov 2026 13:30:50 GMT"
+    },
+    {
+     "title": "MARA Holdings Stocks Jump 10.77% on $500 Million Buyback and Debt Paydown - Yahoo Finance",
+     "date": "Tue, 10 Nov 2026 18:59:51 GMT"
+    },
+    {
+     "title": "MARA Holdings advances 11% after Q3 results and buyback plan (MARA:NASDAQ) - Seeking Alpha",
+     "date": "Tue, 10 Nov 2026 16:16:00 GMT"
+    },
+    {
+     "title": "MARA Sold 13,597 Bitcoin to Pay Off $750 Million in Loans. How Much Bitcoin Does It Have Left? - 24/7 Wall St.",
+     "date": "Tue, 10 Nov 2026 16:57:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst",
+    "Guidance·Buyback"
+   ]
+  }
+ ]
+}
