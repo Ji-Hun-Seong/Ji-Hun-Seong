@@ -2040,5 +2040,74 @@
   "up": 4,
   "avg": -1.75,
   "market_avg": -0.84
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "006360",
+    "name": "GS건설",
+    "score": 80,
+    "next_chg": 5.49
+   },
+   {
+    "code": "013030",
+    "name": "하이록코리아",
+    "score": 64,
+    "next_chg": 1.64
+   },
+   {
+    "code": "005300",
+    "name": "롯데칠성",
+    "score": 61,
+    "next_chg": -7.56
+   },
+   {
+    "code": "068760",
+    "name": "셀트리온제약",
+    "score": 60,
+    "next_chg": 0.13
+   },
+   {
+    "code": "013580",
+    "name": "계룡건설",
+    "score": 59,
+    "next_chg": 5.35
+   },
+   {
+    "code": "035420",
+    "name": "NAVER",
+    "score": 58,
+    "next_chg": 4.17
+   },
+   {
+    "code": "051600",
+    "name": "한전KPS",
+    "score": 57,
+    "next_chg": -4.23
+   },
+   {
+    "code": "365330",
+    "name": "에스와이스틸텍",
+    "score": 57,
+    "next_chg": 12.21
+   },
+   {
+    "code": "241560",
+    "name": "두산밥캣",
+    "score": 54,
+    "next_chg": 2.68
+   },
+   {
+    "code": "071970",
+    "name": "HD현대마린엔진",
+    "score": 54,
+    "next_chg": 11.11
+   }
+  ],
+  "n": 10,
+  "hit10": 2,
+  "up": 8,
+  "avg": 3.1,
+  "market_avg": 2.73
  }
 }
