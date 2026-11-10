@@ -479,8 +479,9 @@ def kr_etf(code: str) -> dict:
             out["holdings"] = h
         if path == "etfAnalysis" and isinstance(j, dict):
             top = j.get("etfTop10MajorConstituentAssets") or []
+            out["top_raw"] = top[:2] if isinstance(top, list) else str(top)[:200]
             if top:
-                out["holdings"] = _holdings({"t": top + [{}] * 0}) or out["holdings"]
+                out["holdings"] = _holdings({"t": top}) or out["holdings"]
             for key, lab in (("sectorPortfolioList", "sector"), ("countryPortfolioList", "country"), ("assetPortfolioList", "asset")):
                 rows = [[x.get("detailTypeName") or x.get("detailTypeCode"), num(x.get("weight"))] for x in j.get(key) or [] if isinstance(x, dict)]
                 rows = [r for r in rows if r[0] and r[1]]
