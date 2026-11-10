@@ -46,7 +46,7 @@ FUNDS = {
     # 🇰🇷 한국 모의 펀드 2개(대가 가치주·성장주 TOP 10)는 2026-11-06 종료 → 👤 내 펀드(my_fund.py, 실제 계좌 펀드화)로 대체
     "us_value": {"name": "🇺🇸💎 미국 대가 가치주 TOP 10", "desc": "가치 대가 점수 순 · PBR 0~2 · PER 30 이하 · 버핏 10점↑ · 매출·순이익 꾸준히 증가 · 원화 환산(환노출)",
                  "market": "us", "kind": "value"},
-    "us_growth": {"name": "🇺🇸🚀 미국 대가 성장주 TOP 10", "desc": "성장 대가 점수 순 · PBR 0~10 · 린치 10점↑ · 매출·순이익 꾸준히 증가 · 원화 환산(환노출)",
+    "us_growth": {"name": "🇺🇸🚀 미국 대가 성장주 TOP 10", "desc": "성장 대가 점수 순 · PBR 0~10 · 린치 10점↑ · 이익성장 10%↑·PEG 2↓·ROE 10%↑ · 매출·순이익 꾸준히 증가 · 원화 환산(환노출)",
                   "market": "us", "kind": "growth"},
 }
 MKT = {   # 시장별: 매매비용 · 비교지수 · 배당 원천징수
@@ -68,9 +68,26 @@ def is_value(x, market: str = "kr") -> bool:
             and (x.get("style") == "both" or (x.get("value") or -1) >= (x.get("growth") or -1)))
 
 
+EG_MIN, PEG_MAX, ROE_MIN = 10, 2, 10                  # 🚀 성장주 세부 조건 (린치 7·13·15장) — 화면 egOk·pegOk·roeOk·catOk 와 같은 값
+
+
+def _ok_growth_detail(x) -> bool:
+    """이익성장 연 10%↑(최근 5년 EPS) · PEG 2↓ · ROE 3년 평균 10%↑ · 린치 분류 저성장주·자산주 제외 — 데이터 없으면 통과"""
+    fin, per = x.get("fin") or {}, x.get("per")
+    eg, roe3 = fin.get("eg"), fin.get("roe3")
+    if eg is not None and eg < EG_MIN:
+        return False
+    if per is not None and per > 0 and eg is not None and eg > 0 and per / eg > PEG_MAX:
+        return False
+    if roe3 is not None and roe3 < ROE_MIN:
+        return False
+    return x.get("lynch_cat") not in ("저성장주", "자산주")
+
+
 def is_growth(x, market: str = "kr") -> bool:
     pbr, h, mc, cap = x.get("pbr"), x.get("heroes") or {}, x.get("mcap_eok"), MKT[market]["growth_mcap_max"]
     return (x.get("ggrade") != "no" and (h.get("lynch") is None or h["lynch"] >= 10) and (pbr is None or 0 < pbr <= 10)
+            and _ok_growth_detail(x)
             and _ok_steady(x) and (cap is None or mc is None or mc < cap)
             and (x.get("style") == "both" or (x.get("growth") or -1) > (x.get("value") or -1)))
 
