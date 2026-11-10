@@ -19,6 +19,20 @@
  "upd":"2026-11-10"}
 ```
 
+## 화면 모양 (인포그래픽 먼저, 글은 그다음)
+
+첫 절은 반드시 `"h":"한눈에 보기"` 이고 `hero` 블록으로 시작한다. 그 아래에 `pts`·`tl`·`branch`·`kv`·`donut`·`pc`·`callout` 중 맞는 것을 2개 이상 쓴다. 긴 3열 표는 폰에서 읽기 어려우니 일정은 `tl`, 비교는 `branch`·`pc`, 숫자 요약은 `kv` 로 바꾼다. 참고 항목: fundroad `rights-offering-fund.json`, `ktb-lifecycle.json`, masterroad `rights-offering.json`.
+
+```json
+{"hero":{"kicker":"실제 사례 · 회사 연도","title":"짧은 제목","sub":"한 줄 요약","stats":[["라벨","값"]]}}
+{"pts":[{"i":"coin","t":"제목","x":"설명"}]}                    // 핵심 포인트 카드
+{"tl":[{"i":"cal","d":"9.04","t":"일정","x":"설명","me":"펀드회계가 할 일"}]}  // 아이콘 타임라인
+{"branch":[{"t":"선택지","i":"check","tone":"acc|blue|gold|bad","x":"설명","r":"결과"}]}
+{"kv":[["항목","값"]]}   {"donut":{"center":"합계","total":"8,861억","items":[["용도",7650,"7,650억"]]}}
+{"pc":{"badT":"단기 부담","bad":["..."],"goodT":"중장기 기대","good":["..."]}}   {"callout":"한 줄 핵심"}
+```
+아이콘 이름: users doc coin mega bank up down cal target flag alert check cash building clock bond pct swap key calc bulb x
+
 ## 쓰는 기준 (A부터 Z까지)
 
 - 절 순서 권장: 한마디로 → 왜 있나/원리 → 절차·일정 → 계산식 → 숫자 예시(끝까지 계산, 가정 표시) → 주가·투자자 영향 → 헷갈리는 말 비교(표) → 실수·체크리스트.

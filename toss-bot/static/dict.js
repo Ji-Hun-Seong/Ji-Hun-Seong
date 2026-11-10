@@ -7,7 +7,7 @@
 const DC = {list: null, err: "", q: "", by: {}, id: {}, rx: null, cfg: {}};
 const dcNorm = s => String(s || "").toLowerCase().replace(/[\s·・()\[\]{}'"’‘“”,.\-_/]/g, "");
 const dcPlain = s => String(s || "").replace(/<[^>]+>/g, "");
-function dcBlockText(b) { if (b.p != null) return b.p; if (b.tip != null) return b.tip; if (b.ul) return b.ul.join(" "); if (b.calc) return b.calc.join(" ");
+function dcBlockText(b) { if (b.hero) return [b.hero.title, b.hero.sub, ...(b.hero.stats || []).flat()].join(" "); if (b.kv) return b.kv.flat().join(" "); if (b.tl) return b.tl.map(x => [x.d, x.t, x.x, x.me].join(" ")).join(" "); if (b.pts) return b.pts.map(x => x.t + " " + x.x).join(" "); if (b.donut) return b.donut.items.map(x => x[0] + " " + (x[2] || "")).join(" "); if (b.pc) return [...b.pc.bad, ...b.pc.good].join(" "); if (b.branch) return b.branch.map(x => [x.t, x.x, x.r].join(" ")).join(" "); if (b.callout != null) return b.callout; if (b.p != null) return b.p; if (b.tip != null) return b.tip; if (b.ul) return b.ul.join(" "); if (b.calc) return b.calc.join(" ");
   if (b.table) return [b.table.head, ...b.table.rows].flat().join(" "); if (b.f) return (b.f.steps || []).join(" ");
   if (b.j) return b.j.map(r => r.note || [r.pre, ...(r.dr || []).flat(), ...(r.cr || []).flat()].join(" ")).join(" "); return ""; }
 const dcRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -73,24 +73,58 @@ function dcResults() {
 function dcHome() {
   const areas = [...new Set(DC.list.map(e => e.area))], rec = (S.dcRecent || []).map(id => DC.id[id]).filter(Boolean);
   const pick = (DC.cfg.featured || []).map(k => DC.by[dcNorm(k)]).filter(Boolean);
-  return (rec.length ? `<div class="bkh">최근 본 항목</div><div class="dchips">${rec.map(e => `<button data-act="dcopen" data-arg="${esc(e.id)}">${esc(e.k)}</button>`).join("")}</div>` : "")
+  return (DC.cfg.tools || []).filter(t => ACT[t.act]).map(t => `<button class="menu" data-act="${t.act}"><span class="t">${ic("target")}</span><span><b>${esc(t.label)}</b><small>${esc(t.sub || "")}</small></span></button>`).join("") + (rec.length ? `<div class="bkh">최근 본 항목</div><div class="dchips">${rec.map(e => `<button data-act="dcopen" data-arg="${esc(e.id)}">${esc(e.k)}</button>`).join("")}</div>` : "")
     + (pick.length ? `<div class="bkh">자주 찾는 말</div><div class="dchips">${pick.map(e => `<button data-act="dcopen" data-arg="${esc(e.id)}">${esc(e.k)}</button>`).join("")}</div>` : "")
     + areas.map(a => { const es = DC.list.filter(e => e.area === a).sort((x, y) => x.k.localeCompare(y.k, "ko"));
       return `<details class="dcar"><summary><b>${esc(a)}</b><span class="mut sm">${es.length}개</span></summary>${es.map(e => dcTermBtn(e)).join("")}</details>`; }).join("");
 }
+
+
+/* ── 시각 블록(인포그래픽) ── */
+const VI = {users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2a5 5 0 0 1 5.5 5.8"/>', doc: '<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8.5 12.5h7M8.5 16.5h7"/>', coin: '<ellipse cx="12" cy="6.5" rx="7" ry="3"/><path d="M5 6.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5M5 11.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/>', mega: '<path d="M3 10v4a1 1 0 0 0 1 1h2l5 4V5L6 9H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>', bank: '<path d="M3 9.5 12 4l9 5.5M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20.5h18"/>', up: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>', down: '<path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/>', cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>', target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>', flag: '<path d="M5 21V4h11l-2 4 2 4H5"/>', alert: '<path d="M10.3 4 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 4a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4.5M12 17.5h.01"/>', check: '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.7 2.7L16.5 9.5"/>', cash: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/>', building: '<path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 10h4a1 1 0 0 1 1 1v10M2.5 21h19M8 8h3M8 12h3M8 16h3"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>', bond: '<path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7M9 7h3"/>', pct: '<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>', swap: '<path d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/>', key: '<circle cx="8" cy="15" r="4.5"/><path d="m11.2 11.8 8.8-8.8M16.5 6.5l2.5 2.5"/>', calc: '<rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M8 6.5h8M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h.01M12 18h3.5"/>', bulb: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/>', x: '<circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/>'};
+const vi = (n, sz = 22) => `<svg viewBox="0 0 24 24" width="${sz}" height="${sz}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${VI[n] || VI.check}</svg>`;
+const VC = ["#1d9bd1", "#1fa463", "#2f6fe4", "#7b5cff", "#f0a40b", "#1e3a8a", "#e0457b", "#0f9d8a"];
+const TONE = {acc: "var(--acc)", gold: "var(--gold)", bad: "var(--bad)", blue: "#2f6fe4", violet: "#7b5cff"};
+function dcDonut(o) { const tot = o.items.reduce((s, x) => s + x[1], 0), R = 52, C = 2 * Math.PI * R; let off = 0;
+  const seg = o.items.map((x, i) => { const L = x[1] / tot * C, r = `<circle r="${R}" cx="70" cy="70" fill="none" stroke="${VC[i % VC.length]}" stroke-width="26" stroke-dasharray="${L} ${C - L}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`; off += L; return r; }).join("");
+  return `<div class="vx-donut"><svg viewBox="0 0 140 140">${seg}<text x="70" y="66" text-anchor="middle" class="vx-dt1">${esc(o.center || "합계")}</text><text x="70" y="84" text-anchor="middle" class="vx-dt2">${esc(o.total || "")}</text></svg><div class="vx-leg">${o.items.map((x, i) => `<div><i style="background:${VC[i % VC.length]}"></i><span>${esc(x[0])}</span><b>${(x[1] / tot * 100).toFixed(1)}%</b>${x[2] ? `<small>${esc(x[2])}</small>` : ""}</div>`).join("")}</div></div>`; }
+function dcBlock(b) {
+  if (b.hero) { const h = b.hero; return `<div class="vx-hero">${h.kicker ? `<span class="vx-kick">${esc(h.kicker)}</span>` : ""}<div class="vx-ht">${esc(h.title)}</div>${h.sub ? `<div class="vx-hs">${esc(h.sub)}</div>` : ""}${(h.stats || []).length ? `<div class="vx-stats">${h.stats.map(s => `<div><b>${esc(s[1])}</b><small>${esc(s[0])}</small></div>`).join("")}</div>` : ""}</div>`; }
+  if (b.kv) return `<div class="vx-kv">${b.kv.map(r => `<div><span>${esc(r[0])}</span><b>${esc(r[1])}</b></div>`).join("")}</div>`;
+  if (b.tl) return `<div class="vx-tl">${b.tl.map((s, i) => `<div class="vx-st"><span class="vx-ic" style="background:${VC[i % VC.length]}">${vi(s.i || "cal", 20)}</span><div class="vx-sb"><div class="vx-sh">${s.d ? `<span class="vx-date">${esc(s.d)}</span>` : ""}<b>${esc(s.t)}</b></div>${s.x ? `<div class="vx-sx">${esc(s.x)}</div>` : ""}${s.me ? `<div class="vx-me">${vi("check", 14)}<span>${esc(s.me)}</span></div>` : ""}</div></div>`).join("")}</div>`;
+  if (b.pts) return `<div class="vx-pts">${b.pts.map((p, i) => `<div class="vx-pt"><span class="vx-pi" style="color:${VC[(i + (b.c || 0)) % VC.length]}">${vi(p.i || "check", 24)}</span><div><b>${esc(p.t)}</b><div>${esc(p.x)}</div></div></div>`).join("")}</div>`;
+  if (b.donut) return dcDonut(b.donut);
+  if (b.pc) return `<div class="vx-pc"><div class="vx-bad"><div class="vx-pch">${vi("down", 26)}<b>${esc(b.pc.badT || "부담 요인")}</b></div><ul>${b.pc.bad.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div><div class="vx-good"><div class="vx-pch">${vi("up", 26)}<b>${esc(b.pc.goodT || "기대 요인")}</b></div><ul>${b.pc.good.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`;
+  if (b.branch) return `<div class="vx-br">${b.branch.map(x => `<div class="vx-bc" style="--tc:${TONE[x.tone] || "var(--acc)"}"><div class="vx-bt">${vi(x.i || "check", 18)}<b>${esc(x.t)}</b></div><div class="vx-bx">${esc(x.x)}</div>${x.r ? `<div class="vx-brs">${esc(x.r)}</div>` : ""}</div>`).join("")}</div>`;
+  if (b.callout != null) return `<div class="vx-call">${vi("bulb", 22)}<span>${esc(b.callout)}</span></div>`;
+  return dpBlock(b);
+}
+const VXCSS = `.vx-hero{border-radius:18px;padding:18px 16px;margin:6px 0 14px;background:linear-gradient(135deg,#132a6b,#1d4fa8 60%,#2a7de1);color:#fff;box-shadow:0 8px 24px rgba(15,40,110,.25)}
+.vx-kick{display:inline-block;font-size:12px;font-weight:800;background:rgba(255,255,255,.18);padding:4px 9px;border-radius:7px;margin-bottom:8px}.vx-ht{font-size:23px;font-weight:900;line-height:1.3;letter-spacing:-.03em}.vx-hs{font-size:14.5px;line-height:1.55;opacity:.92;margin-top:6px}
+.vx-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-top:14px}.vx-stats div{background:rgba(255,255,255,.13);border-radius:12px;padding:9px 10px}.vx-stats b{display:block;font-size:17px;font-weight:900;font-variant-numeric:tabular-nums;color:#fff!important}.vx-stats small{font-size:11.5px;opacity:.85}
+.vx-kv{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:10px 0}.vx-kv div{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;font-size:14px;border-bottom:1px solid var(--line)}.vx-kv div:last-child{border-bottom:0}.vx-kv div:nth-child(odd){background:var(--bg2)}.vx-kv span{color:var(--sub);flex:0 0 auto}.vx-kv b{text-align:right;color:var(--txt)!important;font-variant-numeric:tabular-nums}
+.vx-tl{margin:12px 0;position:relative}.vx-st{display:flex;gap:12px;position:relative;padding-bottom:14px}.vx-st:not(:last-child)::before{content:"";position:absolute;left:19px;top:40px;bottom:0;width:2px;background:var(--line)}.vx-ic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;flex:0 0 auto;box-shadow:0 3px 8px rgba(0,0,0,.18)}
+.vx-sb{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 11px}.vx-sh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.vx-sh b{font-size:15px;color:var(--txt)!important}.vx-date{font-size:12px;font-weight:800;color:#fff;background:#1e3a8a;border-radius:6px;padding:2px 7px;font-variant-numeric:tabular-nums}.vx-sx{font-size:13.5px;color:var(--sub);line-height:1.55;margin-top:4px}.vx-me{display:flex;gap:6px;align-items:flex-start;font-size:13px;line-height:1.5;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);color:var(--acc)}.vx-me span{color:var(--txt)}.vx-me svg{margin-top:2px;flex:0 0 auto}
+.vx-pts{display:grid;gap:8px;margin:10px 0}.vx-pt{display:flex;gap:12px;align-items:flex-start;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px}.vx-pi{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);flex:0 0 auto}.vx-pt b{display:block;font-size:15.5px;color:var(--txt)!important;margin-bottom:2px}.vx-pt div div{font-size:13.5px;color:var(--sub);line-height:1.55}
+.vx-donut{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap}.vx-donut svg{width:140px;height:140px;flex:0 0 auto}.vx-dt1{font-size:11px;fill:var(--sub)}.vx-dt2{font-size:15px;font-weight:900;fill:var(--txt)}.vx-leg{flex:1;min-width:150px;display:grid;gap:8px}.vx-leg div{display:grid;grid-template-columns:12px 1fr auto;gap:2px 8px;align-items:center;font-size:13.5px}.vx-leg i{width:12px;height:12px;border-radius:3px}.vx-leg b{color:var(--txt)!important}.vx-leg small{grid-column:2/4;color:var(--sub);font-size:12px}
+.vx-pc{display:grid;gap:8px;margin:10px 0}.vx-pc>div{border-radius:14px;padding:12px 14px}.vx-bad{background:var(--bad-soft);border:1px solid rgba(229,72,77,.35)}.vx-good{background:var(--acc-soft);border:1px solid rgba(31,164,99,.35)}.vx-pch{display:flex;align-items:center;gap:8px;margin-bottom:6px}.vx-bad .vx-pch{color:var(--bad)}.vx-good .vx-pch{color:var(--acc)}.vx-pch b{font-size:15px;color:inherit!important}.vx-pc ul{margin:0;padding-left:18px}.vx-pc li{font-size:14px!important;line-height:1.6!important;margin:3px 0!important}
+.vx-br{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.vx-bc{border:1px solid var(--line);border-top:4px solid var(--tc);border-radius:12px;padding:10px;background:var(--bg2)}.vx-bt{display:flex;gap:6px;align-items:center;color:var(--tc)}.vx-bt b{font-size:14.5px;color:var(--txt)!important}.vx-bx{font-size:13px;color:var(--sub);line-height:1.5;margin-top:5px}.vx-brs{font-size:12.5px;font-weight:800;margin-top:7px;color:var(--tc)}
+.vx-call{display:flex;gap:10px;align-items:center;background:#1e3a8a;color:#fff;border-radius:14px;padding:13px 14px;margin:12px 0;font-size:14.5px;line-height:1.55;font-weight:700}.vx-call svg{color:#ffd54a;flex:0 0 auto}
+.dterm .dtop{border-radius:18px;margin:-6px -4px 14px;padding:16px;background:linear-gradient(135deg,var(--acc-soft),transparent 70%);border:1px solid var(--line)}`;
 
 /* ── 항목 화면 ── */
 function dcTermView(c) {
   const e = DC.id[c.id]; if (!e) return `<div class="lhead"><button class="x" data-act="back">${ic("left")}</button></div><p class="mut">항목을 찾지 못했어요.</p>`;
   const lessons = (DC.cfg.lessons ? DC.cfg.lessons() : []).filter(l => [e.k, ...(e.al || [])].some(k => l.text.includes(k))).slice(0, 8);
   const deeps = (window.DP && DP.idx ? DP.idx.topics : []).filter(m => [e.k, ...(e.al || [])].some(k => (m.t + m.sum + (m.kw || []).join(" ")).includes(k)));
-  const rel = dcRel(e);
+  const rel = dcRel(e), hero = !!(e.sec[0] && e.sec[0].b[0] && e.sec[0].b[0].hero);
   return `<div class="lhead"><button class="x" data-act="back">${ic("left")}</button><span class="mut sm" style="font-weight:700;flex:1">백과 · ${esc(e.area)}</span><button class="x" data-act="dcfind">${ic("search")}</button></div>
-  <div class="slide dterm"><span class="k">${esc(e.area)}</span><h2>${esc(e.k)}${e.en ? `<small>${esc(e.en)}</small>` : ""}</h2>
+  <div class="slide dterm"><div class="dtop"><span class="k">${esc(e.area)}</span><h2>${esc(e.k)}${e.en ? `<small>${esc(e.en)}</small>` : ""}</h2>
     ${(e.al || []).length ? `<div class="dalias">${e.al.map(a => `<span>${esc(a)}</span>`).join("")}</div>` : ""}
-    <div class="done">${esc(e.one)}</div>
-    <div class="toc2">${e.sec.map((s, i) => `<button data-act="dcsec" data-arg="${i}"><i>${String.fromCharCode(65 + i)}</i>${esc(s.h)}</button>`).join("")}</div>
-    ${e.sec.map((s, i) => `<section id="ds-${i}" class="dsec"><h3><i>${String.fromCharCode(65 + i)}</i>${esc(s.h)}</h3>${s.b.map(dpBlock).join("")}</section>`).join("")}
+    ${hero ? "" : `<div class="done">${esc(e.one)}</div>`}</div>
+    ${e.tool && ACT[e.tool] ? `<button class="btn ghost" style="margin-top:12px" data-act="${esc(e.tool)}">${ic("target")} 계산기로 직접 해 보기</button>` : ""}
+    ${(() => { const sec = (s, i) => `<section id="ds-${i}" class="dsec"><h3><i>${String.fromCharCode(65 + i)}</i>${esc(s.h)}</h3>${s.b.map(dcBlock).join("")}</section>`, toc = `<div class="toc2">${e.sec.map((s, i) => `<button data-act="dcsec" data-arg="${i}"><i>${String.fromCharCode(65 + i)}</i>${esc(s.h)}</button>`).join("")}</div>`;
+      return hero ? sec(e.sec[0], 0) + toc + e.sec.slice(1).map((s, i) => sec(s, i + 1)).join("") : toc + e.sec.map(sec).join(""); })()}
     ${rel.length ? `<section class="dsec drel"><h3>함께 보면 좋은 항목</h3><div class="dchips">${rel.map(r => `<button data-act="dcopen" data-arg="${esc(r.id)}">${esc(r.k)}</button>`).join("")}</div></section>` : ""}
     ${lessons.length || deeps.length ? `<section class="dsec drel"><h3>이 말이 나오는 공부</h3>${lessons.map(l => `<button class="bki" data-act="dclesson" data-arg="${esc(l.id)}"><b>${esc(l.t)}</b><small class="mut">기초 레슨</small></button>`).join("")}${deeps.map(m => `<button class="bki" data-act="dopen" data-arg="${esc(m.id)}"><b>${esc(m.t)}</b><small class="mut">심화 글</small></button>`).join("")}</section>` : ""}
     ${(e.src || []).length ? `<section class="dsec drel"><h3>확인한 원문</h3><ul>${e.src.map(s => `<li><a class="dl" href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.t)}</a> <span class="mut xs">${esc(s.o || "")}</span></li>`).join("")}</ul></section>` : ""}
@@ -127,7 +161,7 @@ function dcOpen(id, hl) { if (!DC.id[id]) return; S.dcRecent = [id, ...(S.dcRece
 
 function DictInit(cfg) {
   DC.cfg = cfg || {};
-  document.head.insertAdjacentHTML("beforeend", `<style>
+  document.head.insertAdjacentHTML("beforeend", `<style>${VXCSS}
 .tm{color:inherit;text-decoration:underline;text-decoration-color:var(--acc);text-decoration-thickness:2px;text-underline-offset:3px;cursor:pointer}
 mark{background:var(--gold-soft);color:inherit;border-radius:4px;padding:0 2px;box-shadow:0 0 0 2px var(--gold-soft)}
 .dcs{position:sticky;top:calc(env(safe-area-inset-top) + 4px);z-index:4;display:flex;gap:8px;background:var(--bg);padding:4px 0 8px}
@@ -140,9 +174,9 @@ mark{background:var(--gold-soft);color:inherit;border-radius:4px;padding:0 2px;b
 .dcar{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:8px 0;padding:0 12px}.dcar summary{display:flex;justify-content:space-between;align-items:center;padding:13px 2px;list-style:none;cursor:pointer}.dcar summary::-webkit-details-marker{display:none}.dcar[open]{padding-bottom:6px}
 .dterm h2 small{display:block;font-size:13px;color:var(--sub);font-weight:600;margin-top:2px;letter-spacing:0}
 .dalias{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 12px}.dalias span{font-size:12px;background:var(--chip);color:var(--sub);border-radius:7px;padding:3px 8px}
-.done{background:var(--bg2);border-left:4px solid var(--acc);border-radius:10px;padding:12px 14px;font-size:16px;line-height:1.7;font-weight:600}
-.toc2{display:flex;flex-direction:column;gap:2px;margin:14px 0 4px;padding:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.toc2 button{display:flex;gap:10px;align-items:center;text-align:left;padding:7px 2px;font-size:14.5px;color:var(--sub)}
+.done{background:var(--bg2);border-left:4px solid var(--acc);border-radius:10px;padding:11px 13px;font-size:15px;line-height:1.65;font-weight:600}
+.toc2{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+.toc2 button{display:flex;gap:6px;align-items:center;text-align:left;padding:5px 10px 5px 5px;font-size:13px;color:var(--sub);background:var(--chip);border-radius:99px}
 .toc2 i,.dsec h3 i{font-style:normal;width:22px;height:22px;border-radius:7px;background:var(--acc-soft);color:var(--acc);display:inline-grid;place-items:center;font-size:12px;font-weight:900;flex:0 0 auto}
 .dsec{scroll-margin-top:calc(env(safe-area-inset-top) + 12px)}.dsec h3{display:flex;gap:9px;align-items:center;font-size:18.5px;margin:26px 0 10px;letter-spacing:-.02em}
 .dterm .dsec p{font-size:16.5px;line-height:1.85;margin:0 0 12px}.dterm .dsec li{font-size:16px}
