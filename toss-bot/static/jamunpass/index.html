@@ -186,6 +186,7 @@ textarea{width:100%;min-height:120px;border:1.5px solid var(--line);border-radiu
 .chk.on i{background:var(--pri);border-color:var(--pri);color:#fff}
 .chk.on span{color:var(--sub);text-decoration:line-through}
 .empty{text-align:center;color:var(--sub);padding:30px 10px;font-size:15px}
+.backhome{display:inline-block;padding:6px 2px 8px;color:var(--sub);font-weight:700;font-size:14px;text-decoration:none}
 </style>
 </head>
 <body>
@@ -348,7 +349,7 @@ function bind() {
 
 /* ───────────────── 첫 실행 ───────────────── */
 function vOnboard() {
-  return `<div style="padding-top:8vh">
+  return `<a class="backhome" href="../">← Invest Atlas로 돌아가기</a><div style="padding-top:8vh">
     <div class="brand" style="justify-content:center;font-size:26px"><span class="logo" style="width:40px;height:40px;border-radius:12px">${ic("check", "ic", 3)}</span>자문패스</div>
     <p class="pgsub" style="margin-top:10px">자격증 합격까지, 매일 10문제</p>
     <div class="card"><b style="font-size:18px">어떤 시험을 준비하나요?</b><p class="mut sm" style="margin:4px 0 10px">설정에서 언제든 바꿀 수 있어요. 기록은 시험별로 따로 저장돼요.</p>
@@ -364,7 +365,7 @@ function vHome() {
   const d = D(), c = completion(), r = recommend(), dd = dday(), st = streak(), todayN = P().days[today()] || 0;
   const ddTxt = dd == null ? "D-?" : dd > 0 ? `D-${dd}` : dd === 0 ? "D-Day" : `D+${-dd}`;
   const dateTxt = S.dates[S.exam] ? S.dates[S.exam].replace(/-/g, ".") : "시험일을 정해 주세요";
-  return `
+  return `<a class="backhome" href="../">← Invest Atlas로 돌아가기</a>
   <div class="hello"><div class="brand"><span class="logo">${ic("check", "ic", 3)}</span>자문패스</div>
     <div class="exsw">${Object.values(window.JP_DATA).map(x => `<button data-act="pickExam" data-arg="${x.key}" class="${S.exam === x.key ? "on" : ""}">${x.short}</button>`).join("")}</div></div>
   <div class="card dday" data-act="openDate" style="cursor:pointer">
