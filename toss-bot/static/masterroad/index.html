@@ -108,6 +108,7 @@ textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:
 <script src="data2.js"></script>
 <script src="data3.js"></script>
 <script src="../deep.js"></script>
+<script src="../dict.js"></script>
 <script>
 "use strict";
 const $ = s => document.querySelector(s);
@@ -372,6 +373,8 @@ const ACT = {
     m.querySelector("#rs").onclick = () => { S = {xp: 0, done: {}, ans: {}, days: {}, drill: {n: 0, c: 0, best: 0}, theme: S.theme}; save(); m.remove(); render(); toast("초기화했어요"); }; }
 };
 DeepInit();
+const LTEXT = MR.lessons.map(l => ({id: l.id, t: l.t, sub: `Lv.${l.lv} 기초 레슨`, text: [l.t, ...l.cards, l.ex, ...l.traps, ...l.sum].join(" ").replace(/<[^>]+>/g, "")}));
+DictInit({lessons: () => LTEXT, openLesson: id => ACT.open(id), featured: ["신주인수권", "배당락일", "유상증자", "권리락", "전환사채", "PER", "PBR", "공매도", "반대매매", "공개매수"]});
 render();
 </script>
 </body>
