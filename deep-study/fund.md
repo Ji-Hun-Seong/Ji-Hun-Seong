@@ -7,7 +7,7 @@
 - [x] 투자신탁의 법률관계: 위탁자·수탁자·수익자 (20261109-investment-trust-parties)
 - [x] 투자회사의 구조와 서류상 회사의 회계 (20261110-investment-company-paper-accounting)
 - [x] 투자유한회사·투자합자회사·투자유한책임회사 (20261110-investment-llc-lp-company-funds)
-- [ ] 투자합자조합·투자익명조합
+- [x] 투자합자조합·투자익명조합 (20261110-investment-lp-undisclosed-association)
 - [ ] 집합투자기구 종류: 증권·부동산·특별자산·혼합자산·단기금융
 - [ ] 개방형과 폐쇄형, 환매금지형 요건
 - [ ] 추가형과 단위형
