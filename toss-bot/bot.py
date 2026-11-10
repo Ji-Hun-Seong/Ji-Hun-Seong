@@ -13,7 +13,7 @@
 
 전략 근거: backtest/research/README.md 6차(미국), 7차(한국)
 - 한국: 코스피 보통주의 자기주식 취득결정·신탁계약체결결정 원공시(정정 제외), 20일 평균 거래대금 3억 이상.
-  공시 직후 지정가(현재가+1.5%, 전일 종가+5% 상한)로 매수 → 10거래일 보유, RSI14>70이면 다음 날 시가 익절.
+  공시 직후 현재가 지정가(전일 종가+5% 상한)로 매수 → 10거래일 보유, RSI14>70이면 다음 날 시가 익절.
   최대 10종목, 남는 돈은 현금. 백테스트 연 13.6%(다음 날 시가 진입) ~ 25.4%(공시일 종가 진입 상한), 손실 연도 없음.
 - 미국: 나스닥100(QQQ)이 200일선 위면 레버리지 = min(2, 45% / 최근 20일 변동성), 아래면 현금.
   TQQQ 비중 = 레버리지/3, 주 1회 조정(차이 5%p 이상일 때만). 10년 연 24.0% vs 나스닥100 17.9%.
@@ -246,7 +246,7 @@ def kr_buy_now(a, s, f, sess, t):
     if (in_regular or (in_after and nxt)):
         if last > cap:
             return f"{f['name']} 이미 +{last / prev_close - 1:.1%} 올라 추격 안 함(상한 +{CFG['kr_chase']:.0%})"
-        limit = tick(min(cap, last * 1.015))
+        limit = tick(min(cap, last))                          # 현재가 그대로 지정가 (전일 종가+5% 상한)
         if s["mode"] == "live" and not stopped():
             try:
                 r = a.order(code, "BUY", qty, f"{today}-B-{code}", order_type="LIMIT", tif="DAY", price=limit)
