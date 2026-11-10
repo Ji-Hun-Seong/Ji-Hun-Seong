@@ -286,6 +286,17 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 .studyrow a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:68px;padding:0 4px;border-radius:12px;background:var(--blue);color:#fff;text-decoration:none;text-align:center}
 .studyrow b{font-size:14px;line-height:1.2;white-space:nowrap}
 .studyrow span{font-size:11.5px;line-height:1.2;opacity:.85;white-space:nowrap}
+.dvt{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;vertical-align:1px}.dvt.ok{background:var(--g-bg);color:var(--g-fg)}.dvt.mid{background:var(--b-bg);color:var(--b-fg)}.dvt.est{background:var(--line);color:var(--sub)}
+.dvhot{color:var(--up)}
+.dvup{border-top:1px solid var(--line);padding:12px 0 4px;margin-top:10px}
+.dvsteps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0 6px}.dvsteps div{background:var(--bg);border-radius:10px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.dvsteps small{font-size:11px;color:var(--sub)}.dvsteps b{font-size:13.5px;white-space:nowrap}.dvsteps em{font-style:normal;font-size:11px;color:var(--sub)}
+.dvbars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end;height:110px;margin:6px 0 8px}.dvbars>div{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:2px}
+.dvbar{width:70%;background:var(--blue);border-radius:4px 4px 2px 2px}.dvbar.est{opacity:.4}.dvbars small{font-size:10.5px;color:var(--sub)}.dvbars em{font-style:normal;font-size:9.5px;color:var(--sub);white-space:nowrap}
+.dvqty{width:64px;padding:4px 6px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--txt);font:inherit;font-size:13px;text-align:right}
+.dvx{border:0;background:none;color:var(--sub);font-size:15px;padding:2px 2px 2px 8px;cursor:pointer}
+.dvmore{margin-top:10px}.dvmore summary{cursor:pointer;color:var(--sub);font-size:13px;font-weight:700;padding:6px 0}
+.dvtb{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}.dvtb th,.dvtb td{padding:6px 3px;border-bottom:1px solid var(--line);text-align:center}.dvtb th{color:var(--sub);font-weight:600}
 </style>
 </head>
 <body>
@@ -301,6 +312,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
       <a href="fundrule/index.html"><b>📑 펀드제도</b><span>최신 이슈 브리핑</span></a>
       <a href="fundroad/index.html"><b>📘 펀드로드</b><span>펀드회계 기초+심화</span></a>
     </div></div>
+  <div class="card" id="h-div"></div>
   <div class="card iron" id="h-iron"></div>
   <div class="card" id="h-mix"><div class="row"><h2 style="margin:0">⚖️ 장기 9 : 단기 1</h2><span class="tiny mut">불러오는 중…</span></div></div>
   <div class="card">
@@ -353,6 +365,12 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
     <div class="small" id="a-sub">-</div>
   </div>
   <div class="card"><h2>보유 종목 (봇 외 포함)</h2><div id="a-items"></div></div>
+</section>
+
+<section id="t-div">
+  <button class="back" onclick="goTab('home')">‹ 홈</button>
+  <div class="srch"><input id="dv-q" placeholder="배당 일정 볼 종목 담기 (예: 삼성전자, 088980)" autocomplete="off" enterkeyhint="search"><div class="sug" id="dv-sug"></div></div>
+  <div id="dv-out"></div>
 </section>
 
 <section id="t-det">
@@ -483,7 +501,7 @@ function line(id, labels, sets) {
 }
 
 function render(d) {
-  D = d;
+  D = d; try { dvHome(); } catch (e) { console.log(e); }
   $("mode").textContent = d.mode === "live" ? "💰 실전" : "🧪 가상";
   $("mode").className = "badge " + d.mode;
   $("stopBanner").style.display = d.stopped ? "block" : "none";
@@ -812,6 +830,120 @@ function fomoCard(a) {
     <b>그리고 어떤 경우에도 대출로 사지 않기.</b></div></div>`;
 }
 
+// ── 💰 배당 플래너 — 5년 DART 배당 공시 평균 → 올해 예상, 공시 뜨면 확정 날짜 ──────────
+const DV = {list: [], data: {}, busy: {}, q: ""};
+try { DV.list = JSON.parse(localStorage.getItem("divList") || "null"); } catch (e) {}
+const dvSave = () => { try { localStorage.setItem("divList", JSON.stringify(DV.list)); } catch (e) {} };
+function dvSeed() {                                       // 처음엔 내 계좌 국내 종목으로 채움
+  if (Array.isArray(DV.list)) return;
+  const it = ((D && D.account) || {}).items || [];
+  DV.list = it.filter(i => i.currency !== "USD").map(i => ({code: String(i.symbol || "").replace(/\D/g, "").slice(-6), name: i.name, qty: Math.floor(+i.quantity || +i.qty || 0) || 0}))
+    .filter(x => x.code.length === 6);
+  if (D && D.account) dvSave();
+}
+const dvD = s => s ? `${+s.slice(5, 7)}/${+s.slice(8, 10)}` : "-";
+const dvW = s => s ? "일월화수목금토"[new Date(s + "T00:00:00").getDay()] : "";
+const dvDW = s => s ? `${dvD(s)}(${dvW(s)})` : "-";
+const dvTag = st => st === "확정" ? `<span class="dvt ok">확정</span>` : st === "기준일 공시" ? `<span class="dvt mid">기준일 공시</span>` : `<span class="dvt est">예상</span>`;
+async function dvFetch(code, force) {
+  if (DV.busy[code] || (DV.data[code] && !force)) return;
+  DV.busy[code] = 1;
+  try { const r = await fetch("api/dividend?q=" + code, {cache: "no-store"}); DV.data[code] = await r.json(); }
+  catch (e) { DV.data[code] = {error: "불러오기 실패"}; }
+  delete DV.busy[code]; dvRender(); dvHome();
+}
+function dvAll() {                                        // 모든 종목의 다가오는 배당(기준일 순)
+  const out = [];
+  for (const s of DV.list || []) {
+    const d = DV.data[s.code];
+    for (const u of (d && d.upcoming) || []) out.push({...u, code: s.code, sname: (d && d.name) || s.name, qty: s.qty || 0});
+  }
+  return out.sort((a, b) => (a.passed ? a.pay || a.record : a.buy_by || a.record).localeCompare(b.passed ? b.pay || b.record : b.buy_by || b.record));
+}
+function dvHome() {
+  const el = $("h-div"); if (!el) return;
+  dvSeed();
+  (DV.list || []).forEach(s => dvFetch(s.code));
+  const up = dvAll().filter(u => !u.passed).slice(0, 3);
+  el.innerHTML = `<div class="row"><h2 style="margin:0">💰 배당 플래너</h2><button class="more" style="padding:0" onclick="goTab('div')">전체 ›</button></div>
+    ${!(DV.list || []).length ? `<div class="empty">종목을 담으면 언제까지 사야 배당을 받는지 알려 줘요</div>`
+      : up.length ? up.map(u => `<div class="srow small tap" onclick="goTab('div')"><span><b>${esc(u.sname)}</b> <span class="tiny mut">${esc(u.name)}</span> ${dvTag(u.status)}</span>
+        <span style="text-align:right"><b class="${u.days_left <= 7 ? "dvhot" : ""}">${dvDW(u.buy_by)}까지 매수</b><br><span class="tiny mut">기준일 ${dvD(u.record)} · D-${u.days_left}</span></span></div>`).join("")
+      : `<div class="empty">불러오는 중…</div>`}`;
+}
+function dvMonths(all) {                                  // 앞으로 12개월 월별 지급(예상 포함)
+  const now = new Date(), m0 = now.getFullYear() * 12 + now.getMonth(), M = Array.from({length: 12}, () => ({amt: 0, n: 0, est: false}));
+  for (const u of all) {
+    if (!u.pay) continue;
+    const i = +u.pay.slice(0, 4) * 12 + (+u.pay.slice(5, 7) - 1) - m0;
+    if (i < 0 || i > 11) continue;
+    M[i].n++; M[i].amt += (u.dps || 0) * (u.qty || 0); M[i].est = M[i].est || u.pay_est;
+  }
+  const mx = Math.max(1, ...M.map(x => x.amt || x.n));
+  return `<div class="dvbars">${M.map((x, i) => { const mm = (m0 + i) % 12 + 1, v = x.amt || x.n;
+    return `<div><div class="dvbar ${x.est ? "est" : ""}" style="height:${v ? Math.max(8, v / mx * 70) : 0}px"></div><small>${mm}월</small>${x.amt ? `<em>${x.amt >= 10000 ? fmtN(x.amt / 10000, 1) + "만" : fmtN(x.amt)}</em>` : x.n ? `<em>${x.n}건</em>` : ""}</div>`; }).join("")}</div>`;
+}
+function dvCard(s) {
+  const d = DV.data[s.code];
+  const head = `<div class="row"><div><b style="font-size:16px">${esc((d && d.name) || s.name || s.code)}</b> <span class="tiny mut">${s.code}</span></div>
+    <span><label class="tiny mut">보유 <input class="dvqty" data-code="${s.code}" type="number" inputmode="numeric" min="0" value="${s.qty || ""}" placeholder="0">주</label>
+    <button class="dvx" data-del="${s.code}" title="빼기">✕</button></span></div>`;
+  if (!d) return `<div class="card">${head}<div class="empty">5년 치 배당 공시 읽는 중… (처음 한 번은 10~20초)</div></div>`;
+  if (d.error) return `<div class="card">${head}<div class="empty">${esc(d.error)} <button class="more" data-re="${s.code}">다시</button></div></div>`;
+  if (d.none) return `<div class="card">${head}<div class="empty">최근 5년 배당 결정 공시가 없어요(무배당이거나 다른 형식).</div></div>`;
+  const up = (d.upcoming || []).map(u => `<div class="dvup">
+      <div class="row"><span><b>${esc(u.name)}</b> ${dvTag(u.status)}</span><span class="small"><b>${u.dps != null ? fmtN(u.dps) + "원" : "-"}</b>${u.dps_est ? `<span class="tiny mut"> (작년)</span>` : ""}</span></div>
+      ${u.passed ? `<div class="small">기준일 ${dvDW(u.record)} 지남 → 지급 ${u.pay ? dvDW(u.pay) : "미정"}${u.pay_est ? " 예상" : ""}</div>` :
+      `<div class="dvsteps"><div><small>마지막 매수일</small><b class="${u.days_left <= 7 ? "dvhot" : ""}">${dvDW(u.buy_by)}</b><em>D-${u.days_left}</em></div>
+        <div><small>배당락일</small><b>${dvDW(u.ex_date)}</b></div><div><small>배당기준일</small><b>${dvDW(u.record)}</b></div>
+        <div><small>지급일</small><b>${u.pay ? dvDW(u.pay) : "미정"}</b>${u.pay && u.pay_est ? "<em>예상</em>" : ""}</div></div>`}
+      ${s.qty && u.dps ? `<div class="tiny mut">${fmtN(s.qty)}주 × ${fmtN(u.dps)}원 = 세전 ${fmtN(s.qty * u.dps)}원 · 세후 약 ${fmtN(Math.floor(s.qty * u.dps * 0.846))}원(15.4%)</div>` : ""}
+      ${u.rcept_no ? `<div class="tiny"><a class="mut" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${u.rcept_no}" target="_blank" rel="noopener">${u.filed} 공시 원문 ›</a></div>` : ""}
+      ${u.cal_sure === false && !u.passed ? `<div class="tiny mut">※ 2027년 휴장일은 공휴일 달력 기준 예상 — 거래소 공지로 하루쯤 바뀔 수 있어요</div>` : ""}</div>`).join("");
+  const sl = (d.slots || []).map(x => `<tr><td>${esc(x.name)}</td><td>${x.record_md.replace("-", "/")}</td><td>${x.pay_month_avg ? Math.floor(x.pay_month_avg) + "월" + (x.pay_month_avg % 1 < .34 ? " 초" : x.pay_month_avg % 1 < .67 ? " 중순" : " 말") : "-"}</td><td>${x.lag_avg != null ? x.lag_avg + "일" : "-"}</td><td>${x.dps_avg ? fmtN(x.dps_avg) : "-"}</td><td>${x.years}년</td></tr>`).join("");
+  const moved = (d.slots || []).some(x => x.moved);
+  return `<div class="card">${head}${up}
+    <details class="dvmore"><summary>최근 5년 평균·이력</summary>
+      <table class="dvtb"><tr><th>배당</th><th>기준일</th><th>지급(평균)</th><th>기준→지급</th><th>평균 DPS</th><th>표본</th></tr>${sl}</table>
+      ${moved ? `<div class="tiny mut">※ 기준일이 옮겨진 해가 있어요(2023년부터 '배당액 먼저 정하고 기준일은 그 뒤' 제도). 예상은 최근 3년에 가장 많이 쓴 달 기준.</div>` : ""}
+      ${(d.events || []).slice(0, 24).map(e => `<div class="srow tiny"><span>${esc(e.kind || "")} · 기준일 ${e.record}${e.pay ? " · 지급 " + e.pay : ""}</span><a class="mut" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${e.rcept_no}" target="_blank" rel="noopener">${e.dps != null ? fmtN(e.dps) + "원" : ""} ›</a></div>`).join("")}
+    </details></div>`;
+}
+function dvRender() {
+  const el = $("dv-out"); if (!el || !$("t-div").classList.contains("act")) return;
+  const all = dvAll(), next = all.filter(u => !u.passed);
+  el.innerHTML = `${(DV.list || []).length ? `<div class="card"><h2>앞으로 12개월 배당 들어오는 달</h2>${dvMonths(all)}
+      <div class="tiny mut">${all.some(u => u.qty) ? "막대 = 보유 주수 × 1주당 배당금(세전, 미확정은 작년 금액)" : "보유 주수를 넣으면 금액으로 보여 줘요"} · 연한 막대 = 예상 날짜</div></div>
+    <div class="card"><h2>사야 할 날 순서</h2>${next.length ? next.map(u => `<div class="srow small"><span><b>${esc(u.sname)}</b> ${esc(u.name)} ${dvTag(u.status)}</span>
+      <span style="text-align:right"><b class="${u.days_left <= 7 ? "dvhot" : ""}">${dvDW(u.buy_by)}</b> <span class="tiny mut">D-${u.days_left}</span><br><span class="tiny mut">기준일 ${dvD(u.record)} · 지급 ${u.pay ? dvD(u.pay) : "미정"}</span></span></div>`).join("") : `<div class="empty">불러오는 중…</div>`}</div>` : ""}
+    ${(DV.list || []).map(dvCard).join("") || `<div class="empty" style="padding:20px 4px">위에서 종목을 검색해 담아 보세요.</div>`}
+    <div class="card tiny mut">· 근거: DART '현금ㆍ현물배당결정'·'주주명부폐쇄(기준일 설정)' 공시 최근 5년. 새 공시가 뜨면 6시간 안에 '확정' 날짜로 바뀌어요.<br>
+      · 마지막 매수일 = 사고 2거래일 뒤 결제(T+2)가 기준일 안에 끝나는 마지막 날. 그다음 날이 배당락일이라 그날 사면 이번 배당은 못 받아요.<br>
+      · 결산배당 지급일은 보통 주총 뒤라 공시에 '-'로 나오는 일이 많아요 → 기준일 후 평균 걸린 날로 예상.<br>
+      · 배당은 회사가 바꾸거나 안 줄 수 있어요. 예상 금액은 작년 금액이에요.</div>`;
+}
+function dvAdd(code, name) {
+  dvSeed(); DV.list = DV.list || [];
+  if (!DV.list.some(x => x.code === code)) DV.list.unshift({code, name, qty: 0});
+  dvSave(); $("dv-q").value = ""; $("dv-sug").style.display = "none"; dvRender(); dvFetch(code); dvHome();
+}
+(() => {
+  const q = $("dv-q"), sug = $("dv-sug"); let tm;
+  q.addEventListener("input", () => { clearTimeout(tm); const v = q.value.trim(); if (!v) { sug.style.display = "none"; return; }
+    tm = setTimeout(async () => { try { const r = await (await fetch("api/search?q=" + encodeURIComponent(v))).json();
+      const ks = (r || []).filter(x => !x.us && /^\d{6}$/.test(x.code));
+      sug.innerHTML = ks.length ? ks.map(x => `<div data-c="${x.code}" data-n="${esc(x.name)}"><span>${esc(x.name)}</span><span class="mut">${x.code}</span></div>`).join("") : `<div class="mut">국내 종목만 돼요</div>`;
+      sug.style.display = "block"; } catch (e) {} }, 200); });
+  sug.addEventListener("click", e => { const t = e.target.closest("[data-c]"); if (t) dvAdd(t.dataset.c, t.dataset.n); });
+  $("dv-out").addEventListener("click", e => {
+    const x = e.target.closest("[data-del]"); if (x) { DV.list = DV.list.filter(s => s.code !== x.dataset.del); dvSave(); dvRender(); dvHome(); }
+    const r = e.target.closest("[data-re]"); if (r) { delete DV.data[r.dataset.re]; dvRender(); dvFetch(r.dataset.re, true); }
+  });
+  $("dv-out").addEventListener("change", e => { const t = e.target.closest(".dvqty"); if (!t) return;
+    const s = DV.list.find(x => x.code === t.dataset.code); if (s) { s.qty = Math.max(0, Math.floor(+t.value || 0)); dvSave(); dvRender(); } });
+})();
+function dvOpen() { dvSeed(); dvRender(); (DV.list || []).forEach(s => dvFetch(s.code)); }
+
 // ── 공통: 탭 이동 · 종목 열기 ────────────────────────
 function goTab(t) {
   if (t === "kr" || t === "us") MKT = t;                  // 한국·미국은 '전략' 탭 하나
@@ -821,6 +953,7 @@ function goTab(t) {
   mktSync();
   window.scrollTo(0, 0);
   if (t === "pick") pLoad();
+  if (t === "div") dvOpen();
   if (t === "chart") obOpen(); else obStop();
   tbarSync();
 }
@@ -862,7 +995,7 @@ async function openStock(q, opt = {}) {
     SD.last = a; SD.tab = "info"; sdRender(a); sdExtra(a, q, opt);        // 새 종목은 항상 정보 탭부터
   } catch (e) { $("c-out").innerHTML = `<div class="card">${backBtn()}<div class="empty">불러오기 실패: ${esc(e.message)}</div></div>`; }
 }
-const TABN = {pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "미국", acct: "계좌", det: "공시"};
+const TABN = {div: "배당", pick: "발굴", home: "홈", scan: "감시", kr: "한국", us: "미국", acct: "계좌", det: "공시"};
 const backBtn = () => SD.prev && SD.prev !== "chart" ? `<button class="back" onclick="goTab('${SD.prev}')">‹ ${TABN[SD.prev] || "뒤로"}</button>` : `<button class="back" onclick="cHome()">‹ 종목 홈</button>`;
 // 🔥 종목 탭 첫 화면 — 토스증권 인기 TOP 10 (검색창을 비우거나 아래 '종목'을 한 번 더 누르면 돌아옴)
 let popM = "kr";

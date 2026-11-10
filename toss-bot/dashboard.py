@@ -1474,6 +1474,19 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
             return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
+        if path == "/api/dividend":               # 💰 배당 플래너 — 5년 배당 공시 평균 + 확정 공시 (DART)
+            q = re.sub(r"\D", "", (parse_qs(urlparse(self.path).query).get("q") or [""])[0])[-6:]
+            try:
+                if len(q) != 6:
+                    raise ValueError("6자리 종목코드가 필요해요")
+                import dividend
+                out = swr("div:" + q, 6 * 3600, lambda: dividend.build(q))
+                if out.get("error"):
+                    with _lock:
+                        _cache.pop("div:" + q, None)
+            except Exception as e:
+                out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/doc":                    # 공시·리포트 상세 (앱 안에서 보기)
             qs = parse_qs(urlparse(self.path).query)
             k, i = (qs.get("k") or [""])[0], (qs.get("id") or [""])[0]

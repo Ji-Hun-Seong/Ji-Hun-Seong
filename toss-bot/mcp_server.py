@@ -239,9 +239,11 @@ PUB_STATIC = {"", "index.html", "kchart.js", "icons.js", "manifest.json", "icon-
               "masterroad/index.html", "masterroad/data1.js", "masterroad/data2.js", "masterroad/data3.js",
               "fundrule/index.html", "fundrule/data.js", "fundrule/data2.js", "fundrule/data4.js",
               "fundroad/index.html", "fundroad/data.js", "fundroad/quiz.js", "deep.js"}
-PUB_DEEP = re.compile(r"^(?:fundroad|masterroad)/deep/(?:index|topics/[\w-]+)\.json$")   # 매일 쌓이는 심화 글
+PUB_DEEP = re.compile(r"^(?:(?:fundroad|masterroad)/deep/(?:index|topics/[\w-]+)\.json"   # 매일 쌓이는 심화 글
+                      r"|(?:fundroad|masterroad)/dict/terms\.json|dict\.js|bondcalc\.js"        # 백과·채권 계산기
+                      r"|jamunpass/(?:index\.html|[\w-]+\.js))$")                                # 자문패스
 PUB_API = {"/api/data", "/api/radar", "/api/scan", "/api/stock", "/api/stock-extra", "/api/picks", "/api/search",
-           "/api/chart", "/api/fin", "/api/screen", "/api/popular", "/api/doc", "/api/orderbook", "/api/mini"}
+           "/api/chart", "/api/fin", "/api/screen", "/api/popular", "/api/doc", "/api/orderbook", "/api/mini", "/api/dividend"}
 PUB_BLOCKED = {"/api/trade", "/api/fills", "/api/reserve", "/api/ob-stream", "/api/order", "/api/stop"}
 _pub_sem = threading.BoundedSemaphore(int(os.environ.get("PUB_MAX_CONC", "12")))   # 한꺼번에 몰려도 서버가 버티게
 _ob_cache = {}                                    # 호가: 같은 종목은 3초 동안 같은 답 (토스 API 아끼기)
