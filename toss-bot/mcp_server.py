@@ -117,7 +117,9 @@ def t_etf_rank(category: str = "all", sort: str = "mom", limit: int = 20):
     if d.get("error") or d.get("empty"):
         return trim({k: d.get(k) for k in ("error", "status", "hist_days", "has_key")})
     xs = d.get("items", [])
-    if category == "active":
+    if category == "tdf":                       # TDF는 목표연도별로 지수가 달라 전부(대표+나머지) 보여 줌
+        xs = [x for x in xs + d.get("more", []) if "TDF" in (x.get("name") or "").upper()]
+    elif category == "active":
         xs = [x for x in xs if x.get("active")]
     elif category == "all":
         xs = [x for x in xs if x.get("cat") != "lev"]
@@ -332,8 +334,8 @@ TOOLS = {
                     style={"type": "string", "enum": ["value", "growth"], "default": "value"}, limit={"type": "integer", "default": 20})),
     "java_picks": (t_java_picks, "자바 매매일지 DNA 20선: 실제 매매일지에서 뽑은 성향(업종·가격대·배당·재무)에 가장 잘 맞는 코스피 종목.",
                    S(limit={"type": "integer", "default": 20})),
-    "etf_rank": (t_etf_rank, "국내 상장 ETF 수익률 순위 (KRX 일별 데이터). 분류와 정렬 선택, 과거 검증(상위 10개 vs KODEX 200) 포함.",
-                 S(category={"type": "string", "enum": ["all", "kr", "foreign", "bond", "cmdty", "active", "lev"], "default": "all"},
+    "etf_rank": (t_etf_rank, "국내 상장 ETF 수익률 순위 (KRX 일별 데이터). 분류와 정렬 선택, 과거 검증(상위 10개 vs KODEX 200) 포함. tdf=은퇴연도별 TDF만.",
+                 S(category={"type": "string", "enum": ["all", "kr", "foreign", "bond", "tdf", "cmdty", "active", "lev"], "default": "all"},
                    sort={"type": "string", "enum": ["mom", "r12", "r36", "r3", "r6", "r1", "eff"], "default": "mom"},
                    limit={"type": "integer", "default": 20})),
     "my_fund": (t_my_fund, "내 펀드: 토스 실제 계좌를 공모펀드처럼 기준가로 산출한 성과(코스피 대비), 보유 종목 비중·수익률, 최근 체결. 미국 모의 펀드 요약 포함.", S()),
