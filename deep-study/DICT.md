@@ -36,7 +36,11 @@
 {"ex":{"title":"유상증자란 무엇일까?","l":{"a":"company","t":"기업"},"r":{"a":"investors","t":"투자자"},"top":{"t":"새로운 주식 발행","a":"stock"},"bot":{"t":"자금 확보","a":"money"},"note":"한두 줄 설명"}}
 {"chain":{"title":"흐름 제목","nodes":[{"a":"fund","t":"단계","x":"설명","go":"다음 단계로 가는 화살표 글"}]}}
 ```
-그림 이름: company investors person stock bond money coin bank gov fund factory doc cal chartup ticket building. 액터 이름표는 6자 이내로 짧게.
+토스풍 흐름 그림(권리·전환처럼 "A → 값 → B, 그리고 고르기"인 개념에):
+```json
+{"flow":{"title":"신주인수권","en":"(Right)","sub":["한 줄","한 줄"],"items":[{"a":"warrant","t":"증서"},{"a":"coindown","t":"발행가 납입"},{"a":"newstock","t":"신주 받기"}],"or":[{"t":"청약","s":"설명"},{"t":"매도","s":"설명"}],"badge":"기한 내에 선택!"}}
+```
+그림 이름: coindown newstock warrant hourglass company investors person stock bond money coin bank gov fund factory doc cal chartup ticket building. 액터 이름표는 6자 이내로 짧게.
 
 아이콘 이름: users doc coin mega bank up down cal target flag alert check cash building clock bond pct swap key calc bulb x
 

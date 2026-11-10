@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent / "toss-bot" / "static"
 APPS = ("masterroad", "fundroad")
-BLOCKS = {"p", "ul", "tip", "calc", "j", "f", "table", "hero", "kv", "tl", "pts", "donut", "pc", "branch", "callout", "ex", "chain"}
+BLOCKS = {"p", "ul", "tip", "calc", "j", "f", "table", "hero", "kv", "tl", "pts", "donut", "pc", "branch", "callout", "ex", "chain", "flow"}
 MIN_SEC, MIN_CHARS = 2, 300
 
 
