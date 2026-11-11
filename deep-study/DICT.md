@@ -66,6 +66,9 @@
 - [x] 투자자별 매매동향 (investor-flow)
 - [x] 외국인 보유비중 (foreign-ownership)
 - [x] 기관계 (institution-type)
+- [x] 대체거래소 (alternative-trading-system)
+- [x] 최선집행의무 (best-execution)
+- [x] 애프터마켓 (after-market)
 - [ ] 사이드카
 - [ ] 서킷브레이커
 

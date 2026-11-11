@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261112-nxt-alternative-exchange-trading-hours",
+"area": "시장 구조",
+"t": "NXT 대체거래소와 거래시간 변화",
+"date": "2026-11-12",
+"sum": "NXT는 '두 번째 호가창'이다. 최선집행·SOR 계산, 거래량 한도 15%·30%와 매매 중단, 얇은 장 후 시장의 가격, 장 후 가격이 섞인 종가 데이터(저장소 994건 검증)까지.",
+"n_sections": 14,
+"n_qs": 14,
+"chars": 15510
+},
+{
 "id": "20261112-investor-flow-data-traps",
 "area": "시장 구조",
 "t": "투자자별 수급 데이터의 함정",
