@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>Invest Atlas</title>
 <script src="kchart.js?v=20261105c"></script>
-<script src="icons.js?v=20261108a" defer></script>
+<script src="icons.js?v=20261112a" defer></script>
 <script src="chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js'"></script>
 <style>
 :root,:root[data-theme=dark]{--bg:#0f1720;--card:#17212b;--line:#243140;--txt:#e8eef5;--sub:#8a9bb0;--sub2:#c4d0de;--blue:#4f8cff;--up:#f04452;--dn:#3d8bfd;--ok:#2fbf71;--warn:#f5a524;
@@ -1748,7 +1748,7 @@ const ETF_GUIDE = `<details class="card" id="e-guide"><summary style="font-size:
   · <b>환헤지 (H)</b>: 똑같이 미국 주식을 사면서, 들고 있는 달러만큼 <b>'몇 달 뒤 달러를 지금 정한 환율로 팔겠다'는 계약(선물환·통화선물)</b>을 같이 맺어요. 환율이 올라 주식 쪽 원화 가치가 늘면 계약 쪽에서 그만큼 잃고, 환율이 내리면 계약 쪽에서 그만큼 벌어요. 둘이 서로 지워져서 <b>달러 기준 주가 수익만 남아요</b>. 계약은 짧은 만기라 만기마다 새로 갈아타요(롤오버).<br>
   · <b>공짜가 아니에요</b>: '나중에 달러를 파는 환율'은 두 나라 금리 차이로 정해져요. <b>미국 금리가 한국보다 높으면</b> 나중 환율이 지금보다 낮게 정해져서 <b>해마다 대략 그 금리 차이만큼 비용</b>, 한국 금리가 더 높으면 반대로 이득이에요.<br>
   · <b>완벽하지도 않아요</b>: 주가가 움직이면 지켜야 할 달러 금액도 바뀌는데 계약은 매일 맞추지 않아서 환율 영향이 조금 남아요.<br>
-  · 아래 <b>💱 환헤지 vs 환노출 백테스트</b>에서 S&P500·나스닥100으로 20년 넘게 비교해 볼 수 있어요.<br><br>
+  · 바로 아래 <b>💱 환헤지 vs 환노출 백테스트</b>를 펼치면 S&P500·나스닥100으로 20년 넘게 비교해 볼 수 있어요.<br><!--FXH--><br>
   <b>⑧ 세금 한 줄</b><br>국내 주식형 ETF는 팔아서 번 돈에 세금이 없고, 그 밖의 ETF(해외·채권·원자재)는 번 돈과 분배금에 15.4%를 떼요. 연금저축·IRP 계좌에서 사면 세금을 나중으로 미룰 수 있어요(레버리지·인버스는 연금계좌에서 못 사요).
   </div></details>`;
 function etfRender(d) {
@@ -1804,15 +1804,15 @@ function etfRender(d) {
       <div class="tiny mut" style="margin-top:4px">${x.fee != null ? `<b style="color:var(--txt)">총보수 연 ${x.fee}%</b>${x.fee_min != null && !x.active ? (x.fee <= x.fee_min + 0.005 ? ` <span class="tag g">같은 지수 최저</span>` : ` <span class="tag r">최저보다 +${(x.fee - x.fee_min).toFixed(3)}%p</span>`) : ""} · ` : ""}순자산 ${fmtN(x.net_eok)}억 · 괴리율 ${x.disc != null ? (x.disc > 0 ? "+" : "") + x.disc.toFixed(2) + "%" : "-"} · 변동성 ${x.vol != null ? x.vol + "%" : "-"}${x.ex12 != null ? ` · KODEX 200 대비 1년 ${pc(x.ex12)}` : ""}${x.idx ? ` · 기초지수 ${esc(x.idx)}` : ""}</div>
       ${x.sibs && !eFull && !(eLow && nFee) ? `<div class="tiny mut" style="margin-top:2px">같은 지수 ETF ${x.sibs + 1}개 중 1년 수익 1등 (${x.sib_names.map(esc).join(", ")}${x.sibs > 3 ? " 등" : ""})</div>` : ""}</div>`).join("");
   const fOpen = !!($("e-fxh") && $("e-fxh").open);
-  head += `<details class="card" id="e-fxh"${fOpen ? " open" : ""}><summary style="font-size:15px;font-weight:700;color:var(--txt)">💱 환헤지(H) vs 환노출 — S&P500·나스닥100 백테스트 <span class="tiny" style="color:var(--blue)">${fOpen ? "접기" : "펼치기"}</span></summary><div id="fxh-out"></div></details>`;
-  $("p-out").innerHTML = (gOpen ? ETF_GUIDE.replace('id="e-guide">', 'id="e-guide" open>').replace(">펼치기<", ">접기<") : ETF_GUIDE) + head + `<div class="card">${rows || `<div class="empty">${d.empty ? "아직 받은 데이터가 없어요 — 서버가 KRX에서 받는 중" : "이 분류에 해당하는 ETF가 없어요"}</div>`}</div>`;
+  const fxhBox = `<details id="e-fxh" style="margin:10px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:12px"${fOpen ? " open" : ""}><summary style="font-size:15px;font-weight:700;color:var(--txt)">💱 환헤지(H) vs 환노출 — S&P500·나스닥100 백테스트 <span class="tiny" style="color:var(--blue)">${fOpen ? "접기" : "펼치기"}</span></summary><div id="fxh-out"></div></details>`;
+  $("p-out").innerHTML = (gOpen ? ETF_GUIDE.replace('id="e-guide">', 'id="e-guide" open>').replace(">펼치기<", ">접기<") : ETF_GUIDE).replace("<!--FXH-->", fxhBox) + head + `<div class="card">${rows || `<div class="empty">${d.empty ? "아직 받은 데이터가 없어요 — 서버가 KRX에서 받는 중" : "이 분류에 해당하는 ETF가 없어요"}</div>`}</div>`;
   $("p-out").querySelectorAll("[data-ec]").forEach(b => b.onclick = () => { eCat = b.dataset.ec; try { localStorage.setItem("e-cat", eCat); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-el]").forEach(b => b.onclick = () => { eLow = b.dataset.el === "1"; try { localStorage.setItem("e-low", eLow ? "1" : "0"); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-ek]").forEach(b => b.onclick = () => { eKr = b.dataset.ek; try { localStorage.setItem("e-kr", eKr); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-ep]").forEach(b => b.onclick = () => { ePen = b.dataset.ep; try { localStorage.setItem("e-pen", ePen); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-es]").forEach(b => b.onclick = () => { eSort = b.dataset.es; try { localStorage.setItem("e-sort", eSort); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-ec2]").forEach(el => el.onclick = () => openStock(el.dataset.ec2));
-  const g = $("e-guide"); if (g) g.ontoggle = () => { const s = g.querySelector("summary .tiny"); if (s) s.textContent = g.open ? "접기" : "펼치기"; };
+  const g = $("e-guide"); if (g) g.ontoggle = (ev) => { if (ev && ev.target !== g) return; const s = g.querySelector("summary .tiny"); if (s) s.textContent = g.open ? "접기" : "펼치기"; };
   const fx = $("e-fxh"); if (fx) { fx.ontoggle = () => { const s = fx.querySelector("summary .tiny"); if (s) s.textContent = fx.open ? "접기" : "펼치기"; if (fx.open) fxhLoad(); }; if (fx.open) fxhLoad(); }
 }
 // 💱 환헤지(H) vs 환노출 — 서버 chartpage/fx_hedge.py (6시간 캐시)
