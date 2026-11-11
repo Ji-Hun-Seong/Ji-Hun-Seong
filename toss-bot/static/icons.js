@@ -72,6 +72,7 @@
     star: '<path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>',
     receipt: '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/>',
     clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+    calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/>',
     hash: '<path d="M4 9h16"/><path d="M4 15h16"/><path d="M10 3 8 21"/><path d="m16 3-2 18"/>',
   };
   const TONE = {star: "var(--warn)", alert: "var(--warn)", ban: "var(--up)", check: "var(--ok)", x: "var(--up)", flame: "#f97316", sparkle: "var(--warn)", trophy: "var(--warn)"};
@@ -91,7 +92,7 @@
     "👎": "thumbdown", "📏": "ruler", "🗄️": "db", "🗄": "db", "📡": "radio", "👆": "pointer", "📢": "megaphone", "☐": "square", "⌂": "home", "◎": "wallet",
     "🧺": "basket", "🏭": "factory", "💱": "exchange", "🖱️": "mouse", "🖱": "mouse", "🙂": "smile", "🖥️": "monitor", "🖥": "monitor",
     "🎓": "cap", "📚": "book", "🌐": "globe", "🚧": "alert", "🐢": "hourglass", "⭐": "star", "🧾": "receipt", "⏰": "clock",
-    "🏅": "trophy", "🔢": "hash",
+    "🏅": "trophy", "🔢": "hash", "📅": "calendar", "🗓️": "calendar", "🗓": "calendar",
   };
   const DOT = {"🟢": "var(--ok)", "🟡": "var(--warn)", "🔴": "var(--up)", "⚪": "var(--sub)", "🟠": "#f97316", "🔵": "var(--blue)", "🔸": "#f97316"};
   const FLAG = {"🇰🇷": "KR", "🇺🇸": "US", "🇪🇺": "EU", "🇨🇳": "CN", "🇯🇵": "JP"};

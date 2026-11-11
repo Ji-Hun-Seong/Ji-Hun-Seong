@@ -1475,6 +1475,13 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 out = {"error": f"{type(e).__name__}: {str(e)[:200]}"}
             return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
+        if path == "/api/dividend/upcoming":      # 💰 시장 전체 — 곧 기준일이 오는 배당 (최근 공시)
+            try:
+                import dividend
+                out = dividend.upcoming()
+            except Exception as e:
+                out = {"items": [], "error": f"{type(e).__name__}: {str(e)[:200]}"}
+            return self._send(200, json.dumps(out, ensure_ascii=False, default=str), "application/json; charset=utf-8")
         if path == "/api/dividend":               # 💰 배당 플래너 — 5년 배당 공시 평균 + 확정 공시 (DART)
             q = re.sub(r"\D", "", (parse_qs(urlparse(self.path).query).get("q") or [""])[0])[-6:]
             try:

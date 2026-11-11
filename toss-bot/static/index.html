@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>Invest Atlas</title>
 <script src="kchart.js?v=20261105c"></script>
-<script src="icons.js?v=20261112a" defer></script>
+<script src="icons.js?v=20261112b" defer></script>
 <script src="chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js'"></script>
 <style>
 :root,:root[data-theme=dark]{--bg:#0f1720;--card:#17212b;--line:#243140;--txt:#e8eef5;--sub:#8a9bb0;--sub2:#c4d0de;--blue:#4f8cff;--up:#f04452;--dn:#3d8bfd;--ok:#2fbf71;--warn:#f5a524;
@@ -370,6 +370,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 <section id="t-div">
   <button class="back" onclick="goTab('home')">‹ 홈</button>
   <div class="srch"><input id="dv-q" placeholder="배당 일정 볼 종목 담기 (예: 삼성전자, 088980)" autocomplete="off" enterkeyhint="search"><div class="sug" id="dv-sug"></div></div>
+  <div id="dv-mkt"></div>
   <div id="dv-out"></div>
 </section>
 
@@ -869,7 +870,39 @@ function dvHome() {
     ${!(DV.list || []).length ? `<div class="empty">종목을 담으면 언제까지 사야 배당을 받는지 알려 줘요</div>`
       : up.length ? up.map(u => `<div class="srow small tap" onclick="goTab('div')"><span><b>${esc(u.sname)}</b> <span class="tiny mut">${esc(u.name)}</span> ${dvTag(u.status)}</span>
         <span style="text-align:right"><b class="${u.days_left <= 7 ? "dvhot" : ""}">${dvDW(u.buy_by)}까지 매수</b><br><span class="tiny mut">기준일 ${dvD(u.record)} · D-${u.days_left}</span></span></div>`).join("")
-      : `<div class="empty">불러오는 중…</div>`}`;
+      : `<div class="empty">불러오는 중…</div>`}
+    ${(() => { const m = dvmItems(30).slice().sort((p, q) => p.buy_by.localeCompare(q.buy_by)).slice(0, 4);
+      return m.length ? `<div class="tiny mut" style="margin:12px 0 2px;font-weight:700">곧 기준일 — 시장 전체 <span style="font-weight:400">(1달 안 ${dvmItems(30).length}개)</span></div>` + m.map(x => dvmRow(x, false)).join("") : ""; })()}`;
+  if (!DVM.d) dvmLoad();
+}
+// 시장 전체 — 곧 기준일이 오는 배당 (서버 chartpage/dividend.py upcoming, 최근 공시 기준)
+const DVM = {d: null, busy: 0, tries: 0, win: 30, sort: "day"};
+try { DVM.win = +localStorage.getItem("dvm-win") || 30; DVM.sort = localStorage.getItem("dvm-sort") || "day"; } catch (e) {}
+async function dvmLoad(force) {
+  if (DVM.busy || (DVM.d && !DVM.d.loading && !force)) return;
+  DVM.busy = 1;
+  try { DVM.d = await (await fetch("api/dividend/upcoming", {cache: "no-store"})).json(); } catch (e) { DVM.d = DVM.d || {items: [], error: "불러오기 실패"}; }
+  DVM.busy = 0; dvmRender(); dvHome();
+  if (DVM.d.loading && DVM.tries++ < 12) setTimeout(() => dvmLoad(true), 20000);   // 서버가 뒤에서 모으는 중이면 20초마다 다시
+}
+function dvmItems(win) {
+  const xs = ((DVM.d && DVM.d.items) || []).filter(x => x.days_left <= win);
+  return DVM.sort === "yield" ? xs.slice().sort((a, b) => (b.yield || 0) - (a.yield || 0)) : xs;
+}
+const dvmRow = (x, add) => `<div class="srow small"><span data-stock="${esc(x.name)}" style="flex:1;min-width:0"><b>${esc(x.name)}</b> <span class="tiny mut">${esc(x.slot_name || "")}</span> ${dvTag(x.status)}<br>
+    <span class="tiny mut">${x.dps != null ? "1주 " + fmtN(x.dps) + "원" : "금액 미정"}${x.yield != null ? " · 시가배당률 " + fmtN(x.yield, 1) + "%" : ""} · 기준일 ${dvD(x.record)}${x.pay ? " · 지급 " + dvD(x.pay) : ""}</span></span>
+  <span style="text-align:right;white-space:nowrap;margin-left:8px"><b class="${x.days_left <= 7 ? "dvhot" : ""}">${dvDW(x.buy_by)}까지</b> <span class="tiny mut">D-${x.days_left}</span>${add ? `<br><button class="more" style="padding:2px 0 0" data-dvadd="${x.code}" data-n="${esc(x.name)}">${(DV.list || []).some(s => s.code === x.code) ? "담김" : "+ 담기"}</button>` : ""}</span></div>`;
+function dvmRender() {
+  const el = $("dv-mkt"); if (!el) return;
+  const d = DVM.d, xs = dvmItems(DVM.win), all = (d && d.items) || [];
+  const chip = (k, v, lab) => `<button data-${k}="${v}" style="${String(DVM[k === "dw" ? "win" : "sort"]) === String(v) ? "background:var(--blue);color:#fff" : ""}">${lab}</button>`;
+  el.innerHTML = `<div class="card"><h2>📅 곧 배당 기준일이 오는 종목 <span class="tiny mut">시장 전체</span></h2>
+    <div class="chips" style="margin:6px 0 4px">${chip("dw", 14, "2주 안")}${chip("dw", 30, "1달 안")}${chip("dw", 999, "전체")}<span style="flex:1"></span>${chip("ds", "day", "날짜순")}${chip("ds", "yield", "배당률순")}</div>
+    ${!d ? `<div class="empty">불러오는 중…</div>` : xs.length ? xs.slice(0, 60).map(x => dvmRow(x, true)).join("") + (xs.length > 60 ? `<div class="tiny mut" style="padding-top:8px">외 ${xs.length - 60}개</div>` : "")
+      : d.loading && !all.length ? `<div class="empty">최근 공시를 모으는 중이에요 — 처음 한 번은 1~2분 걸려요</div>`
+      : d.error && !all.length ? `<div class="empty">${esc(d.error)}</div>`
+      : `<div class="empty">이 기간에 기준일이 오는 배당 공시가 없어요${all.length ? ` (전체 ${all.length}개)` : ""}</div>`}
+    <div class="tiny mut" style="margin-top:8px">최근 ${(d && d.back_days) || 75}일 DART '현금ㆍ현물배당결정'·'기준일 설정' 공시 중 아직 살 수 있는 것${d && d.asof ? ` · ${d.asof} 기준` : ""}${d && d.loading && all.length ? " · 새로 모으는 중" : ""}. 공시가 아직 안 나온 배당(예상)은 여기 없어요 — 종목을 담으면 예상 일정까지 보여 줘요. 이름을 누르면 종목 상세로 가요.</div></div>`;
 }
 function dvMonths(all) {                                  // 앞으로 12개월 월별 지급(예상 포함)
   const now = new Date(), m0 = now.getFullYear() * 12 + now.getMonth(), M = Array.from({length: 12}, () => ({amt: 0, n: 0, est: false}));
@@ -935,6 +968,12 @@ function dvAdd(code, name) {
       sug.innerHTML = ks.length ? ks.map(x => `<div data-c="${x.code}" data-n="${esc(x.name)}"><span>${esc(x.name)}</span><span class="mut">${x.code}</span></div>`).join("") : `<div class="mut">국내 종목만 돼요</div>`;
       sug.style.display = "block"; } catch (e) {} }, 200); });
   sug.addEventListener("click", e => { const t = e.target.closest("[data-c]"); if (t) dvAdd(t.dataset.c, t.dataset.n); });
+  $("dv-mkt").addEventListener("click", e => {
+    const w = e.target.closest("[data-dw]"), o = e.target.closest("[data-ds]"), ad = e.target.closest("[data-dvadd]");
+    if (w) { DVM.win = +w.dataset.dw; try { localStorage.setItem("dvm-win", DVM.win); } catch (er) {} dvmRender(); }
+    if (o) { DVM.sort = o.dataset.ds; try { localStorage.setItem("dvm-sort", DVM.sort); } catch (er) {} dvmRender(); }
+    if (ad) { dvAdd(ad.dataset.dvadd, ad.dataset.n); dvmRender(); }
+  });
   $("dv-out").addEventListener("click", e => {
     const x = e.target.closest("[data-del]"); if (x) { DV.list = DV.list.filter(s => s.code !== x.dataset.del); dvSave(); dvRender(); dvHome(); }
     const r = e.target.closest("[data-re]"); if (r) { delete DV.data[r.dataset.re]; dvRender(); dvFetch(r.dataset.re, true); }
@@ -942,7 +981,7 @@ function dvAdd(code, name) {
   $("dv-out").addEventListener("change", e => { const t = e.target.closest(".dvqty"); if (!t) return;
     const s = DV.list.find(x => x.code === t.dataset.code); if (s) { s.qty = Math.max(0, Math.floor(+t.value || 0)); dvSave(); dvRender(); } });
 })();
-function dvOpen() { dvSeed(); dvRender(); (DV.list || []).forEach(s => dvFetch(s.code)); }
+function dvOpen() { dvSeed(); dvmRender(); dvmLoad(); dvRender(); (DV.list || []).forEach(s => dvFetch(s.code)); }
 
 // ── 공통: 탭 이동 · 종목 열기 ────────────────────────
 function goTab(t) {

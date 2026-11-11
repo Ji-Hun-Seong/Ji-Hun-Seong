@@ -9,7 +9,7 @@ dividend.py — 💰 배당 플래너: 최근 5년 DART 공시로 '언제 받나
     · 올해 공시가 아직 없으면 최근 패턴으로 예상, 공시가 뜨면 그 날짜로 '확정'
     · 언제까지 사야 하나: 결제가 T+2(거래일)라 '매수일+2거래일 ≤ 기준일'인 마지막 거래일. 배당락일 = 그다음 거래일
 
-단독 테스트:  DART_API_KEY=... python3 dividend.py 005930
+단독 테스트:  DART_API_KEY=... python3 dividend.py 005930      (시장 전체 다가오는 배당: python3 dividend.py upcoming)
 """
 from __future__ import annotations
 
@@ -287,6 +287,107 @@ def build(code: str, today: dt.date | None = None) -> dict:
             "asof": today.isoformat(), "none": not events}
 
 
+# ── 시장 전체: 곧 기준일이 오는 배당 (최근 공시 기준) ─────────────────────
+UP_FILE = ds.CACHE / "div_upcoming.json"
+UP_BACK = 75                                           # 며칠 전 공시까지 볼지 (DART는 회사 지정 없이 3개월까지만 검색됨)
+UP_TTL = 6 * 3600
+_up_lock = threading.Lock()
+_up_busy = 0.0
+
+
+def _list_market(cls: str, bgn: str, end: str) -> list[dict]:
+    """한 시장(Y 코스피 · K 코스닥)의 거래소공시 목록에서 배당 결정·기준일 설정만"""
+    out, page = [], 1
+    while page <= 150:
+        j = requests.get("https://opendart.fss.or.kr/api/list.json", timeout=20,
+                         params={"crtfc_key": _key(), "bgn_de": bgn, "end_de": end, "pblntf_ty": "I", "corp_cls": cls,
+                                 "page_no": page, "page_count": 100}).json()
+        if j.get("status") == "013":
+            break
+        if j.get("status") != "000":
+            raise RuntimeError(f"DART {j.get('status')}: {j.get('message')}")
+        for x in j.get("list") or []:
+            nm = x.get("report_nm", "")
+            if x.get("stock_code") and (RX_DECIDE.search(nm) or RX_RECORD.search(nm)):
+                out.append({**x, "_mkt": "코스피" if cls == "Y" else "코스닥"})
+        if page >= int(j.get("total_page") or 1):
+            break
+        page += 1
+    return out
+
+
+def build_upcoming(today: dt.date | None = None) -> dict:
+    today = today or dt.date.today()
+    bgn, end = (today - dt.timedelta(days=UP_BACK)).strftime("%Y%m%d"), today.strftime("%Y%m%d")
+    lst = _list_market("Y", bgn, end) + _list_market("K", bgn, end)
+    picks = [(x, "d" if RX_DECIDE.search(x.get("report_nm", "")) else "r") for x in lst]
+    with ThreadPoolExecutor(6) as ex:
+        parsed = list(ex.map(lambda p: (p[0], p[1], _safe_doc(p[0]["rcept_no"], p[1])), picks))
+    dec, notes = {}, {}
+    for x, k, r in sorted(parsed, key=lambda t: t[0]["rcept_no"]):      # 접수번호 순 → 정정공시가 뒤에서 덮어씀
+        if not r or not r.get("record"):
+            continue
+        slot = slot_of(r.get("kind", ""), r["record"])
+        (dec if k == "d" else notes)[(x["stock_code"], slot)] = (x, k, r, slot)
+    items = []
+    for (code, slot), (x, k, r, _s) in {**notes, **dec}.items():        # 결정 공시가 있으면 그쪽(금액·지급일이 있음)
+        rec = _d(r["record"])
+        if rec < today:
+            continue
+        lb, exd = buy_deadline(rec)
+        if lb < today:                                                   # 이미 마지막 매수일이 지남
+            continue
+        items.append({
+            "code": code, "name": (x.get("corp_name") or "").strip(), "market": x["_mkt"],
+            "slot": slot, "slot_name": SLOT_NAME.get(slot, ""), "status": "확정" if k == "d" else "기준일 공시",
+            "record": r["record"], "pay": r.get("pay"), "dps": r.get("dps"), "yield": r.get("yield"),
+            "buy_by": lb.isoformat(), "ex_date": exd.isoformat(), "days_left": (lb - today).days,
+            "cal_sure": rec <= HOLIDAY_SURE_UNTIL, "rcept_no": x["rcept_no"],
+            "filed": f"{x['rcept_dt'][:4]}-{x['rcept_dt'][4:6]}-{x['rcept_dt'][6:]}",
+        })
+    items.sort(key=lambda i: (i["buy_by"], -(i.get("yield") or 0)))
+    return {"asof": today.isoformat(), "ts": time.time(), "back_days": UP_BACK, "items": items}
+
+
+def upcoming() -> dict:
+    """저장된 목록을 바로 돌려주고, 6시간이 지났으면 뒤에서 새로 모음 (처음엔 1~2분 걸려서 기다리게 하지 않음)"""
+    global _up_busy
+    try:
+        cur = json.loads(UP_FILE.read_text())
+    except Exception:
+        cur = None
+    fresh = cur and time.time() - cur.get("ts", 0) < UP_TTL and cur.get("asof") == dt.date.today().isoformat()
+    if not fresh:
+        with _up_lock:
+            start = time.time() - _up_busy > 900
+            if start:
+                _up_busy = time.time()
+        if start:
+            def work():
+                global _up_busy
+                try:
+                    UP_FILE.write_text(json.dumps(build_upcoming(), ensure_ascii=False))
+                except Exception as e:
+                    print("dividend upcoming", type(e).__name__, str(e)[:200], flush=True)
+                    try:
+                        UP_FILE.with_suffix(".err").write_text(f"{type(e).__name__}: {str(e)[:200]}")
+                    except Exception:
+                        pass
+                _up_busy = 0.0
+            threading.Thread(target=work, daemon=True).start()
+    out = dict(cur) if cur else {"items": []}
+    if cur and cur.get("asof") != dt.date.today().isoformat():           # 어제 목록이면 지난 것만 걸러서 보여 줌
+        t = dt.date.today()
+        out["items"] = [{**i, "days_left": (_d(i["buy_by"]) - t).days} for i in cur["items"] if i["buy_by"] >= t.isoformat()]
+    out["loading"] = not fresh
+    if not cur:
+        try:
+            out["error"] = UP_FILE.with_suffix(".err").read_text() if _up_busy == 0.0 else None
+        except Exception:
+            pass
+    return out
+
+
 def _plan(sl, record, pay, dps, status, today, src):
     rec = _d(record)
     p = {"slot": sl["slot"], "name": sl["name"], "status": status, "record": record,
@@ -331,4 +432,5 @@ def _md(y, md, mon):
 
 
 if __name__ == "__main__":
-    print(json.dumps(build(sys.argv[1] if len(sys.argv) > 1 else "005930"), ensure_ascii=False, indent=1))
+    a = sys.argv[1] if len(sys.argv) > 1 else "005930"
+    print(json.dumps(build_upcoming() if a == "upcoming" else build(a), ensure_ascii=False, indent=1))
