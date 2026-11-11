@@ -63,6 +63,9 @@
 - [x] 신용거래융자 (margin-loan)
 - [x] 미수거래 (unsettled-purchase)
 - [x] 담보유지비율 (maintenance-ratio)
+- [x] 투자자별 매매동향 (investor-flow)
+- [x] 외국인 보유비중 (foreign-ownership)
+- [x] 기관계 (institution-type)
 - [ ] 사이드카
 - [ ] 서킷브레이커
 
