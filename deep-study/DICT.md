@@ -60,6 +60,9 @@
 - [x] 업틱룰 (uptick-rule)
 - [x] 공매도 과열종목 (short-selling-overheated)
 - [x] 공매도 잔고 공시 (short-position-disclosure)
+- [x] 신용거래융자 (margin-loan)
+- [x] 미수거래 (unsettled-purchase)
+- [x] 담보유지비율 (maintenance-ratio)
 - [ ] 사이드카
 - [ ] 서킷브레이커
 
