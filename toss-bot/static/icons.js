@@ -62,8 +62,20 @@
     square: '<rect x="3" y="3" width="18" height="18" rx="2"/>',
     home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v10.5a1.5 1.5 0 0 0 1.5 1.5H10v-6h4v6h3.5a1.5 1.5 0 0 0 1.5-1.5V9"/>',
     wallet: '<path d="M19 7V5.5A1.5 1.5 0 0 0 17.5 4H5a2 2 0 0 0 0 4h14a1 1 0 0 1 1 1v3"/><path d="M3 6v12a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3"/><path d="M21 12v4h-4a2 2 0 0 1 0-4z"/>',
+    basket: '<path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/>',
+    factory: '<path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/>',
+    exchange: '<path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/>',
+    mouse: '<rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 6v4"/>',
+    smile: '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/>',
+    monitor: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>',
+    cap: '<path d="M21.42 10.92a1 1 0 0 0-.02-1.84L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.83l8.57 3.91a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+    star: '<path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>',
+    receipt: '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/>',
+    clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+    calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/>',
+    hash: '<path d="M4 9h16"/><path d="M4 15h16"/><path d="M10 3 8 21"/><path d="m16 3-2 18"/>',
   };
-  const TONE = {alert: "var(--warn)", ban: "var(--up)", check: "var(--ok)", x: "var(--up)", flame: "#f97316", sparkle: "var(--warn)", trophy: "var(--warn)"};
+  const TONE = {star: "var(--warn)", alert: "var(--warn)", ban: "var(--up)", check: "var(--ok)", x: "var(--up)", flame: "#f97316", sparkle: "var(--warn)", trophy: "var(--warn)"};
 
   // 이모지 → [아이콘, 회전(선택)]
   const MAP = {
@@ -78,6 +90,9 @@
     "🚨": "flame", "🧩": "pie", "🧭": "compass", "🔄": "refresh", "🔁": "refresh", "⏳": "hourglass", "💸": "coins",
     "💰": "coins", "🪙": "coins", "🔔": "bell", "🏆": "trophy", "🦅": "trophy", "✨": "sparkle", "👍": "thumbup",
     "👎": "thumbdown", "📏": "ruler", "🗄️": "db", "🗄": "db", "📡": "radio", "👆": "pointer", "📢": "megaphone", "☐": "square", "⌂": "home", "◎": "wallet",
+    "🧺": "basket", "🏭": "factory", "💱": "exchange", "🖱️": "mouse", "🖱": "mouse", "🙂": "smile", "🖥️": "monitor", "🖥": "monitor",
+    "🎓": "cap", "📚": "book", "🌐": "globe", "🚧": "alert", "🐢": "hourglass", "⭐": "star", "🧾": "receipt", "⏰": "clock",
+    "🏅": "trophy", "🔢": "hash", "📅": "calendar", "🗓️": "calendar", "🗓": "calendar",
   };
   const DOT = {"🟢": "var(--ok)", "🟡": "var(--warn)", "🔴": "var(--up)", "⚪": "var(--sub)", "🟠": "#f97316", "🔵": "var(--blue)", "🔸": "#f97316"};
   const FLAG = {"🇰🇷": "KR", "🇺🇸": "US", "🇪🇺": "EU", "🇨🇳": "CN", "🇯🇵": "JP"};
@@ -96,9 +111,11 @@
     return `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="${tone || "currentColor"}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${flip ? `<g transform="rotate(180 12 12)">${body}</g>` : body}</svg>`;
   };
   const keys = Object.keys(MAP).concat(Object.keys(DOT), Object.keys(FLAG)).sort((a, b) => b.length - a.length);
-  const RX = new RegExp("(" + keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")️?", "g");
+  const ANYFLAG = "(?:\\uD83C[\\uDDE6-\\uDDFF]){2}";   // 목록에 없는 국기도 두 글자 배지로 (🇹🇼 → TW)
+  const RX = new RegExp("(" + keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + "|" + ANYFLAG + ")️?", "g");
+  const code = (k) => String.fromCharCode(k.codePointAt(0) - 0x1F1E6 + 65, k.codePointAt(2) - 0x1F1E6 + 65);
   const html = (k) => DOT[k] ? `<span class="ic-dot" style="background:${DOT[k]}"></span>`
-    : FLAG[k] ? `<span class="ic-flag">${FLAG[k]}</span>` : svg(MAP[k]);
+    : FLAG[k] ? `<span class="ic-flag">${FLAG[k]}</span>` : MAP[k] ? svg(MAP[k]) : `<span class="ic-flag">${code(k)}</span>`;
   const SKIP = {SCRIPT: 1, STYLE: 1, TEXTAREA: 1, INPUT: 1, OPTION: 1, SELECT: 1, svg: 1, SVG: 1, TITLE: 1, CANVAS: 1};
 
   function fix(root) {
