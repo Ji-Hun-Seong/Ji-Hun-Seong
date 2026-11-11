@@ -48,8 +48,50 @@ def load_corps() -> list[dict]:
     if hit and time.time() - hit[0] < 86400:
         return hit[1]
     corps = _load_corps_uncached()
+    live = _listed_codes()
+    if live:                                    # DART 목록엔 상장폐지된 회사(KB손해보험·국민은행 등)도 종목코드가 남아 있음 → 지금 거래되는 것만
+        corps = [c for c in corps if c["code"] in live]
     _MEM["corps"] = (time.time(), corps)
     return corps
+
+
+def _listed_codes() -> set[str]:
+    """지금 상장된 종목코드(코스피·코스닥, 거래정지 종목 포함) — 네이버 증권 시가총액 목록, 하루 캐시.
+       실패하면 급등 연구의 전 종목 표(surge-study/data/universe, 최근 10개 파일 합집합 — 이날 안 거래된 종목은 빠질 수 있음).
+       둘 다 너무 작으면(1,500개 미만) 빈 집합 → 거르지 않음"""
+    import csv, gzip
+    f = CACHE / "listed.json"
+    if f.exists() and time.time() - f.stat().st_mtime < 86400:
+        try:
+            return set(json.loads(f.read_text()))
+        except Exception:
+            pass
+    codes: set[str] = set()
+    try:
+        for mkt in ("KOSPI", "KOSDAQ"):
+            for page in range(1, 80):
+                j = requests.get(f"https://m.stock.naver.com/api/stocks/marketValue/{mkt}",
+                                 params={"page": page, "pageSize": 100}, headers=UA, timeout=20).json()
+                items = j.get("stocks", []) if isinstance(j, dict) else j
+                if not items:
+                    break
+                codes |= {str(it.get("itemCode") or "").zfill(6) for it in items if it.get("itemCode")}
+    except Exception as e:
+        print("상장 목록(네이버) 실패:", e)
+    if len(codes) >= 1500:
+        f.write_text(json.dumps(sorted(codes)))
+        return codes
+    codes = set()
+    d = Path(__file__).resolve().parents[2] / "surge-study" / "data" / "universe"
+    for g in (sorted(d.glob("*.csv.gz"))[-10:] if d.exists() else []):
+        try:
+            with gzip.open(g, "rt", encoding="utf-8") as fh:
+                codes |= {r["code"].zfill(6) for r in csv.DictReader(fh) if r.get("code")}
+        except Exception as e:
+            print("상장 종목표 읽기 실패:", g.name, e)
+    if len(codes) >= 1500:
+        return codes
+    return set(json.loads(f.read_text())) if f.exists() else set()
 
 
 def _load_corps_uncached() -> list[dict]:
