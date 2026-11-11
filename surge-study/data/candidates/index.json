@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-11",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 745,
+   "top": [
+    "동원개발",
+    "HJ중공업",
+    "금호건설"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-10",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 768,
@@ -9,8 +21,14 @@
     "쎄크",
     "동방메디컬"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 169,
+   "graded": {
+    "avg": 3.53,
+    "up": 4,
+    "n": 10,
+    "hit10": 1,
+    "market_avg": 2.34
+   }
   },
   {
    "date": "2026-11-09",

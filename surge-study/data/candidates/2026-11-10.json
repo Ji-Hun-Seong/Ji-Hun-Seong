@@ -2103,5 +2103,74 @@
   "up": 8,
   "avg": 3.1,
   "market_avg": 2.73
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "013870",
+    "name": "지엠비코리아",
+    "score": 94,
+    "next_chg": -0.27
+   },
+   {
+    "code": "081180",
+    "name": "쎄크",
+    "score": 74,
+    "next_chg": 3.57
+   },
+   {
+    "code": "240550",
+    "name": "동방메디컬",
+    "score": 68,
+    "next_chg": -1.6
+   },
+   {
+    "code": "060250",
+    "name": "NHN KCP",
+    "score": 60,
+    "next_chg": 4.91
+   },
+   {
+    "code": "267250",
+    "name": "HD현대",
+    "score": 58,
+    "next_chg": -1.65
+   },
+   {
+    "code": "235980",
+    "name": "메드팩토",
+    "score": 58,
+    "next_chg": 29.99
+   },
+   {
+    "code": "012750",
+    "name": "에스원",
+    "score": 56,
+    "next_chg": -1.11
+   },
+   {
+    "code": "101360",
+    "name": "에코앤드림",
+    "score": 54.0,
+    "next_chg": 3.33
+   },
+   {
+    "code": "453340",
+    "name": "현대그린푸드",
+    "score": 51,
+    "next_chg": -1.69
+   },
+   {
+    "code": "030200",
+    "name": "KT",
+    "score": 50,
+    "next_chg": -0.2
+   }
+  ],
+  "n": 10,
+  "hit10": 1,
+  "up": 4,
+  "avg": 3.53,
+  "market_avg": 2.34
  }
 }
