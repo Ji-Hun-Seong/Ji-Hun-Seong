@@ -148,9 +148,9 @@
 - [x] 기한이익상실
 - [x] 사이드포켓 (side-pocket)
 - [x] 영업일 조정 관행 (business-day-convention)
-- [ ] 채권 대차
+- [x] 채권 대차 (bond-lending)
 - [x] 국고채 지표물·경과물
-- [ ] 현물금리·선도금리
+- [x] 현물금리·선도금리 (spot-forward-rate)
 - [x] 단리·복리 (simple-compound)
 - [x] 연속복리 (continuous-compounding)
 
