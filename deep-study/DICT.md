@@ -156,9 +156,10 @@
 - [x] 현물금리·선도금리 (spot-forward-rate)
 - [x] 단리·복리 (simple-compound)
 - [x] 연속복리 (continuous-compounding)
+- [x] 불규칙 이표(전기·후기 이자) (odd-coupon)
 
 ### 펀드 기본·구조
-- [ ] 설정조정금·환매조정금
+- [x] 설정조정금·환매조정금 (adjustment-account)
 - [ ] 원본
 - [ ] 집합투자규약
 - [ ] 투자신탁과 투자회사
