@@ -57,6 +57,9 @@
 - [x] 프로그램매매 (program-trading)
 - [x] 베이시스 (basis)
 - [x] 선물옵션 동시만기일 (expiry-day)
+- [x] 업틱룰 (uptick-rule)
+- [x] 공매도 과열종목 (short-selling-overheated)
+- [x] 공매도 잔고 공시 (short-position-disclosure)
 - [ ] 사이드카
 - [ ] 서킷브레이커
 

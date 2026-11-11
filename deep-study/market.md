@@ -7,7 +7,7 @@
 - [x] 호가창과 체결 우선순위, 단일가매매 (20261109-order-book-priority-auction)
 - [x] 동시호가·VI·서킷브레이커·상한가 규칙 (20261110-vi-circuit-breaker-price-limit)
 - [x] 프로그램매매와 선물옵션 동시 만기 (20261111-program-trading-expiry)
-- [ ] 공매도 제도와 대차잔고 읽기
+- [x] 공매도 제도와 대차잔고 읽기 (20261111-short-selling-lending-balance)
 - [ ] 신용융자·미수·반대매매
 - [ ] 투자자별 수급 데이터의 함정
 - [ ] NXT 대체거래소와 거래시간 변화
