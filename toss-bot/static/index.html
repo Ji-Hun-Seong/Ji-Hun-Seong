@@ -1715,8 +1715,11 @@ function fundRender(d) {
   $("p-out").querySelectorAll("[data-sc]").forEach(el => el.onclick = () => openStock(el.dataset.sc, {us: fMkt === "us"}));
 }
 // 📦 ETF — KRX 일별 데이터로 수익률 순위 (chartpage/etf.py) · 설명은 펀드를 처음 보는 사람 기준
-let eCat = "all", eSort = "mom", ePen = "all", eLow = true;
-try { eCat = localStorage.getItem("e-cat") || "all"; eSort = localStorage.getItem("e-sort") || "mom"; ePen = localStorage.getItem("e-pen") || "all"; eLow = localStorage.getItem("e-low") !== "0"; } catch (e) {}
+let eCat = "all", eSort = "mom", ePen = "all", eLow = true, eKr = "all";
+try { eCat = localStorage.getItem("e-cat") || "all"; eSort = localStorage.getItem("e-sort") || "mom"; ePen = localStorage.getItem("e-pen") || "all"; eLow = localStorage.getItem("e-low") !== "0"; eKr = localStorage.getItem("e-kr") || "all"; } catch (e) {}
+// 🇰🇷 한국 주식 빼기 — 국내주식 분류 · 주식 위주(주식 50%↑ 또는 모름)인데 국가 비중 한국 20% 초과 · 채권혼합인데 이름에 국내 종목·지수
+const E_KR_MAX = 20, E_KR_NAME = /코스피|KOSPI|코스닥|KOSDAQ|삼성|현대|SK|LG|한화|포스코|POSCO|카카오|네이버|국내|한국|코리아|KRX|밸류업/i;
+const eKrOut = x => x.cat === "kr" || (x.kr != null && (x.eq == null || x.eq >= 50) && x.kr > E_KR_MAX) || (x.eq != null && x.eq < 50 && E_KR_NAME.test(x.name));
 const ETF_GUIDE = `<details class="card" id="e-guide"><summary style="font-size:15px;font-weight:700;color:var(--txt)">📘 ETF가 처음이라면 — 3분 설명 <span class="tiny" style="color:var(--blue)">펼치기</span></summary>
   <div class="small" style="line-height:1.7;margin-top:10px">
   <b>① 펀드란?</b><br>여러 사람의 돈을 한 바구니에 모아 <b>운용사</b>(삼성·미래에셋 등)가 대신 굴리는 상품이에요. 내가 갖는 건 그 바구니의 <b>지분(좌수)</b>이고, 바구니 값이 오르면 내 돈도 늘어요.<br><br>
@@ -1759,11 +1762,14 @@ function etfRender(d) {
   const CATS = [["all", "전체"], ["sp", "S&P500"], ["nq", "나스닥100"], ["kr", "🇰🇷 국내주식"], ["foreign", "🌍 해외주식"], ["bond", "🏦 채권·혼합"], ["tdf", "🎯 TDF"], ["cmdty", "🪙 원자재"], ["active", "🧑‍💼 액티브"], ["lev", "⚡ 레버리지·인버스"]];
   const SORTS = [["mom", "모멘텀"], ["r12", "1년"], ["r36", "3년"], ["r3", "3개월"], ["eff", "덜 흔들림"], ["fee", "보수 낮은 순"]];
   const nFee = [...(d.items || []), ...(d.more || [])].filter(x => x.fee != null).length;
+  const nGeo = [...(d.items || []), ...(d.more || [])].filter(x => x.kr != null).length;
   const chip = (k, l, on, a) => `<span class="tag ${on ? "b" : ""}" data-${a}="${k}" style="cursor:pointer;margin:3px 4px 0 0;${on ? "font-weight:700" : ""}">${l}</span>`;
   head += `<div class="card"><div>${CATS.map(([k, l]) => chip(k, l, eCat === k, "ec")).join("")}</div>
     ${eCat === "tdf" ? `<div class="tiny mut" style="margin-top:6px;line-height:1.6">TDF = 은퇴 연도(이름 속 숫자)에 맞춰 주식→채권 비중을 자동으로 줄여 가는 펀드 · 숫자가 클수록(은퇴가 멀수록) 주식이 많아 더 오르고 더 빠져요 · '적격'이 붙어야 퇴직연금 100% 가능 · 자세한 건 위 📘 설명 ⑦</div>` : ""}
     <div style="margin-top:8px"><span class="tiny mut">퇴직연금 </span>${[["all", "전체"], ["100", "100% 가능"], ["70", "70% 한도"]].map(([k, l]) => chip(k, l, ePen === k, "ep")).join("")}</div>
     ${ePen !== "all" ? `<div class="tiny mut" style="margin-top:6px;line-height:1.6">${ePen === "100" ? "적격 TDF · 채권혼합(주식 50% 이하) · 채권형·금리형 — DC·IRP 적립금 전부 담을 수 있어요. 위험자산 70%를 채운 뒤 남은 30%에도 쓸 수 있어요" : "주식형 ETF 등 — DC·IRP 위험자산 합계가 적립금의 70%를 넘으면 안 돼요"} · 이름으로 추정한 분류라 매수 전 증권사 화면 확인 · DC는 회사 상품 목록에 있어야 해요</div>` : ""}
+    <div style="margin-top:8px"><span class="tiny mut">한국 주식 </span>${[["all", "포함"], ["no", "🚫 빼기"]].map(([k, l]) => chip(k, l, eKr === k, "ek")).join("")}</div>
+    ${eKr === "no" ? `<div class="tiny mut" style="margin-top:6px;line-height:1.6">국내주식 ETF와, 종목 상세의 🌍 국가 비중에서 <b>한국이 ${E_KR_MAX}%를 넘는</b> 주식 위주 ETF를 뺐어요 · 채권혼합(주식 50% 미만)은 한국 비중이 대부분 국내 채권이라 남기되, 이름에 국내 종목·지수가 있으면 빼요 · 국가 비중은 네이버 증권(일주일에 한 번)${nGeo ? `, ${fmtN(nGeo)}개 받음` : " — 아직 받는 중이라 지금은 이름 분류로만 걸러요"}</div>` : ""}
     <div style="margin-top:8px"><span class="tiny mut">보수 </span>${[["1", "저보수만"], ["0", "전체"]].map(([k, l]) => chip(k, l, (eLow ? "1" : "0") === k, "el")).join("")}</div>
     <div class="tiny mut" style="margin-top:6px;line-height:1.6">${nFee ? (eLow ? "같은 지수를 따라가는 패시브 ETF 중 <b>총보수가 가장 낮은 것</b>(차이 0.005%p 이내 포함)만 남겨요 · 액티브는 그대로" : "보수 상관없이 전부") + ` · 총보수 = 운용·판매·수탁·사무관리 4대 보수 합 (네이버 증권, ${fmtN(nFee)}개)` : "총보수 데이터를 받는 중이에요 — 서버가 일주일에 한 번 네이버 증권에서 받아요"}</div>
     <div style="margin-top:8px"><span class="tiny mut">정렬 </span>${SORTS.map(([k, l]) => chip(k, l, eSort === k, "es")).join("")}</div>
@@ -1779,11 +1785,12 @@ function etfRender(d) {
     xs = pool.filter(x => keep.has(x.grp || x.code) && xs.some(y => (y.grp || y.code) === (x.grp || x.code)));
     if (!eFull) { const seen = new Map(); xs.forEach(x => { const k = x.grp || x.code, o = seen.get(k); if (!o || (x.fee ?? 9) < (o.fee ?? 9) || ((x.fee ?? 9) === (o.fee ?? 9) && (x.net_eok || 0) > (o.net_eok || 0))) seen.set(k, x); }); xs = [...seen.values()]; }
   }
+  if (eKr === "no") xs = xs.filter(x => !eKrOut(x));
   xs = xs.filter(x => x[eSort] != null).sort((a, b) => eSort === "fee" ? a.fee - b.fee : b[eSort] - a[eSort]).slice(0, 50);
   const CL = d.cats || {};
   const rows = xs.map((x, i) => `<div class="prow" data-ec2="${esc(x.code)}"><div class="row"><div><span class="rk">${i + 1}</span><span class="name">${esc(x.name)}</span><span class="tkr">${esc(x.code)}</span></div>
       <div style="text-align:right">${eSort === "fee" ? `<b>${x.fee}%</b>` : pc(x[eSort === "eff" ? "r12" : eSort === "mom" ? "mom" : eSort])}<div class="tiny mut">${eSort === "mom" ? "모멘텀" : eSort === "eff" ? "1년" : eSort === "fee" ? "총보수" : ""}</div></div></div>
-      <div style="margin-top:4px"><span class="tag ${x.active ? "y" : "g"}">${x.active ? "액티브" : "패시브"}</span><span class="tag">${esc(CL[x.cat] || "")}</span>${/TDF/i.test(x.name) ? `<span class="tag b">${esc((x.name.match(/TDF\s*(\d{4})/i) || [])[1] ? "TDF " + x.name.match(/TDF\s*(\d{4})/i)[1] + "년 은퇴" : "TDF")}${/적격/.test(x.name) ? " · 적격" : ""}</span>` : ""}${x.hedge ? `<span class="tag">환헤지</span>` : ""}${x.synth ? `<span class="tag">합성</span>` : ""}<span class="tag">추가설정 가능</span></div>
+      <div style="margin-top:4px"><span class="tag ${x.active ? "y" : "g"}">${x.active ? "액티브" : "패시브"}</span><span class="tag">${esc(CL[x.cat] || "")}</span>${/TDF/i.test(x.name) ? `<span class="tag b">${esc((x.name.match(/TDF\s*(\d{4})/i) || [])[1] ? "TDF " + x.name.match(/TDF\s*(\d{4})/i)[1] + "년 은퇴" : "TDF")}${/적격/.test(x.name) ? " · 적격" : ""}</span>` : ""}${x.kr != null ? `<span class="tag ${x.kr > E_KR_MAX && (x.eq == null || x.eq >= 50) ? "r" : ""}">🇰🇷 한국 ${x.kr.toFixed(0)}%${x.eq != null && x.eq < 50 ? ` · 주식 ${x.eq.toFixed(0)}%` : ""}</span>` : ""}${x.hedge ? `<span class="tag">환헤지</span>` : ""}${x.synth ? `<span class="tag">합성</span>` : ""}<span class="tag">추가설정 가능</span></div>
       <div class="kv" style="margin-top:6px"><div><small>1개월</small><b>${pc(x.r1)}</b></div><div><small>3개월</small><b>${pc(x.r3)}</b></div><div><small>6개월</small><b>${pc(x.r6)}</b></div>
         <div><small>1년</small><b>${pc(x.r12)}</b></div><div><small>3년</small><b>${pc(x.r36)}</b></div><div><small>최대 낙폭</small><b>${pc(x.mdd)}</b></div></div>
       <div class="tiny mut" style="margin-top:4px">${x.fee != null ? `<b style="color:var(--txt)">총보수 연 ${x.fee}%</b>${x.fee_min != null && !x.active ? (x.fee <= x.fee_min + 0.005 ? ` <span class="tag g">같은 지수 최저</span>` : ` <span class="tag r">최저보다 +${(x.fee - x.fee_min).toFixed(3)}%p</span>`) : ""} · ` : ""}순자산 ${fmtN(x.net_eok)}억 · 괴리율 ${x.disc != null ? (x.disc > 0 ? "+" : "") + x.disc.toFixed(2) + "%" : "-"} · 변동성 ${x.vol != null ? x.vol + "%" : "-"}${x.ex12 != null ? ` · KODEX 200 대비 1년 ${pc(x.ex12)}` : ""}${x.idx ? ` · 기초지수 ${esc(x.idx)}` : ""}</div>
@@ -1791,6 +1798,7 @@ function etfRender(d) {
   $("p-out").innerHTML = (gOpen ? ETF_GUIDE.replace('id="e-guide">', 'id="e-guide" open>').replace(">펼치기<", ">접기<") : ETF_GUIDE) + head + `<div class="card">${rows || `<div class="empty">${d.empty ? "아직 받은 데이터가 없어요 — 서버가 KRX에서 받는 중" : "이 분류에 해당하는 ETF가 없어요"}</div>`}</div>`;
   $("p-out").querySelectorAll("[data-ec]").forEach(b => b.onclick = () => { eCat = b.dataset.ec; try { localStorage.setItem("e-cat", eCat); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-el]").forEach(b => b.onclick = () => { eLow = b.dataset.el === "1"; try { localStorage.setItem("e-low", eLow ? "1" : "0"); } catch (e) {} etfRender(d); });
+  $("p-out").querySelectorAll("[data-ek]").forEach(b => b.onclick = () => { eKr = b.dataset.ek; try { localStorage.setItem("e-kr", eKr); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-ep]").forEach(b => b.onclick = () => { ePen = b.dataset.ep; try { localStorage.setItem("e-pen", ePen); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-es]").forEach(b => b.onclick = () => { eSort = b.dataset.es; try { localStorage.setItem("e-sort", eSort); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-ec2]").forEach(el => el.onclick = () => openStock(el.dataset.ec2));

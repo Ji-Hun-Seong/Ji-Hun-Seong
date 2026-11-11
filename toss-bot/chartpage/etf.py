@@ -62,6 +62,7 @@ def _conn():
                  tv REAL, idx TEXT, PRIMARY KEY(d, code))""")
     c.execute("CREATE TABLE IF NOT EXISTS days(d TEXT PRIMARY KEY, n INTEGER, at TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS fee(code TEXT PRIMARY KEY, fee REAL, at REAL)")
+    c.execute("CREATE TABLE IF NOT EXISTS geo(code TEXT PRIMARY KEY, kr REAL, eq REAL, at REAL)")   # 한국 비중·주식 비중(%)
     return c
 
 
@@ -243,6 +244,68 @@ def refresh_fees():
     c.close()
 
 
+# ── 국가·자산 비중 (네이버 증권 etfAnalysis — 종목 상세 '🌍 국가 비중'과 같은 숫자), 7일마다 새로 ──
+KR_NAMES = {"KR", "KOR", "KOREA", "한국", "대한민국", "국내"}
+EQ_NAMES = {"EQUITY", "STOCK", "주식"}
+
+
+def _share(rows, names):
+    """[{detailTypeName/Code, weight}] → names 에 해당하는 비중 합(%) · 목록이 없으면 None"""
+    def wnum(v):
+        try:
+            return float(str(v).replace(",", "").replace("%", ""))
+        except (TypeError, ValueError):
+            return None
+    rs = [(str(x.get("detailTypeCode") or "").upper(), str(x.get("detailTypeName") or "").upper(), wnum(x.get("weight")))
+          for x in rows or [] if isinstance(x, dict)]
+    rs = [r for r in rs if r[2] is not None and r[2] > 0]
+    if not rs:
+        return None
+    k = 100 if sum(r[2] for r in rs) <= 1.01 else 1                 # 0.85 처럼 소수로 오면 %로
+    return round(sum(r[2] for r in rs if r[0] in names or r[1] in names) * k, 1)
+
+
+def parse_geo(j):
+    if not isinstance(j, dict):
+        return None, None
+    return _share(j.get("countryPortfolioList"), KR_NAMES), _share(j.get("assetPortfolioList"), EQ_NAMES)
+
+
+def fetch_geo(code: str):
+    import requests
+    ua = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1"}
+    try:
+        r = requests.get(f"https://m.stock.naver.com/api/stock/{code}/etfAnalysis", headers=ua, timeout=8)
+        return parse_geo(r.json()) if r.ok else (None, None)
+    except Exception:
+        return None, None
+
+
+def refresh_geo():
+    c = _conn()
+    last = c.execute("SELECT MAX(d) FROM days WHERE n > 0").fetchone()[0]
+    if not last:
+        c.close()
+        return
+    codes = [r[0] for r in c.execute("SELECT code FROM px WHERE d=? AND net >= ? ORDER BY net DESC", (last, MIN_NET))]
+    have = dict(c.execute("SELECT code, at FROM geo").fetchall())
+    todo = [k for k in codes if time.time() - (have.get(k) or 0) > 7 * 86400]
+    got = miss = 0
+    for k in todo:
+        kr, eq = fetch_geo(k)
+        ok = kr is not None or eq is not None
+        got, miss = got + ok, miss + (not ok)
+        if not got and miss >= 15:                      # 처음 15개가 다 실패면 주소·형식이 바뀐 것 — 하루 뒤 다시
+            STATUS["geo_msg"] = "네이버에서 국가 비중을 못 찾음"
+            break
+        with _db_lock:
+            c.execute("INSERT OR REPLACE INTO geo VALUES(?,?,?,?)", (k, kr, eq, time.time() if ok else time.time() - 6 * 86400))
+            c.commit()
+        time.sleep(0.3)
+    STATUS["geo_n"] = c.execute("SELECT COUNT(*) FROM geo WHERE kr IS NOT NULL").fetchone()[0]
+    c.close()
+
+
 def worker():
     """대시보드가 켜질 때 뒤에서 계속: 빠진 날 채우기 → 1시간 쉬기 (오류면 30분 뒤 다시)"""
     while True:
@@ -255,6 +318,10 @@ def worker():
             refresh_fees()
         except Exception as e:
             STATUS["fee_msg"] = f"{type(e).__name__}: {str(e)[:120]}"
+        try:
+            refresh_geo()
+        except Exception as e:
+            STATUS["geo_msg"] = f"{type(e).__name__}: {str(e)[:120]}"
         time.sleep(3600 if ok else 1800)
 
 
@@ -319,6 +386,7 @@ def summary():
     cut = days[max(0, len(days) - 800)]
     px = pd.read_sql("SELECT d, code, name, close, nav, net, tv, idx FROM px WHERE d >= ?", c, params=(cut,))
     fees = dict(c.execute("SELECT code, fee FROM fee WHERE fee IS NOT NULL").fetchall())
+    geo = {k: (kr, eq) for k, kr, eq in c.execute("SELECT code, kr, eq FROM geo WHERE kr IS NOT NULL OR eq IS NOT NULL")}
     c.close()
     px = px[px.d.isin(days)]
     close = px.pivot(index="d", columns="code", values="close").sort_index()
@@ -356,6 +424,7 @@ def summary():
               "hedge": "(H)" in name, "synth": "합성" in name, "idx": row["idx"] or "",
               "net_eok": _rnd((row["net"] or 0) / 1e8, 0), "tv_eok": _rnd((row["tv"] or 0) / 1e8, 1),
               "close": row["close"], "nav": row["nav"], "fee": fees.get(code),
+              "kr": (geo.get(code) or (None, None))[0], "eq": (geo.get(code) or (None, None))[1],
               "disc": _rnd((row["close"] / row["nav"] - 1) * 100, 2) if row["nav"] and row["close"] else None,
               "r1": r1, "r3": r3, "r6": r6, "r12": r12, "r36": r36,
               "mom": _rnd(sum(moms) / len(moms)) if len(moms) == 3 or (n < 253 and moms) else None,
@@ -445,6 +514,8 @@ if __name__ == "__main__":
         print(d, len(rows), "개")
         for r in rows[:3]:
             print(json.dumps(r, ensure_ascii=False))
+    elif cmd == "geo":                                  # python chartpage/etf.py geo 448540 — 한국·주식 비중 확인
+        print(sys.argv[2] if len(sys.argv) > 2 else "069500", fetch_geo(sys.argv[2] if len(sys.argv) > 2 else "069500"))
     elif cmd == "backfill":
         print("완료" if backfill(verbose=True) else f"중단: {STATUS['msg']}")
     else:
