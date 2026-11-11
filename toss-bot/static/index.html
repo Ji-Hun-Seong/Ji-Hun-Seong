@@ -872,7 +872,11 @@ function dvHome() {
         <span style="text-align:right"><b class="${u.days_left <= 7 ? "dvhot" : ""}">${dvDW(u.buy_by)}까지 매수</b><br><span class="tiny mut">기준일 ${dvD(u.record)} · D-${u.days_left}</span></span></div>`).join("")
       : `<div class="empty">불러오는 중…</div>`}
     ${(() => { const m = dvmItems(30).slice().sort((p, q) => p.buy_by.localeCompare(q.buy_by)).slice(0, 4);
-      return m.length ? `<div class="tiny mut" style="margin:12px 0 2px;font-weight:700">곧 기준일 — 시장 전체 <span style="font-weight:400">(1달 안 ${dvmItems(30).length}개)</span></div>` + m.map(x => dvmRow(x, false)).join("") : ""; })()}`;
+      const hd = t => `<div class="tiny mut tap" onclick="goTab('div')" style="margin:12px 0 2px;font-weight:700">곧 기준일 — 시장 전체 <span style="font-weight:400">${t}</span></div>`, d = DVM.d;
+      return m.length ? hd(`(1달 안 ${dvmItems(30).length}개) ›`) + m.map(x => dvmRow(x, false)).join("")
+        : !d || (d.loading && !d.error) ? hd("· 최근 공시 모으는 중… (처음엔 몇 분)")
+        : d.error ? hd("· 못 불러왔어요: " + esc(String(d.error).slice(0, 80)))
+        : hd(`· 1달 안에 기준일이 오는 공시가 없어요${(d.items || []).length ? ` (전체 ${d.items.length}개 ›)` : ""}`); })()}`;
   if (!DVM.d) dvmLoad();
 }
 // 시장 전체 — 곧 기준일이 오는 배당 (서버 chartpage/dividend.py upcoming, 최근 공시 기준)
@@ -881,9 +885,10 @@ try { DVM.win = +localStorage.getItem("dvm-win") || 30; DVM.sort = localStorage.
 async function dvmLoad(force) {
   if (DVM.busy || (DVM.d && !DVM.d.loading && !force)) return;
   DVM.busy = 1;
-  try { DVM.d = await (await fetch("api/dividend/upcoming", {cache: "no-store"})).json(); } catch (e) { DVM.d = DVM.d || {items: [], error: "불러오기 실패"}; }
+  try { const r = await fetch("api/dividend/upcoming", {cache: "no-store"}); if (!r.ok) throw new Error("서버 응답 " + r.status + " — 대시보드가 아직 새 코드로 안 켜졌을 수 있어요"); DVM.d = await r.json(); }
+  catch (e) { DVM.d = DVM.d && (DVM.d.items || []).length ? DVM.d : {items: [], error: e.message || "불러오기 실패"}; }
   DVM.busy = 0; dvmRender(); dvHome();
-  if (DVM.d.loading && DVM.tries++ < 12) setTimeout(() => dvmLoad(true), 20000);   // 서버가 뒤에서 모으는 중이면 20초마다 다시
+  if (DVM.d.loading && !DVM.d.error && DVM.tries++ < 45) setTimeout(() => dvmLoad(true), 20000);   // 서버가 뒤에서 모으는 중이면 20초마다 다시
 }
 function dvmItems(win) {
   const xs = ((DVM.d && DVM.d.items) || []).filter(x => x.days_left <= win);
@@ -899,8 +904,8 @@ function dvmRender() {
   el.innerHTML = `<div class="card"><h2>📅 곧 배당 기준일이 오는 종목 <span class="tiny mut">시장 전체</span></h2>
     <div class="chips" style="margin:6px 0 4px">${chip("dw", 14, "2주 안")}${chip("dw", 30, "1달 안")}${chip("dw", 999, "전체")}<span style="flex:1"></span>${chip("ds", "day", "날짜순")}${chip("ds", "yield", "배당률순")}</div>
     ${!d ? `<div class="empty">불러오는 중…</div>` : xs.length ? xs.slice(0, 60).map(x => dvmRow(x, true)).join("") + (xs.length > 60 ? `<div class="tiny mut" style="padding-top:8px">외 ${xs.length - 60}개</div>` : "")
-      : d.loading && !all.length ? `<div class="empty">최근 공시를 모으는 중이에요 — 처음 한 번은 1~2분 걸려요</div>`
-      : d.error && !all.length ? `<div class="empty">${esc(d.error)}</div>`
+      : d.error && !all.length ? `<div class="empty">못 불러왔어요: ${esc(d.error)} <button class="more" data-dvre="1">다시</button></div>`
+      : d.loading && !all.length ? `<div class="empty">최근 공시를 모으는 중이에요 — 처음 한 번은 몇 분 걸려요</div>`
       : `<div class="empty">이 기간에 기준일이 오는 배당 공시가 없어요${all.length ? ` (전체 ${all.length}개)` : ""}</div>`}
     <div class="tiny mut" style="margin-top:8px">최근 ${(d && d.back_days) || 75}일 DART '현금ㆍ현물배당결정'·'기준일 설정' 공시 중 아직 살 수 있는 것${d && d.asof ? ` · ${d.asof} 기준` : ""}${d && d.loading && all.length ? " · 새로 모으는 중" : ""}. 공시가 아직 안 나온 배당(예상)은 여기 없어요 — 종목을 담으면 예상 일정까지 보여 줘요. 이름을 누르면 종목 상세로 가요.</div></div>`;
 }
@@ -973,6 +978,7 @@ function dvAdd(code, name) {
     if (w) { DVM.win = +w.dataset.dw; try { localStorage.setItem("dvm-win", DVM.win); } catch (er) {} dvmRender(); }
     if (o) { DVM.sort = o.dataset.ds; try { localStorage.setItem("dvm-sort", DVM.sort); } catch (er) {} dvmRender(); }
     if (ad) { dvAdd(ad.dataset.dvadd, ad.dataset.n); dvmRender(); }
+    if (e.target.closest("[data-dvre]")) { DVM.d = null; DVM.tries = 0; dvmRender(); dvmLoad(true); }
   });
   $("dv-out").addEventListener("click", e => {
     const x = e.target.closest("[data-del]"); if (x) { DV.list = DV.list.filter(s => s.code !== x.dataset.del); dvSave(); dvRender(); dvHome(); }

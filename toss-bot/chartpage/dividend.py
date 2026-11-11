@@ -367,6 +367,7 @@ def upcoming() -> dict:
                 global _up_busy
                 try:
                     UP_FILE.write_text(json.dumps(build_upcoming(), ensure_ascii=False))
+                    UP_FILE.with_suffix(".err").unlink(missing_ok=True)
                 except Exception as e:
                     print("dividend upcoming", type(e).__name__, str(e)[:200], flush=True)
                     try:
@@ -380,9 +381,10 @@ def upcoming() -> dict:
         t = dt.date.today()
         out["items"] = [{**i, "days_left": (_d(i["buy_by"]) - t).days} for i in cur["items"] if i["buy_by"] >= t.isoformat()]
     out["loading"] = not fresh
-    if not cur:
+    out["collecting"] = _up_busy > 0                                       # 지금 뒤에서 모으는 중인지
+    if not fresh and not out["collecting"]:                               # 모으다 실패했으면 이유를 화면에 보여 줌
         try:
-            out["error"] = UP_FILE.with_suffix(".err").read_text() if _up_busy == 0.0 else None
+            out["error"] = UP_FILE.with_suffix(".err").read_text()
         except Exception:
             pass
     return out
