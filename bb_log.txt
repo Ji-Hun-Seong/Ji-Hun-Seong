@@ -1,0 +1,19 @@
+자사주 공시 1657 밸류업 543
+0 1657 calls 2 {'rcept_no': '20260821000616', 'rcept_dt': '20260821', 'code': '005930', 'trust': False, 'amount': 14999999992000.0, 'shares_plan': 53285968.0, 'burn': False, 'fy': 2025, 'shares': 5919637922.0, 'equity': 436320337000000.0}
+100 1657 calls 126 {'rcept_no': '20250428000097', 'rcept_dt': '20250428', 'code': '068270', 'trust': False, 'amount': 100000009600.0, 'shares_plan': 631712.0, 'burn': False, 'fy': 2024, 'shares': None, 'equity': 17580062368691.0}
+200 1657 calls 238 {'rcept_no': '20170419800347', 'rcept_dt': '20170419', 'code': '138040', 'trust': False, 'amount': None, 'shares_plan': None, 'burn': False, 'fy': 2016, 'shares': 142885818.0, 'equity': None}
+300 1657 calls 384 {'rcept_no': '20140127000166', 'rcept_dt': '20140127', 'code': '007660', 'trust': True, 'amount': None, 'shares_plan': None, 'burn': False, 'fy': 2012, 'shares': None, 'equity': None}
+400 1657 calls 542 {'rcept_no': '20200320000253', 'rcept_dt': '20200320', 'code': '018880', 'trust': True, 'amount': None, 'shares_plan': None, 'burn': False, 'fy': 2018, 'shares': 533800000.0, 'equity': 2131656180687.0}
+500 1657 calls 698 {'rcept_no': '20231026800599', 'rcept_dt': '20231026', 'code': '004990', 'trust': True, 'amount': 50000000000.0, 'shares_plan': None, 'burn': False, 'fy': 2022, 'shares': 104909237.0, 'equity': 9766258734737.0}
+600 1657 calls 832 {'rcept_no': '20240201000561', 'rcept_dt': '20240201', 'code': '012630', 'trust': False, 'amount': 14640000000.0, 'shares_plan': 2000000.0, 'burn': False, 'fy': 2022, 'shares': 59741721.0, 'equity': 4832838799122.0}
+700 1657 calls 994 {'rcept_no': '20250728000233', 'rcept_dt': '20250728', 'code': '093050', 'trust': False, 'amount': 5000000000.0, 'shares_plan': 259605.0, 'burn': False, 'fy': 2024, 'shares': 29240000.0, 'equity': 1772778738357.0}
+800 1657 calls 1132 {'rcept_no': '20260320001168', 'rcept_dt': '20260320', 'code': '005810', 'trust': False, 'amount': 4700000000.0, 'shares_plan': 124174.0, 'burn': False, 'fy': 2024, 'shares': 14417292.0, 'equity': 1115463598070.0}
+900 1657 calls 1280 {'rcept_no': '20180619000082', 'rcept_dt': '20180619', 'code': '194370', 'trust': True, 'amount': None, 'shares_plan': None, 'burn': False, 'fy': 2017, 'shares': 13335601.0, 'equity': 156422682391.0}
+1000 1657 calls 1430 {'rcept_no': '20230717000237', 'rcept_dt': '20230717', 'code': '002310', 'trust': True, 'amount': 15000000000.0, 'shares_plan': None, 'burn': False, 'fy': 2022, 'shares': 8956502.0, 'equity': 804286022003.0}
+1100 1657 calls 1582 {'rcept_no': '20140213000119', 'rcept_dt': '20140213', 'code': '044820', 'trust': True, 'amount': None, 'shares_plan': None, 'burn': False, 'fy': 2012, 'shares': None, 'equity': None}
+1200 1657 calls 1716 {'rcept_no': '20260903000061', 'rcept_dt': '20260903', 'code': '015230', 'trust': True, 'amount': 5000000000.0, 'shares_plan': 815660.0, 'burn': False, 'fy': 2025, 'shares': 28572230.0, 'equity': 323284050270.0}
+1300 1657 calls 1844 {'rcept_no': '20230126800469', 'rcept_dt': '20230126', 'code': '107590', 'trust': False, 'amount': 2768000000.0, 'shares_plan': 20000.0, 'burn': False, 'fy': 2021, 'shares': 2320000.0, 'equity': 235758441462.0}
+1400 1657 calls 1982 {'rcept_no': '20170403002779', 'rcept_dt': '20170403', 'code': '120030', 'trust': True, 'amount': 2000000000.0, 'shares_plan': None, 'burn': False, 'fy': 2016, 'shares': 1257651.0, 'equity': 87882658792.0}
+1500 1657 calls 2164 {'rcept_no': '20160912000330', 'rcept_dt': '20160912', 'code': '019680', 'trust': True, 'amount': None, 'shares_plan': None, 'burn': False, 'fy': 2015, 'shares': 84702850.0, 'equity': 643976794312.0}
+1600 1657 calls 2336 {'rcept_no': '20150506000379', 'rcept_dt': '20150506', 'code': '133820', 'trust': False, 'amount': None, 'shares_plan': None, 'burn': False, 'fy': 2014, 'shares': None, 'equity': None}
+완료 calls 2418 자사주 1657 금액 있음 809 자본 있음 1292 밸류업 543 약속액 있음 53
