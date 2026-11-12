@@ -16,7 +16,7 @@
 
 ## 재무제표 정독
 - [x] 사업보고서 읽는 순서 (20261112-business-report-reading-order)
-- [ ] 손익계산서: 매출 인식과 일회성 항목
+- [x] 손익계산서: 매출 인식과 일회성 항목 (20261113-income-statement-revenue-recognition-one-offs)
 - [ ] 재무상태표: 운전자본과 숨은 부채
 - [ ] 현금흐름표: 이익의 질 판별
 - [ ] 연결과 별도, 지배주주 순이익

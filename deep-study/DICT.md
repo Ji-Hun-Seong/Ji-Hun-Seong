@@ -100,7 +100,7 @@
 - [x] 사업보고서 (business-report)
 - [x] 감사의견 (audit-opinion)
 - [x] 주요사항보고서 (material-event-report)
-- [ ] 잠정실적 공시
+- [x] 잠정실적 공시 (preliminary-earnings)
 - [ ] 최대주주와 특수관계인
 - [ ] 5% 룰(대량보유 보고)
 - [ ] 지주회사
@@ -109,8 +109,8 @@
 - [ ] 거래정지
 
 ### 재무제표
-- [ ] 영업이익
-- [ ] 당기순이익과 지배주주 순이익
+- [x] 영업이익 (operating-profit)
+- [x] 당기순이익과 지배주주 순이익 (net-income-controlling)
 - [ ] 부채비율
 - [ ] 영업활동현금흐름
 - [ ] 잉여현금흐름(FCF)
