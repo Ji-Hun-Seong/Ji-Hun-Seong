@@ -2070,5 +2070,74 @@
   "up": 4,
   "avg": 3.53,
   "market_avg": 2.34
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "013120",
+    "name": "동원개발",
+    "score": 79,
+    "next_chg": -1.92
+   },
+   {
+    "code": "097230",
+    "name": "HJ중공업",
+    "score": 66,
+    "next_chg": 2.58
+   },
+   {
+    "code": "002990",
+    "name": "금호건설",
+    "score": 62,
+    "next_chg": 2.25
+   },
+   {
+    "code": "036570",
+    "name": "NC",
+    "score": 61,
+    "next_chg": -9.88
+   },
+   {
+    "code": "036460",
+    "name": "한국가스공사",
+    "score": 61,
+    "next_chg": 4.9
+   },
+   {
+    "code": "195940",
+    "name": "HK이노엔",
+    "score": 60,
+    "next_chg": -0.96
+   },
+   {
+    "code": "082740",
+    "name": "한화엔진",
+    "score": 59,
+    "next_chg": -3.06
+   },
+   {
+    "code": "388050",
+    "name": "지투파워",
+    "score": 59,
+    "next_chg": -4.9
+   },
+   {
+    "code": "012750",
+    "name": "에스원",
+    "score": 55,
+    "next_chg": 1.32
+   },
+   {
+    "code": "058860",
+    "name": "KTis",
+    "score": 55,
+    "next_chg": 1.93
+   }
+  ],
+  "n": 10,
+  "hit10": 0,
+  "up": 5,
+  "avg": -0.77,
+  "market_avg": -1.23
  }
 }

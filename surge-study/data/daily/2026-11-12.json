@@ -1,0 +1,3295 @@
+{
+ "date": "2026-11-12",
+ "context": {
+  "n_stocks": 2689,
+  "n_up": 643,
+  "n_down": 1876,
+  "n_surge": 34,
+  "n_limit_up": 6,
+  "median_chg": -1.2364760432766575
+ },
+ "surgers": [
+  {
+   "date": "2026-11-12",
+   "code": "301300",
+   "name": "바이브컴퍼니",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 34.39041578576463,
+   "gap": 3.594080338266381,
+   "tv": 3090245825.0,
+   "vol_ratio": 32.83900129797623,
+   "close": 1907.0,
+   "pctb": 0.175666847791027,
+   "bw": 0.24685983926222552,
+   "bw_pctile": 0.11666666666666667,
+   "squeeze": false,
+   "rsi14": 31.994261119081784,
+   "ma5_gap": -0.026214658248696177,
+   "ma20_gap": -0.08006482982171803,
+   "ma60_gap": -0.1938950378246338,
+   "ma120_gap": -0.17117713484677388,
+   "ma_aligned": false,
+   "ret5": -0.09502551020408168,
+   "ret20": -0.16480282519128897,
+   "ret60": -0.3258907363420428,
+   "from_high": -0.6572463768115941,
+   "from_low": 0.5749167591564928,
+   "vol_ratio_prev": 0.6061393034926812,
+   "tv20_avg": 77785069.55,
+   "tv_prev": 42392625.0,
+   "prev_chg": 0.0,
+   "up_days": 0,
+   "prev_close_pos": 0.10112359550561797,
+   "fr": 1.91,
+   "price": 1419.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 34.39041578576463,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": true,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "주주총회소집결의 (임시주주총회)",
+     "rcept_no": "20261112901139",
+     "filer": "바이브컴퍼니"
+    },
+    {
+     "date": "20261112",
+     "title": "주주명부폐쇄기간또는기준일설정",
+     "rcept_no": "20261112901130",
+     "filer": "바이브컴퍼니"
+    },
+    {
+     "date": "20261112",
+     "title": "주요사항보고서(유상증자결정)",
+     "rcept_no": "20261112000665",
+     "filer": "바이브컴퍼니"
+    },
+    {
+     "date": "20261112",
+     "title": "주요사항보고서(유상증자결정)",
+     "rcept_no": "20261112000633",
+     "filer": "바이브컴퍼니"
+    },
+    {
+     "date": "20261112",
+     "title": "경영권변경등에관한계약체결",
+     "rcept_no": "20261112900980",
+     "filer": "바이브컴퍼니"
+    }
+   ],
+   "news": [
+    {
+     "title": "바이브컴퍼니, 29억9천만원 제3자배정 유상증자 - 연합뉴스",
+     "source": "연합뉴스",
+     "date": "Thu, 12 Nov 2026 08:29:46 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE4wNVRvaTVadHN2UjJMQkIwSDJSWDUwWVJJY1FMa1J2N3NZRFJDMWhkVTRiMVluZVNOc3FWck00b054UFVGMWw2U2xQOTktWkFLOXhBXzNLUHJUbEZ3dzdlQdIBYEFVX3lxTE4wNVRvaTVadHN2UjJMQkIwSDJSWDUwWVJJY1FMa1J2N3NZRFJDMWhkVTRiMVluZVNOc3FWck00b054UFVGMWw2U2xQOTktWkFLOXhBXzNLUHJUbEZ3dzdlQQ?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "바이브컴퍼니, 50억원 유상증자…에이아이블레이저에 제3자배정 - 연합뉴스",
+     "source": "연합뉴스",
+     "date": "Thu, 12 Nov 2026 08:28:54 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE51czk2Q2tmLVlnLTM1Xy14ZldGSUZOZFp3dzJKOG5IbVhSNUlqNEJPWkFfUHNpOUhfc2ktWjRySDBPb1RSR0sxMlYzNWlOeXN6THdWX18wT0RyRFJBVFZERdIBYEFVX3lxTE51czk2Q2tmLVlnLTM1Xy14ZldGSUZOZFp3dzJKOG5IbVhSNUlqNEJPWkFfUHNpOUhfc2ktWjRySDBPb1RSR0sxMlYzNWlOeXN6THdWX18wT0RyRFJBVFZERQ?oc=5",
+     "tier": "A",
+     "score": 4
+    },
+    {
+     "title": "바이브컴퍼니, 50억원 유상증자…에이아이블레이저에 제3자배정 - www.ebn.co.kr",
+     "source": "www.ebn.co.kr",
+     "date": "Thu, 12 Nov 2026 09:07:04 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5aejVvUTQ5ejZvNy1nUGU4aTVuYkR2WXZta1dsV241N3RqeW12a1J0bnpqNTU2OUVGSjVEZlZqVHpoeEZjTTVneGtzLVBFSzFHQ3dMdjhxb1VXMEdVREp1dEN5SlF2TTlV?oc=5",
+     "tier": "B",
+     "score": 3
+    },
+    {
+     "title": "바이브컴퍼니, 우리카드 ‘AI KMS’ 재구축 수주…업무 에이전트 확장 기반 마련 - 테크월드",
+     "source": "테크월드",
+     "date": "Tue, 10 Nov 2026 23:10:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9vS3BCbVZ1Z3lTcngzckhPdDhaS2szUE1VSmEwSU5nMDhFcHJBOFI1eS03V1NQMDZoVFpZR1NaZ0R0RkZMRnczRmRQSmVVNkFHaHNwSU5jRmloOFY1Yi1PenBMOFpST1FL?oc=5",
+     "tier": "B",
+     "score": 3
+    },
+    {
+     "title": "[특징주] 바이브컴퍼니, AI 챗봇 테마 훈풍 속 금융권 AX 사업 성과 부각되며 强세 - 와이드경제",
+     "source": "와이드경제",
+     "date": "Thu, 12 Nov 2026 05:36:40 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE52Y3AxR2Zlck81LUxRbjR3bFpXcFBzVnUzTVBmMUNHQUxQVjU4V3FzNjBrZ3lMOEp0WlpEMWF0Q0FabWZvNG12dGNqWm5LTjhPbmFJOWJKWU1odXh6V19oNEFxUzc3VmJGXzBoeQ?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "바이브컴퍼니 장중 26%대 급등…AI 챗봇주 강세 - 비건뉴스",
+     "source": "비건뉴스",
+     "date": "Thu, 12 Nov 2026 05:24:32 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFA2dEFkSDRTYWFNWE1zVk9ra3FjWWZIcm16S08zeUNLVXNsSzRYenZJVi0yRWRYeHZRdE9GVmtBWThyOW5oalUya0FNV0YtTTVwZHowamRpdm8tSVM4MEdHWEEzOThVdw?oc=5",
+     "tier": "C",
+     "score": 1
+    }
+   ],
+   "catalysts_dart": [
+    "유상증자·CB",
+    "M&A·지배구조"
+   ],
+   "catalysts_news": [
+    "수주·계약",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "유상증자·CB",
+    "M&A·지배구조",
+    "수주·계약"
+   ],
+   "themes": [
+    "AI",
+    "금융"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "209640",
+   "name": "와이제이링크",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 29.850746268656714,
+   "gap": -1.4925373134328401,
+   "tv": 10707705090.0,
+   "vol_ratio": 12.18268373104561,
+   "close": 3915.0,
+   "pctb": 0.4352315779605315,
+   "bw": 0.2790747632524263,
+   "bw_pctile": 0.125,
+   "squeeze": false,
+   "rsi14": 44.21768707482993,
+   "ma5_gap": 0.07410046312789453,
+   "ma20_gap": -0.01807523204689787,
+   "ma60_gap": -0.08829755065013611,
+   "ma120_gap": -0.23835587600652597,
+   "ma_aligned": false,
+   "ret5": 0.01858108108108114,
+   "ret20": -0.13112391930835732,
+   "ret60": -0.1728395061728395,
+   "from_high": -0.7086956521739131,
+   "from_low": 0.2615062761506277,
+   "vol_ratio_prev": 0.4827719434573936,
+   "tv20_avg": 698644691.25,
+   "tv_prev": 334541385.0,
+   "prev_chg": 0.029010238907849928,
+   "up_days": 2,
+   "prev_close_pos": 0.8,
+   "fr": 2.05,
+   "price": 3015.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 29.850746268656714,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": true,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "주식등의대량보유상황보고서(일반)",
+     "rcept_no": "20261112000533",
+     "filer": "박순일"
+    },
+    {
+     "date": "20261112",
+     "title": "분기보고서 (2026.09)",
+     "rcept_no": "20261112000193",
+     "filer": "와이제이링크"
+    }
+   ],
+   "news": [
+    {
+     "title": "와이제이링크, 美데이터센터 수주 11배 급증…3Q누적 72억 흑자전환 - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Thu, 12 Nov 2026 05:00:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE43OWlvVHVzMUNrR3o4RVhvYzFKLWhybHllMXNURThsUHFHZzM0OVdPY3VlYXMzWnF5Y08wQllSaFpxanZBaUd4WGxlZ0ZRWG5VZTVtblY3NWxLTDBYNlp3VHQwLVg4QUhh0gFuQVVfeXFMTzdxbWpQWVVONDJMOE1xOERjYXN5VmNtRzFCV3lsaUtrbHlkLXdVTHVCbk1UUWhkU2c1dnpxRHhyVmFJVVktTjM4MENtR25qeW5fby1yYUhINjdsOTFyUXg5UGhScFF1cTMxSkxnYUE?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "와이제이링크 박순일, 주식담보대출 이자율·만기 조건 변경 - 데이터투자",
+     "source": "데이터투자",
+     "date": "Thu, 12 Nov 2026 07:15:59 GMT",
+     "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1Ua0JOcF9jWlVOTFB4YTFkYllQVlNKY3c1dXFxTXBSQk50NzZrOWo5Tk1jaW84TWJRZFhzSS0xM2Fsa3hpM2g1OXBEbzNNa05iTFVfYlZQRUxjcmFRSXl0OERXTkMxQWFWdlJkUlYwTnVGMEk?oc=5",
+     "tier": "C",
+     "score": 0
+    },
+    {
+     "title": "[급등락주 짚어보기] 호실적·주주환원 업은 AI·장비주 '질주'…넥스아이 상장 첫날 '下' - 이투데이",
+     "source": "이투데이",
+     "date": "Thu, 12 Nov 2026 07:48:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5UM0pScWxPMGEyQTVWVEVaMDd0bmx6Ym1OZGhDSXROR3U2aVhwdXJXcEJDdG9rZ251UmxsdGJZZEZHWlZvbmxyWkZNN3hFUnk2RURmTg?oc=5",
+     "tier": "A",
+     "score": 0
+    },
+    {
+     "title": "금융당국 \"13일 코스닥 추가대책 사실 아냐, 풍문유포 엄정 조치\" - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Thu, 12 Nov 2026 04:57:55 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9WS01fTElFRW9RRzRSTEVtTUJlZTdMckh3a3BpY1JZbGIwaUl5MEF0LUoxOWR4T25fTUd0QTg0VU1FVTNyUmh6bWdYLUFJd3RMMWhvODRHVkl1eklYd2Zlc0paN3ZIQTQtSVo5Mk930gFuQVVfeXFMT1ZLTV9MSUVFb1FHNFJMRW1NQmVlN0xySHdrcGljUllsYjBpSXkwQXQtSjE5ZHhPbl9NR3RBODRVTUVVM3JSaHptZ1gtQUl3dEwxaG84NEdWSXV6SVh3ZmVzSlo3dkhBNC1JWjkyT3c?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "[주식마감] '지분경쟁' 한진칼우 다시 '上'... 공시 없는 상한가 종목도 무더기 - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 10:40:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5SeXhOTFlQSS1QeUdwUWxfRlZBbDNuT0JlTVgtcllKMHcxRnFYUEw0SFF5R2JqdEtOc2xabUdMUWI0bnpNbzQ1aE5WeXMwNnczQmhDRXBiTXZWelhGTVUwd2hkZUplSllWTEE?oc=5",
+     "tier": "C",
+     "score": -6
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "실적",
+    "수주·계약",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "실적",
+    "수주·계약"
+   ],
+   "themes": [
+    "AI",
+    "금융",
+    "데이터센터"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "263860",
+   "name": "지니언스",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 29.844961240310084,
+   "gap": 6.20155038759691,
+   "tv": 270596317000.0,
+   "vol_ratio": 6.610123629944298,
+   "close": 33500.0,
+   "pctb": 0.7003533173720456,
+   "bw": 0.48535263196380096,
+   "bw_pctile": 0.9583333333333334,
+   "squeeze": false,
+   "rsi14": 60.60107039934129,
+   "ma5_gap": 0.056078591895210916,
+   "ma20_gap": 0.09724200990920107,
+   "ma60_gap": 0.3125206671132177,
+   "ma120_gap": 0.5502866728424427,
+   "ma_aligned": true,
+   "ret5": 0.009784735812133016,
+   "ret20": 0.11688311688311681,
+   "ret60": 0.6775032509752925,
+   "from_high": -0.2670454545454546,
+   "from_low": 1.3454545454545452,
+   "vol_ratio_prev": 4.237389582372978,
+   "tv20_avg": 31622349270.5,
+   "tv_prev": 111418590000.0,
+   "prev_chg": 0.0,
+   "up_days": 0,
+   "prev_close_pos": 0.050505050505050504,
+   "fr": 19.69,
+   "price": 25800.0,
+   "big": true,
+   "surge": true,
+   "high_chg": 30.426356589147296,
+   "close_pos": 0.976,
+   "upper_wick": 0.5813953488372093,
+   "limit_up": true,
+   "filings": [
+    {
+     "date": "20261111",
+     "title": "기업설명회(IR)개최",
+     "rcept_no": "20261111900231",
+     "filer": "지니언스"
+    },
+    {
+     "date": "20261112",
+     "title": "분기보고서 (2026.09)",
+     "rcept_no": "20261112000006",
+     "filer": "지니언스"
+    }
+   ],
+   "news": [
+    {
+     "title": "지니언스, AI 보안 수요 확대에 영업익 3.5배 ‘쑥’ - 서울경제",
+     "source": "서울경제",
+     "date": "Thu, 12 Nov 2026 09:08:48 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBObDgwRUdFUUFhZThqMU1PRENMYWdxVTh1Ty1Xal90QTI5ODRUZE5FNGdDRlZqaUNTMWVjWFlRc0tqVHJBQ1o5ZXZ5NlJ1VDlFalHSAVNBVV95cUxQSzNuV0FGTU9MRmV1c2N2X2ZaZVJQV19tYnNHZHJyY0Yxb3BUZVdvR21VSzllUUktdGdxZ2xpSEo4QTVlN2gyVTl5Y2NTZVZtSTlVWQ?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "지니언스, 3분기 영업익 2.7배 증가...NAC·EDR 쌍끌이 성장 - 디일렉",
+     "source": "디일렉",
+     "date": "Thu, 12 Nov 2026 05:41:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9NRlA4MmdfZk5IYlotWWRnWVlxeHdUN1VPSFpnakZJcC1fLWFUbE9rU1psMXB2aGdvbFhXNnhHRmg1a0s1U2Vsa3F2cHdqMElMekItN21DOXdna2h3ZHRZVDkzTVc3dw?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "지니언스, 누적 영업익 3배 넘게 늘었다…NAC·EDR로 ‘폭풍성장’ - 매일경제",
+     "source": "매일경제",
+     "date": "Thu, 12 Nov 2026 09:17:28 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE9HQlItNFpHemtBUjRfaTY1SklZS3J4anR6STVOX0VEX0I0Sy1zUjVTdEFiSHh4dW5oWERSY1YwZ1g0RXVkVm01amJVa0tmdw?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "지니언스, 3Q 누적 영업익 81억…전년比 273% 급등 - 이투데이",
+     "source": "이투데이",
+     "date": "Thu, 12 Nov 2026 05:05:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5Id0VHeVdSZUZxZEVxTnYtZEQ4LTZIQUVXdi1vaWVBc3NkUnNORjd6T0F3djZRMWhNM1o3T1VHcVFTOUhxUUJCOHdJREkyRHBIYk5HZw?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "지니언스, 3분기 영업이익 38억원…전년 동기 대비 253%↑ - 한국경제",
+     "source": "한국경제",
+     "date": "Wed, 11 Nov 2026 23:49:12 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBMVkpKb3hVM3NuUXJYUXFGWkdWQ281anFld0s2dnlxc0VNak9ISjVkMjNOUUdkd2dBcndTUWlnYXo3cnNUZE9LeUpiZzQ3cFhtMnhvRW15TWdSZw?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "지니언스, 3분기 영업익 38억원…전년比 253%↑ - 뉴시스",
+     "source": "뉴시스",
+     "date": "Wed, 11 Nov 2026 23:42:06 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1nX2YxQy1kWF9QRmg1cHBxY3ZwdmpNcFM1b2dEcUpScDM3bGxWMkhjS0w0MkZSQnRFV3F3QnpWbzUyb1BfWUpmZHU2Wmt6aUN3Z3gxSE9POGNaSHJYV05aYdIBeEFVX3lxTE1wN09BcVZxSHJtdmNma2dFNF8xSUJMWklvRTJ1eG5zYTY1a2Q2Y1ppZEFPdVY2Wmxsa19CWlpvWEE3TjZwNVZsTVJDalhhMWtEMzRRcm5GcjZDU09BSF9NSlN5NjJPMV9RLXRBZDBDd0JOQVFZYTVaNg?oc=5",
+     "tier": "A",
+     "score": 7
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "실적",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "실적"
+   ],
+   "themes": [
+    "AI",
+    "보안"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "099520",
+   "name": "DGI",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 29.50354609929078,
+   "gap": -0.28368794326241176,
+   "tv": 1816932997.0,
+   "vol_ratio": 1.7550075065859,
+   "close": 913.0,
+   "pctb": 0.29398583389523986,
+   "bw": 0.9374745963444591,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 17.808219178082183,
+   "ma5_gap": 0.05255300089578996,
+   "ma20_gap": -0.19313304721030045,
+   "ma60_gap": -0.31393538341767213,
+   "ma120_gap": -0.33883522460845916,
+   "ma_aligned": false,
+   "ret5": -0.035567715458276306,
+   "ret20": -0.36141304347826086,
+   "ret60": -0.3619909502262444,
+   "from_high": -0.5090529247910863,
+   "from_low": Infinity,
+   "vol_ratio_prev": 0.1460804456472944,
+   "tv20_avg": 1288226386.3,
+   "tv_prev": 115933725.0,
+   "prev_chg": 0.07963246554364467,
+   "up_days": 2,
+   "prev_close_pos": 0.8026315789473685,
+   "fr": 1.01,
+   "price": 705.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 29.50354609929078,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": true,
+   "filings": [],
+   "news": [
+    {
+     "title": "DGI 주가, 상한가... 무슨 회사길래? - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 00:22:17 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFAwX2tLaC1TcDAtNDYyakZmVkM4NGVyYUt6REFTamRUeVhfQ3gwX1Nnb0NJYjh6WDc4Znl6RkhuWHFBZ0VNUkd2dG1rZFZreV94amxfTlJCUmEyNnBTaGh2Vk8tdlRwM0tybWc?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "DGI 장중 상한가…913원까지 올라 - 비건뉴스",
+     "source": "비건뉴스",
+     "date": "Thu, 12 Nov 2026 05:16:04 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFA5dzM1T05NMjlDTDdwZl9kRUh0TXBRLXNxOHhUVU9KSDNVNzI0U1hDMUhTYlhaNVgwM19Qd1hWdzVJMzd1dE0wVWpMRktjR1VRU29NQzNhTXhFdnB3N2puM0JjOFhWdw?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "특징주, DGI-CCTV＆DVR 테마 상승세에 28.02% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 00:25:06 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9sNGZxdEhiZ0ItdjdnSkVRR0kyazcyYW0weTU3VjBOYVVVS0d5bFE5TWJPaEc5dmduLWxzRzFMY0JTN3J3R0tVc2hWeXBzc0dYOWc?oc=5",
+     "tier": "B",
+     "score": 0
+    },
+    {
+     "title": "특징주, 비츠로시스-CCTV＆DVR 테마 상승세에 9.97% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 06:23:15 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5hc3JvUlgtMThERFNfMGlCVjhXUVUtOFZFM1BUSktqQTRGczc0bVRXT1hFdjJneDJMVEMwcXIyRGJ2dUZrVnZqOFA4T05TQjlpenc?oc=5",
+     "tier": "B",
+     "score": -3
+    },
+    {
+     "title": "[오늘의 특징주] 코난테크놀로지·모아라이프플러스 상한가…AI 호재에 상폐 위험주도 급등 - https://www.ppss.kr/",
+     "source": "https://www.ppss.kr/",
+     "date": "Thu, 12 Nov 2026 02:13:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE43VkdnY1ByUGo3dFNKUDFrNWNQSFdEZEdsMlowMEplSERMa0FNdWxKQS1la2dhaEV6QTNlRGhwRmMxN3l5Yllpel9DN3ZIbEdHelIxdmlUNTNQMFJ6SnBrN2hvYzY?oc=5",
+     "tier": "B",
+     "score": -3
+    },
+    {
+     "title": "[주식마감] '지분경쟁' 한진칼우 다시 '上'... 공시 없는 상한가 종목도 무더기 - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 10:40:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5SeXhOTFlQSS1QeUdwUWxfRlZBbDNuT0JlTVgtcllKMHcxRnFYUEw0SFF5R2JqdEtOc2xabUdMUWI0bnpNbzQ1aE5WeXMwNnczQmhDRXBiTXZWelhGTVUwd2hkZUplSllWTEE?oc=5",
+     "tier": "C",
+     "score": -6
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": [
+    "AI"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "402030",
+   "name": "코난테크놀로지",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 28.913260219341975,
+   "gap": 28.414755732801588,
+   "tv": 2534848920.0,
+   "vol_ratio": 18.234954887917404,
+   "close": 12930.0,
+   "pctb": 0.2716945651280502,
+   "bw": 0.23924467104797512,
+   "bw_pctile": 0.275,
+   "squeeze": false,
+   "rsi14": 32.72727272727272,
+   "ma5_gap": 0.03210537147561232,
+   "ma20_gap": -0.05462085866440458,
+   "ma60_gap": -0.19438829466807672,
+   "ma120_gap": -0.23802529786398907,
+   "ma_aligned": false,
+   "ret5": -0.03464870067372472,
+   "ret20": -0.13459879206212255,
+   "ret60": -0.31112637362637363,
+   "from_high": -0.6565068493150685,
+   "from_low": 0.0973741794310723,
+   "vol_ratio_prev": 0.6349350079004678,
+   "tv20_avg": 116007500.0,
+   "tv_prev": 70330360.0,
+   "prev_chg": 0.024514811031664863,
+   "up_days": 3,
+   "prev_close_pos": 0.7209302325581395,
+   "fr": 1.0,
+   "price": 10030.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 28.913260219341975,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[오늘의 특징주] 코난테크놀로지·모아라이프플러스 상한가…AI 호재에 상폐 위험주도 급등 - https://www.ppss.kr/",
+     "source": "https://www.ppss.kr/",
+     "date": "Thu, 12 Nov 2026 02:13:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE43VkdnY1ByUGo3dFNKUDFrNWNQSFdEZEdsMlowMEplSERMa0FNdWxKQS1la2dhaEV6QTNlRGhwRmMxN3l5Yllpel9DN3ZIbEdHelIxdmlUNTNQMFJ6SnBrN2hvYzY?oc=5",
+     "tier": "B",
+     "score": 4
+    },
+    {
+     "title": "코난테크놀로지, 철도학회로부터 부산역 AI 다국어 안내 성과 인정 - 더에이아이",
+     "source": "더에이아이",
+     "date": "Wed, 11 Nov 2026 12:48:26 GMT",
+     "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1pNkozb0dBWDdLdXJsSElkckhMNFNFd3hQT2lncUZxSTdCOERqbWhVSWktZ0RrcXMxdHViZlNuLWltdlZrQ3FJVV9YYmh2dWxXQ0RCZnI0cmhjNTBNRnZjdUR4MkdZZVNxSm5v?oc=5",
+     "tier": "B",
+     "score": 3
+    },
+    {
+     "title": "코난테크놀로지, 부산역 AI 역무원 운영 분석으로 철도학회 우수상 - 아이뉴스24",
+     "source": "아이뉴스24",
+     "date": "Wed, 11 Nov 2026 08:50:42 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBUbmdMM3VXV1g0a183N3hYbVVKLWhVWWd2aU9wY0lXeGM5OFZKRFd6MUVKOFRQbXhkLTM4S1BFTFZEcGtZaURIUndsbw?oc=5",
+     "tier": "B",
+     "score": 2
+    },
+    {
+     "title": "코난테크놀로지, 부산역 AI 다국어 안내 성과로 한국철도학회 논문 우수상 - 테크월드",
+     "source": "테크월드",
+     "date": "Wed, 11 Nov 2026 04:04:16 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1McGkwYVhXVnZDNFV5eVFvRlpYek1YNUw3NFRGMFZCbmdfNVJtdTZtWWhiQko4cXNuWXRmd21CZ252WHF4d3BqOWhRdjRwWVBnVHJLZEc0YjY1MzNySVNrcVdWNVFnS054?oc=5",
+     "tier": "B",
+     "score": 2
+    },
+    {
+     "title": "코난테크놀로지 주가, 상한가... 무슨 회사길래? - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 00:06:15 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5HbDBJTkp0UkhrLS02WDl5MHpDZFNSWUgwOXpVVTN5eGFDNU5CV2ZXaHlWRk53VGM1Y2xnWVd5VDFiU1NwUHBweUtrQnVpQXJyZWxVcy1GWWtsMm9VWEotaTBER20ySzlDWVE?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "코난테크놀로지, 부산역 AI 안내 논문상 이튿날 장중 상한가 - 비건뉴스",
+     "source": "비건뉴스",
+     "date": "Thu, 12 Nov 2026 04:59:55 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE83Y2ZsREo3ZDAwTC1QQWpYUGZRLU9zc3Vnbk90TU80ZS1ySnFqc0VTZ2taNmNyVjhCeFEtZENZc3BJd2ZKLXVRRm5GdVJzY01SVk5oRXFvcE1wT2xNNDQ3YmJVanlWdw?oc=5",
+     "tier": "C",
+     "score": 1
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": [
+    "AI"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "451760",
+   "name": "컨텍",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 28.186528497409324,
+   "gap": -1.5544041450777257,
+   "tv": 35202805770.0,
+   "vol_ratio": 2.3419454619092885,
+   "close": 12370.0,
+   "pctb": 0.5941754842208719,
+   "bw": 0.8343341611469797,
+   "bw_pctile": 0.9333333333333333,
+   "squeeze": false,
+   "rsi14": 64.7313691507799,
+   "ma5_gap": 0.07103218645948939,
+   "ma20_gap": 0.07857382362803178,
+   "ma60_gap": 0.19712194516809323,
+   "ma120_gap": 0.01578056332839184,
+   "ma_aligned": true,
+   "ret5": -0.1187214611872146,
+   "ret20": 0.4026162790697674,
+   "ret60": 0.16969696969696968,
+   "from_high": -0.6337760910815939,
+   "from_low": 0.6753472222222223,
+   "vol_ratio_prev": 0.08717579806416884,
+   "tv20_avg": 12495775464.5,
+   "tv_prev": 1019783050.0,
+   "prev_chg": 0.04777415852334421,
+   "up_days": 3,
+   "prev_close_pos": 0.9375,
+   "fr": 0.62,
+   "price": 9650.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 28.186528497409324,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[단독] 컨텍 \"블루오리진 등과 안테나 200기 공급 논의…최소 1조원 규모\" - 한국경제",
+     "source": "한국경제",
+     "date": "Thu, 12 Nov 2026 04:16:19 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1ZWDZsd0ZYSVctYkRkU0dHMG0xcWc2VUNianhCRU5UQmRSYkkybHNDQnNybnlCc3AzcHlaRkhqaDJCdGFKS216NW44V1VsaDh5T2plQlQ1ZEstZw?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "[단독] 컨텍, 블루오리진 등 안테나 대량 공급 - 한국경제",
+     "source": "한국경제",
+     "date": "Thu, 12 Nov 2026 08:22:06 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBldXl4amRNV3d6SFl2Y3hGSmVHeUNNRWlpeVJHd0VXcDFDWFdieGwzMzBhUjR3LVhhYkxTakllUUpnY0RUWmlmVkVfMkpxbFBhYU9MX0FlNE82UQ?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "[속보] 컨텍 주가, 상한가 도달…코스닥 약세 속 급등 - CBC뉴스",
+     "source": "CBC뉴스",
+     "date": "Thu, 12 Nov 2026 04:55:09 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9LR01ENDNZYk1ad0VDc2g4Q0pzVjFPOGlhRzZ4dXU5NlRoZUhVel9RbmFBamtlOHhsWVBaNFNuQ1MtdkI2VDdOZGl6QnhkV0xpNjZRWThCRmR1ZTlVemhqQ0g0MmoyRWRJ?oc=5",
+     "tier": "B",
+     "score": 4
+    },
+    {
+     "title": "\"기술은 기본, 관건은 우주 외교\"…이성희 컨텍 대표 제언 - 중도일보",
+     "source": "중도일보",
+     "date": "Thu, 12 Nov 2026 08:35:29 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9LQ0VyalZzNW94R0ZuNUozRUd5LWIzNy1MRkhmdXItZGNoWWtlOVlBcTJUZFNlQlhJZk5BX2l3Wld5V2k2RHdsVVN6ajJycld4QWo1c1FPVVNnclRONERzYU1PaUhuTE9McUFFZg?oc=5",
+     "tier": "B",
+     "score": -1
+    },
+    {
+     "title": "AP위성 “자체 위성 띄워 데이터 판다”…플랫폼·서비스로 사업 확장 - 이데일리",
+     "source": "이데일리",
+     "date": "Thu, 12 Nov 2026 07:22:19 GMT",
+     "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNWktkVDFrd0FobmRzaUs4MmxnMEN0ejBDMFotT2wwUWN5NkN6ellKWkVuT0ItVnhhNEFEQWo3ZldDcjZGeVFHVjEtN19kU0xibm1pZFlQZkR0VWtrbDdkMjVzbmdkOVY3OElIWjZORGRYc1RhbE1rMUJRQmJMYzg4Yw?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "5극3특 제주 성장전략 질문에 위 지사가 답한 기업들은? - 제주의소리",
+     "source": "제주의소리",
+     "date": "Wed, 11 Nov 2026 06:33:20 GMT",
+     "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE4tdzFWSHZRbEVURU8ycnpxQ0hGOXhKOFRUX2l4VlIwZ2ZhbkkxU29ZR0VldE5hZ3B1bElhUTNtaXA1MTU0TnlISTBhY0dCeWlxdEtvcVVEa3dYZHNYQW9wbkVRcjRGWEFjNkZZ?oc=5",
+     "tier": "B",
+     "score": -5
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": [
+    "우주"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "148780",
+   "name": "비큐AI",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 27.848101265822777,
+   "gap": 5.063291139240511,
+   "tv": 3438233920.0,
+   "vol_ratio": 21.31611442425943,
+   "close": 4040.0,
+   "pctb": 0.07297191570041515,
+   "bw": 0.3261091041066556,
+   "bw_pctile": 0.4666666666666667,
+   "squeeze": false,
+   "rsi14": 30.487804878048777,
+   "ma5_gap": -0.014962593516209433,
+   "ma20_gap": -0.13925774599931906,
+   "ma60_gap": -0.15697739045374715,
+   "ma120_gap": -0.07160310053226127,
+   "ma_aligned": false,
+   "ret5": -0.10227272727272729,
+   "ret20": -0.17493472584856395,
+   "ret60": -0.2946428571428571,
+   "from_high": -0.6695252039322317,
+   "from_low": 0.6970998925886145,
+   "vol_ratio_prev": 0.7874802171541706,
+   "tv20_avg": 145885377.25,
+   "tv_prev": 98664680.0,
+   "prev_chg": -0.03215926493108734,
+   "up_days": 0,
+   "prev_close_pos": 0.684931506849315,
+   "fr": 0.09,
+   "price": 3160.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 27.848101265822777,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "비큐AI 주가, 상한가... 이유는? - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 00:17:22 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBaVU00TkUtSGc2RHo3TUk1bUpLbFpIUG16MndXRE1vdGs0T0hXTllYRlRmTHJ1UThPX1p6b3NTSUJrUVF1Vm5MdHBvREtSdnNhWlRNempsbEhobHVwbFhMbS1sbUdLUkRUQ0E?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "비큐AI 주가 장중 상한가…3분기 순이익 흑자전환 - 비건뉴스",
+     "source": "비건뉴스",
+     "date": "Thu, 12 Nov 2026 05:08:51 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBTa2FCQVNWUFZ5TUtVSHpmTmFhdWhqUzhRRmU0YUdjT3hvRi1XR0dqcERYOFhzUjhrWEZVZloxYUJnSy16M1N6UXM1Ukc4UFZKcUE5azFnb0RQSkJKM0ViQ0t5ZDFpUQ?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "[급등락주 짚어보기] 호실적·주주환원 업은 AI·장비주 '질주'…넥스아이 상장 첫날 '下' - 이투데이",
+     "source": "이투데이",
+     "date": "Thu, 12 Nov 2026 07:48:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5UM0pScWxPMGEyQTVWVEVaMDd0bmx6Ym1OZGhDSXROR3U2aVhwdXJXcEJDdG9rZ251UmxsdGJZZEZHWlZvbmxyWkZNN3hFUnk2RURmTg?oc=5",
+     "tier": "A",
+     "score": 0
+    },
+    {
+     "title": "비큐AI, 퓨리오사AI 투자 평가이익 반영…3분기 순이익 큰 폭 개선 : 네이버 블로그 - Naver Blog",
+     "source": "Naver Blog",
+     "date": "Wed, 11 Nov 2026 00:13:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxNNFM5Y2FmZGQyWS1ubzVMTjg1VEZKNmtmMDNEbm5SazJMUWpuWkZYblM4ckhUYS05eFBuakE0MFd4R0owRW0yazJRZmFKYkJkenVyblJzTURhR3VoRi1IZXVVUDBJTWZXaWcyNzJKSi1odkU0azkzVmZHSXl4dGo1QUxyQzE3RldBQzBaSHNqVQ?oc=5",
+     "tier": "C",
+     "score": -1
+    },
+    {
+     "title": "[오늘의 특징주] 코난테크놀로지·모아라이프플러스 상한가…AI 호재에 상폐 위험주도 급등 - https://www.ppss.kr/",
+     "source": "https://www.ppss.kr/",
+     "date": "Thu, 12 Nov 2026 02:13:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE43VkdnY1ByUGo3dFNKUDFrNWNQSFdEZEdsMlowMEplSERMa0FNdWxKQS1la2dhaEV6QTNlRGhwRmMxN3l5Yllpel9DN3ZIbEdHelIxdmlUNTNQMFJ6SnBrN2hvYzY?oc=5",
+     "tier": "B",
+     "score": -3
+    },
+    {
+     "title": "코스닥 '뚝'...주성엔지니어링·에스피지·알테오젠 '급락' - 초이스경제",
+     "source": "초이스경제",
+     "date": "Thu, 12 Nov 2026 08:25:55 GMT",
+     "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5NNDZaNUFjeTNBNDYwc1Z6QTNPeWk0enktV1pJM0VoaG9KY3hEaG51WmtEY1l0MEw4ZnQzT3BxcmZibll0RlBYeW5oSWVKYjlvdWZkNV9JWWhYbi1HZVdBTDc1LXh5U1VUMXJzQ1NNRmVFVTTSAXNBVV95cUxOTTQ2WjVBY3kzQTQ2MHNWekEzT3lpNHp5LVdaSTNFaGhvSmN4RGhudVprRGNZdDBMOGZ0M09wcXJmYm5ZdEZQWHluaEllSmI5b3VmZDVfSVloWG4tR2VXQUw3NS14eVNVVDFyc0NTTUZlRVU0?oc=5",
+     "tier": "B",
+     "score": -4
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "실적",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "실적"
+   ],
+   "themes": [
+    "AI"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "0039P0",
+   "name": "매드업",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 27.65151515151516,
+   "gap": -0.37878787878787845,
+   "tv": 38030463480.0,
+   "vol_ratio": 9.789529951787124,
+   "close": 6740.0,
+   "pctb": 0.26753228063051243,
+   "bw": 0.356589206611121,
+   "bw_pctile": 0.18309859154929578,
+   "squeeze": false,
+   "rsi14": 38.30128205128206,
+   "ma5_gap": 0.03145145536237548,
+   "ma20_gap": -0.0828954796126623,
+   "ma60_gap": -0.27652237459606976,
+   "ma120_gap": null,
+   "ma_aligned": false,
+   "ret5": -0.10051107325383302,
+   "ret20": -0.24028776978417266,
+   "ret60": -0.3874709976798144,
+   "from_high": -0.7653333333333333,
+   "from_low": 0.1578947368421053,
+   "vol_ratio_prev": 0.41832354741853334,
+   "tv20_avg": 3401588961.5,
+   "tv_prev": 1277670240.0,
+   "prev_chg": 0.025242718446601975,
+   "up_days": 2,
+   "prev_close_pos": 0.9545454545454546,
+   "fr": 1.68,
+   "price": 5280.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 27.65151515151516,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "임원ㆍ주요주주특정증권등소유상황보고서",
+     "rcept_no": "20261112000502",
+     "filer": "송호중"
+    },
+    {
+     "date": "20261112",
+     "title": "분기보고서 (2026.09)",
+     "rcept_no": "20261112000169",
+     "filer": "매드업"
+    },
+    {
+     "date": "20261112",
+     "title": "주요사항보고서(자기주식취득결정)",
+     "rcept_no": "20261112000145",
+     "filer": "매드업"
+    },
+    {
+     "date": "20261112",
+     "title": "현금ㆍ현물배당결정 (분기배당)",
+     "rcept_no": "20261112900257",
+     "filer": "매드업"
+    },
+    {
+     "date": "20261112",
+     "title": "중간(분기)배당을위한주주명부폐쇄(기준일)결정",
+     "rcept_no": "20261112900242",
+     "filer": "매드업"
+    }
+   ],
+   "news": [
+    {
+     "title": "매드업, 3분기 누적 영업익 102% 증가…연매출 조기 돌파·56억원 주주환원 - 이투데이",
+     "source": "이투데이",
+     "date": "Thu, 12 Nov 2026 02:04:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1VRXlRSkY3MTZFQjRfd1Fianh5QnR2R0o4NF83UnBWaXFCMzJaekM4bzFZdkdyTngxRC1XamQyOEdUTmhPN2M2MlRpeVhYTnVjUHBkUQ?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "[1112시황레이더] 매드업, 20억 원 규모 자사주 취득 결정 등에 장중 상한가 By 인포스탁데일리 - Investing.com 한국어",
+     "source": "Investing.com 한국어",
+     "date": "Thu, 12 Nov 2026 03:11:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTFBVRUowTjNFakdjSkNwTWZoY052ZTlHdTFUc1VSRF9OSDJKTmxzYTUxbzdnbjBOaGYtOHFLbTBjSHR5VVl2cjh1MjdtNFVHYWttclM4VkNuTDJ1N3dtQjR6LTl1TEFMS0d3d05NUHhsY1M?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "매드업 주가, 급등세... 무슨 회사길래? - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 00:44:42 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9aN1hQRExYODI4UWFGSHBPMGQ4WndJQjQ2dHk5enVrR0FVeDRTU2pDUjAtcFNUUGtNOFIyQU5ITTVRQUtGZEtwalRSanB1MXNtdl81Ukx3TFNqXzIzZThSa0hmNHVEWnA3ZHc?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "[특징주] 매드업, 3분기 만에 작년 연매출 돌파·대규모 주주환원 호재에 상한가 육박 - 와이드경제",
+     "source": "와이드경제",
+     "date": "Thu, 12 Nov 2026 04:12:49 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1xaFNxNGZadUd4MVUyMlZiNXRWRHZnQV9EMUtWYVR5d0Z4LXp2VEIxdEpHX0ZhVS0tR3lWTE9UcE5jalJiYlVfQWhIYWpjQlNzaGV6NDMzbndfUGQwV21rX2hXeF9nR01MWk1wbg?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "매드업 송호중 이사, 소유 주식 수량 3만주 증가…소유 지분율 0.16%p 상승 - 디지털투데이",
+     "source": "디지털투데이",
+     "date": "Thu, 12 Nov 2026 08:20:03 GMT",
+     "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5Jakl0NTQ0TFNwd3NZSjZYSDExRnpSLUotenJWdUNvVy1HUkZ3YWJOaGRwSVYxWkg2WUVYamM0eUItckh1bS1oVnpjdFliVFNMU0JPYWJDNnR0dE55Y0lZa19CWXVzcC0tVWk4UTZCUkRiN2wwRXVaUy1Zcw?oc=5",
+     "tier": "C",
+     "score": 0
+    },
+    {
+     "title": "매드업, 20억원 규모 자기주식 취득 결정 - 디지털투데이",
+     "source": "디지털투데이",
+     "date": "Thu, 12 Nov 2026 02:11:01 GMT",
+     "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9QNE9VZGtyZjlEMmxIQ2xCVzFaaGo0dWRlSzduXzJJdFFHY1hSWnRTa2JkMmZuVDZYMTFCZ1AzN2dHVlk0T0w2X3lQdWJ2bFhEUVBzVUlnSVlVNnZRYXV0QkdBYUExY2doeGVxTUdmQWZMWjFyNVpFSC04WQ?oc=5",
+     "tier": "C",
+     "score": 0
+    }
+   ],
+   "catalysts_dart": [
+    "자사주·소각"
+   ],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "자사주·소각"
+   ],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "302430",
+   "name": "이노메트리",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 26.848249027237348,
+   "gap": -2.7237354085603127,
+   "tv": 6651162840.0,
+   "vol_ratio": 29.17299748197273,
+   "close": 6520.0,
+   "pctb": 0.24928382166918384,
+   "bw": 0.413966017459365,
+   "bw_pctile": 0.5916666666666667,
+   "squeeze": false,
+   "rsi14": 33.265306122448976,
+   "ma5_gap": 0.03482987718945041,
+   "ma20_gap": -0.10378797785623994,
+   "ma60_gap": -0.23894132889135666,
+   "ma120_gap": -0.2356829967967583,
+   "ma_aligned": false,
+   "ret5": -0.056880733944954076,
+   "ret20": -0.2688477951635846,
+   "ret60": -0.0738738738738739,
+   "from_high": -0.5545927209705372,
+   "from_low": 0.2754342431761787,
+   "vol_ratio_prev": 0.8366097561664018,
+   "tv20_avg": 202568896.75,
+   "tv_prev": 152354740.0,
+   "prev_chg": 0.041540020263424626,
+   "up_days": 2,
+   "prev_close_pos": 0.971830985915493,
+   "fr": 1.66,
+   "price": 5140.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 28.988326848249034,
+   "close_pos": 0.9325153374233128,
+   "upper_wick": 2.140077821011673,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "특징주, 이노메트리-유리 기판 테마 상승세에 24.71% ↑ - 매일경제",
+     "source": "매일경제",
+     "date": "Thu, 12 Nov 2026 04:14:59 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE1wTmUzNG5tLXB6NFdXb1g5OFJha3gtenJjRTlFQTR1Q2V2SmVzdWI4MzltS2lKQWxwNldfWWpKT1lsTThmdWc?oc=5",
+     "tier": "A",
+     "score": 3
+    },
+    {
+     "title": "삼성전기 유리기판 공급망 윤곽…레이저 LPKF, 식각 태성, 검사는 테크밸리·이노메트리 - 전자신문",
+     "source": "전자신문",
+     "date": "Thu, 12 Nov 2026 00:30:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE0teU5wZ3pwNXZLR3RIM0c5Q05YM1pWbXY0RTVONkJidHZYMm1LeXFQU01CdWZmVWZwVGFjY1YyMjFXSEp1ak02dUtDRlY4UQ?oc=5",
+     "tier": "A",
+     "score": 2
+    },
+    {
+     "title": "이노메트리 주가, 급등세... 왜? - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 01:00:53 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE93WmRuVE5oUURfVUhoOEVEZ3lsUjl2T1NMaXB2QWVjR0JJMDdadjB1TjAtWGxXMXhDQXppS0Q5clVvb3NWbzVGRk5XcUxpTEhDWmlUOU5qYzRLdUpYLTA1MTJtUXRfcW1k?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "지니언스, 공공 수주·단말 보안 수요 확대에 수익성 개선 - 전자신문",
+     "source": "전자신문",
+     "date": "Thu, 12 Nov 2026 04:53:50 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE5LVy1vNlJnVFJMRk5PODRxZjduamxmS21FZ2MyOWN2SzZhS2ljSkFwbkhwdk16SXUzQ05HeXZFVGhiUEI1ZkVwUWVUa1Ztdw?oc=5",
+     "tier": "A",
+     "score": 0
+    },
+    {
+     "title": "특징주, 제이앤티씨-유리 기판 테마 상승세에 29.94% ↑ - 매일경제",
+     "source": "매일경제",
+     "date": "Thu, 12 Nov 2026 04:14:49 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9QMFRJYmNKT2o5R0hWVDZTMFItTUZubWw4dkZsR2R2SDdWVHRVbXZIODRHb3FabWZXUkl5X0V0aGRJaDVIVHc?oc=5",
+     "tier": "A",
+     "score": 0
+    },
+    {
+     "title": "특징주, HB테크놀러지-유리 기판 테마 상승세에 8.12% ↑ - 매일경제",
+     "source": "매일경제",
+     "date": "Thu, 12 Nov 2026 04:14:19 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBYZWhSNFc3SHBreUw1eUZxXzAyNHN3dE9Ha0pKNTNkQWdSWVZtTk1JbmI3STZDQ1F6NUFaTnBNeTZ4M0Uxc3c?oc=5",
+     "tier": "A",
+     "score": 0
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "수주·계약",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "수주·계약"
+   ],
+   "themes": [
+    "보안"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "069510",
+   "name": "에스텍",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 20.080726538849646,
+   "gap": 19.828456104944504,
+   "tv": 30669965200.0,
+   "vol_ratio": 69.69709589574539,
+   "close": 23800.0,
+   "pctb": 1.5474722165249577,
+   "bw": 0.3333465342577068,
+   "bw_pctile": 0.9083333333333333,
+   "squeeze": false,
+   "rsi14": 90.32738095238095,
+   "ma5_gap": 0.2533198431769319,
+   "ma20_gap": 0.3491712331098329,
+   "ma60_gap": 0.4622090521216293,
+   "ma120_gap": 0.535006195786865,
+   "ma_aligned": true,
+   "ret5": 0.3706777316735823,
+   "ret20": 0.439360929557008,
+   "ret60": 0.5830670926517572,
+   "from_high": 0.0,
+   "from_low": 0.7664884135472372,
+   "vol_ratio_prev": 3.8962417002891,
+   "tv20_avg": 284828684.0,
+   "tv_prev": 1215382220.0,
+   "prev_chg": 0.29627207325049043,
+   "up_days": 3,
+   "prev_close_pos": null,
+   "fr": 57.87,
+   "price": 19820.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 20.332996972754792,
+   "close_pos": 0.5,
+   "upper_wick": 0.2522704339051463,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261111",
+     "title": "공개매수설명서",
+     "rcept_no": "20261111000002",
+     "filer": "에프에프이케이"
+    },
+    {
+     "date": "20261111",
+     "title": "공개매수신고서",
+     "rcept_no": "20261111000001",
+     "filer": "에프에프이케이"
+    }
+   ],
+   "news": [
+    {
+     "title": "에스텍, 대주주 공개매수 후 상폐 추진에 20% 급등 - 뉴시스",
+     "source": "뉴시스",
+     "date": "Thu, 12 Nov 2026 01:13:12 GMT",
+     "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE9nVnBiU0gwWEtwNTBqTlFLYTNOcnp0Ykd2RDZKOGdJYUZJWXBvcWkyd2M2cnBldTNkUkxEV1hkRkpydFVJQlJKbE1SVzdYUjVMVkR4YjgtMXdBM0FoM1VDLUl5OWZ0MlNrb0xDOFU4aTlXM0tjZ1JPeNIBeEFVX3lxTE9nVnBiU0gwWEtwNTBqTlFLYTNOcnp0Ykd2RDZKOGdJYUZJWXBvcWkyd2M2cnBldTNkUkxEV1hkRkpydFVJQlJKbE1SVzdYUjVMVkR4YjgtMXdBM0FoM1VDLUl5OWZ0MlNrb0xDOFU4aTlXM0tjZ1JPeA?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "[특징주] 에스텍, 공개매수 후 상장폐지 소식에 ‘상한가’ - Chosunbiz",
+     "source": "Chosunbiz",
+     "date": "Wed, 11 Nov 2026 00:20:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOQXFIMWxHdTJycE43M1I5bUtLN2ZHeHdPRC02OGNYTW5YNU1NN0ZEaWh2RmFMQTRuZm5CaFpDMVpWYXZ6MVdVcXJMVGR6S2JKaXI1cGt0aXJLd2NDZWUxT0pNUklmMkwzUEtrRVNrOTBQZWF6R2RfSUtyOEtOaTVBSEtrc1BaU1Nn0gGcAUFVX3lxTE9veGkwSDVPZjc0TTJfbGtzdHhfN0ticHlMRFh4TXZ0MUFrcDhMMG50RDdRTXdXTDQ3OWQ2TzJGRHo0QW5RMG1oNGZicEdLajRhbDUyS1BoNlRSUko3ZXpnaEtETG1wZU1IaGxDOUdLc1RFQ3JDZ2g3Qlh3M3E3TExualhqRG1XX2FEcDF4enYwWXYwWklNZG1naWlpQg?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "[특징주]에스텍, 이틀째 20.33% 오른 채 마감…종가 공개매수가 2만4천 원에 근접 - 남도일보",
+     "source": "남도일보",
+     "date": "Thu, 12 Nov 2026 07:13:50 GMT",
+     "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTFBaanN4bHQydWFCeUxCU05XeXd1TUcwTDZ0b1JQT1pSYXBMRkdZSy1BNmt5cHh2dlRnWFVWQWxRV0NmSFBsU0kwNkZSYkNRdGhoRkRQbkVUeVJrdW5iQ0VSWUE5VE5Qemxkb2NEbHlEa1PSAXBBVV95cUxQWmpzeGx0MnVhQnlMQlNOV3l3dU1HMEw2dG9SUE9aUmFwTEZHWUstQTZreXB4dnZUZ1hVVkFsUVdDZkhQbFNJMDZGUmJDUXRoaEZEUG5FVHlSa3VuYkNFUllBOVROUHpsZG9jRGx5RGtT?oc=5",
+     "tier": "B",
+     "score": 4
+    },
+    {
+     "title": "[마감분석] 에스텍 19%대 급등 2만3750원 마감 : 기업주식정보 - 재경일보",
+     "source": "재경일보",
+     "date": "Thu, 12 Nov 2026 06:48:43 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5GNk9OVkFFMENiQlVtS0w5aU54WWxiMUx2TXp6Yk8xaU42dWJ0MmYyM182S0U1SWVhWXp0SUpsWUpGV25WeVl6UnZSUQ?oc=5",
+     "tier": "B",
+     "score": 4
+    },
+    {
+     "title": "[특징주] 에스텍, 장중 19%대 급등세 기록 : 기업주식정보 - 재경일보",
+     "source": "재경일보",
+     "date": "Thu, 12 Nov 2026 01:23:51 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBxOEV3WkNBNHktOVBuVmZZTkZTdkdhMm9LOTNoaHY5cldob29NWHBYenRvZW14bDVTVjBGN29RUmhVUVpuVmZlM01ydw?oc=5",
+     "tier": "B",
+     "score": 4
+    },
+    {
+     "title": "포스타전기, 에스텍 상장폐지 추진… 공개매수가 73%가 '현금' - 블로터",
+     "source": "블로터",
+     "date": "Thu, 12 Nov 2026 08:57:19 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1PcEQzeDEzcmZOaEZJZTkwTlhUMGZLVVJfRTdXUkRMVF9YSzI3TU43bTJPWnpYZmdvYTMwNThhSVFScGlKME5jZTRheWttdl9hSkhJN0xlVGFpcEJBeEh5T0Z3ckpXMjM20gFsQVVfeXFMUGdLSzFBNDlpU3BKeS1PNTNtaW9kSFYxbjJ6MGF6VEpVRTAxYXhEM1lIODE1V2lQcFBjVi11N3Y5ZjRlMDUtUldMTG92cWxsQ2RfdFR1dUhVMVl3MG1PNER6c29md0JBekJNTGVQ?oc=5",
+     "tier": "A",
+     "score": 3
+    }
+   ],
+   "catalysts_dart": [
+    "M&A·지배구조"
+   ],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "M&A·지배구조"
+   ],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "009730",
+   "name": "이렘",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 19.951923076923084,
+   "gap": 2.8846153846153744,
+   "tv": 1209383885.0,
+   "vol_ratio": 6.2002719445570795,
+   "close": 2495.0,
+   "pctb": 0.285917125835163,
+   "bw": 0.3615457534817309,
+   "bw_pctile": 0.4,
+   "squeeze": false,
+   "rsi14": 46.996466431095406,
+   "ma5_gap": -0.04761904761904767,
+   "ma20_gap": -0.07740075404746061,
+   "ma60_gap": 0.0810155309362739,
+   "ma120_gap": 0.23010807800541122,
+   "ma_aligned": false,
+   "ret5": -0.01187648456057011,
+   "ret20": -0.22242990654205608,
+   "ret60": 0.10462028677642055,
+   "from_high": -0.6846573681018799,
+   "from_low": 1.3582766439909295,
+   "vol_ratio_prev": 1.4312019043803106,
+   "tv20_avg": 179407394.75,
+   "tv_prev": 303132960.0,
+   "prev_chg": -0.060948081264108334,
+   "up_days": 0,
+   "prev_close_pos": 0.15555555555555556,
+   "fr": 0.0,
+   "price": 2080.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 20.192307692307686,
+   "close_pos": 0.9902152641878669,
+   "upper_wick": 0.2403846153846154,
+   "limit_up": false,
+   "filings": [],
+   "news": [],
+   "catalysts_dart": [],
+   "catalysts_news": [],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "009140",
+   "name": "케이아이이",
+   "market": "KOSPI",
+   "pref": false,
+   "chg": 16.574585635359117,
+   "gap": 1.104972375690605,
+   "tv": 1103076350.0,
+   "vol_ratio": 10.825555089637463,
+   "close": 10550.0,
+   "pctb": 0.07853959245931137,
+   "bw": 0.20273049744926339,
+   "bw_pctile": 0.5166666666666667,
+   "squeeze": false,
+   "rsi14": 28.50678733031674,
+   "ma5_gap": -0.014590592334494779,
+   "ma20_gap": -0.08544287807589313,
+   "ma60_gap": -0.15276054953542262,
+   "ma120_gap": -0.19750235539709216,
+   "ma_aligned": false,
+   "ret5": -0.08585858585858586,
+   "ret20": -0.20439560439560445,
+   "ret60": -0.21982758620689657,
+   "from_high": -0.4828571428571429,
+   "from_low": 0.07609988109393573,
+   "vol_ratio_prev": 0.3507471170623446,
+   "tv20_avg": 98743722.5,
+   "tv_prev": 32109400.0,
+   "prev_chg": -0.008762322015334112,
+   "up_days": 0,
+   "prev_close_pos": 0.32142857142857145,
+   "fr": 9.16,
+   "price": 9050.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 21.436464088397788,
+   "close_pos": 0.8662613981762918,
+   "upper_wick": 4.861878453038674,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "주요사항보고서(자기주식취득결정)",
+     "rcept_no": "20261112000285",
+     "filer": "케이아이이"
+    }
+   ],
+   "news": [
+    {
+     "title": "케이아이이, 20억원 규모 자기주식 취득 결정 - 디지털투데이",
+     "source": "디지털투데이",
+     "date": "Thu, 12 Nov 2026 05:41:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBsSF8tNjRDeG94ZklHR215cFhFMk90OTJhaFNZTHBKT3hwTmFZNVlEME9LaGtnMmItdHNLS2hqTXkyUU81VFQ0RDZLbm9NNHM1em5nbGVybE9jZGRkRmtya2R2dkFoSkRVREJkNFNaTzZreDk4RmdnNjdiMA?oc=5",
+     "tier": "C",
+     "score": 0
+    },
+    {
+     "title": "개인 홀로 순매수… 코스피 0.11% 내린 5369.63 - 서울신문",
+     "source": "서울신문",
+     "date": "Thu, 12 Nov 2026 00:37:41 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE5RRlUxU0hfR0VBS0Rjb2JlLWozaDg2emNCdmF3eGgtbjhsRENxMVFRakdIaXRwSlh4eXlvN21vUC1YWUg4RTVjcEE4Z19jYkNWaS1jOENLYw?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "케이아이이, 20억원 규모 자기주식 취득 결정 - 데이터투자",
+     "source": "데이터투자",
+     "date": "Thu, 12 Nov 2026 05:11:13 GMT",
+     "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9nY1VFcEVOaFpLMWx6Y3M0SHFqOHgxRzhoQjNaN1M3SXhnZ0lITENiQU9kbjNpaVdiSE4yVGlRSzJzMV9iLTludzI2WFNVNDJJX3RUVElTY25namRoT3ZrWWJzbWIxeFRrOUxNQjM4RXh3bGs?oc=5",
+     "tier": "C",
+     "score": -2
+    },
+    {
+     "title": "[오늘의 주요 공시·12일] 삼성생명, 3분기 영업익 9377억 … 전년동기대비 증가 - 세이프머니",
+     "source": "세이프머니",
+     "date": "Thu, 12 Nov 2026 08:00:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5DSWl6UXRPdFJ3eEhGUnc5cl90dzhaSjh2XzdBTDVXTGFKM19pNTJnYjFyRm5UWEo0Y1NILW5td1c2dVNqTWtOMmFjYTFTUzJEY0JSYWZDbi1jVDI1U256WVk4eUUxa3ZNREVsWlV3?oc=5",
+     "tier": "B",
+     "score": -3
+    },
+    {
+     "title": "ESG 등급, 개선 됐으나 하위권 등급이 절반 - 스마트투데이",
+     "source": "스마트투데이",
+     "date": "Wed, 11 Nov 2026 05:14:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5YM0pzdk5iNTdXVGVPNmtibXluX3Q0eVJpYnNBcnRQY3JLRndkV0lvV2hUTTRhajd5dkVMN1dUWkpYd2sySFFiYW9TZGF2S2VPQ3Bsdnc5XzN5ZWZPeGhV?oc=5",
+     "tier": "B",
+     "score": -5
+    },
+    {
+     "title": "[1112주요일정] 면역항암제 불응성 원인 인자 표적 항암 신약 개발업체 넥스아이 신규 상장 등 By 인포스탁데일리 - Investing.com 한국어",
+     "source": "Investing.com 한국어",
+     "date": "Wed, 11 Nov 2026 23:08:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTE00NW1rcXgwMVJUM2x1N19rZExreGg0NjkySDVuQWZjQl9MaW1iRXhWQUdpS3pUTWdiNTNNdWNiZVR6d2FVV3JUN3ZmdHVjSTZIOUEtbHhUMUxZMm9lcHNySlI4Z1FvXzc5dnlFX3Q0VFg?oc=5",
+     "tier": "C",
+     "score": -7
+    }
+   ],
+   "catalysts_dart": [
+    "자사주·소각"
+   ],
+   "catalysts_news": [
+    "신기술·신제품",
+    "수급"
+   ],
+   "catalysts": [
+    "자사주·소각",
+    "신기술·신제품",
+    "수급"
+   ],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "141000",
+   "name": "비아트론",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 16.43059490084986,
+   "gap": -0.18885741265344258,
+   "tv": 19797726150.0,
+   "vol_ratio": 3.3458353320277743,
+   "close": 12330.0,
+   "pctb": 0.42347848030886354,
+   "bw": 0.5998700599186645,
+   "bw_pctile": 0.8583333333333333,
+   "squeeze": false,
+   "rsi14": 41.80904522613066,
+   "ma5_gap": 0.1203977994075327,
+   "ma20_gap": -0.04590296860218934,
+   "ma60_gap": 0.0310750507099391,
+   "ma120_gap": 0.11427744701745768,
+   "ma_aligned": false,
+   "ret5": 0.041297935103244754,
+   "ret20": -0.2578836720392431,
+   "ret60": 0.1701657458563537,
+   "from_high": -0.3046618516086671,
+   "from_low": 0.6292307692307693,
+   "vol_ratio_prev": 0.992305674649221,
+   "tv20_avg": 5518967259.5,
+   "tv_prev": 4909799340.0,
+   "prev_chg": 0.08393039918116685,
+   "up_days": 3,
+   "prev_close_pos": 0.9142857142857143,
+   "fr": 3.44,
+   "price": 10590.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 19.452313503305007,
+   "close_pos": 0.8490566037735849,
+   "upper_wick": 3.0217186024551466,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "비아트론 주가, 급등세... 무슨 회사길래? - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 01:08:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zM25jNW5WQVVyTWtxZGt1Q2pQc2MxY0JEcjBhZElDQXg1V1A1QVc1dmk1aEFnRWZyS3Nvdy1VSXBPVVRQbEc3UXFELVpjTmRaaHVCa1F4eC11MDNTVmpxQzJzcFI2eGZManc?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "[종목상담 주식민원처리반] 고객사 다변화 확인 시 폭발적 상승 기대 '테크윙' - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Thu, 12 Nov 2026 09:31:16 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBIQjhYUFdhREZFYzVsZXhjU1R3X3pjQ0pVRHRQdGQ5TDQwNDRkVTAzcWliSGpkYUtIU0dPWmZSN24wQXJ0ZUVmMmhCOWtHbEM0Q3QwZDlfX2VaUFVJelg1bnpUWWcxM0Nh0gFuQVVfeXFMT1VMZ3pwUTJyV3U4alR3NG1PN2tDd2I4ZkpoX0xISm1ISUVBSWUxN3RQR1lyZGVPNlhCM0YxUTY5UVpENWk0alFkUVNxUjAxMVJNdmJ3UVVLYzVpelhac2tnRTlHanpZRWlfNnhTcFE?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "씽크풀 : 비아트론(141000)눌릴때마다 물량 모아둘 기회로 보이며 이후 전망 및 대응전략. - ThinkPool",
+     "source": "ThinkPool",
+     "date": "Thu, 12 Nov 2026 00:32:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBQODZCQlR4TmJSVkxkVmg4ZUhubGxvVmdlZ0syVXVyMGVJZTdBV0VDT3k5QlJ0YWJrVEU1c0dEUkRtd09jaFlLbDJVRXJmendab0c2WlhDb0NTUGxD?oc=5",
+     "tier": "C",
+     "score": -2
+    },
+    {
+     "title": "[고래사냥] '케이씨텍·성호전자·JW신약! 내일장 고래 종목은?! - MTN 머니투데이방송",
+     "source": "MTN 머니투데이방송",
+     "date": "Tue, 10 Nov 2026 12:59:53 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5OYlNxWGJ1bnJvTWdZNkZuZ3VWTS10bXpGSFFVZDBVMVNXN1RoWkNwS25fcWRZcFVlaEdHd01zN0JDYlpPaGt5c0ttQ1BhSF9wRG9WVXdSaWJXekFQOHFZ?oc=5",
+     "tier": "A",
+     "score": -2
+    },
+    {
+     "title": "[고래사냥] '케이씨텍·성호전자·JW신약! 내일장 고래 종목은?! - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Tue, 10 Nov 2026 13:21:47 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE40MFp5RGNuZ3UxcS10THMxYlBweWpLT2lmLWZpeGRhc201S01tUEF3RUtpT1QybEU3bGZJLV9CbVNZSlFTNGVwOUlqTDZzaFVFelhyWnNzZ2c0OUp2aHhBZ0F2ckl5SFlRY291UG5B0gFuQVVfeXFMTjQwWnlEY25ndTFxLXRMczFiUHB5aktPaWYtZml4ZGFzbTVLTW1QQXdFS2lPVDJsRTdsZkktX0JtU1lKUVM0ZXA5SWpMNnNoVUV6WHJac3NnZzQ5SnZoeEFnQXZySXlIWVFjb3VQbkE?oc=5",
+     "tier": "A",
+     "score": -4
+    },
+    {
+     "title": "IT용 OLED 투자 확대 기대…디스플레이 장비·부품주 차별화 장세 - 핀포인트뉴스",
+     "source": "핀포인트뉴스",
+     "date": "Thu, 12 Nov 2026 06:40:37 GMT",
+     "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE5yaWdObmtOc3Zld29pbU0taGF6SVkwbnd4ZUZ2SEFJbTZfdU1YazlHTkgtV195dnNXZXU1RVktQTdMdF9KU3dfS2I0ZHVPdjloSFFJb3ZZbWRjVW5ldEk4QVV5dmRBRmR2LUtIVGJkWlhLZ0F3VGsw0gF3QVVfeXFMTnJpZ05ua05zdmV3b2ltTS1oYXpJWTBud3hlRnZIQUltNl91TVhrOUdOSC1XX3l2c1dldTVFWS1BN0x0X0pTd19LYjRkdU92OWhIUUlvdlltZGNVbmV0SThBVXl2ZEFGZHYtS0hUYmRaWEtnQXdUazA?oc=5",
+     "tier": "C",
+     "score": -7
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "211270",
+   "name": "AP위성",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 15.83054626532887,
+   "gap": -0.6688963210702337,
+   "tv": 76178160470.0,
+   "vol_ratio": 4.047602775118096,
+   "close": 10390.0,
+   "pctb": 0.673338223198641,
+   "bw": 0.49058362376422976,
+   "bw_pctile": 0.75,
+   "squeeze": false,
+   "rsi14": 60.51546391752577,
+   "ma5_gap": 0.034840793724042474,
+   "ma20_gap": 0.08503689367364209,
+   "ma60_gap": 0.06724305459160407,
+   "ma120_gap": -0.042519124710905576,
+   "ma_aligned": false,
+   "ret5": -0.1248780487804878,
+   "ret20": 0.22540983606557385,
+   "ret60": 0.06153846153846154,
+   "from_high": -0.5995535714285714,
+   "from_low": 0.5681818181818181,
+   "vol_ratio_prev": 0.2774066044168199,
+   "tv20_avg": 16729911752.5,
+   "tv_prev": 4453488390.0,
+   "prev_chg": 0.028669724770642224,
+   "up_days": 3,
+   "prev_close_pos": 0.7391304347826086,
+   "fr": 1.94,
+   "price": 8970.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 22.630992196209586,
+   "close_pos": 0.758893280632411,
+   "upper_wick": 6.800445930880714,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "단일판매ㆍ공급계약체결",
+     "rcept_no": "20261112900140",
+     "filer": "AP위성"
+    }
+   ],
+   "news": [
+    {
+     "title": "AP위성, 차세대 위성 스마트폰 개발·양산 계약 - 뉴시스",
+     "source": "뉴시스",
+     "date": "Thu, 12 Nov 2026 01:02:31 GMT",
+     "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE9QeExPd1BRRmk5LVFwdjFFTmp2RjNZY0V6Rmt2TW12NldQNXhSMXFsblBQMVZpU0NkdXdqUlVaN085cVV0U1RreC0tNW5MZTB2MnVEUmQzMGVJVk10T241RnZLU2ZteGhiTmVld2YwbkVoZkpGRE5KStIBeEFVX3lxTE9QeExPd1BRRmk5LVFwdjFFTmp2RjNZY0V6Rmt2TW12NldQNXhSMXFsblBQMVZpU0NkdXdqUlVaN085cVV0U1RreC0tNW5MZTB2MnVEUmQzMGVJVk10T241RnZLU2ZteGhiTmVld2YwbkVoZkpGRE5KSg?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "AP위성, UAE서 차세대 위성 스마트폰 149억원 수주 - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 00:59:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1seHc1UXcyUE05RDEtd1QwcUtMNGJlcnBrTmlSamtsRFNjd2RmLUlMOW9XZ3lieVdVT2dseWxHRmgwemZDTEJKMXJic1dRMW0xRlc4OW5XbmdoNHNM?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "AP위성, UAE 차세대 하이브리드 위성 스마트폰 사업 수주 - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Thu, 12 Nov 2026 05:00:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE42bXgxbjA2UUVmQU8wZU9fSzJJMk1XWUFUYVJOblVocG52WnJubHNLOVlJek9kcFVVMVEtTGV0V1JsVFcwV1pzdjR0TzZjbmdMb21LekdpTGR5SDREQlp4SElIaWZfSFR6MEZLaXhB0gFuQVVfeXFMTjZteDFuMDZRRWZBTzBlT19LMkkyTVdZQVRhUk5uVWhwbnZacm5sc0s5WUl6T2RwVVUxUS1MZXRXUmxUVzBXWnN2NHRPNmNuZ0xvbUt6R2lMZHlINERCWnhISUhpZl9IVHowRktpeEE?oc=5",
+     "tier": "A",
+     "score": 7
+    },
+    {
+     "title": "AP위성, 다음달 SAR 위성 개발 본격화…\"위성 플랫폼 기업으로 도약\" - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Thu, 12 Nov 2026 05:46:21 GMT",
+     "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE4zTEdyMkZlMEZ3SFVpS29DVlVDWC1BRkY4ODYzaHNIWHVrUmo3WlJ1cXI1MXJGMnc5aHd2UjdWZVhTc2R4X1FNdGljR3NkeDQ5ZUFFeUt2a0Y4VlJmQy1qSWttSXhBbEFXeUJuVEV6VdIBb0FVX3lxTE4zTEdyMkZlMEZ3SFVpS29DVlVDWC1BRkY4ODYzaHNIWHVrUmo3WlJ1cXI1MXJGMnc5aHd2UjdWZVhTc2R4X1FNdGljR3NkeDQ5ZUFFeUt2a0Y4VlJmQy1qSWttSXhBbEFXeUJuVEV6VQ?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "AP위성, 자체 SAR 위성 연내 착수…데이터 사업 시동 [현장+] - 블로터",
+     "source": "블로터",
+     "date": "Thu, 12 Nov 2026 08:08:56 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9jdUMzVkwzNnFjd0M5YzVZOTdlenJWQklaWEJLYnNnSWpUMTJPX2FNSzJ4MWxXamg0TGR1X3BBVHhMSEliV0w4b05feFhQanFlUDIzMVVadXUyZlFmQ1AtbEwxNWF1blFRQ3BlWNIBbEFVX3lxTE9jdUMzVkwzNnFjd0M5YzVZOTdlenJWQklaWEJLYnNnSWpUMTJPX2FNSzJ4MWxXamg0TGR1X3BBVHhMSEliV0w4b05feFhQanFlUDIzMVVadXUyZlFmQ1AtbEwxNWF1blFRQ3BlWA?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "AP위성 “자체 위성 띄워 데이터 판다”…플랫폼·서비스로 사업 확장 - 이데일리",
+     "source": "이데일리",
+     "date": "Thu, 12 Nov 2026 07:22:19 GMT",
+     "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNWktkVDFrd0FobmRzaUs4MmxnMEN0ejBDMFotT2wwUWN5NkN6ellKWkVuT0ItVnhhNEFEQWo3ZldDcjZGeVFHVjEtN19kU0xibm1pZFlQZkR0VWtrbDdkMjVzbmdkOVY3OElIWjZORGRYc1RhbE1rMUJRQmJMYzg4Yw?oc=5",
+     "tier": "A",
+     "score": 6
+    }
+   ],
+   "catalysts_dart": [
+    "수주·계약"
+   ],
+   "catalysts_news": [
+    "수주·계약",
+    "신기술·신제품"
+   ],
+   "catalysts": [
+    "수주·계약",
+    "신기술·신제품"
+   ],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "051630",
+   "name": "진양화학",
+   "market": "KOSPI",
+   "pref": false,
+   "chg": 15.469613259668513,
+   "gap": 0.0,
+   "tv": 6348512940.0,
+   "vol_ratio": 0.7356819423615713,
+   "close": 4180.0,
+   "pctb": 0.7556921785101149,
+   "bw": 1.2767094298430959,
+   "bw_pctile": 0.9583333333333334,
+   "squeeze": false,
+   "rsi14": 76.45348837209302,
+   "ma5_gap": -0.03953303263465113,
+   "ma20_gap": 0.3264446154409879,
+   "ma60_gap": 0.9513772842434371,
+   "ma120_gap": 1.0823745973308787,
+   "ma_aligned": true,
+   "ret5": -0.06217616580310881,
+   "ret20": 1.2235872235872236,
+   "ret60": 2.4150943396226414,
+   "from_high": -0.14622641509433965,
+   "from_low": 3.1136363636363633,
+   "vol_ratio_prev": 0.41222387701792723,
+   "tv20_avg": 6181825692.95,
+   "tv_prev": 3027453060.0,
+   "prev_chg": 0.005555555555555536,
+   "up_days": 2,
+   "prev_close_pos": 0.9230769230769231,
+   "fr": 1.77,
+   "price": 3620.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 17.95580110497237,
+   "close_pos": 0.8922155688622755,
+   "upper_wick": 2.4861878453038675,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[표]11월 12일 52주 신고가 종목 및 최근 동향 - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 06:40:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5JSURCVWMzMDlWT09TcTR6TmZLM0l3cFJ6SjhuX2I5RHhoeXpvbk1jbXVvREhrUC01Z0xQOFZxMURkMjZpMURHaG9Mb3k5TnluSVQ3em5oRE9jTU9o?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "[오늘의 특징주] 에스텍·메드팩토 상한가…공개매수·항암제 기술이전에 매수세 - https://www.ppss.kr/",
+     "source": "https://www.ppss.kr/",
+     "date": "Wed, 11 Nov 2026 08:47:54 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE8tV2d3d2NhNkk3amx2aDktelcxY2oxcWFlcGtKSUk5REpIMG9Tcm9BZnIxMEFTSXhvQzlSS2ZwQndEZmUwTVVxanh2WFExVEpEaC05aVpXVjBPLUVycko1LXBSa28?oc=5",
+     "tier": "B",
+     "score": -4
+    },
+    {
+     "title": "ESG 등급, 개선 됐으나 하위권 등급이 절반 - 스마트투데이",
+     "source": "스마트투데이",
+     "date": "Wed, 11 Nov 2026 05:14:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5YM0pzdk5iNTdXVGVPNmtibXluX3Q0eVJpYnNBcnRQY3JLRndkV0lvV2hUTTRhajd5dkVMN1dUWkpYd2sySFFiYW9TZGF2S2VPQ3Bsdnc5XzN5ZWZPeGhV?oc=5",
+     "tier": "B",
+     "score": -5
+    },
+    {
+     "title": "화학업종 대형주 부진 속 중소형주 급등…실적·수급별 차별화 - 핀포인트뉴스",
+     "source": "핀포인트뉴스",
+     "date": "Thu, 12 Nov 2026 06:53:04 GMT",
+     "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1feUh2a08xUldBSjNndl9ZMUUzY2wwUjY0Uk40QTRXWkhhemZSVVFVd0pEN21XY3ZxRWNFQ2lzclkyZFV2anhDeDZFTTFLeW1YaDd5M1M0aGNuRENwNUttdVJvbF9EWHFwakIxdHpac0kwX3lTNS040gF3QVVfeXFMTV95SHZrTzFSV0FKM2d2X1kxRTNjbDBSNjRSTjRBNFdaSGF6ZlJVUVV3SkQ3bVdjdnFFY0VDaXNyWTJkVXZqeEN4NkVNMUt5bVhoN3kzUzRoY25EQ3A1S211Um9sX0RYcXBqQjF0elpzSTBfeVM1LTg?oc=5",
+     "tier": "C",
+     "score": -6
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "실적",
+    "임상·허가",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "실적",
+    "임상·허가"
+   ],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "108860",
+   "name": "셀바스AI",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 15.049226441631514,
+   "gap": 13.220815752461323,
+   "tv": 14012479060.0,
+   "vol_ratio": 10.587318397307275,
+   "close": 8180.0,
+   "pctb": 0.32497776588888094,
+   "bw": 0.2655063996341105,
+   "bw_pctile": 0.2833333333333333,
+   "squeeze": false,
+   "rsi14": 37.77777777777778,
+   "ma5_gap": 0.04898200059014468,
+   "ma20_gap": -0.04646952323476161,
+   "ma60_gap": -0.16275783565246393,
+   "ma120_gap": -0.1775830658454064,
+   "ma_aligned": false,
+   "ret5": -0.0193103448275862,
+   "ret20": -0.11124999999999996,
+   "ret60": -0.3292452830188679,
+   "from_high": -0.5955631399317406,
+   "from_low": 0.16557377049180322,
+   "vol_ratio_prev": 0.657285790976496,
+   "tv20_avg": 1216866148.5,
+   "tv_prev": 750830220.0,
+   "prev_chg": 0.04712812960235646,
+   "up_days": 2,
+   "prev_close_pos": 0.9642857142857143,
+   "fr": 3.65,
+   "price": 7110.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 17.29957805907174,
+   "close_pos": 0.8072289156626506,
+   "upper_wick": 2.250351617440225,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "셀바스AI·메디아나, 인텔 'K-AI 풀스택 얼라이언스' 합류 - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 06:01:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE4wRW1UdkNoY2UyY3JzZHg0UndTU2otLUU1WTFjdzlTRmIxSzdvUC1zVXJUQndUU1JqcGFLbTcyRUtxYWRrR3F3NFJyNUlnVDZ3N2hrRUkzV05zeHNm?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "셀바스AI, 예스24에 다국어교차 온디바이스 AI 음성합성 공급 - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Wed, 11 Nov 2026 00:24:59 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE4xblk5dlpoSGE5a2JhdG8zUy1Qa212aWZtZXFsUG42S1RtNjBoQVJKb2tlQzlVcTVNNjFUenB1QUhMQ252QmFRckM2bGU0a3dJMURLZTFXdHBsaWFVbmJQOENLRXJ5R3RHSlpNdXVR0gFuQVVfeXFMTjFuWTl2WmhIYTlrYmF0bzNTLVBrbXZpZm1lcWxQbjZLVG02MGhBUkpva2VDOVVxNU02MVR6cHVBSExDbnZCYVFyQzZsZTRrd0kxREtlMVd0cGxpYVVuYlA4Q0tFcnlHdEdKWk11dVE?oc=5",
+     "tier": "A",
+     "score": 5
+    },
+    {
+     "title": "셀바스AI, 예스24에 한국어·영어 AI 음성합성 기술 적용 - 이데일리",
+     "source": "이데일리",
+     "date": "Wed, 11 Nov 2026 00:24:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPNnlqOWxFbW0weElxUzhqSW1rWEJJcnQxZHZ6MlpFXzRNZURFYTViUm9XRnVXWjhDb05TQlVSMjZmcDRIdGFTUS1LMjZDdUlWQ0JwTkVJS0F6cHZHYmRjcW4tdms4aENEM0otaC0teVcxZ0xIczAtdndLaGVjTFNIeA?oc=5",
+     "tier": "A",
+     "score": 5
+    },
+    {
+     "title": "셀바스AI, AI 음성합성 기술 예스24 전자책에 적용·상용화 - 매일경제",
+     "source": "매일경제",
+     "date": "Wed, 11 Nov 2026 00:37:43 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBzb2xDbjNqSVl4U3FiMk5wY1pqUUR0cmRtanBWWV9Ud2Y2R3RvV1NVMEoxbkM2alFIUmZ5N3YxYUZ0R3dFUVE?oc=5",
+     "tier": "A",
+     "score": 5
+    },
+    {
+     "title": "셀바스AI-메디아나, 인텔 주도 ‘K-AI 풀스택 얼라이언스’ 합류…기업ㆍ의료 AI 영토 확장 - 이투데이",
+     "source": "이투데이",
+     "date": "Thu, 12 Nov 2026 06:00:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE41c05UdXVYTHVVQnJSUU1RenpWSDJ4c2JmM1U5blpveEFndUtQTG5WZURJRWE3aFFrZi1uUjNtcWUwZDhWNThmdm5jWjFKZ2lmSHYwLQ?oc=5",
+     "tier": "A",
+     "score": 4
+    },
+    {
+     "title": "셀바스AI·메디아나, 인텔 주도 ‘K-AI 풀스택 얼라이언스’ 참여…기업·의료 AI 사업 확대 - 바이오타임즈",
+     "source": "바이오타임즈",
+     "date": "Thu, 12 Nov 2026 07:55:35 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1IOGJqMWRodGVFUWNiTmdPVXhUQXFkVVBJRFFpTi1zVTdFS0ozQWVpR0tON3kyd0dENl9PRmdwdjliOWozTkVROHYyZ01YTlM3ZFM3S25SUFc2Um95TlVjQmEzUDFsN3RNa3BWYw?oc=5",
+     "tier": "B",
+     "score": 3
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [],
+   "catalysts": [],
+   "themes": [
+    "AI",
+    "바이오"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "368770",
+   "name": "파이버프로",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 14.652406417112296,
+   "gap": -2.1390374331550777,
+   "tv": 18771438240.0,
+   "vol_ratio": 12.923900255811104,
+   "close": 10720.0,
+   "pctb": 0.34050601268237907,
+   "bw": 0.3300244265185478,
+   "bw_pctile": 0.525,
+   "squeeze": false,
+   "rsi14": 39.478957915831664,
+   "ma5_gap": 0.07200183444164177,
+   "ma20_gap": -0.05263691169765439,
+   "ma60_gap": -0.21469266626538064,
+   "ma120_gap": -0.28634125863450755,
+   "ma_aligned": false,
+   "ret5": -0.02298850574712641,
+   "ret20": -0.20425531914893613,
+   "ret60": -0.2932728647014361,
+   "from_high": -0.6878130217028381,
+   "from_low": 0.7708333333333333,
+   "vol_ratio_prev": 0.7338069375141151,
+   "tv20_avg": 1328504550.0,
+   "tv_prev": 932671850.0,
+   "prev_chg": 0.0625,
+   "up_days": 3,
+   "prev_close_pos": 0.92,
+   "fr": 2.91,
+   "price": 9350.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 26.203208556149725,
+   "close_pos": 0.6058394160583942,
+   "upper_wick": 11.550802139037433,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "분기보고서 (2026.09)",
+     "rcept_no": "20261112000091",
+     "filer": "파이버프로"
+    }
+   ],
+   "news": [
+    {
+     "title": "파이버프로 주가, 급등세... 어떤 회사길래? - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 01:06:15 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1PNGRkbVpUQnpmcDVIakZ0eElFZm9McWhnU3hyRUtiODBzdzN5RlpfNkZrRTlXX2dsZlExUHRTa3hud2RHTDJfUjk4TlRzdWVHcFBkS0JaelhTeEVkdEpCVkZFYTQ2UFk5M2c?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "특징주, 파이버프로-광통신(광케이블/광섬유 등) 테마 상승세에 21.62% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 01:43:52 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9oeHdZN1RXSWNDM3JMNVU5Szl5UTBud0RqR1RTMEhic2VZZUd0bm5BbXhGbzh6MDc5aUxHSFFjYlVKWldvcG54TGhTMEdUNzE1dXc?oc=5",
+     "tier": "B",
+     "score": 0
+    },
+    {
+     "title": "특징주, 성호전자-광통신(광케이블/광섬유 등) 테마 상승세에 5.51% ↑ - 매일경제",
+     "source": "매일경제",
+     "date": "Thu, 12 Nov 2026 01:43:56 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9UNktzOE5qbHdVZHNpR0Q2ajRDREY4QnQyNWFWMUE2VC03TTdERFhsV0toUUg1ZnB5Xzd5U3VZdThNVTUxZGc?oc=5",
+     "tier": "A",
+     "score": 0
+    },
+    {
+     "title": "특징주, 빛과전자-광통신(광케이블/광섬유 등) 테마 상승세에 5.51% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 01:43:42 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBFeVJxWWE1SVp1VXlBb0pNSmYzUXR1SVdMeVJWU3A5SzJZT2wzczFrUm9ObzZvUVJVMW5zcGYyMG50cFlvdzkwV1pXTm5HUzJkM3c?oc=5",
+     "tier": "B",
+     "score": -3
+    },
+    {
+     "title": "특징주, RF머트리얼즈-광통신(광케이블/광섬유 등) 테마 상승세에 6.69% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 01:43:49 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBqSzh3Mk1hdUZlVjZtZk5ZeDNKS1dOellvNVJuOUhDLXVlbGk2aEV1dm5nUTdHa1NCSGFRaF84UTZQRGVKNzlscUdQTTBXaXVTdHc?oc=5",
+     "tier": "B",
+     "score": -3
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": [
+    "광통신"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "179900",
+   "name": "유티아이",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 14.350912778904657,
+   "gap": 3.9553752535496978,
+   "tv": 1241999880.0,
+   "vol_ratio": 2.4244900007439303,
+   "close": 2255.0,
+   "pctb": 0.4785528220838271,
+   "bw": 0.3018598010803461,
+   "bw_pctile": 0.23333333333333334,
+   "squeeze": false,
+   "rsi14": 57.02875399361022,
+   "ma5_gap": 0.027939949958298627,
+   "ma20_gap": -0.006474040859510755,
+   "ma60_gap": -0.13544794931936244,
+   "ma120_gap": -0.6570290635403517,
+   "ma_aligned": false,
+   "ret5": -0.08065268065268061,
+   "ret20": -0.014000000000000012,
+   "ret60": -0.1176733780760626,
+   "from_high": -0.9326962457337884,
+   "from_low": 0.1815458358298383,
+   "vol_ratio_prev": 0.3185175180734288,
+   "tv20_avg": 453411991.55,
+   "tv_prev": 193234308.0,
+   "prev_chg": -0.004040404040404066,
+   "up_days": 0,
+   "prev_close_pos": 0.1510791366906475,
+   "fr": 10.16,
+   "price": 1972.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 21.703853955375262,
+   "close_pos": 0.6384039900249376,
+   "upper_wick": 7.352941176470589,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "갤럭시 부품주 강세…폴더블폰·프리미엄 부품 수요 확대 기대 - 핀포인트뉴스",
+     "source": "핀포인트뉴스",
+     "date": "Thu, 12 Nov 2026 01:53:26 GMT",
+     "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9PekFwMXc4dTZwLWx3VWVSUkswdC1XaWJSWDEyMEZvN3NhN0F3M2gzMlFkRUlPcjRqODIxbElONFI0Wnp3eGtsOWZLeUhrVzcwd0tCaVNEMVBIU2ZWVk0wSTE5T0FnWVl3Qi0xclNOT3ltSGUtM1I00gF3QVVfeXFMT096QXAxdzh1NnAtbHdVZVJSSzB0LVdpYlJYMTIwRm83c2E3QXczaDMyUWRFSU9yNGo4MjFsSU40UjRaend4a2w5Zkt5SGtXNzB3S0JpU0QxUEhTZlZWTTBJMTlPQWdZWXdCLTFyU05PeW1IZS0zUjQ?oc=5",
+     "tier": "C",
+     "score": -6
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "036710",
+   "name": "심텍홀딩스",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 13.861386138613852,
+   "gap": 0.0,
+   "tv": 49052818750.0,
+   "vol_ratio": 10.55326709742337,
+   "close": 5750.0,
+   "pctb": 1.4190725539554037,
+   "bw": 0.38880982944525594,
+   "bw_pctile": 0.31666666666666665,
+   "squeeze": false,
+   "rsi14": 68.36492890995261,
+   "ma5_gap": 0.3032258064516129,
+   "ma20_gap": 0.35734444295121626,
+   "ma60_gap": 0.23951728369809788,
+   "ma120_gap": 0.23081922596500504,
+   "ma_aligned": false,
+   "ret5": 0.22721749696233284,
+   "ret20": 0.1399548532731376,
+   "ret60": 0.2899106002554279,
+   "from_high": -0.22307692307692306,
+   "from_low": 1.4876847290640396,
+   "vol_ratio_prev": 11.091449362197926,
+   "tv20_avg": 3374583916.25,
+   "tv_prev": 29690207450.0,
+   "prev_chg": 0.3237221494102227,
+   "up_days": 2,
+   "prev_close_pos": 1.0,
+   "fr": 24.96,
+   "price": 5050.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 18.61386138613861,
+   "close_pos": 0.7525773195876289,
+   "upper_wick": 4.752475247524752,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[장중수급포착] 심텍홀딩스, 외국인/기관 동시 순매수… 주가 +13.47% - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 01:26:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE8zcGVoMkNITlQxUWgzbk9UbXdjVDNSeXRHcE1nUE1BVENLbV9tR2NoeGZnbERualJaSDdYQ01DVGU5UU42ejFCT3ljaENjblNuTkZ4elZHQ2Zibzdl?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "[특징주] 심텍홀딩스, 장중 14%대 급등세 기록 : 기업주식정보 - 재경일보",
+     "source": "재경일보",
+     "date": "Thu, 12 Nov 2026 01:25:31 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5oVl9XSndBWnc1cHZneUNHSDBfVi0yQVRzSGVxR3lCS0IxUE9RMkhHYnBHc0hnSm9aTTNqeE90WG83R1pob3ZzQXZpNA?oc=5",
+     "tier": "B",
+     "score": 4
+    },
+    {
+     "title": "심텍홀딩스, 장 마감 29.82% 급등…반도체 PCB 호황과 연결 실적 점검 - 잡포스트",
+     "source": "잡포스트",
+     "date": "Wed, 11 Nov 2026 07:40:22 GMT",
+     "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE5KNEpTV1hVSlZMX1NfM3g4bFV3QzI3cHZCdk9lX2ZSQ01vclZTOEV3UVB5eC1YVElHQ2h4OUtwQjVXNVlUYUh0YW9zZ0RDUnJ4dWZ2Y0xNdU4yVW45Q1R3MnVPWTd5SjQ3NUhoMGdxYjF4d9IBckFVX3lxTE5KNEpTV1hVSlZMX1NfM3g4bFV3QzI3cHZCdk9lX2ZSQ01vclZTOEV3UVB5eC1YVElHQ2h4OUtwQjVXNVlUYUh0YW9zZ0RDUnJ4dWZ2Y0xNdU4yVW45Q1R3MnVPWTd5SjQ3NUhoMGdxYjF4dw?oc=5",
+     "tier": "B",
+     "score": 3
+    },
+    {
+     "title": "[특징주] 심텍홀딩스 20% 급등·이수페타시스 강세…반도체 기판주 전반적 상승세 - CBC뉴스",
+     "source": "CBC뉴스",
+     "date": "Wed, 11 Nov 2026 00:24:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9naG9EQTV5NFluaUtyaktBcXFIX0p1X0VtTm1xeVpkcTRuVE15MWFoY2QyQ1c4Y1RBY3RmcUZ0WWpabTJDU21EZXk4OUYwNFppekdJQXZ5LWFIbzJGMmxCY2I3X1pjRFZV?oc=5",
+     "tier": "B",
+     "score": 3
+    },
+    {
+     "title": "[마감분석] 심텍 1.89% 오른 12만3900원 마감 : 기업주식정보 - 재경일보",
+     "source": "재경일보",
+     "date": "Thu, 12 Nov 2026 06:51:59 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE41TG1GOW5RZndiMWRuME10Y0htUXBnWk5pUFlXbEVaLWwzRUljMTFsMWJzT0hHVzlOc3Q5VXpmT2dtVENrVHQ0UUZFYw?oc=5",
+     "tier": "B",
+     "score": 3
+    },
+    {
+     "title": "[마감분석] 심텍 14%대 급등 12만1600원 마감 : 기업주식정보 - 재경일보",
+     "source": "재경일보",
+     "date": "Wed, 11 Nov 2026 06:52:14 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE45N05pRDFVckhUTm1qUEh6U3NJakVoZ2l2SnI1MW95WVpkYklNLWgzZ3hGSzZCLUlBb0tGN3FlSXktVkVMX0hDOFZWMA?oc=5",
+     "tier": "B",
+     "score": 3
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "실적",
+    "수급",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "실적",
+    "수급"
+   ],
+   "themes": [
+    "반도체"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "340450",
+   "name": "지씨지놈",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 13.55013550135502,
+   "gap": 0.27100271002709064,
+   "tv": 5712855500.0,
+   "vol_ratio": 0.9063755203291497,
+   "close": 8380.0,
+   "pctb": 0.20740135083356148,
+   "bw": 0.4702639540998941,
+   "bw_pctile": 0.7916666666666666,
+   "squeeze": false,
+   "rsi14": 27.194492254733206,
+   "ma5_gap": 0.02900167317345237,
+   "ma20_gap": -0.13759859772129712,
+   "ma60_gap": -0.01034798739467635,
+   "ma120_gap": 0.16314348194408868,
+   "ma_aligned": false,
+   "ret5": -0.05987261146496814,
+   "ret20": -0.15945330296127558,
+   "ret60": 0.3085106382978724,
+   "from_high": -0.29714285714285715,
+   "from_low": 0.8,
+   "vol_ratio_prev": 0.43852020505874,
+   "tv20_avg": 6621907846.5,
+   "tv_prev": 2470388580.0,
+   "prev_chg": 0.03651685393258419,
+   "up_days": 2,
+   "prev_close_pos": 0.43859649122807015,
+   "fr": 5.73,
+   "price": 7380.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 14.769647696476973,
+   "close_pos": 0.9312977099236641,
+   "upper_wick": 1.2195121951219512,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[특징주] 지씨지놈, 췌장암 조기검사美 진출 기대에 강세 - 바이오타임즈",
+     "source": "바이오타임즈",
+     "date": "Thu, 12 Nov 2026 09:21:39 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1hQkFZYXB3TE8yWFZtTzdmVUFiZy01OC1WdXJwbVhHX3FJNW41MzF2VVp1MjFKZWJRYnltc0ZSUW8zRUtnOERManpneThaeGJMN2NMa0plWnctX2M2TDQ0LVdGUk1QcmtXb1NLTw?oc=5",
+     "tier": "B",
+     "score": 4
+    },
+    {
+     "title": "GC녹십자, 약물감시 지원 AI 소프트웨어 ‘PVLitrieve’ 개발 - 한국경제",
+     "source": "한국경제",
+     "date": "Thu, 12 Nov 2026 04:31:42 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE01aDNzdkhRUVRkYlB1b1EyMEdaWmtSQ05hVFFMSUhmdURpRWtxdm5EaFFwNU9hNXZkaFNjTlJ3aVdRemlCY3ZnbVItNGVqVVR2WUFjVVZSVVNndw?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "GC녹십자-충청북도, 유망 바이오 스타트업 함께 키운다... KBIOHealth와 혁신생태계 가동 - 한국경제",
+     "source": "한국경제",
+     "date": "Thu, 12 Nov 2026 00:18:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE44WEdSazBPYXpxNHdISGoxZlhncEx6NXd4MUl3dTVJRDkwVWFKSHk1NDFtOXlqYXVOMGtlVjV3QldmRUpyNFpaanViS3ZuT0lMcGNNdG1yY2dMZw?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "GC녹십자, 협력사와 지속가능한 공급망 구축 나선다 - 한국경제",
+     "source": "한국경제",
+     "date": "Wed, 11 Nov 2026 05:51:29 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBMZ2l5b0hBM3dIaF9oUE8yVkNxQmJKeGp2M05iX2RnN3VwdkNLOVJEdDJhQlVRTERyUEV3a1NFRVhFZXVXZWtaTF9Sb2dub3lSY3A1d3hINXlwdw?oc=5",
+     "tier": "A",
+     "score": -2
+    },
+    {
+     "title": "[바이오 마감 브리핑]신규 상장주 급락…넥스아이 40%·바로팜 18%↓ - 메디코파마",
+     "source": "메디코파마",
+     "date": "Thu, 12 Nov 2026 07:45:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE1iVVVDUzgzczl1X0M2T2haMWVsQ2tqcFZZakJHTmEtMUlJeWFTTWpxZ21ETWlOdUNXbGEyVzNBODNUcmdma0YzbDh4S2stbkZBeXdndkRlQjdteEJQS0h6aHN0ejdKVzdCVF9XMFM1MVI0QQ?oc=5",
+     "tier": "B",
+     "score": -4
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "신기술·신제품",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "신기술·신제품"
+   ],
+   "themes": [
+    "AI",
+    "바이오"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "039980",
+   "name": "폴라리스AI",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 12.926829268292671,
+   "gap": 6.829268292682933,
+   "tv": 14372621940.0,
+   "vol_ratio": 2.258907410089061,
+   "close": 4630.0,
+   "pctb": 0.2702645193015004,
+   "bw": 0.5540642105475577,
+   "bw_pctile": 0.8,
+   "squeeze": false,
+   "rsi14": 34.168865435356196,
+   "ma5_gap": 0.04538500764915865,
+   "ma20_gap": -0.1272882077479779,
+   "ma60_gap": -0.1905231984205331,
+   "ma120_gap": -0.24157173467342885,
+   "ma_aligned": false,
+   "ret5": -0.07761529808773904,
+   "ret20": -0.11351351351351346,
+   "ret60": -0.3471337579617835,
+   "from_high": -0.6708942045272115,
+   "from_low": 0.16312056737588643,
+   "vol_ratio_prev": 0.06207477905472861,
+   "tv20_avg": 7506763129.0,
+   "tv_prev": 349229800.0,
+   "prev_chg": 0.04060913705583746,
+   "up_days": 2,
+   "prev_close_pos": 0.5925925925925926,
+   "fr": 0.0,
+   "price": 4100.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 27.5609756097561,
+   "close_pos": 0.3142857142857143,
+   "upper_wick": 14.634146341463413,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[장중수급포착] 폴라리스AI핸디, 기관 10일 연속 순매수행진... 주가 +1.70% - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 01:25:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1yOGZIOVcwTTJQSDF5Ql9xWTQ5cEJNVzJjdnA4YnM0c055R1pwZmczcjBCOHZHanFQTm9Pc0p0eVJZbFo3cGdDQzFMdVBpQk45eG5PYl9pRE1iSjNW?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "폴라리스AI파마, 일본 시장 과반 점유 '둘록세틴' 국내 DMF 등록 - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Wed, 11 Nov 2026 05:19:19 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5FX2FNVEpLZlpNSnV6Vk53eXI2dGtFOHNEVWk1NFBXLVFfaXRKcUUxYWZYNkZCV3lRTWw3NGlKcG9keThZV1JSelA4c1BiRnNQT1daVXI5TWM3bXlVTkFjWVFGM3JSZnhfN1B4WFJ30gFuQVVfeXFMTkVfYU1USktmWk1KdXpWTnd5cjZ0a0U4c0RVaTU0UFctUV9pdEpxRTFhZlg2RkJXeVFNbDc0aUpwb2R5OFlXUlJ6UDhzUGJGc1BPV1pVcjlNYzdteVVOQWNZUUYzclJmeF83UHhYUnc?oc=5",
+     "tier": "A",
+     "score": 5
+    },
+    {
+     "title": "폴라리스AI파마, 日 둘록세틴 원료의약품 시장 과반 점유 - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Wed, 11 Nov 2026 02:05:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1OOS1iV3NBU3BfRUhfLUUyQ3dpLW83OTdvZHlLQkp1d1FtVUloSHV5Um1veVd5TWljMFFEYVdNdUZVVHFlb2ZUNFYzaU5VbDM2bjZ1RlZyeUtsUFdh?oc=5",
+     "tier": "A",
+     "score": 5
+    },
+    {
+     "title": "폴라리스AI파마, 日 과반 점유 둘록세틴 원료의약품 국내 DMF 등록 완료 - 이투데이",
+     "source": "이투데이",
+     "date": "Wed, 11 Nov 2026 02:11:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBqT0NINXpTVjhoWEpfZU1xVnNXZmFHbW5QTEtITzVzVTVGVkl1ZzBUT1RXNlVXOHYySXNUdFZLSXpKQUoxbEJiX3JDZEF4eWxKc0tiMg?oc=5",
+     "tier": "A",
+     "score": 5
+    },
+    {
+     "title": "폴라리스AI파마, '둘록세틴' 국내 원료의약품 등록 완료 - 뉴시스",
+     "source": "뉴시스",
+     "date": "Wed, 11 Nov 2026 04:41:06 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBvLWp6cjJ4V3pCQVhuTmYzZkZYZUtZZ2lPRTA3SjRIN1ZDWlFlWXNpZjlqOXdLMHBQbm42VEJCdDY1d1ZNbjhXRHZlNy12OVdrbHRWazlUaklJcm5XRXA4ZNIBeEFVX3lxTFBoMnVyb3ptOXE3T3lXVDN5bEplYVRucnluZm5iV0hpSzR5UFhJTjZzSW0wSXNrMldhZjBsWFdsVUNZVjlKb1pJX2ZPdEozaVhyMFNHQkxGY2Q0UUtkNjFSTG5adEZKVlgxandRWXR2cGVWMjdRLWczQg?oc=5",
+     "tier": "A",
+     "score": 5
+    },
+    {
+     "title": "[특징주] 폴라리스AI, 'AI 챗봇' 훈풍·계열사 제약 호재 겹치며 23%대 급등 - 와이드경제",
+     "source": "와이드경제",
+     "date": "Thu, 12 Nov 2026 00:24:54 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9oUWIxTzFxbmVEbnVLTVpicmVuTWo1YV9XOFNRaVVucFJXa1BNWDFpODFwc2lSMVFOaFBsSGo0UTYzSFFWRjVzWjNUNUhIRy1RM0dleHN6MkIxeTd2NjRFdjk2b2RYc0YzQkhWaA?oc=5",
+     "tier": "C",
+     "score": 1
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "수급",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "수급"
+   ],
+   "themes": [
+    "AI",
+    "제약"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "037270",
+   "name": "YG PLUS",
+   "market": "KOSPI",
+   "pref": false,
+   "chg": 12.755102040816336,
+   "gap": -0.5102040816326481,
+   "tv": 17105085075.0,
+   "vol_ratio": 25.4825412981569,
+   "close": 3315.0,
+   "pctb": 0.5395477786160717,
+   "bw": 0.17973171476824712,
+   "bw_pctile": 0.48333333333333334,
+   "squeeze": false,
+   "rsi14": 42.25352112676056,
+   "ma5_gap": 0.03813559322033888,
+   "ma20_gap": 0.0071079900659416495,
+   "ma60_gap": -0.04643494242932045,
+   "ma120_gap": -0.11179365818657871,
+   "ma_aligned": false,
+   "ret5": 0.035211267605633756,
+   "ret20": -0.015075376884422065,
+   "ret60": -0.17531556802244042,
+   "from_high": -0.6356877323420074,
+   "from_low": 0.09906542056074774,
+   "vol_ratio_prev": 0.5872539635777267,
+   "tv20_avg": 597189337.0,
+   "tv_prev": 348407640.0,
+   "prev_chg": 0.035211267605633756,
+   "up_days": 2,
+   "prev_close_pos": 0.6666666666666666,
+   "fr": 5.51,
+   "price": 2940.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 16.326530612244895,
+   "close_pos": 0.7878787878787878,
+   "upper_wick": 3.571428571428571,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[종목상담 주식민원처리반] 내년 주요 엔터사 이익 회복 기대감↑ 'YG PLUS' - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Thu, 12 Nov 2026 10:05:46 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE0yWmgxQ1ZzY2JCQUVrMlJpYnJiRXFvTDRzYl9KZmlhRmtiOF9NRExHYmVXN2NlUFdkWFRmNXZKczZFQUwyZktHcjJzVkJ5Ti1wMUxwaXZwWi1Nc25oNnBNbExuUzhyZUt40gFuQVVfeXFMUF9LWGplU1RKUnQ3b0VsZC0xUGFWRWZMbU1BenNBYzlXQ1pHdUh3b1dqemRqY3JHbWpKWmNZLTUwMEx6RXk4Q1BuaHlzbzRoQ3VEZHFHdGhvNlhDOS1LaGhWaS1XVy1wTl96OHN2Zmc?oc=5",
+     "tier": "A",
+     "score": 4
+    },
+    {
+     "title": "오후 이슈 [엔터] : JYP Ent., YG PLUS, 에스엠, 하이브, 와이지엔터테인먼트 - 파이낸셜뉴스",
+     "source": "파이낸셜뉴스",
+     "date": "Thu, 12 Nov 2026 07:02:16 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9ZODNlOU9vWHA4ZVdsWWRmdjlxQzM2bEZ4eWV0YW1YRHJrY2RIVVkwX2xkNlBYOUhJc3c0T1RqbmZkblJ0Y0dHbVJmbEtuMDhPemMwaXZrSVBCUQ?oc=5",
+     "tier": "A",
+     "score": 4
+    },
+    {
+     "title": "YG PLUS 주가, 급등세... 무슨 회사길래? - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 02:06:56 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1uQm5aWE90REZ1Q05oRDF5ZHBuaEp2Qm5ST3dxdXBKdjVmQVNDZ3NxSGpQOGNCUHhkNjV2Qmd1TFcydF9Mc3NUak81R1RVaWxmX3dkNVdQN1pLbzVpODRVWHZiOU9UamNVcUE?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "특징주, YG PLUS-음원/음반 테마 상승세에 9.69% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 01:23:37 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1TSXBBQmFQYzFGNW0tMkVGQUNEeFJ3V2ZFZEp2QmJ0cjdUMXdZVFZxa0xpbW9IWWRWRVhXcTc3cFlKalF4c0FKa2l4N0FCX25TLVE?oc=5",
+     "tier": "B",
+     "score": 0
+    },
+    {
+     "title": "YG, 빅뱅 월드투어 등 공연 수익성이 4분기 실적 좌우-상상인 - 이데일리",
+     "source": "이데일리",
+     "date": "Tue, 10 Nov 2026 23:03:26 GMT",
+     "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOcXBXQVdVdVBEOVI2cUtSZGh0TVVUd0QtRVVuS1pSbExmWVFyNUVZZ3dzVHJOVXljOFZkelFvNmJESnBBeDlCSHp3RGczVW9pcmxkbjJJZWE4YzBWZTQyR0pBX1llSlhfenA3NVk4QkNHRTBmZ1JudVZpU1ZwTWZxOQ?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "[특징주] 외국인 '삼성전자·모아라이프플러스', 기관 '심텍홀딩스·티엘비' 순매수 - 뉴스티앤티",
+     "source": "뉴스티앤티",
+     "date": "Thu, 12 Nov 2026 02:35:15 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5xQTVXSTc1WWlLVFBzdURCRUlobHAtWHN1VllaM0ZCd0pMOTd2NGI1ejd2WGx6TTUwbjlaRy1LUGZVWmNUb21PU0c1WmJlVi0xMGk4R1J5bWlZYjhKWEFWYm0tblM0b3owWlE?oc=5",
+     "tier": "C",
+     "score": -6
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "실적",
+    "수급",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "실적",
+    "수급"
+   ],
+   "themes": [
+    "엔터"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "002360",
+   "name": "SH에너지화학",
+   "market": "KOSPI",
+   "pref": false,
+   "chg": 11.951588502269296,
+   "gap": 21.028744326777616,
+   "tv": 1085568900.0,
+   "vol_ratio": 5.80891560850201,
+   "close": 3700.0,
+   "pctb": -0.11988511308682305,
+   "bw": 0.1984129490858661,
+   "bw_pctile": 0.175,
+   "squeeze": false,
+   "rsi14": 25.671641791044777,
+   "ma5_gap": -0.06267725467952356,
+   "ma20_gap": -0.1229932333819822,
+   "ma60_gap": 0.2234698914116484,
+   "ma120_gap": 0.39519666785102414,
+   "ma_aligned": false,
+   "ret5": -0.13026315789473686,
+   "ret20": -0.09945504087193457,
+   "ret60": 0.8842645381984036,
+   "from_high": -0.45371900826446276,
+   "from_low": Infinity,
+   "vol_ratio_prev": 0.7538541519893887,
+   "tv20_avg": 192640448.5,
+   "tv_prev": 128197645.0,
+   "prev_chg": -0.05300859598853869,
+   "up_days": 0,
+   "prev_close_pos": 0.36764705882352944,
+   "fr": 32.4,
+   "price": 3305.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 27.382753403933435,
+   "close_pos": 0.5,
+   "upper_wick": 6.354009077155824,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "개인 홀로 순매수… 코스피 0.11% 내린 5369.63 - 서울신문",
+     "source": "서울신문",
+     "date": "Thu, 12 Nov 2026 00:37:41 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE5RRlUxU0hfR0VBS0Rjb2JlLWozaDg2emNCdmF3eGgtbjhsRENxMVFRakdIaXRwSlh4eXlvN21vUC1YWUg4RTVjcEE4Z19jYkNWaS1jOENLYw?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "ESG 등급, 개선 됐으나 하위권 등급이 절반 - 스마트투데이",
+     "source": "스마트투데이",
+     "date": "Wed, 11 Nov 2026 05:14:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5YM0pzdk5iNTdXVGVPNmtibXluX3Q0eVJpYnNBcnRQY3JLRndkV0lvV2hUTTRhajd5dkVMN1dUWkpYd2sySFFiYW9TZGF2S2VPQ3Bsdnc5XzN5ZWZPeGhV?oc=5",
+     "tier": "B",
+     "score": -5
+    },
+    {
+     "title": "화학업종 대형주 부진 속 중소형주 급등…실적·수급별 차별화 - 핀포인트뉴스",
+     "source": "핀포인트뉴스",
+     "date": "Thu, 12 Nov 2026 06:53:04 GMT",
+     "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1feUh2a08xUldBSjNndl9ZMUUzY2wwUjY0Uk40QTRXWkhhemZSVVFVd0pEN21XY3ZxRWNFQ2lzclkyZFV2anhDeDZFTTFLeW1YaDd5M1M0aGNuRENwNUttdVJvbF9EWHFwakIxdHpac0kwX3lTNS040gF3QVVfeXFMTV95SHZrTzFSV0FKM2d2X1kxRTNjbDBSNjRSTjRBNFdaSGF6ZlJVUVV3SkQ3bVdjdnFFY0VDaXNyWTJkVXZqeEN4NkVNMUt5bVhoN3kzUzRoY25EQ3A1S211Um9sX0RYcXBqQjF0elpzSTBfeVM1LTg?oc=5",
+     "tier": "C",
+     "score": -6
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "실적",
+    "수급",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "실적",
+    "수급"
+   ],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "204270",
+   "name": "제이앤티씨",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 11.758055398530253,
+   "gap": -1.8654607122668199,
+   "tv": 79082016540.0,
+   "vol_ratio": 7.436213323904455,
+   "close": 19770.0,
+   "pctb": 0.4556240942318812,
+   "bw": 0.3505085276223876,
+   "bw_pctile": 0.2833333333333333,
+   "squeeze": false,
+   "rsi14": 44.92254733218588,
+   "ma5_gap": 0.07760721247563351,
+   "ma20_gap": -0.015554133392693181,
+   "ma60_gap": -0.131167938181461,
+   "ma120_gap": -0.05682257441051408,
+   "ma_aligned": false,
+   "ret5": 0.02968568102444702,
+   "ret20": -0.1454106280193237,
+   "ret60": -0.06253312135665079,
+   "from_high": -0.41229235880398674,
+   "from_low": 0.5879712746858168,
+   "vol_ratio_prev": 0.6725283917678733,
+   "tv20_avg": 9628125004.5,
+   "tv_prev": 6755563340.0,
+   "prev_chg": 0.05611940298507467,
+   "up_days": 4,
+   "prev_close_pos": 0.9901960784313726,
+   "fr": 2.61,
+   "price": 17690.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 28.321085358959873,
+   "close_pos": 0.4692028985507246,
+   "upper_wick": 16.56302996042962,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "제이앤티씨, 日호야 독점 깬다…씨게이트에 HDD 유리플래터 첫 공급 - 디일렉",
+     "source": "디일렉",
+     "date": "Thu, 12 Nov 2026 03:56:12 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE0yYVBHN1RVdUFhR2g4VnpSSy05SE9nOXZCSUxrMlRLUWprZTNlZzJiZS1FNmhPRXNROWJFSE04Q3FGNFFtUkNab0xSQzA3UDNCV0xkNFlIejhXWG9HTmRlaVRmZU9ZZw?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "[속보] 제이앤티씨 VI 발동, 주가 급등…22%대 상승 - CBC뉴스",
+     "source": "CBC뉴스",
+     "date": "Thu, 12 Nov 2026 04:30:33 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE56Ym9JTzYtRkxHZHRka1pHRWFvTlJQRm1wcDhDeW1raGx6NDdyVW41dXZZMDVoemZ5clZROXdYTklTSzRGaG8ta0ZobDhnTEVhOXI4Q0duYURPbzFLNkdPZHhfVzdLcEZ4?oc=5",
+     "tier": "B",
+     "score": 4
+    },
+    {
+     "title": "특징주, 제이앤티씨-유리 기판 테마 상승세에 29.94% ↑ - 매일경제",
+     "source": "매일경제",
+     "date": "Thu, 12 Nov 2026 04:14:49 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9QMFRJYmNKT2o5R0hWVDZTMFItTUZubWw4dkZsR2R2SDdWVHRVbXZIODRHb3FabWZXUkl5X0V0aGRJaDVIVHc?oc=5",
+     "tier": "A",
+     "score": 3
+    },
+    {
+     "title": "제이앤티씨 거래량 3,392,395주…19,650원 형성 - 잡포스트",
+     "source": "잡포스트",
+     "date": "Thu, 12 Nov 2026 06:03:07 GMT",
+     "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE80MnlUb3QzR044cnlueGduRXRNbG9scThYVFZseUpsWlh3VzdQREtVbkpabGMzZGh5cW5ja2cyQ2tMS3BRQ2NBdDJwUFZUUEpEU0VWZl9FRklEM3ozVHZWVV9NZmRIM0tENE1HVEZR0gFyQVVfeXFMUDY1cU1ISk9yLTdkSENId3BmNkk1ZDI5RE8zd0RoSW1ISWhSV2g2enNHZlZSdlN6LThzblRzejBlWnFJOG8td1VZY0o1UGNobjAwNDhpOExPakhhWHRZbk5Qdmw5SXU1ZWJWQnQyNWc2ZG9n?oc=5",
+     "tier": "B",
+     "score": 3
+    },
+    {
+     "title": "특징주, 한빛레이저-유리 기판 테마 상승세에 21.78% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 04:14:39 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1Ibk1Nc1hnZzh6OEVZQWlueU1yVlVrQkUtSmphVUJ0YzRMamRmVWV6M0U0UTlfRl83VGtHVjlHOWlMUEhRSXMyYzF2cDB3dzFEYlE?oc=5",
+     "tier": "B",
+     "score": -3
+    },
+    {
+     "title": "특징주, 이노메트리-유리 기판 테마 상승세에 24.71% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 04:14:36 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBWVnYtY0tnN2JkcVdrNGE0WG9fZlFfdGZpZzl6Rk9fZUN1RlhoelR3S1ZEZXhjbjkwaXhrVkVGTFBfMEtWN2Yzdl9qd19rUkJYOVE?oc=5",
+     "tier": "B",
+     "score": -3
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "071280",
+   "name": "로체시스템즈",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 10.305343511450381,
+   "gap": 0.12722646310432406,
+   "tv": 2600037630.0,
+   "vol_ratio": 1.3938374230491255,
+   "close": 8670.0,
+   "pctb": 0.665674072270816,
+   "bw": 0.2507479675115823,
+   "bw_pctile": 0.25,
+   "squeeze": false,
+   "rsi14": 60.90225563909774,
+   "ma5_gap": 0.0761226725082147,
+   "ma20_gap": 0.041542436891274015,
+   "ma60_gap": 0.05317224591884595,
+   "ma120_gap": 0.08747535540105833,
+   "ma_aligned": false,
+   "ret5": -0.008827238335435084,
+   "ret20": -0.07092198581560283,
+   "ret60": 0.17313432835820897,
+   "from_high": -0.3406040268456376,
+   "from_low": 0.5262135922330098,
+   "vol_ratio_prev": 0.5076976008073765,
+   "tv20_avg": 1654316436.0,
+   "tv_prev": 869889780.0,
+   "prev_chg": 0.0826446280991735,
+   "up_days": 3,
+   "prev_close_pos": 0.75,
+   "fr": 47.55,
+   "price": 7860.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 11.832061068702293,
+   "close_pos": 0.8899082568807339,
+   "upper_wick": 1.5267175572519083,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[표] 11월 12일 애프터마켓 상승 종목 및 최근 동향 - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 09:03:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBKd3FKc0phZTRKVk9ZTzBQUld6MWU5WXBLYlhGcGFjSzZmMFBPU3l2YWV3cDR4NElBVTRSZGVnbVdlbENNRDFyN0JzaEx4MXdaejRTSnE0VlVBZnVi?oc=5",
+     "tier": "A",
+     "score": -1
+    },
+    {
+     "title": "글로벌 반도체 설비 투자 확대…반도체 장비 관련주 무더기 '휘파람' - 핀포인트뉴스",
+     "source": "핀포인트뉴스",
+     "date": "Wed, 11 Nov 2026 00:43:23 GMT",
+     "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE4ydzNiX2VNWE5kNTdlRjJ5RFVRUTdpWlFfa1RoTXJjQTJqYnJleEZnVHZYeklPSXBXMWoxR1JPbmlLVC1ST09WX1JDNVBJQklVV21ibmdXQWdMM1lFWGR5NHI4U3AzNDVIQ2xFX3BycTZwU2PSAXdBVV95cUxQVHFITXh4OEVRR0lYZUR5dW9DYWVlZWxpa1RqcU1zakZ5TUx0M0N6MW1kWDRVOW1WZ29PY3JTMzEtRlpjS3ozZlVXS0I2WHhMZVFYUzJYbHpfazBkclZKSHVHdW1KaEVIdzh0MXNQQ3hQUmM4cVhPZw?oc=5",
+     "tier": "C",
+     "score": -8
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [],
+   "catalysts": [],
+   "themes": [
+    "반도체"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "177350",
+   "name": "베셀",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 30.000000000000004,
+   "gap": -5.000000000000004,
+   "tv": 676346112.0,
+   "vol_ratio": 11.460591291218181,
+   "close": 936.0,
+   "pctb": 0.20820449205861638,
+   "bw": 0.6502384692435013,
+   "bw_pctile": 0.8666666666666667,
+   "squeeze": false,
+   "rsi14": 14.356435643564353,
+   "ma5_gap": 0.0033444816053511683,
+   "ma20_gap": -0.18973666441593517,
+   "ma60_gap": -0.4559399518909866,
+   "ma120_gap": -0.48312065902115975,
+   "ma_aligned": false,
+   "ret5": -0.08045977011494254,
+   "ret20": -0.43793911007025765,
+   "ret60": -0.48201438848920863,
+   "from_high": -0.803921568627451,
+   "from_low": 0.048034934497816595,
+   "vol_ratio_prev": 0.5715034345587776,
+   "tv20_avg": 57503945.45,
+   "tv_prev": 27639360.0,
+   "prev_chg": 0.018387553041018467,
+   "up_days": 1,
+   "prev_close_pos": 0.6,
+   "fr": 1.38,
+   "price": 720.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 30.000000000000004,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": true,
+   "filings": [],
+   "news": [
+    {
+     "title": "[주식마감] '지분경쟁' 한진칼우 다시 '上'... 공시 없는 상한가 종목도 무더기 - 금강일보",
+     "source": "금강일보",
+     "date": "Thu, 12 Nov 2026 10:40:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5SeXhOTFlQSS1QeUdwUWxfRlZBbDNuT0JlTVgtcllKMHcxRnFYUEw0SFF5R2JqdEtOc2xabUdMUWI0bnpNbzQ1aE5WeXMwNnczQmhDRXBiTXZWelhGTVUwd2hkZUplSllWTEE?oc=5",
+     "tier": "C",
+     "score": -6
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "142760",
+   "name": "모아라이프플러스",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 30.000000000000004,
+   "gap": 11.111111111111116,
+   "tv": 840732867.0,
+   "vol_ratio": 3.127476571457471,
+   "close": 117.0,
+   "pctb": 0.1842445929406017,
+   "bw": 2.254909921039174,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 3.0732860520094647,
+   "ma5_gap": -0.2091388400702987,
+   "ma20_gap": -0.712,
+   "ma60_gap": -0.8167503732862766,
+   "ma120_gap": -0.8814020908372134,
+   "ma_aligned": false,
+   "ret5": -0.3959731543624161,
+   "ret20": -0.8185483870967742,
+   "ret60": -0.8710601719197708,
+   "from_high": -0.9762407602956705,
+   "from_low": 0.09756097560975618,
+   "vol_ratio_prev": 1.5908025643904269,
+   "tv20_avg": 631133208.8,
+   "tv_prev": 308556180.0,
+   "prev_chg": -0.021739130434782594,
+   "up_days": 0,
+   "prev_close_pos": 0.7272727272727273,
+   "fr": 8.3,
+   "price": 90.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 30.000000000000004,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": true,
+   "filings": [
+    {
+     "date": "20261111",
+     "title": "[기재정정]최대주주변경을수반하는주식담보제공계약체결",
+     "rcept_no": "20261111900796",
+     "filer": "모아라이프플러스"
+    },
+    {
+     "date": "20261111",
+     "title": "[기재정정]의결권대리행사권유참고서류",
+     "rcept_no": "20261111000308",
+     "filer": "모아라이프플러스"
+    },
+    {
+     "date": "20261111",
+     "title": "[기재정정]주주총회소집공고",
+     "rcept_no": "20261111000301",
+     "filer": "모아라이프플러스"
+    },
+    {
+     "date": "20261111",
+     "title": "[첨부정정]주요사항보고서(전환사채권발행결정)",
+     "rcept_no": "20261111000069",
+     "filer": "모아라이프플러스"
+    },
+    {
+     "date": "20261112",
+     "title": "최대주주변경을수반하는주식담보제공계약해제ㆍ취소등",
+     "rcept_no": "20261112901181",
+     "filer": "모아라이프플러스"
+    },
+    {
+     "date": "20261112",
+     "title": "주권매매거래정지기간변경",
+     "rcept_no": "20261112901143",
+     "filer": "코스닥시장본부"
+    },
+    {
+     "date": "20261112",
+     "title": "기타시장안내 (상장적격성 실질심사 관련 안내)",
+     "rcept_no": "20261112901133",
+     "filer": "코스닥시장본부"
+    },
+    {
+     "date": "20261112",
+     "title": "[기재정정]최대주주변경을수반하는주식담보제공계약체결",
+     "rcept_no": "20261112900870",
+     "filer": "모아라이프플러스"
+    },
+    {
+     "date": "20261112",
+     "title": "최대주주변경",
+     "rcept_no": "20261112900875",
+     "filer": "모아라이프플러스"
+    },
+    {
+     "date": "20261112",
+     "title": "주권매매거래정지 (상장적격성 실질심사 대상 (사유발생))",
+     "rcept_no": "20261112900882",
+     "filer": "코스닥시장본부"
+    }
+   ],
+   "news": [
+    {
+     "title": "[장중수급포착] 모아라이프플러스, 외국인 8일 연속 순매수행진... 주가 +30.00% - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 01:24:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE4wUjdTM1gwazRINW1pXzh5bllXUFduX1ZsQnIxQk9Lb1FlSXo3WDlPYy1wMmxsMFBMYVVsVVNrVXppemhIREotS01ZU0dFelRqNmVNd2hYWU1YMHlf?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "모아라이프플러스, 담보권 실행으로 최대주주 변경 발생 - 데이터투자",
+     "source": "데이터투자",
+     "date": "Thu, 12 Nov 2026 07:31:27 GMT",
+     "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1qZXpPa0F0UG51Q2k2V0JJOGVTZDVKY2dCMzZuc2paLUxNSEV0aDNfbEl6dE5DbmxqT0VKdUk2TjloczRBcy1kWUNpUUwzNVgyNVZKOFp1Z0VIb0FiVk9RbkJjc0gyM1ZJUXJjNkR4ZWczTjQ?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "[급등락주 짚어보기] 호실적·주주환원 업은 AI·장비주 '질주'…넥스아이 상장 첫날 '下' - 이투데이",
+     "source": "이투데이",
+     "date": "Thu, 12 Nov 2026 07:48:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5UM0pScWxPMGEyQTVWVEVaMDd0bmx6Ym1OZGhDSXROR3U2aVhwdXJXcEJDdG9rZ251UmxsdGJZZEZHWlZvbmxyWkZNN3hFUnk2RURmTg?oc=5",
+     "tier": "A",
+     "score": 0
+    },
+    {
+     "title": "모아라이프플러스, 상장적격성 실질심사 사유 발생으로 거래정지 - 데이터투자",
+     "source": "데이터투자",
+     "date": "Thu, 12 Nov 2026 07:30:12 GMT",
+     "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE05Q3RyOFNvWEFXYWh6MEIzXzkwV2ppd1dtbjZCLVdBd2hPTmQ2Y21Ob1VGYk5xUXdOMEdhUDh0TjB2SFFNR096ZkxDXy1uQUVURnE0U3A2bV9pTGVDTmUyc2owXy1tRG1lN0x5QUhpdGMwVE0?oc=5",
+     "tier": "C",
+     "score": 0
+    },
+    {
+     "title": "[오늘의 특징주] 코난테크놀로지·모아라이프플러스 상한가…AI 호재에 상폐 위험주도 급등 - https://www.ppss.kr/",
+     "source": "https://www.ppss.kr/",
+     "date": "Thu, 12 Nov 2026 02:13:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE43VkdnY1ByUGo3dFNKUDFrNWNQSFdEZEdsMlowMEplSERMa0FNdWxKQS1la2dhaEV6QTNlRGhwRmMxN3l5Yllpel9DN3ZIbEdHelIxdmlUNTNQMFJ6SnBrN2hvYzY?oc=5",
+     "tier": "B",
+     "score": 0
+    },
+    {
+     "title": "[속보] 공소청, ‘성북구 10대 살인’ 50대 구속영장 청구 - Chosunbiz",
+     "source": "Chosunbiz",
+     "date": "Thu, 12 Nov 2026 09:03:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPNnY2VmJ5bnZnTnNzNHo5bjlWX3hmX1BsMkRGVUZ5N1oxZjVGREhaQXZXSG1jWmYyRjRlTnhXTjl1emUyYmEtM0FSOG1rZ21zZ2lINFIxVUo4d2F2ZXlJRUJlb2JqRE9lc2lWTVVMSi1jYXhlUF9jVjY5cFc2YWdySGxnZVVIYTU1dDRsaUN4NkwyMWpTWE54d3dmd2QxQXFKQ2fSAZ4BQVVfeXFMUGRndVRYUE55a3ZUSnF3RDdzU1pYQl9MWkVJU1V1Y0JrTlBIaE9raXBKZzdOUFZGVFhyZmRITGdXSk9fNVVwQUp3b2FDVUwtMFktU0lCR3dFMHAwX3BZWTRtU2pHNnRCdHV4OXppcTFYMHc0WUlXMk5ycnJPR01Pd0ppaXc5QlM2eEJrd2ZkM2dfZkp3WFJEM21lcVpPZVE?oc=5",
+     "tier": "A",
+     "score": -1
+    }
+   ],
+   "catalysts_dart": [
+    "유상증자·CB",
+    "M&A·지배구조",
+    "거래소 조치"
+   ],
+   "catalysts_news": [
+    "실적",
+    "수급",
+    "상한가·급등"
+   ],
+   "catalysts": [
+    "유상증자·CB",
+    "M&A·지배구조",
+    "실적",
+    "수급"
+   ],
+   "themes": [
+    "AI"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "455180",
+   "name": "케이지에이",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 17.809734513274343,
+   "gap": 3.207964601769908,
+   "tv": 397340850.0,
+   "vol_ratio": 8.508973889681423,
+   "close": 1065.0,
+   "pctb": 0.21554932189061254,
+   "bw": 0.6467491184558956,
+   "bw_pctile": 0.8833333333333333,
+   "squeeze": false,
+   "rsi14": 29.61956521739131,
+   "ma5_gap": 0.09390125847047437,
+   "ma20_gap": -0.18396822531142798,
+   "ma60_gap": -0.27331189710610937,
+   "ma120_gap": -0.3848596540969662,
+   "ma_aligned": false,
+   "ret5": -0.08223350253807105,
+   "ret20": -0.25840853158326493,
+   "ret60": -0.4511232544019429,
+   "from_high": -0.8394316163410303,
+   "from_low": 0.2804532577903682,
+   "vol_ratio_prev": 3.2396952386922533,
+   "tv20_avg": 43422168.1,
+   "tv_prev": 112126736.0,
+   "prev_chg": 0.1545338441890165,
+   "up_days": 1,
+   "prev_close_pos": 0.7559523809523809,
+   "fr": 2.1,
+   "price": 904.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 20.575221238938045,
+   "close_pos": 0.8663101604278075,
+   "upper_wick": 2.765486725663717,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "의결권대리행사권유참고서류",
+     "rcept_no": "20261112000225",
+     "filer": "케이지에이"
+    },
+    {
+     "date": "20261112",
+     "title": "주주총회소집공고",
+     "rcept_no": "20261112000224",
+     "filer": "케이지에이"
+    },
+    {
+     "date": "20261112",
+     "title": "[기재정정]주주총회소집결의 (임시주주총회)",
+     "rcept_no": "20261112900382",
+     "filer": "케이지에이"
+    }
+   ],
+   "news": [
+    {
+     "title": "독립 보험대리점 2026년 11월 브랜드평판...인카금융서비스, 에이플러스에셋, 프라임에셋 順 - 에너지신문",
+     "source": "에너지신문",
+     "date": "Wed, 11 Nov 2026 03:31:30 GMT",
+     "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE9DalB1YlE1R0NKRmx1d2lGWDU0NE1GVGNnV3NfVEZiT2xxS3VJdlJheDh3SjZGdTVjUTZCX2hJSnJwYVJhQVNyNWRpcXNrSldPTWN6QzJyeDNmc0VfcU9zYk52S3c4NUhCVTdDYVNkbnVLQQ?oc=5",
+     "tier": "B",
+     "score": -5
+    },
+    {
+     "title": "인카금융서비스, 독립 보험대리점 (GA) 브랜드평판 2026년 11월...1위 - 비욘드포스트",
+     "source": "비욘드포스트",
+     "date": "Tue, 10 Nov 2026 23:04:23 GMT",
+     "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9SUGZyNHpMQXFVVTdCWmd5LVA4cUdlS0FSTHhMeHJyZkxTSm1fV2JjV2NmeDVHTFhkUWtkWXkyVXUyLXlmMUtveHAxTGVNakZ2ZWluMTFNY21BbDVURS1mYXhxX3RIclJtVmF2NDN3UVM0YlE5RlZBVGhFejQ?oc=5",
+     "tier": "B",
+     "score": -5
+    },
+    {
+     "title": "2차전지 장비주 '룰루랄라'…씨케이솔루션 상한가 투자심리 회복 - 핀포인트뉴스",
+     "source": "핀포인트뉴스",
+     "date": "Wed, 11 Nov 2026 01:12:38 GMT",
+     "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBROF9PZVFqaTN0d21zaDRDQ19Gb0dPNS1uM3Bxb01TQVpuNUl2eGRYa1E2dFdHR2UzOTZYaFlCTUpNbU9Ga25yekhKSll2NjdXS0hqN2ZsNklxWjMwX0ZRQzM2bGtmVFdZNGw1OHpmenBESGZlRUFR0gF3QVVfeXFMUFE4X09lUWppM3R3bXNoNENDX0ZvR081LW4zcHFvTVNBWm41SXZ4ZFhrUTZ0V0dHZTM5NlhoWUJNSk1tT0ZrbnJ6SEpKWXY2N1dLSGo3Zmw2SXFaMzBfRlFDMzZsa2ZUV1k0bDU4emZ6cERIZmVFQVE?oc=5",
+     "tier": "C",
+     "score": -7
+    },
+    {
+     "title": "GA 브랜드평판 순위 엇갈렸다…인카금융서비스 1위, 한화생명금융서비스 4위 - 핀포인트뉴스",
+     "source": "핀포인트뉴스",
+     "date": "Tue, 10 Nov 2026 22:39:20 GMT",
+     "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1fbV9rU0tGOFBPTmxDZEo4R1phVE5fU2NZRHF2cUtJT09oVHhvdFVsVi1DajI2VHVrYzZURUVvaXBJLUg3UHhSZGYyTGdCcDktNjRjWXdDdnN3OXpkOXNvMG50QUNzaVk4SDBWc2JiOG9OY1FpNU4w0gF3QVVfeXFMTV9tX2tTS0Y4UE9ObENkSjhHWmFUTl9TY1lEcXZxS0lPT2hUeG90VWxWLUNqMjZUdWtjNlRFRW9pcEktSDdQeFJkZjJMZ0JwOS02NGNZd0N2c3c5emQ5c28wbnRBQ3NpWThIMFZzYmI4b05jUWk1TjA?oc=5",
+     "tier": "C",
+     "score": -8
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "상한가·급등"
+   ],
+   "catalysts": [],
+   "themes": [
+    "2차전지",
+    "금융"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "070590",
+   "name": "인티큐브",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 15.677966101694917,
+   "gap": 0.8474576271186418,
+   "tv": 65247000.0,
+   "vol_ratio": 0.4981335623219277,
+   "close": 2730.0,
+   "pctb": 0.2939969168831607,
+   "bw": 0.440449537234173,
+   "bw_pctile": 0.925,
+   "squeeze": false,
+   "rsi14": 53.22033898305085,
+   "ma5_gap": -0.10842463165848126,
+   "ma20_gap": -0.09073396262762479,
+   "ma60_gap": 0.06015003818337017,
+   "ma120_gap": 0.21025641025641018,
+   "ma_aligned": true,
+   "ret5": -0.1791304347826087,
+   "ret20": 0.07762557077625565,
+   "ret60": 0.38905238375515006,
+   "from_high": -0.21464226289517474,
+   "from_low": 0.6197666437886067,
+   "vol_ratio_prev": 0.4875327658697313,
+   "tv20_avg": 129137163.25,
+   "tv_prev": 54143120.0,
+   "prev_chg": -0.09055876685934494,
+   "up_days": 0,
+   "prev_close_pos": 0.14285714285714285,
+   "fr": 0.64,
+   "price": 2360.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 15.889830508474567,
+   "close_pos": 0.9859154929577465,
+   "upper_wick": 0.211864406779661,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "분기보고서 (2026.09)",
+     "rcept_no": "20261112000449",
+     "filer": "인티큐브"
+    }
+   ],
+   "news": [],
+   "catalysts_dart": [],
+   "catalysts_news": [],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "418620",
+   "name": "E8",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 13.131313131313128,
+   "gap": -5.941770647653,
+   "tv": 311802848.0,
+   "vol_ratio": 2.056169815253339,
+   "close": 1904.0,
+   "pctb": 0.2697321356839897,
+   "bw": 0.4745108534111783,
+   "bw_pctile": 0.45,
+   "squeeze": false,
+   "rsi14": 31.522896698615554,
+   "ma5_gap": 0.09928151534944485,
+   "ma20_gap": -0.10926460080975953,
+   "ma60_gap": -0.316150178784267,
+   "ma120_gap": -0.5269969600022484,
+   "ma_aligned": false,
+   "ret5": -0.01808634772462081,
+   "ret20": -0.17093596059113303,
+   "ret60": -0.523229461756374,
+   "from_high": -0.8713794421092854,
+   "from_low": Infinity,
+   "vol_ratio_prev": 3.7666904897965883,
+   "tv20_avg": 125360696.65,
+   "tv_prev": 424873350.0,
+   "prev_chg": 0.09713168187744459,
+   "up_days": 2,
+   "prev_close_pos": 1.0,
+   "fr": 1.69,
+   "price": 1683.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 13.725490196078427,
+   "close_pos": 0.9697885196374623,
+   "upper_wick": 0.5941770647653001,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "[더벨]E8 “상폐 대응 위한 기업가치 제고 총력” - 머니투데이 - 머니투데이",
+     "source": "머니투데이",
+     "date": "Thu, 12 Nov 2026 06:18:24 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5JdEJvRjRJYWp2ODdCc0NtLWUybVpYMWxrQk5aUHQ4d2xzWDlZT2VfcGFTSHVIR3JLT3BpazZTV3RXRmhCbGpFWEsydGVyZmlZTEdIYnVLM0s3WWV5RmZmUHdpZHYxMWxP0gFuQVVfeXFMT0JkUFhyVTFKZ09xdmU5WGdRVmh1dTB6VTNnbDFGemxxTEVwQUFKXzY0SGZBZElubTRXaDVlTFVjYTVmcVVQMm9oMXVHb2o4MFlKVjg0OVNBVXFOMUdrdXZJRXFsZjk4OFdBSG1JQ0E?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "E8 \"주식병합 통한 주가 요건 충족…상폐 우려 과도\" - 뉴시스",
+     "source": "뉴시스",
+     "date": "Thu, 12 Nov 2026 00:49:15 GMT",
+     "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE9UMTJKTmNvOF9TYzlOU3h2cE0zdDFuSXBOSU9TVXFEVUdaMUpNaHVnbUF5RHl4TGNUTG11RUhyelVRU3dOTjdGRXd2MGU3M21hU0NNdEtJV0dpdXU5WUVhejdCUGxrczcwUkxXbXhqb1EzSnZUVkRFWNIBeEFVX3lxTE9UMTJKTmNvOF9TYzlOU3h2cE0zdDFuSXBOSU9TVXFEVUdaMUpNaHVnbUF5RHl4TGNUTG11RUhyelVRU3dOTjdGRXd2MGU3M21hU0NNdEtJV0dpdXU5WUVhejdCUGxrczcwUkxXbXhqb1EzSnZUVkRFWA?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "E8, 상장폐지 우려에 “사실과 달라…기업가치 제고에 총력” - 매일경제",
+     "source": "매일경제",
+     "date": "Thu, 12 Nov 2026 00:56:20 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9OMHprY2RqNEU3NVRlSW5aTVRvTnRBSThYZndwa1IwWjRJQXNIeHQwVVRaenJjSFE4b045WER3Yk9NRE9nOTVsdk9CYUs0d09VdEE?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "E8 \"주식병합으로 상장폐지 우려 해소\" - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 00:30:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1RLWxCRzc3SUFhZWQxUndiRFpLQXdrd2RUaXdTNXBMbGhRUDU1TnVscWs5VjFTc1UxVW9aOU1VZkh5ajdnamtVZG05cmZ0YnV5SXZuYUlBSVNJRlBp?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "E8, 상장폐지 우려 과도…\"사업 경쟁력 강화해 기업가치 높일 것\" - 아시아경제",
+     "source": "아시아경제",
+     "date": "Thu, 12 Nov 2026 00:12:18 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5VWEs0NmRJWmlQNzRZWnp2NE9vQ1NoMzhfYkRXeFdYa3gzeXlSSUV2RF96Y0Yzd3FsTzRnem5GZHNTdHR2Y2dZOWRTX0Y5bHBybl9YX0h3NkNQYTd3WF8xbQ?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "E8, 시총 미달 상장폐지 절차 유예…\"기업가치 제고 총력\" - 팝콘뉴스",
+     "source": "팝콘뉴스",
+     "date": "Thu, 12 Nov 2026 02:16:54 GMT",
+     "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5kN3ctbE9RTTJhMkZzVU5acGdvMUhRdDQ3N1EteERqeFVPZ09OY0ZGazRqRlgyeE4yTFFHUkE1WV84ZGI1NXR3NC1fSi1qOWVUdGt1R2syR3pTOXBrRE5jaVZGMjU3b0h6TGJCbDJMTQ?oc=5",
+     "tier": "B",
+     "score": 3
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "093380",
+   "name": "풍강",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 12.162162162162172,
+   "gap": 1.737451737451745,
+   "tv": 20843375.0,
+   "vol_ratio": 0.6455647229245207,
+   "close": 2905.0,
+   "pctb": 0.4104881426807579,
+   "bw": 0.2704274278351978,
+   "bw_pctile": 0.8166666666666667,
+   "squeeze": false,
+   "rsi14": 35.58718861209964,
+   "ma5_gap": 0.010140405616224646,
+   "ma20_gap": -0.0242064613355939,
+   "ma60_gap": -0.10973618630231163,
+   "ma120_gap": -0.05131101004242855,
+   "ma_aligned": false,
+   "ret5": 0.003875968992248069,
+   "ret20": -0.03717472118959109,
+   "ret60": -0.09440559440559437,
+   "from_high": -0.23711340206185572,
+   "from_low": 0.27901234567901234,
+   "vol_ratio_prev": 0.9690092477673781,
+   "tv20_avg": 29162887.75,
+   "tv_prev": 26894560.0,
+   "prev_chg": -0.009560229445506718,
+   "up_days": 0,
+   "prev_close_pos": 0.1111111111111111,
+   "fr": 0.93,
+   "price": 2590.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 29.922779922779917,
+   "close_pos": 0.38666666666666666,
+   "upper_wick": 17.760617760617762,
+   "limit_up": false,
+   "filings": [],
+   "news": [],
+   "catalysts_dart": [],
+   "catalysts_news": [],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "290090",
+   "name": "트윔",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 11.893583724569634,
+   "gap": 0.15649452269170805,
+   "tv": 323848525.0,
+   "vol_ratio": 28.079414773255635,
+   "close": 3575.0,
+   "pctb": 0.07098732904377754,
+   "bw": 0.41275383659577847,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 34.03565640194489,
+   "ma5_gap": -0.05473372781065089,
+   "ma20_gap": -0.1770766258853831,
+   "ma60_gap": -0.24533501299110316,
+   "ma120_gap": -0.28268739651446695,
+   "ma_aligned": false,
+   "ret5": -0.12585499316005477,
+   "ret20": -0.29000000000000004,
+   "ret60": -0.24911868390129255,
+   "from_high": -0.6127272727272728,
+   "from_low": 0.049261083743842304,
+   "vol_ratio_prev": 2.1578841915447806,
+   "tv20_avg": 11796886.0,
+   "tv_prev": 20646090.0,
+   "prev_chg": -0.0884450784593438,
+   "up_days": 0,
+   "prev_close_pos": 0.5172413793103449,
+   "fr": 0.64,
+   "price": 3195.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 29.73395931142411,
+   "close_pos": 0.3968253968253968,
+   "upper_wick": 17.84037558685446,
+   "limit_up": false,
+   "filings": [],
+   "news": [
+    {
+     "title": "공장 자동화 넘어 자율운영 시대…스마트팩토리 시장 확대 - 핀포인트뉴스",
+     "source": "핀포인트뉴스",
+     "date": "Thu, 12 Nov 2026 05:27:45 GMT",
+     "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9kMEd2U2xUaG9qMllFZ2tOUkJqX2RsSGNSTkpuY250MFpxT3YyMWU3UDJMNGdsRjNoeGx0YWNWOGRvMXFkWnRvaUY3N21ZVHRrcFczR3oyVUpNMHNOYlR6VlYxaTFmODhIVnZmZmtBcll1ZHBhT2Rv0gF3QVVfeXFMT2QwR3ZTbFRob2oyWUVna05SQmpfZGxIY1JOSm5jbnQwWnFPdjIxZTdQMkw0Z2xGM2h4bHRhY1Y4ZG8xcWRadG9pRjc3bVlUdGtwVzNHejJVSk0wc05iVHpWVjFpMWY4OEhWdmZma0FyWXVkcGFPZG8?oc=5",
+     "tier": "C",
+     "score": -7
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [],
+   "catalysts": [],
+   "themes": []
+  },
+  {
+   "date": "2026-11-12",
+   "code": "021880",
+   "name": "메이슨캐피탈",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 11.365719523373041,
+   "gap": 2.4747937671860676,
+   "tv": 85782645.0,
+   "vol_ratio": 2.874662312783357,
+   "close": 1215.0,
+   "pctb": 0.607298111821922,
+   "bw": 0.16828132447633704,
+   "bw_pctile": 0.325,
+   "squeeze": false,
+   "rsi14": 45.6,
+   "ma5_gap": 0.045820552147239235,
+   "ma20_gap": 0.01805626837120311,
+   "ma60_gap": -0.08199755984685941,
+   "ma120_gap": -0.310588148561619,
+   "ma_aligned": false,
+   "ret5": 0.07381889763779537,
+   "ret20": -0.057044079515989665,
+   "ret60": -0.17535903250188967,
+   "from_high": -0.7903938520653218,
+   "from_low": 0.15327695560253707,
+   "vol_ratio_prev": 6.091145431078043,
+   "tv20_avg": 26382382.45,
+   "tv_prev": 126914939.0,
+   "prev_chg": 0.056147144240077385,
+   "up_days": 3,
+   "prev_close_pos": 0.5075757575757576,
+   "fr": 1.26,
+   "price": 1091.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 14.482126489459212,
+   "close_pos": 0.8291457286432161,
+   "upper_wick": 3.1164069660861595,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "반기보고서 (2026.09)",
+     "rcept_no": "20261112000213",
+     "filer": "메이슨캐피탈"
+    }
+   ],
+   "news": [
+    {
+     "title": "[장중수급포착] 메이슨캐피탈, 외국인 5일 연속 순매수행진... 주가 +5.60% - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Wed, 11 Nov 2026 01:17:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5vVTdNbjhlbDNDOXR2a3hMU2xaaEthbDNrNlR3c3llWEk5QVJWSThLcXdfVDdtNXg5V3daMkJ1MzVCdmZWU19UM203TTBVdkRuRkhKTktucE1YNVNG?oc=5",
+     "tier": "A",
+     "score": 5
+    },
+    {
+     "title": "아리바이오, 3상 탑라인 공개 임박…지분·판권 보유 상장사 주목 - 딜사이트",
+     "source": "딜사이트",
+     "date": "Wed, 11 Nov 2026 02:17:02 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE82RDB2YjFpdzNJUlFWRllzdEh6R0M4dlBjTVNYdDIxRkpyMk9aQjhCMmROVk9WSEhlSFQyMUkxbG55NGtDMlFJa052Vk9MYzg?oc=5",
+     "tier": "A",
+     "score": -2
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "수급"
+   ],
+   "catalysts": [
+    "수급"
+   ],
+   "themes": [
+    "바이오"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "073570",
+   "name": "리튬포어스",
+   "market": "KOSDAQ",
+   "pref": false,
+   "chg": 10.993657505285404,
+   "gap": -4.8625792811839315,
+   "tv": 226605750.0,
+   "vol_ratio": 4.301042053315862,
+   "close": 2625.0,
+   "pctb": 0.5753811830445082,
+   "bw": 0.25877031297581715,
+   "bw_pctile": 0.36666666666666664,
+   "squeeze": false,
+   "rsi14": 42.857142857142854,
+   "ma5_gap": 0.06339928057553967,
+   "ma20_gap": 0.019506412328914813,
+   "ma60_gap": 0.1161715081294099,
+   "ma120_gap": 0.15464420847064564,
+   "ma_aligned": false,
+   "ret5": 0.05345211581291753,
+   "ret20": -0.06521739130434778,
+   "ret60": 0.3545246277205041,
+   "from_high": -0.6221441124780316,
+   "from_low": 0.6654929577464788,
+   "vol_ratio_prev": 0.7181339408932341,
+   "tv20_avg": 46301071.0,
+   "tv_prev": 36489585.0,
+   "prev_chg": 0.035010940919037115,
+   "up_days": 3,
+   "prev_close_pos": 0.8666666666666667,
+   "fr": 0.45,
+   "price": 2365.0,
+   "big": false,
+   "surge": true,
+   "high_chg": 18.393234672304448,
+   "close_pos": 0.6818181818181818,
+   "upper_wick": 7.399577167019028,
+   "limit_up": false,
+   "filings": [
+    {
+     "date": "20261112",
+     "title": "주식등의대량보유상황보고서(일반)",
+     "rcept_no": "20261112000687",
+     "filer": "변희조"
+    },
+    {
+     "date": "20261112",
+     "title": "임원ㆍ주요주주특정증권등소유상황보고서",
+     "rcept_no": "20261112000685",
+     "filer": "변희조"
+    },
+    {
+     "date": "20261112",
+     "title": "임원ㆍ주요주주특정증권등소유상황보고서",
+     "rcept_no": "20261112000680",
+     "filer": "변재석"
+    },
+    {
+     "date": "20261112",
+     "title": "임원ㆍ주요주주특정증권등소유상황보고서",
+     "rcept_no": "20261112000677",
+     "filer": "신은숙"
+    },
+    {
+     "date": "20261112",
+     "title": "임원ㆍ주요주주특정증권등소유상황보고서",
+     "rcept_no": "20261112000672",
+     "filer": "명현식"
+    }
+   ],
+   "news": [
+    {
+     "title": "[장중수급포착] 리튬포어스, 외국인 5일 연속 순매수행진... 주가 +10.78% - 뉴스핌",
+     "source": "뉴스핌",
+     "date": "Thu, 12 Nov 2026 04:33:00 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE0xS2pFRmg5LTV1ZW1qYWdoN3RCVnMzQTdBSDI2UnN4U19xbm5KcV9RRGpiMkN3SElwaW1CSFpwTXRQWGdQaWpUemhHRVJfaG4waGkybnVwZkUxSkE1?oc=5",
+     "tier": "A",
+     "score": 6
+    },
+    {
+     "title": "리튬포어스, 엘엠케이 주식 양수도 및 유상증자 완료... 100% 자회사화 ‘눈앞’ - 센트럴경제",
+     "source": "센트럴경제",
+     "date": "Wed, 11 Nov 2026 02:43:01 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE4yUE9uQXNrUXVzZmM2YldGNEFJSjR4eU1xTFh1dGs1ZWxQUmdvcEFvV0tRWXZwcm1PdE9uMS1aY1dENDdtU1hvVXNneU1xbEtSUTlFMzdYWnExUEJBMG4zMzlUWEF3c0nSAWpBVV95cUxPRS1KNEFQMi1yS285TWFjcVh4Y2Q0RE9FNUJEQ3VhM09tQ2g1QWc3eDhhXzJTUUltR1gtVENRZGxONGR0U1ZIV3NJZ0c0djB6R1NZbXlERjA0clRzS2lLdmJ1OG1PSm9QMDFR?oc=5",
+     "tier": "B",
+     "score": 2
+    },
+    {
+     "title": "리튬포어스, 최대주주 변희조 측 주식등 보유 비율 0.46%p 증가 - 디지털투데이",
+     "source": "디지털투데이",
+     "date": "Thu, 12 Nov 2026 09:11:10 GMT",
+     "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE02VXVzRXl1WWhBVFpxUWw3YTZvSHFvT2RqMVVYcWo0MmgxTFVzRmwxVlE3Z1FleUxNYURBZzFPSkRCbk8yTVNVQ21zbDJqb1ZuaDlnaGltN1VqWXE5M3EtSjZRdER3U1RKR3RjZWxJU3hjM2E4T25qT0VpRQ?oc=5",
+     "tier": "C",
+     "score": 1
+    },
+    {
+     "title": "특징주, 리튬포어스-캐릭터상품 테마 상승세에 12.05% ↑ - 매일경제 마켓",
+     "source": "매일경제 마켓",
+     "date": "Thu, 12 Nov 2026 01:43:46 GMT",
+     "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1XU2lNeEhVWk04UWZjWXpYWEZhQ0FuZS1iSkVSWUc3WTZyd0FMZW1fV0tLdTVpYkQ1UnRRVkg3eEw5SWhMNHZra1FYWTJXRkdPWnc?oc=5",
+     "tier": "B",
+     "score": 0
+    },
+    {
+     "title": "리튬포어스 사실상지배주주 변희조 사내이사, 소유 주식 수량 28만7207주 증가…소유 지분율 0.61%p 상승 - 디지털투데이",
+     "source": "디지털투데이",
+     "date": "Thu, 12 Nov 2026 09:11:09 GMT",
+     "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1KRVNXbHIzMDdaRmExMVRTaU5Vbm1YTWdiQVBCTk1rYmdqZlRtZHR3a2tvamw5bmQ3amlaUTdpVGJBMXJ0THQ4eUYyOExHOUpqdFN6aF9HbzRUOGx0SUtHMFJTakEyM1lBOGlBenlmMURqWFM1U0FUenRfZw?oc=5",
+     "tier": "C",
+     "score": 0
+    },
+    {
+     "title": "리튬포어스 명현식 사내이사, 소유 주식 수량 10만6288주 보고…소유 지분율 0.81% - 디지털투데이",
+     "source": "디지털투데이",
+     "date": "Thu, 12 Nov 2026 09:11:03 GMT",
+     "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBTZWlXVGlpTzZtcFZ6V1gzVmUtOUhCa1RuUFpGenp6SVJ5V01PelVHTkZkTnFhek9DZ2JpQmh1ZEtfVGpnN2p0UXVvby00ZTBLOWVSb0V6bnc0TFVlWmEwZGpZZUV1MTBUbW1BWUdFQ2VVd2gxeEVtS1JpRQ?oc=5",
+     "tier": "C",
+     "score": 0
+    }
+   ],
+   "catalysts_dart": [],
+   "catalysts_news": [
+    "수급"
+   ],
+   "catalysts": [
+    "수급"
+   ],
+   "themes": []
+  }
+ ]
+}

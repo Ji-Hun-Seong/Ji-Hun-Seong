@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-12",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 846,
+   "top": [
+    "한국가스공사",
+    "프레스티지바이오로직스",
+    "케이씨"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-11",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 745,
@@ -9,8 +21,14 @@
     "HJ중공업",
     "금호건설"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 178,
+   "graded": {
+    "avg": -0.77,
+    "up": 5,
+    "n": 10,
+    "hit10": 0,
+    "market_avg": -1.23
+   }
   },
   {
    "date": "2026-11-10",
