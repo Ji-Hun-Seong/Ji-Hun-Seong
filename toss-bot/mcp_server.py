@@ -331,7 +331,7 @@ S = lambda **p: {"type": "object", "properties": p, "additionalProperties": Fals
 TOOLS = {
     "market_surge": (t_market_surge, "한국 급등주: 다음 날 급등 후보 순위, 그날 실제 급등주와 재료, 장중 지금 막 오르기 시작한 종목. 날짜를 주면 그날 기준.",
                      S(date={"type": "string", "description": "YYYY-MM-DD (비우면 최신)"}, limit={"type": "integer", "default": 15})),
-    "hero_rank": (t_hero_rank, "대가 투자원칙(버핏·린치·그레이엄·피셔·템플턴 등) 점수로 고른 종목 순위 — 앱 발굴 탭과 같은 걸러내기(가치: PBR 0~2·PER 한국10/해외30 이하·버핏 10점↑, 성장: PBR 0~10·린치 10점↑·이익성장 10%↑·PEG 2↓·ROE 10%↑·저성장주/자산주 제외, 둘 다 매출·순이익 꾸준히 증가·장기 부적합 제외). 시장(kr/us/eu/cn/jp)과 스타일(value 가치/growth 성장).",
+    "hero_rank": (t_hero_rank, "대가 투자원칙(버핏·린치·그레이엄·피셔·템플턴 등) 점수로 고른 종목 순위 — 앱 발굴 탭과 같은 걸러내기(가치: PBR 한국2/해외10 이하·PER 한국10/해외30 이하·버핏 10점↑, 성장: PBR 0~10·린치 10점↑·이익성장 10%↑·PEG 2↓·ROE 10%↑·저성장주/자산주 제외, 둘 다 매출·순이익 꾸준히 증가·장기 부적합 제외). 시장(kr/us/eu/cn/jp)과 스타일(value 가치/growth 성장).",
                   S(market={"type": "string", "enum": ["kr", "us", "eu", "cn", "jp"], "default": "kr"},
                     style={"type": "string", "enum": ["value", "growth"], "default": "value"}, limit={"type": "integer", "default": 20})),
     "java_picks": (t_java_picks, "자바 매매일지 DNA 20선: 실제 매매일지에서 뽑은 성향(업종·가격대·배당·재무)에 가장 잘 맞는 코스피 종목.",

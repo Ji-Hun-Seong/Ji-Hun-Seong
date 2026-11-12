@@ -44,14 +44,14 @@ DIV_PAY_DAYS = 30                  # 배당락 → 입금까지
 
 FUNDS = {
     # 🇰🇷 한국 모의 펀드 2개(대가 가치주·성장주 TOP 10)는 2026-11-06 종료 → 👤 내 펀드(my_fund.py, 실제 계좌 펀드화)로 대체
-    "us_value": {"name": "🇺🇸💎 미국 대가 가치주 TOP 10", "desc": "가치 대가 점수 순 · PBR 0~2 · PER 30 이하 · 버핏 10점↑ · 매출·순이익 꾸준히 증가 · 원화 환산(환노출)",
+    "us_value": {"name": "🇺🇸💎 미국 대가 가치주 TOP 10", "desc": "가치 대가 점수 순 · PBR 0~10 · PER 30 이하 · 버핏 10점↑ · 매출·순이익 꾸준히 증가 · 원화 환산(환노출)",
                  "market": "us", "kind": "value"},
     "us_growth": {"name": "🇺🇸🚀 미국 대가 성장주 TOP 10", "desc": "성장 대가 점수 순 · PBR 0~10 · 린치 10점↑ · 이익성장 10%↑·PEG 2↓·ROE 10%↑ · 매출·순이익 꾸준히 증가 · 원화 환산(환노출)",
                   "market": "us", "kind": "growth"},
 }
 MKT = {   # 시장별: 매매비용 · 비교지수 · 배당 원천징수
-    "kr": {"commission": COMMISSION, "sell_tax": SELL_TAX, "bench": "코스피", "wht": 0.0, "per_max": 10, "growth_mcap_max": 100000},
-    "us": {"commission": 0.0025, "sell_tax": 0.0, "bench": "S&P 500(원화)", "wht": 0.15, "per_max": 30, "growth_mcap_max": None},
+    "kr": {"commission": COMMISSION, "sell_tax": SELL_TAX, "bench": "코스피", "wht": 0.0, "per_max": 10, "pbr_max": 2, "growth_mcap_max": 100000},
+    "us": {"commission": 0.0025, "sell_tax": 0.0, "bench": "S&P 500(원화)", "wht": 0.15, "per_max": 30, "pbr_max": 10, "growth_mcap_max": None}   # 미국은 거품 감안 PBR 10배까지,
 }
 
 
@@ -63,7 +63,7 @@ def _ok_steady(x):
 
 def is_value(x, market: str = "kr") -> bool:
     pbr, per, h = x.get("pbr"), x.get("per"), x.get("heroes") or {}
-    return (x.get("vgrade") != "no" and (pbr is None or 0 < pbr <= 2) and (per is None or per <= MKT[market]["per_max"])
+    return (x.get("vgrade") != "no" and (pbr is None or 0 < pbr <= MKT[market]["pbr_max"]) and (per is None or per <= MKT[market]["per_max"])
             and (h.get("buffett") is None or h["buffett"] >= 10) and _ok_steady(x)
             and (x.get("style") == "both" or (x.get("value") or -1) >= (x.get("growth") or -1)))
 

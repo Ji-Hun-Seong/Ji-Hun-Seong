@@ -1911,8 +1911,9 @@ function pRender(d) {
     const two = !d.items.length || d.items[0].value !== undefined;     // 아직 채점 전이어도 💎/🚀 탭은 보이게
     const sk = two ? hSort : "all", key = x => sk === "value" ? (x.value ?? -1) : sk === "growth" ? (x.growth ?? -1) : x.total;
     // 💎 가치주 / 🚀 성장주 탭 — 가치 점수가 높으면 가치주, 성장 점수가 높으면 성장주 (둘 다 위성 이상이면 양쪽에)
-    // 💎 가치주 탭은 PBR 0 초과 ~ 2.0 이하만 (자본잠식·마이너스 PBR, 2배 넘게 비싼 건 가치주로 안 봄 · PBR 모르면 일단 보여 줌)
-    const pbrOk = x => x.pbr == null || (x.pbr > 0 && x.pbr <= 2);
+    // 💎 가치주 탭 PBR 상한 — 한국 2배 · 해외 10배 (미국은 거품이 있어 고ROE 우량주가 PBR 높게 나옴) · 자본잠식 제외 · 모르면 일단 보여 줌
+    const pbrMax = glob ? 10 : 2;
+    const pbrOk = x => x.pbr == null || (x.pbr > 0 && x.pbr <= pbrMax);
     const perMax = glob ? 30 : 10;                        // 가치주 탭 PER 상한 — 한국 10배 · 해외 30배
     const perOk = x => x.per == null || x.per <= perMax;
     const BUF_MIN = 10;                                   // 버핏 점수 20점 만점 중 절반(10점) 미만이면 가치주 탭에서 제외
@@ -1947,7 +1948,7 @@ function pRender(d) {
     // 이 목록에 남는 조건을 한눈에 — 위에서부터 차례로 걸렀을 때 남는 종목 수
     const revN = glob ? 4 : 5;
     const revOk = x => !x.steady || x.steady.rev5 !== false, niOk = x => !x.steady || x.steady.ok !== false;
-    const COND = sk === "value" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], [`PER ${perMax}배 이하`, perOk], ["PBR 2배 이하 <small>자본잠식 제외</small>", pbrOk], [`버핏 점수 ${BUF_MIN}점 이상 <a data-hg="buffett" class="cf-q">무슨 점수?</a>`, bufOk], ["장기 부적합 등급 제외", x => x.vgrade !== "no"], ["가치 점수 ≥ 성장 점수 <a data-hg='all' class='cf-q'>무슨 점수?</a>", x => x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1)]]
+    const COND = sk === "value" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], [`PER ${perMax}배 이하`, perOk], [`PBR ${pbrMax}배 이하 <small>자본잠식 제외</small>`, pbrOk], [`버핏 점수 ${BUF_MIN}점 이상 <a data-hg="buffett" class="cf-q">무슨 점수?</a>`, bufOk], ["장기 부적합 등급 제외", x => x.vgrade !== "no"], ["가치 점수 ≥ 성장 점수 <a data-hg='all' class='cf-q'>무슨 점수?</a>", x => x.style === "both" || (x.value ?? -1) >= (x.growth ?? -1)]]
       : sk === "growth" ? [[`매출 ${revN}년 연속 증가`, revOk], ["순이익 꾸준히 증가 <small>최근 4년</small>", niOk], ["PBR 10배 이하 <small>자본잠식 제외</small>", gPbrOk], [`린치 점수 ${LYN_MIN}점 이상 <small>20점 만점</small> <a data-hg="lynch" class="cf-q">무슨 점수?</a>`, lynOk], ["린치 분류: 저성장주·자산주 제외", catOk], [`이익 성장률 연 ${EG_MIN}% 이상 <small>최근 5년 EPS</small>`, egOk], [`PEG ${PEG_MAX} 이하 <small>PER ÷ 이익성장률</small>`, pegOk], [`ROE ${ROE_MIN}% 이상 <small>3년 평균</small>`, roeOk], ["장기 부적합 등급 제외", x => x.ggrade !== "no"], ["성장 점수 > 가치 점수 <a data-hg='all' class='cf-q'>무슨 점수?</a>", x => x.style === "both" || (x.growth ?? -1) > (x.value ?? -1)]] : null;
     if (szk !== "all" && COND) COND.push([szk === "big" ? "시가총액 10조 이상" : "시가총액 10조 미만", inSize]);
     let hLeft = d.items;
