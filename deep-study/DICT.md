@@ -160,6 +160,8 @@
 - [x] 단리·복리 (simple-compound)
 - [x] 연속복리 (continuous-compounding)
 - [x] 불규칙 이표(전기·후기 이자) (odd-coupon)
+- [x] 말일 규칙(EOM) (eom-rule)
+- [x] 휴일이자(만기 휴일) (holiday-interest)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
