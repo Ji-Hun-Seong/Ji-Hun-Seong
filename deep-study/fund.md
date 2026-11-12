@@ -10,7 +10,7 @@
 - [x] 이자 계산 4: 전기·후기 이자와 첫 이표가 불규칙한 채권 (20261112-odd-first-coupon-front-back-stub)
 - [x] 이자 계산 5: 윤년·말일·만기 휴일 처리 (20261112-leap-year-month-end-maturity-holiday)
 - [x] 수익률 1: 표면·경상·만기·보유기간·실효수익률 (20261112-yield-measures-coupon-current-ytm-hpr)
-- [ ] 수익률 2: 재투자 위험과 수익률 곡선
+- [x] 수익률 2: 재투자 위험과 수익률 곡선 (20261112-reinvestment-risk-yield-curve)
 - [ ] 현물금리·선도금리와 부트스트래핑
 - [ ] 국채: 국고채 경과물·지표물, 스트립
 - [ ] 통안증권·재정증권

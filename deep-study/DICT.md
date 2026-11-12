@@ -170,6 +170,8 @@
 - [x] 휴일이자(만기 휴일) (holiday-interest)
 - [x] 보유기간수익률 (holding-period-return)
 - [x] 실효수익률 (realized-compound-yield)
+- [x] 수익률 곡선 (yield-curve)
+- [x] 재투자 위험 (reinvestment-risk)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
