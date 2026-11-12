@@ -1,0 +1,23 @@
+종목 597
+sec 403 https://www.sec.gov/files/company_tickers.json
+sec 403 https://www.sec.gov/files/company_tickers.json
+sec 403 https://www.sec.gov/files/company_tickers.json
+sec 403 https://www.sec.gov/files/company_tickers.json
+8-K 2.02 0 CIK 없음 597
+yf 0 A 60 100 fail 0
+yf 50 ARES 4225 4314 fail 0
+yf 100 CDW 9171 8485 fail 0
+yf 150 DD 13490 12754 fail 0
+yf 200 EXPE 18687 17170 fail 0
+FB: No earnings dates found, symbol may be delisted
+yf 250 GPN 22375 21102 fail 0
+INFO: No earnings dates found, symbol may be delisted
+yf 300 JBHT 27341 25376 fail 0
+yf 350 MAT 32478 29546 fail 0
+NFX: No earnings dates found, symbol may be delisted
+yf 400 NTRS 37458 34008 fail 0
+yf 450 Q 42728 38356 fail 0
+STI: No earnings dates found, symbol may be delisted
+yf 500 SWKS 47704 42673 fail 0
+yf 550 VEEV 51566 46921 fail 0
+완료 배당 56234 yf 실적 50820 실패 0
