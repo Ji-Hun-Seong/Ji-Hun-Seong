@@ -174,6 +174,8 @@
 - [x] 실효수익률 (realized-compound-yield)
 - [x] 수익률 곡선 (yield-curve)
 - [x] 재투자 위험 (reinvestment-risk)
+- [x] 할인계수 (discount-factor)
+- [x] 액면수익률 (par-yield)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
