@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261112-us-market-structure-premarket-dark-pool",
+"area": "시장 구조",
+"t": "미국 시장 구조 ①: 프리장·다크풀·주문 라우팅",
+"date": "2026-11-12",
+"sum": "17개 거래소와 절반이 넘는 장외 체결, 정규장에서만 작동하는 NBBO 보호·LULD, 프리·애프터·야간 세션의 비용, 다크풀과 PFOF의 실제 구조를 원문과 미국 급등주 288건 계산으로 따라간다",
+"n_sections": 18,
+"n_qs": 14,
+"chars": 18961
+},
+{
 "id": "20261112-nxt-alternative-exchange-trading-hours",
 "area": "시장 구조",
 "t": "NXT 대체거래소와 거래시간 변화",

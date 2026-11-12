@@ -69,6 +69,9 @@
 - [x] 대체거래소 (alternative-trading-system)
 - [x] 최선집행의무 (best-execution)
 - [x] 애프터마켓 (after-market)
+- [x] 다크풀 (dark-pool)
+- [x] NBBO·주문보호규칙 (nbbo)
+- [x] 주문흐름 대가 PFOF (payment-for-order-flow)
 - [ ] 사이드카
 - [ ] 서킷브레이커
 
