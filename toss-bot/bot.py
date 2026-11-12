@@ -15,6 +15,8 @@
 - 한국: 코스피 보통주의 자기주식 취득결정·신탁계약체결결정 원공시(정정 제외), 20일 평균 거래대금 3억 이상.
   공시 직후 지정가(현재가+0.5%, 전일 종가+5% 상한)로 매수 → 10거래일 보유, RSI14>70이면 다음 날 시가 익절.
   최대 10종목, 남는 돈은 현금. 백테스트 연 13.6%(다음 날 시가 진입) ~ 25.4%(공시일 종가 진입 상한), 손실 연도 없음.
+  + 좋은 공시만 매수(2026-11-12, README 8차, signal-bot/buyback_quality.py): 시총 3%↑ 매입 / 52주 고점 -30%↓ /
+    1년 안 재매입 / 밸류업 약속(연 시총 3%↑) 이행 중 하나. 첫 매입+고점 근처 공시는 10일 초과수익 IS -0.6%·OOS 0.0% → 안 삼.
 - 미국: 나스닥100(QQQ)이 200일선 위면 레버리지 = min(2, 45% / 최근 20일 변동성), 아래면 현금.
   TQQQ 비중 = 레버리지/3, 주 1회 조정(차이 5%p 이상일 때만). 10년 연 24.0% vs 나스닥100 17.9%.
 
@@ -26,6 +28,8 @@ import requests
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from toss_api import Toss, TossError
+sys.path.insert(0, os.path.join(os.path.dirname(HERE), "signal-bot"))
+import buyback_quality as BQ   # 좋은 자사주 공시 판별(시총 3%·고점 -30%·재매입·밸류업 약속)
 
 KST = dt.timezone(dt.timedelta(hours=9))
 STATE_DIR = os.path.join(HERE, "state")
@@ -204,7 +208,8 @@ def buyback_filings(rows):
         for kind, pat in BB:
             if re.search(pat, nm) and code not in codes:             # 같은 날 같은 종목(주요사항+거래소 중복) 1번만
                 codes.add(code)
-                out.append({"rcept_no": it["rcept_no"], "code": code, "name": it.get("corp_name", code), "kind": kind})
+                out.append({"rcept_no": it["rcept_no"], "code": code, "name": it.get("corp_name", code), "kind": kind,
+                            "corp_code": it.get("corp_code")})
     return out
 
 
@@ -216,7 +221,7 @@ def kr_buy_now(a, s, f, sess, t):
         return f"{f['name']} 이미 보유/예약 → 건너뜀"
     if len(k["positions"]) + len(k["pending"]) >= CFG["kr_slots"]:
         return f"{f['name']} 자리 없음({CFG['kr_slots']}종목 보유 중)"
-    bars = daily(a, code, 25)
+    bars = daily(a, code, 260)                            # 52주 고점 계산용
     if len(bars) < 21:
         return f"{f['name']} 일봉 부족"
     today = t.date().isoformat()
@@ -229,6 +234,17 @@ def kr_buy_now(a, s, f, sess, t):
          if x["warningType"] in ("LIQUIDATION_TRADING", "OVERHEATED", "INVESTMENT_WARNING", "INVESTMENT_RISK")]
     if w:
         return f"{f['name']} 투자유의({','.join(w)}) → 제외"
+    if not f.get("quality"):                              # 시가 예약을 장중 매수로 바꿀 때는 이미 판별됨
+        key = os.environ.get("DART_API_KEY", "")
+        try:
+            qv = BQ.assess(code=code, corp_code=f.get("corp_code"), rcept_no=f["rcept_no"], trust="신탁" in f["kind"],
+                           key=key, day=today.replace("-", ""), closes=[b[4] for b in hist])
+        except Exception as e:                            # 판별 실패 시엔 예전처럼 매수(전체 자사주 공시도 초과수익 +)
+            log("품질 판별 실패", code, e); qv = {"good": True, "reasons": ["판별 실패 → 기본 규칙"], "notes": []}
+        if not qv["good"]:
+            return (f"{f['name']} 약한 공시 → 안 삼 (첫 매입·고점 근처·규모 작음: 백테스트 초과수익 0%) "
+                    f"[{' / '.join(qv['notes']) or '정보 없음'}]")
+        f["quality"] = " / ".join(qv["reasons"])
     last = float(a.prices([code])[0]["lastPrice"])
     cap = prev_close * (1 + CFG["kr_chase"])
     slot = min(CFG["kr_capital"] / CFG["kr_slots"], k["cash"])
@@ -242,7 +258,8 @@ def kr_buy_now(a, s, f, sess, t):
         info = (a.stock_info([code]) or [{}])[0]
         nxt = bool((info.get("koreanMarketDetail") or {}).get("nxtSupported"))
     rec = {"code": code, "name": f["name"], "rcept_no": f["rcept_no"], "detected": t.isoformat(timespec="seconds"),
-           "prev_close": prev_close, "last": last, "qty": qty}
+           "prev_close": prev_close, "last": last, "qty": qty, "quality": f.get("quality", "")}
+    why = f"\n  ⭐ {f['quality']}" if f.get("quality") else ""
     if (in_regular or (in_after and nxt)):
         if last > cap:
             return f"{f['name']} 이미 +{last / prev_close - 1:.1%} 올라 추격 안 함(상한 +{CFG['kr_chase']:.0%})"
@@ -252,17 +269,17 @@ def kr_buy_now(a, s, f, sess, t):
                 r = a.order(code, "BUY", qty, f"{today}-B-{code}", order_type="LIMIT", tif="DAY", price=limit)
                 k["pending"].append({**rec, "how": "now", "order_id": r["orderId"], "limit": limit,
                                      "placed": t.isoformat(timespec="seconds")})
-                return f"🔺 {f['name']} {qty}주 지정가 {won(limit)} 주문 (현재 {won(last)}, 전일比 {last / prev_close - 1:+.1%})"
+                return f"🔺 {f['name']} {qty}주 지정가 {won(limit)} 주문 (현재 {won(last)}, 전일比 {last / prev_close - 1:+.1%}){why}"
             except TossError as e:
                 log("즉시 주문 실패 → 내일 시가로", code, e)
         elif s["mode"] == "paper":
             px = min(limit, last * (1 + PAPER_SLIP))
             kr_fill(s, rec, px, qty, today, "공시 직후 " + ("장중" if in_regular else "애프터마켓"))
-            return f"🧪 {f['name']} {qty}주 @ {won(px)} 가상 매수 (전일比 {px / prev_close - 1:+.1%})"
+            return f"🧪 {f['name']} {qty}주 @ {won(px)} 가상 매수 (전일比 {px / prev_close - 1:+.1%}){why}"
     # 장 마감 후(NXT 미지원)·장 시작 전·휴장일 → 다음 거래일 시가, 전일 종가+5% 지정가(갭이 크면 안 삼)
     day_for = today if (sess["open"] and t < sess["start"]) else sess["next"]
     k["pending"].append({**rec, "how": "open", "for": day_for})
-    return f"⏰ {f['name']} {qty}주 → {day_for} 시가 매수 예약 (상한 {won(tick(cap))})"
+    return f"⏰ {f['name']} {qty}주 → {day_for} 시가 매수 예약 (상한 {won(tick(cap))}){why}"
 
 
 def kr_fill(s, rec, px, qty, day, how):
@@ -328,7 +345,8 @@ def process_late(a, sess):
         late = [p for p in s["kr"]["pending"] if p.get("how") == "open" and p["for"] <= today and not p.get("placed")]
         for p in late:
             s["kr"]["pending"].remove(p)
-            m = kr_buy_now(a, s, {"code": p["code"], "name": p["name"], "rcept_no": p["rcept_no"], "kind": "자사주"}, sess, t)
+            m = kr_buy_now(a, s, {"code": p["code"], "name": p["name"], "rcept_no": p["rcept_no"], "kind": "자사주",
+                                  "quality": p.get("quality") or "이미 판별됨"}, sess, t)
             msgs.append(f"⏩ {p['name']} 시가 예약을 놓쳐 장중 매수로 전환: {m}")
     if msgs:
         tg("\n".join(msgs))

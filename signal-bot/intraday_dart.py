@@ -27,6 +27,7 @@ import requests
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from daily_signals import DART, UA, daily, rsi, send  # noqa: E402
+import buyback_quality as BQ  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SEEN = os.path.join(HERE, "intraday_seen.json")
@@ -298,10 +299,11 @@ def quote(code: str):
     except Exception:
         pass
     try:
-        d = daily(code, (datetime.now(KST) - timedelta(days=330)).strftime("%Y%m%d"))
+        d = daily(code, (datetime.now(KST) - timedelta(days=400)).strftime("%Y%m%d"))
         c = d["Close"]
         info["tv20"] = float((c * d["Volume"]).iloc[-21:-1].mean())          # 오늘(미완성) 제외
         info["rsi"] = float(rsi(c).iloc[-1])
+        info["closes"] = [float(x) for x in c.iloc[:-1].tolist()] if d.index[-1].strftime("%Y%m%d") == datetime.now(KST).strftime("%Y%m%d") else [float(x) for x in c.tolist()]
         if len(c) >= 201:
             info["above200"] = bool(c.iloc[-1] > c.iloc[-201:-1].mean())
     except Exception:
@@ -355,9 +357,25 @@ def main():
                               "corp_code": it.get("corp_code")})
                 break
     print(f"{day} 대상 유형 새 공시 {len(fresh)}건")
+    vu_lines = []
+    for it in rows:
+        code, no = it.get("stock_code"), it["rcept_no"]
+        nm = re.sub(r"\s+", "", it.get("report_nm", ""))
+        if not code or not code.endswith("0") or no in done or nm.startswith("[") or not re.search(BQ.VU_PAT, nm):
+            continue
+        fresh.append({"rcept_no": no, "kind": "밸류업", "code": code, "skip": True})   # 본 공시로 기록만
+        v = BQ.valueup_alert(doc_text(no, key), code)
+        time.sleep(0.3)
+        if v and v["big"]:
+            vu_lines += [f"■ {it.get('corp_name', code)} ({code}) — 기업가치제고계획",
+                         f"▪ 자사주 매입 약속 연 {v['yearly'] / 1e8:,.0f}억 = 시총 {v['cap'] / 1e8:,.0f}억의 {v['pct']:.1%}",
+                         "▪ 계획 공시만으로는 안 삼(백테스트: 밸류업 공시 후 60일 -4.4%). 실제 자사주 취득·신탁 공시가 나오면 '약속 이행'으로 우대 매수",
+                         f"  https://dart.fss.or.kr/dsaf001/main.do?rcpNo={no}", ""]
 
     picks, others = [], []
     for e in fresh:
+        if e.get("skip"):
+            continue
         q = quote(e["code"])
         e["q"] = q
         tv = q.get("tv20")
@@ -366,7 +384,15 @@ def main():
             print("제외(거래대금 부족)", e["name"], tv); continue
         e["summary"] = (f"20일 거래대금 {tv / 1e8:,.0f}억" if tv else "거래대금 확인 불가") + (" · 유동성 낮음(참고)" if is_bb and (tv or 0) < LIQ else "")
         if is_bb:
-            e["bb"] = bb_lines(e["kind"], bb_parse(e["kind"], doc_text(e["rcept_no"], key)))
+            txt = doc_text(e["rcept_no"], key)
+            e["bb"] = bb_lines(e["kind"], bb_parse(e["kind"], txt))
+            try:
+                qv = BQ.assess(code=e["code"], corp_code=e.get("corp_code"), rcept_no=e["rcept_no"], trust="신탁" in e["kind"],
+                               key=key, day=day, closes=q.get("closes"), price=q.get("price"), text=txt)
+                e["bb"].append(f"⭐ 좋은 공시 → 토스봇 매수: {' / '.join(qv['reasons'])}" if qv["good"] else
+                               f"▫️ 약한 공시 → 토스봇 매수 안 함 ({' / '.join(qv['notes']) or '첫 매입·고점 근처'})")
+            except Exception as ex:
+                print("품질 판별 실패", e["code"], ex)
             time.sleep(0.3)
         if e["kind"] == "공급계약":
             if not q.get("above200"):
@@ -376,6 +402,10 @@ def main():
             if summ:
                 e["summary"] = summ + " · " + e["summary"]
         picks.append(e)
+    if vu_lines and not a.dry_run:
+        broadcast(f"📌 밸류업 약속 (연 시총 3% 이상 자사주 매입) · {now:%m/%d %H:%M}\n\n" + "\n".join(vu_lines))
+    elif vu_lines:
+        print("\n".join(vu_lines))
     if picks:
         L = [f"⚡ 장중 공시 알림 · {now:%m/%d %H:%M}" + ("" if day == now.strftime("%Y%m%d") else f" · {day}"), ""]
         for title, group in (("🟢 백테스트 검증 공시", picks),):
@@ -398,7 +428,7 @@ def main():
                 L.append(f"  근거: {e['why']}")
                 L.append(f"  https://dart.fss.or.kr/dsaf001/main.do?rcpNo={e['rcept_no']}")
             L.append("")
-        L.append("※ 수치는 공시 다음 날 시가 매수 기준 유사 종목 대비 평균 초과수익(과거 성과이며 보장 아님). 자사주는 모의투자 B에 다음 날 시가 매수로 기록됩니다.")
+        L.append("※ 수치는 공시 다음 날 시가 매수 기준 유사 종목 대비 평균 초과수익(과거 성과이며 보장 아님). 자사주는 ⭐좋은 공시(시총 3%↑·고점 -30%↓·재매입·밸류업 약속 이행)만 토스봇이 매수합니다.")
         text = "\n".join(L)
         print(text)
         has_alert = bool(picks)
