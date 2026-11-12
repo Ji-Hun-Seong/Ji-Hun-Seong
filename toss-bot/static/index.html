@@ -1911,10 +1911,10 @@ function pRender(d) {
     const two = !d.items.length || d.items[0].value !== undefined;     // 아직 채점 전이어도 💎/🚀 탭은 보이게
     const sk = two ? hSort : "all", key = x => sk === "value" ? (x.value ?? -1) : sk === "growth" ? (x.growth ?? -1) : x.total;
     // 💎 가치주 / 🚀 성장주 탭 — 가치 점수가 높으면 가치주, 성장 점수가 높으면 성장주 (둘 다 위성 이상이면 양쪽에)
-    // 💎 가치주 탭 PBR 상한 — 한국·일본 2배(저PBR 시장) · 그 밖(미국 등) 10배(거품이 있어 고ROE 우량주가 PBR 높게 나옴) · 자본잠식 제외 · 모르면 일단 보여 줌
-    const pbrMax = ({ kr: 2, jp: 2 })[d.market || "kr"] ?? 10;
+    // 💎 가치주 탭 PBR 상한 — 한국·일본·중국 2배(저PBR 시장) · 미국·유럽 10배(거품이 있어 고ROE 우량주가 PBR 높게 나옴) · 자본잠식 제외 · 모르면 일단 보여 줌
+    const pbrMax = ({ kr: 2, jp: 2, cn: 2 })[d.market || "kr"] ?? 10;
     const pbrOk = x => x.pbr == null || (x.pbr > 0 && x.pbr <= pbrMax);
-    const perMax = glob ? 30 : 10;                        // 가치주 탭 PER 상한 — 한국 10배 · 해외 30배
+    const perMax = ({ kr: 10, jp: 10 })[d.market || "kr"] ?? 30;   // 가치주 탭 PER 상한 — 한국·일본 10배 · 그 밖 30배
     const perOk = x => x.per == null || x.per <= perMax;
     const BUF_MIN = 10;                                   // 버핏 점수 20점 만점 중 절반(10점) 미만이면 가치주 탭에서 제외
     const bufOk = x => !x.heroes || x.heroes.buffett == null || x.heroes.buffett >= BUF_MIN;

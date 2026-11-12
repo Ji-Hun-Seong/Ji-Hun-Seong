@@ -61,14 +61,14 @@ def _ok_steady(x):
     return s.get("ok") is not False and s.get("rev5") is not False   # rev5: 매출 5년 연속 증가 (재채점 전이면 통과)
 
 
-PBR_MAX = {"kr": 2, "jp": 2}                          # 💎 가치주 PBR 상한 — 한국·일본 2배(저PBR 시장) · 그 밖(미국 등)은 10배(거품 감안)
+PBR_MAX = {"kr": 2, "jp": 2, "cn": 2}                 # 💎 가치주 PBR 상한 — 한국·일본·중국 2배(저PBR 시장) · 미국·유럽은 10배(거품 감안)
+PER_MAX = {"kr": 10, "jp": 10}                        # 💎 가치주 PER 상한 — 한국·일본 10배 · 그 밖 30배
 
 
 def is_value(x, market: str = "kr") -> bool:
     pbr, per, h = x.get("pbr"), x.get("per"), x.get("heroes") or {}
-    pmax = PBR_MAX.get(market, 10)
-    rules = MKT.get(market) or MKT["us"]
-    return (x.get("vgrade") != "no" and (pbr is None or 0 < pbr <= pmax) and (per is None or per <= rules["per_max"])
+    pmax, emax = PBR_MAX.get(market, 10), PER_MAX.get(market, 30)
+    return (x.get("vgrade") != "no" and (pbr is None or 0 < pbr <= pmax) and (per is None or per <= emax)
             and (h.get("buffett") is None or h["buffett"] >= 10) and _ok_steady(x)
             and (x.get("style") == "both" or (x.get("value") or -1) >= (x.get("growth") or -1)))
 
