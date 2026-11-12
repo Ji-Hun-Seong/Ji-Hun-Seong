@@ -72,6 +72,9 @@
 - [x] 다크풀 (dark-pool)
 - [x] NBBO·주문보호규칙 (nbbo)
 - [x] 주문흐름 대가 PFOF (payment-for-order-flow)
+- [x] 미결제약정 (open-interest)
+- [x] 델타 헤지 (delta-hedging)
+- [x] 풋콜비율 (put-call-ratio)
 - [ ] 사이드카
 - [ ] 서킷브레이커
 

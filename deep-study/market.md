@@ -12,7 +12,7 @@
 - [x] 투자자별 수급 데이터의 함정 (20261112-investor-flow-data-traps)
 - [x] NXT 대체거래소와 거래시간 변화 (20261112-nxt-alternative-exchange-trading-hours)
 - [x] 미국 시장 구조 ①: 프리장·다크풀·주문 라우팅 (20261112-us-market-structure-premarket-dark-pool)
-- [ ] 미국 시장 구조 ②: 옵션 흐름(거래량·미결제약정·헤지 수요)
+- [x] 미국 시장 구조 ②: 옵션 흐름(거래량·미결제약정·헤지 수요) (20261112-us-options-flow-open-interest-hedging)
 
 ## 재무제표 정독
 - [ ] 사업보고서 읽는 순서

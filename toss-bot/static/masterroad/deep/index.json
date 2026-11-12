@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261112-us-options-flow-open-interest-hedging",
+"area": "시장 구조",
+"t": "미국 시장 구조 ②: 옵션 흐름(거래량·미결제약정·헤지 수요)",
+"date": "2026-11-12",
+"sum": "OI는 방향을 말하지 않는다. 개시·청산 추정, 블랙-숄즈로 끝까지 계산한 딜러 델타·감마 헤지, 부호 가정 하나로 뒤집히는 GEX, 0DTE·피닝·정보 거래 연구, GME 감마 스퀴즈 서사의 실제까지",
+"n_sections": 19,
+"n_qs": 13,
+"chars": 16937
+},
+{
 "id": "20261112-us-market-structure-premarket-dark-pool",
 "area": "시장 구조",
 "t": "미국 시장 구조 ①: 프리장·다크풀·주문 라우팅",
