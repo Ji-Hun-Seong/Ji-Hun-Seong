@@ -1,0 +1,180 @@
+{
+ "date": "2026-11-12",
+ "context": {
+  "n_gainers_list": 38,
+  "n_surge": 2,
+  "asof": "2026-11-12T16:04-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-12",
+   "code": "PLBL",
+   "name": "Polibeli Group Ltd",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 2663636736,
+   "chg": 28.786536855457868,
+   "gap": -0.9743105141622355,
+   "high_chg": 30.912309857486942,
+   "close_pos": 0.9340659858898097,
+   "upper_wick": 2.125773002029071,
+   "limit_up": false,
+   "tv": 8442367.447850704,
+   "vol_ratio": 7.806009478035828,
+   "close": 7.269999980926514,
+   "pctb": 0.9982186964224739,
+   "bw": 0.0787045512179041,
+   "bw_pctile": 0.05,
+   "squeeze": true,
+   "rsi14": 58.80597142393523,
+   "ma5_gap": 0.046339203129536655,
+   "ma20_gap": 0.0392120789103001,
+   "ma60_gap": 0.007466012665287902,
+   "ma120_gap": -0.11503384467186706,
+   "ma_aligned": false,
+   "ret5": 0.03577984926345712,
+   "ret20": 0.02450086142230057,
+   "ret60": -0.05126047699424929,
+   "from_high": -0.5195744697083818,
+   "from_low": 0.10686276205591616,
+   "vol_ratio_prev": 1.1777830364085056,
+   "tv20_avg": 809813.670835495,
+   "tv_prev": 983358.9966773987,
+   "prev_chg": 0.05317161199868159,
+   "up_days": 1,
+   "prev_close_pos": 0.8939398318064907,
+   "fr": null,
+   "price": 5.644999980926514,
+   "filings": [
+    {
+     "date": "2026-11-12",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2035697/000121390026118261/ea0311980-6k_polibeli.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Why Is Polibeli Group Stock Gaining Thursday? - Benzinga",
+     "date": "Thu, 12 Nov 2026 18:03:14 GMT"
+    },
+    {
+     "title": "Top US Stock Gainers and Losers in Today's Session - ChartMill",
+     "date": "Thu, 12 Nov 2026 20:00:32 GMT"
+    },
+    {
+     "title": "What Pushed Polibeli Group (NASDAQ:PLBL) Up 22.14% Amid Light Trading? - kalkine.ca",
+     "date": "Thu, 12 Nov 2026 18:39:00 GMT"
+    },
+    {
+     "title": "Which of the Top 5 AI Infrastructure Advancers on November 12 Shows the Firmest Customer Relationship: Fermi (NASDAQ:FRMI), New Era Energy & Digital (NASDAQ:NUAI), Ainos (NASDAQ:AIMD), Polibeli Group (NASDAQ:PLBL) or QTREX Quantum (NAS - kalkine.ca",
+     "date": "Thu, 12 Nov 2026 18:39:00 GMT"
+    },
+    {
+     "title": "US Stock Movers: PLBL Surges 29% While BZ and CTVA Tumble After Thursday Close - Business Upturn",
+     "date": "Thu, 12 Nov 2026 21:25:00 GMT"
+    },
+    {
+     "title": "US Midday Movers: PLBL Surges 20% While BZ and CTVA Tumble - Business Upturn",
+     "date": "Thu, 12 Nov 2026 17:25:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "code": "MBGL",
+   "name": "Mobility Global Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 7401599488,
+   "chg": 16.114453173585865,
+   "gap": 6.024100192487092,
+   "high_chg": 16.99297297147202,
+   "close_pos": 0.9209927167703724,
+   "upper_wick": 0.878519797886156,
+   "limit_up": false,
+   "tv": 168519715.20554352,
+   "vol_ratio": 1.9766205367922147,
+   "close": 23.1299991607666,
+   "pctb": 0.8538355393651545,
+   "bw": 0.12225920961816077,
+   "bw_pctile": 0.4358974358974359,
+   "squeeze": false,
+   "rsi14": 58.333316776504674,
+   "ma5_gap": 0.003931049145746934,
+   "ma20_gap": 0.043259653377599294,
+   "ma60_gap": 0.039439925410617915,
+   "ma120_gap": null,
+   "ma_aligned": false,
+   "ret5": 0.0065689315185732955,
+   "ret20": 0.11659192297732845,
+   "ret60": 0.005045428002495855,
+   "from_high": -0.2338461509117713,
+   "from_low": 0.17522119054108165,
+   "vol_ratio_prev": 0.8202938754280266,
+   "tv20_avg": 70381726.92164421,
+   "tv_prev": 60317760.23101807,
+   "prev_chg": -0.0005017676231163781,
+   "up_days": 0,
+   "prev_close_pos": 0.8421063198630722,
+   "fr": null,
+   "price": 19.920000076293945,
+   "filings": [
+    {
+     "date": "2026-11-12",
+     "form": "S-4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2090312/000110465926126248/mbgl-20260930xs4.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2090312/000209031226000035/mbgl-20260930.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/2090312/000209031226000034/mbgl-20261112.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Mobility Global Stock Hits 52-Week High - Here's Why - Benzinga",
+     "date": "Thu, 12 Nov 2026 17:35:44 GMT"
+    },
+    {
+     "title": "Fund Update: New $15.6M $MBGL stock position opened by Newport Trust Company, LLC - Quiver Quantitative",
+     "date": "Thu, 12 Nov 2026 20:56:00 GMT"
+    },
+    {
+     "title": "Mobility Global jumps 12% on Q3 beat, higher EBITDA outlook (MBGL:NYSE) - Seeking Alpha",
+     "date": "Thu, 12 Nov 2026 15:44:27 GMT"
+    },
+    {
+     "title": "Mobility Global (NYSE:MBGL) - Stock Analysis - Simply Wall St",
+     "date": "Thu, 12 Nov 2026 11:45:35 GMT"
+    },
+    {
+     "title": "Mobility Global (NYSE:MBGL) Shares Gap Up on Earnings Beat - MarketBeat",
+     "date": "Thu, 12 Nov 2026 15:27:13 GMT"
+    },
+    {
+     "title": "Mobility Global Inc. (MBGL) Stock Forecasts - Yahoo Finance",
+     "date": "Wed, 11 Nov 2026 20:36:09 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  }
+ ]
+}
