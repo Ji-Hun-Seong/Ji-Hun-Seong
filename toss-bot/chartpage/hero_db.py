@@ -44,7 +44,7 @@ REGIONS = {
 }
 # 미국은 정식 거래소만 (장외 OTC·핑크시트에 올라온 외국 회사 GDR — 예: SK hynix — 제외)
 US_EXCH = {"NMS", "NGM", "NCM", "NYQ", "ASE", "PCX", "BTS", "NYS", "NAS"}
-UNI_VER = "2"                                                       # 목록 규칙이 바뀌면 올림 → 7일 안 기다리고 바로 다시 받음
+UNI_VER = "3"                                                       # 목록 규칙이 바뀌면 올림 → 7일 안 기다리고 바로 다시 받음
 ROW_VER = "3"                                                       # 채점 줄에 새 칸이 생기면 올림 → 20시간 안 기다리고 다시 채점
 PRIO = {"내 계좌": 0, "아는 회사": 1, "가치주 후보": 2, "대표 종목": 3}
 
@@ -142,10 +142,45 @@ def _screen(region: str, offset: int, size: int = 250) -> list[dict]:
     return (r or {}).get("quotes") or []
 
 
+def _wiki_tickers(page: str) -> set:
+    """위키백과 구성종목 표(id=constituents)에서 Symbol/Ticker 칸만 뽑음 (야후 표기: BRK.B → BRK-B)"""
+    import requests
+    html = requests.get("https://en.wikipedia.org/wiki/" + page, headers={"User-Agent": "Mozilla/5.0 (toss-bot dashboard)"}, timeout=30).text
+    i = html.find('id="constituents"')
+    if i < 0:
+        return set()
+    tbl = html[i: html.find("</table>", i)]
+    out, col = set(), None
+    for tr in tbl.split("<tr")[1:]:
+        cells = [re.sub(r"<[^>]+>", "", x).strip() for x in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", tr, re.S)]
+        if col is None:
+            col = next((k for k, x in enumerate(cells) if x.lower() in ("symbol", "ticker")), None)
+            continue
+        if col < len(cells) and re.fullmatch(r"[A-Z][A-Z.\-]{0,5}", cells[col]):
+            out.add(cells[col].replace(".", "-"))
+    return out
+
+
+def index_members() -> set:
+    """S&P500 ∪ 나스닥100. 나스닥100을 못 받으면 예외(→ 기존 목록 유지), S&P500은 예비 파일로 대체 가능."""
+    try:
+        sp = _wiki_tickers("List_of_S%26P_500_companies")
+    except Exception:
+        sp = set()
+    if len(sp) < 450:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "sp500_fallback.txt")) as f:
+            sp = {x.strip() for x in f if x.strip() and not x.startswith("#")}
+    nq = _wiki_tickers("Nasdaq-100")
+    if not 90 <= len(nq) <= 115:
+        raise RuntimeError(f"나스닥100 목록 {len(nq)}개 — 위키백과 표 형식이 바뀐 듯")
+    return sp | nq
+
+
 def universe_global(market: str) -> list[dict]:
     """야후 스크리너 — 나라별 시총 큰 순으로 받아 원화 환산 MIN_GL_EOK 밑으로 내려가면 멈춤"""
     import heroes
     out, seen = [], set()
+    members = index_members() if market == "us" else None   # 미국은 S&P500·나스닥100 구성종목만 (브라질·중국 ADR 등 제외)
     for region, pat in REGIONS[market]:
         for off in range(0, 5000, 250):
             qs = _screen(region, off)
@@ -162,6 +197,8 @@ def universe_global(market: str) -> list[dict]:
                 if q.get("quoteType", "EQUITY") != "EQUITY" or not re.search(pat, sym) or sym in seen:
                     continue
                 if region == "us" and q.get("exchange") and q["exchange"] not in US_EXCH:
+                    continue
+                if members is not None and sym not in members:
                     continue
                 seen.add(sym)
                 out.append({"code": sym, "name": q.get("longName") or q.get("shortName") or sym, "mcap_eok": eok, "ccy": ccy})
