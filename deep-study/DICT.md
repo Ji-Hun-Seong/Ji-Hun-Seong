@@ -176,6 +176,8 @@
 - [x] 재투자 위험 (reinvestment-risk)
 - [x] 할인계수 (discount-factor)
 - [x] 액면수익률 (par-yield)
+- [x] Z스프레드 (z-spread)
+- [x] 할인 마진(DM) (discount-margin)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
