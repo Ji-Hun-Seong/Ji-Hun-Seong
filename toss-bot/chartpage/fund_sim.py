@@ -50,8 +50,8 @@ FUNDS = {
                   "market": "us", "kind": "growth"},
 }
 MKT = {   # 시장별: 매매비용 · 비교지수 · 배당 원천징수
-    "kr": {"commission": COMMISSION, "sell_tax": SELL_TAX, "bench": "코스피", "wht": 0.0, "per_max": 10, "pbr_max": 2, "growth_mcap_max": 100000},
-    "us": {"commission": 0.0025, "sell_tax": 0.0, "bench": "S&P 500(원화)", "wht": 0.15, "per_max": 30, "pbr_max": 10, "growth_mcap_max": None}   # 미국은 거품 감안 PBR 10배까지,
+    "kr": {"commission": COMMISSION, "sell_tax": SELL_TAX, "bench": "코스피", "wht": 0.0, "per_max": 10, "growth_mcap_max": 100000},
+    "us": {"commission": 0.0025, "sell_tax": 0.0, "bench": "S&P 500(원화)", "wht": 0.15, "per_max": 30, "growth_mcap_max": None},
 }
 
 
@@ -61,9 +61,14 @@ def _ok_steady(x):
     return s.get("ok") is not False and s.get("rev5") is not False   # rev5: 매출 5년 연속 증가 (재채점 전이면 통과)
 
 
+PBR_MAX = {"kr": 2, "jp": 2}                          # 💎 가치주 PBR 상한 — 한국·일본 2배(저PBR 시장) · 그 밖(미국 등)은 10배(거품 감안)
+
+
 def is_value(x, market: str = "kr") -> bool:
     pbr, per, h = x.get("pbr"), x.get("per"), x.get("heroes") or {}
-    return (x.get("vgrade") != "no" and (pbr is None or 0 < pbr <= MKT[market]["pbr_max"]) and (per is None or per <= MKT[market]["per_max"])
+    pmax = PBR_MAX.get(market, 10)
+    rules = MKT.get(market) or MKT["us"]
+    return (x.get("vgrade") != "no" and (pbr is None or 0 < pbr <= pmax) and (per is None or per <= rules["per_max"])
             and (h.get("buffett") is None or h["buffett"] >= 10) and _ok_steady(x)
             and (x.get("style") == "both" or (x.get("value") or -1) >= (x.get("growth") or -1)))
 
