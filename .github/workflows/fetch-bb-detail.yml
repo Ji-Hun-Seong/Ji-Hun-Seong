@@ -1,0 +1,39 @@
+name: Fetch buyback detail (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "backtest/fetch_bb_detail.py"
+      - ".github/workflows/fetch-bb-detail.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas
+      - run: |
+          mkdir -p backtest/data
+          set -o pipefail
+          python -u backtest/fetch_bb_detail.py 2>&1 | tee backtest/data/bb_log.txt
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY || vars.DART_API_KEY || secrets.DART_KEY || secrets.OPENDART_API_KEY || secrets.DART_API }}
+      - name: Push to bt-data-bb branch
+        if: always()
+        run: |
+          git config user.name "backtest-bot"
+          git config user.email "backtest-bot@users.noreply.github.com"
+          mkdir -p /tmp/d && cp backtest/data/bb_* /tmp/d/
+          git checkout --orphan bt-data-bb
+          git rm -rq --cached . && git clean -fdq
+          cp /tmp/d/* . && git add bb_*
+          git commit -qm "bb detail $(date +%F)"
+          git push -f origin bt-data-bb
