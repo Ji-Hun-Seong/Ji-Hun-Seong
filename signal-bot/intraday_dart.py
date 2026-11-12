@@ -369,7 +369,7 @@ def main():
         if v and v["big"]:
             vu_lines += [f"■ {it.get('corp_name', code)} ({code}) — 기업가치제고계획",
                          f"▪ 자사주 매입 약속 연 {v['yearly'] / 1e8:,.0f}억 = 시총 {v['cap'] / 1e8:,.0f}억의 {v['pct']:.1%}",
-                         "▪ 계획 공시만으로는 안 삼(백테스트: 밸류업 공시 후 60일 -4.4%). 실제 자사주 취득·신탁 공시가 나오면 '약속 이행'으로 우대 매수",
+                         "▪ 참고용 — 계획 공시만으로는 안 삼(백테스트: 밸류업 공시 후 60일 -4.4%). 실제 자사주 취득 공시가 나오면 일반 조건으로 판단",
                          f"  https://dart.fss.or.kr/dsaf001/main.do?rcpNo={no}", ""]
 
     picks, others = [], []
@@ -391,6 +391,7 @@ def main():
                                key=key, day=day, closes=q.get("closes"), price=q.get("price"), text=txt)
                 e["bb"].append(f"⭐ 좋은 공시 → 토스봇 매수: {' / '.join(qv['reasons'])}" if qv["good"] else
                                f"▫️ 약한 공시 → 토스봇 매수 안 함 ({' / '.join(qv['notes']) or '첫 매입·고점 근처'})")
+                e["bb"] += [f"  · {x}" for x in qv["notes"]] if qv["good"] else []
             except Exception as ex:
                 print("품질 판별 실패", e["code"], ex)
             time.sleep(0.3)
@@ -428,7 +429,7 @@ def main():
                 L.append(f"  근거: {e['why']}")
                 L.append(f"  https://dart.fss.or.kr/dsaf001/main.do?rcpNo={e['rcept_no']}")
             L.append("")
-        L.append("※ 수치는 공시 다음 날 시가 매수 기준 유사 종목 대비 평균 초과수익(과거 성과이며 보장 아님). 자사주는 ⭐좋은 공시(시총 3%↑·고점 -30%↓·재매입·밸류업 약속 이행)만 토스봇이 매수합니다.")
+        L.append("※ 수치는 공시 다음 날 시가 매수 기준 유사 종목 대비 평균 초과수익(과거 성과이며 보장 아님). 자사주는 ⭐좋은 공시(고점 -30%↓ 또는 재매입, 그리고 시총 1%↑ 매입)만 토스봇이 매수합니다.")
         text = "\n".join(L)
         print(text)
         has_alert = bool(picks)

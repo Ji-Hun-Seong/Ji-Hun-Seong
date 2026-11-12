@@ -15,8 +15,8 @@
 - 한국: 코스피 보통주의 자기주식 취득결정·신탁계약체결결정 원공시(정정 제외), 20일 평균 거래대금 3억 이상.
   공시 직후 지정가(현재가+0.5%, 전일 종가+5% 상한)로 매수 → 10거래일 보유, RSI14>70이면 다음 날 시가 익절.
   최대 10종목, 남는 돈은 현금. 백테스트 연 13.6%(다음 날 시가 진입) ~ 25.4%(공시일 종가 진입 상한), 손실 연도 없음.
-  + 좋은 공시만 매수(2026-11-12, README 8차, signal-bot/buyback_quality.py): 시총 3%↑ 매입 / 52주 고점 -30%↓ /
-    1년 안 재매입 / 밸류업 약속(연 시총 3%↑) 이행 중 하나. 첫 매입+고점 근처 공시는 10일 초과수익 IS -0.6%·OOS 0.0% → 안 삼.
+  + 좋은 공시만 매수(2026-11-12, README 8차, signal-bot/buyback_quality.py): (52주 고점 -30%↓ 또는 1년 안 재매입)
+    그리고 매입 규모 시총 1%↑. 최대 7종목. 백테스트 연 20.4%·MDD -27%·Sharpe 1.64, 손실 연도 없음.
 - 미국: 나스닥100(QQQ)이 200일선 위면 레버리지 = min(2, 45% / 최근 20일 변동성), 아래면 현금.
   TQQQ 비중 = 레버리지/3, 주 1회 조정(차이 5%p 이상일 때만). 10년 연 24.0% vs 나스닥100 17.9%.
 
@@ -55,7 +55,7 @@ def load_env():
 load_env()
 CFG = dict(
     kr_capital=float(os.environ.get("KR_CAPITAL") or os.environ.get("BOT_CAPITAL") or 3_000_000),
-    kr_slots=int(os.environ.get("KR_SLOTS") or os.environ.get("MAX_POSITIONS") or 10),
+    kr_slots=int(os.environ.get("KR_SLOTS") or os.environ.get("MAX_POSITIONS") or 7),
     kr_hold=int(os.environ.get("KR_HOLD_DAYS") or 10),
     kr_min_tv=float(os.environ.get("KR_MIN_TV") or 3e8),
     kr_chase=float(os.environ.get("KR_MAX_CHASE") or 0.05),
@@ -242,7 +242,7 @@ def kr_buy_now(a, s, f, sess, t):
         except Exception as e:                            # 판별 실패 시엔 예전처럼 매수(전체 자사주 공시도 초과수익 +)
             log("품질 판별 실패", code, e); qv = {"good": True, "reasons": ["판별 실패 → 기본 규칙"], "notes": []}
         if not qv["good"]:
-            return (f"{f['name']} 약한 공시 → 안 삼 (첫 매입·고점 근처·규모 작음: 백테스트 초과수익 0%) "
+            return (f"{f['name']} 약한 공시 → 안 삼 (첫 매입+고점 근처, 또는 시총 1% 미만: 백테스트 초과수익 0%) "
                     f"[{' / '.join(qv['notes']) or '정보 없음'}]")
         f["quality"] = " / ".join(qv["reasons"])
     last = float(a.prices([code])[0]["lastPrice"])

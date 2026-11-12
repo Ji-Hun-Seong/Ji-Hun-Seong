@@ -1,15 +1,12 @@
 """buyback_quality.py — '좋은 자사주 공시' 판별 (토스봇 실매매 + 장중 공시 알림 공용, requests만 사용)
 
-좋은 공시 = 아래 중 하나라도 해당
-  ① 매입 규모가 시가총액의 3% 이상 (아빠 기준: '1년에 3% 이상 사면 효과가 크다')
-  ② 주가가 52주 고점 대비 -30% 이하에서 매입 (백테스트 10일 초과 IS +2.5%·OOS +1.9%)
-  ③ 1년 안에 또 매입하는 회사 (재매입, 10일 초과 IS +1.4%·OOS +2.0%)
-  ④ 최근 2년 안 기업가치제고계획(밸류업)에서 '연 시총 3% 이상' 자사주 매입을 약속했고 그 약속을 이행하는 매입
-②③ 둘 다 아닌 공시(첫 매입 + 고점 근처)는 2014~2026 백테스트에서 10일 초과수익 IS -0.6%·OOS 0.0% → 매수하지 않음.
-①④는 원문 금액이 필요해 과거 검증이 안 됨(아빠 기준을 그대로 반영). backtest/research/README.md 8차 참고.
-
-밸류업 계획 공시 자체는 매수하지 않음: 공시 후 60일 -4.4%(t -3.3, 2024~). 약속한 돈이 실제로 들어가는
-자기주식취득결정·신탁계약 공시가 나올 때 ④로 우대한다.
+매수 = [① 52주 고점 대비 -30% 이하  또는  ② 1년 안 재매입]  그리고  [③ 매입 규모가 시총의 1% 이상 (금액 모르면 통과)]
+  백테스트(README 8차, 2014~2026 자사주 원공시 1,315건, 다음 날 시가 → 10일 초과수익):
+  ①② 둘 다 아님: IS -0.6%·OOS 0.0% → 제외 / 규모 1% 미만: IS +0.1%·OOS +0.5% → 제외
+  최종: 거래당 IS +1.7%·OOS +2.6%, 7종목 포트폴리오 연 20.4%·MDD -27%·Sharpe 1.64, 손실 연도 없음
+검증해 보니 효과 없어서 매수 이유에서 뺀 것(표시만 함): 시총 3% 이상(1~3%와 차이 없음), 소각 목적,
+  밸류업 약속 이행(17건 +0.3%), 저PBR(거래당은 조금 낫지만 기회가 줄어 연수익 하락).
+밸류업 계획 공시 자체도 매수하지 않음: 공시 후 60일 -4.4%(t -3.3, 2024~).
 """
 from __future__ import annotations
 
@@ -25,7 +22,8 @@ DART = "https://opendart.fss.or.kr/api"
 UA = {"User-Agent": "Mozilla/5.0"}
 BB_PAT = r"자기주식취득신탁계약체결결정|^(?:주요사항보고서\()?자기주식취득결정"
 VU_PAT = r"기업가치제고계획"
-SIZE_MIN = 0.03        # 시총 대비 3%
+SIZE_MIN = 0.01        # 시총 대비 1% 미만이면 제외
+BIG = 0.03             # 아빠 기준(연 3%) — 알림 표시용
 DD_MAX = -0.30         # 52주 고점 대비 -30%
 NUM = r"(-?[\d,]+(?:\.\d+)?)"
 
@@ -135,8 +133,8 @@ def assess(*, code: str, corp_code: str | None, rcept_no: str, trust: bool, key:
     cap = mcap(code)
     if amt and cap:
         r["pct"] = amt / cap
-        (r["reasons"] if r["pct"] >= SIZE_MIN else r["notes"]).append(
-            f"매입 규모 {amt / 1e8:,.0f}억 = 시총 {cap / 1e8:,.0f}억의 {r['pct']:.1%}")
+        r["notes"].append(f"매입 규모 {amt / 1e8:,.0f}억 = 시총 {cap / 1e8:,.0f}억의 {r['pct']:.1%}"
+                          + (" (시총 3%↑ 큰 매입)" if r["pct"] >= BIG else " (1% 미만 → 제외)" if r["pct"] < SIZE_MIN else ""))
     if corp_code:
         d = datetime.strptime(day, "%Y%m%d")
         hist = corp_filings(corp_code, key, (d - timedelta(days=730)).strftime("%Y%m%d"), (d - timedelta(days=1)).strftime("%Y%m%d"))
@@ -144,7 +142,7 @@ def assess(*, code: str, corp_code: str | None, rcept_no: str, trust: bool, key:
         prev = [x for x in hist if x.get("rcept_dt", "") >= one_y and re.search(BB_PAT, re.sub(r"\s+", "", x.get("report_nm", "")))]
         r["repeat"] = bool(prev)
         if prev:
-            r["reasons"].append(f"1년 안 재매입({len(prev)}번째 이상)")
+            r["reasons"].append(f"1년 안 재매입(이전 {len(prev)}건)")
         vu = [x for x in hist if re.search(VU_PAT, re.sub(r"\s+", "", x.get("report_nm", "")))]
         if vu:
             vu.sort(key=lambda x: x["rcept_no"])
@@ -152,8 +150,9 @@ def assess(*, code: str, corp_code: str | None, rcept_no: str, trust: bool, key:
             if yearly and cap:
                 r["pledge_pct"] = yearly / cap
                 msg = f"밸류업 약속 연 {yearly / 1e8:,.0f}억(시총의 {r['pledge_pct']:.1%}) 이행"
-                (r["reasons"] if r["pledge_pct"] >= SIZE_MIN else r["notes"]).append(msg)
-    r["good"] = bool(r["reasons"])
+                r["notes"].append(msg)
+    r["small"] = r.get("pct") is not None and r["pct"] < SIZE_MIN
+    r["good"] = bool(r["reasons"]) and not r["small"]
     return r
 
 
@@ -163,4 +162,4 @@ def valueup_alert(text: str, code: str) -> dict | None:
     cap = mcap(code)
     if not y or not cap:
         return None
-    return {"yearly": y, "cap": cap, "pct": y / cap, "big": y / cap >= SIZE_MIN}
+    return {"yearly": y, "cap": cap, "pct": y / cap, "big": y / cap >= BIG}
