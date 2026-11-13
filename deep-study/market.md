@@ -20,7 +20,7 @@
 - [x] 재무상태표: 운전자본과 숨은 부채 (20261113-balance-sheet-working-capital-hidden-liabilities)
 - [x] 현금흐름표: 이익의 질 판별 (20261113-cash-flow-statement-earnings-quality)
 - [x] 연결과 별도, 지배주주 순이익 (20261113-consolidated-separate-controlling-net-income)
-- [ ] 영업권·무형자산·재고 손상
+- [x] 영업권·무형자산·재고 손상 (20261114-goodwill-intangible-inventory-impairment)
 - [ ] 분식 징후 점검표와 실제 사례
 - [ ] 감사의견·계속기업 불확실성
 - [ ] 주석에서 찾는 약정·소송·특수관계자

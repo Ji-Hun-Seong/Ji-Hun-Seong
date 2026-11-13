@@ -121,7 +121,9 @@
 - [x] 비지배지분 (non-controlling-interest)
 - [x] 지분법 (equity-method)
 - [ ] 자본잠식
-- [ ] 영업권
+- [x] 영업권 (goodwill)
+- [x] 손상차손 (impairment-loss)
+- [x] 재고자산평가손실 (inventory-write-down)
 
 ### 가치 지표
 - [ ] PEG

@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261114-goodwill-intangible-inventory-impairment",
+"area": "재무제표 정독",
+"t": "영업권·무형자산·재고 손상",
+"date": "2026-11-14",
+"sum": "회수가능액·순실현가능가치의 원리, 사용가치 민감도와 손상 배분을 끝까지 계산하고, 롯데쇼핑 감사보고서·Kraft Heinz 8-K와 65개사 분기 데이터로 4분기 손상 집중을 확인한다.",
+"n_sections": 22,
+"n_qs": 14,
+"chars": 22742
+},
+{
 "id": "20261113-income-statement-revenue-recognition-one-offs",
 "area": "재무제표 정독",
 "t": "손익계산서: 매출 인식과 일회성 항목",
