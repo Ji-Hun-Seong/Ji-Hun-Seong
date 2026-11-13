@@ -111,7 +111,9 @@
 ### 재무제표
 - [x] 영업이익 (operating-profit)
 - [x] 당기순이익과 지배주주 순이익 (net-income-controlling)
-- [ ] 부채비율
+- [x] 부채비율 (debt-ratio)
+- [x] 운전자본 (working-capital)
+- [x] 충당부채와 우발부채 (provision-contingent-liability)
 - [ ] 영업활동현금흐름
 - [ ] 잉여현금흐름(FCF)
 - [ ] 자본잠식

@@ -11,6 +11,16 @@
 "chars": 18303
 },
 {
+"id": "20261113-balance-sheet-working-capital-hidden-liabilities",
+"area": "재무제표 정독",
+"t": "재무상태표: 운전자본과 숨은 부채",
+"date": "2026-11-13",
+"sum": "현금전환주기·성장의 현금 소모·공급자금융을 끝까지 계산하고, 리스·충당부채·채무보증·약정 위반이 부채비율 밖에서 움직이는 경로를 태영건설·Carillion 원문 수치와 코스피 채무보증 공시 5,726건으로 점검",
+"n_sections": 19,
+"n_qs": 14,
+"chars": 15976
+},
+{
 "id": "20261112-us-options-flow-open-interest-hedging",
 "area": "시장 구조",
 "t": "미국 시장 구조 ②: 옵션 흐름(거래량·미결제약정·헤지 수요)",
