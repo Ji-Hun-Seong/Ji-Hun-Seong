@@ -117,6 +117,9 @@
 - [x] 영업활동현금흐름 (operating-cash-flow)
 - [x] 잉여현금흐름(FCF) (free-cash-flow)
 - [x] 발생액 (accruals)
+- [x] 연결재무제표 (consolidated-financial-statements)
+- [x] 비지배지분 (non-controlling-interest)
+- [x] 지분법 (equity-method)
 - [ ] 자본잠식
 - [ ] 영업권
 

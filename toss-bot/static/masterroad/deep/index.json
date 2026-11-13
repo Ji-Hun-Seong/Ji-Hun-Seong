@@ -11,6 +11,16 @@
 "chars": 18303
 },
 {
+"id": "20261113-consolidated-separate-controlling-net-income",
+"area": "재무제표 정독",
+"t": "연결과 별도, 지배주주 순이익",
+"date": "2026-11-13",
+"sum": "지배력·지분법·비지배지분 규칙으로 별도·연결·지배 순이익을 끝까지 계산하고, 자회사 상장·지배력 상실 회계, 상법 배당 한도와 거래소 자본잠식 기준, OpenDART 69개사 207건에서 세 숫자가 벌어지는 폭과 한화·현대제철·신세계 사례로 PER·배당 판단을 점검",
+"n_sections": 19,
+"n_qs": 13,
+"chars": 19261
+},
+{
 "id": "20261113-cash-flow-statement-earnings-quality",
 "area": "재무제표 정독",
 "t": "현금흐름표: 이익의 질 판별",
