@@ -180,6 +180,8 @@
 - [x] 액면수익률 (par-yield)
 - [x] Z스프레드 (z-spread)
 - [x] 할인 마진(DM) (discount-margin)
+- [x] 국고채 스트립(원금이자분리채권) (ktb-strips)
+- [x] 국고채 통합발행 (ktb-fungible-issue)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)

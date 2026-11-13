@@ -13,7 +13,7 @@
 - [x] 수익률 2: 재투자 위험과 수익률 곡선 (20261112-reinvestment-risk-yield-curve)
 - [x] 현물금리·선도금리와 부트스트래핑 1: 국고채 곡선을 6개월 단위로 풀기 (20261112-spot-forward-bootstrapping-ktb-curve)
 - [x] 현물금리·선도금리와 부트스트래핑 2: 신용 스프레드 곡선·Z스프레드와 FRN 선도 추정 (20261113-credit-spread-curve-zspread-frn-forward)
-- [ ] 국채: 국고채 경과물·지표물, 스트립
+- [x] 국채: 국고채 경과물·지표물, 스트립 (20261113-ktb-benchmark-offtherun-strips)
 - [ ] 통안증권·재정증권
 - [ ] 지방채·특수채·국민주택채권
 - [ ] 은행채·여전채·금융지주채
