@@ -1,0 +1,607 @@
+{
+ "date": "2026-11-13",
+ "context": {
+  "n_gainers_list": 87,
+  "n_surge": 7,
+  "asof": "2026-11-13T16:02-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-13",
+   "code": "LFTO",
+   "name": "Liftoff Mobile, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 4138462464,
+   "chg": 30.62534329218789,
+   "gap": 26.884024226489057,
+   "high_chg": 32.0144355002147,
+   "close_pos": 0.9259525333686919,
+   "upper_wick": 1.3890922080268087,
+   "limit_up": true,
+   "tv": 233544490.3033638,
+   "vol_ratio": 12.923150784044575,
+   "close": 24.440000534057617,
+   "pctb": 0.8926105697979418,
+   "bw": 0.31135392589534616,
+   "bw_pctile": 0.8191489361702128,
+   "squeeze": false,
+   "rsi14": 61.12334246536208,
+   "ma5_gap": 0.013103737626813716,
+   "ma20_gap": 0.12224084225459797,
+   "ma60_gap": 0.09763962751737898,
+   "ma120_gap": null,
+   "ma_aligned": false,
+   "ret5": 0.09096207000826007,
+   "ret20": 0.1044863338024391,
+   "ret60": -0.04100467119548723,
+   "from_high": -0.37840535390853436,
+   "from_low": 0.34025781041159586,
+   "vol_ratio_prev": 1.7689986517431036,
+   "tv20_avg": 12389719.1792202,
+   "tv_prev": 23198527.864837646,
+   "prev_chg": 0.00862532905621105,
+   "up_days": 2,
+   "prev_close_pos": 0.1716414298850182,
+   "fr": null,
+   "price": 18.709999084472656,
+   "filings": [
+    {
+     "date": "2026-11-13",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1850351/000162828026073522/lfto-20260930.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1850351/000162828026073379/lfto-20261112.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Liftoff Mobile (LFTO) Stock Sees Modest Fair Value Cut As Analysts Trim Targets - Yahoo Finance",
+     "date": "Fri, 13 Nov 2026 15:08:24 GMT"
+    },
+    {
+     "title": "Why Is Liftoff Mobile Stock Skyrocketing Friday? - Benzinga",
+     "date": "Fri, 13 Nov 2026 16:43:21 GMT"
+    },
+    {
+     "title": "Liftoff Mobile (NASDAQ:LFTO) Stock Price Target Raised at Wells Fargo & Company - MarketBeat",
+     "date": "Fri, 13 Nov 2026 17:08:32 GMT"
+    },
+    {
+     "title": "Why Are Liftoff Mobile (NASDAQ:LFTO) Shares Up 18.65% Pre-Market on USD 87 Million Quarterly Profit? - Kalkine",
+     "date": "Fri, 13 Nov 2026 12:05:00 GMT"
+    },
+    {
+     "title": "LIFTOFF MOBILE ($LFTO) Releases Q3 2026 Earnings, Stock Rises - Quiver Quantitative",
+     "date": "Thu, 12 Nov 2026 22:55:00 GMT"
+    },
+    {
+     "title": "Liftoff Mobile, Inc. (LFTO) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Thu, 12 Nov 2026 22:04:58 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "code": "MOD",
+   "name": "Modine Manufacturing Company",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 7216694272,
+   "chg": 27.860514244209234,
+   "gap": 33.836005694793016,
+   "high_chg": 38.07728756540265,
+   "close_pos": 0.2773335774739583,
+   "upper_wick": 4.241281870609638,
+   "limit_up": false,
+   "tv": 1141735618.1208801,
+   "vol_ratio": 3.7483682472381012,
+   "close": 135.66000366210938,
+   "pctb": 0.2531788295593562,
+   "bw": 0.6121215118052388,
+   "bw_pctile": 0.95,
+   "squeeze": false,
+   "rsi14": 35.620774865392136,
+   "ma5_gap": 0.02294638243636271,
+   "ma20_gap": -0.1510845479956654,
+   "ma60_gap": -0.35541684391484696,
+   "ma120_gap": -0.4811473841471149,
+   "ma_aligned": false,
+   "ret5": 0.16095852043674297,
+   "ret20": -0.31108368119958796,
+   "ret60": -0.456287799497916,
+   "from_high": -0.6717710797397646,
+   "from_low": 0.2078779929132788,
+   "vol_ratio_prev": 0.763012264105474,
+   "tv20_avg": 260746062.34760284,
+   "tv_prev": 184762537.34283447,
+   "prev_chg": -0.005343580243823087,
+   "up_days": 0,
+   "prev_close_pos": 0.5308639543914421,
+   "fr": null,
+   "price": 106.0999984741211,
+   "filings": [],
+   "news": [
+    {
+     "title": "Modine Stock Gets a Potential $5.6 Billion Takeover Catalyst From Samsung - Yahoo Finance",
+     "date": "Fri, 13 Nov 2026 11:41:03 GMT"
+    },
+    {
+     "title": "MOD Stock Jumps 30% as Samsung Reportedly Explores Acquisition of Modine - Barchart.com",
+     "date": "Fri, 13 Nov 2026 20:14:20 GMT"
+    },
+    {
+     "title": "Why Is Modine (NYSE:MOD) Stock Soaring? Samsung Takeover Talks Spark 31% Rally - Stocks Down Under",
+     "date": "Fri, 13 Nov 2026 19:13:52 GMT"
+    },
+    {
+     "title": "Options Bulls Target 2 Rallying AI Infrastructure Stocks - Schaeffer's Investment Research",
+     "date": "Fri, 13 Nov 2026 17:34:34 GMT"
+    },
+    {
+     "title": "Samsung Wants to Buy an American AI Data Center Cooling Company - 24/7 Wall St.",
+     "date": "Fri, 13 Nov 2026 17:27:00 GMT"
+    },
+    {
+     "title": "Why Is Modine Manufacturing Stock Skyrocketing Friday? - Modine Manufacturing (NYSE:MOD) - Benzinga",
+     "date": "Fri, 13 Nov 2026 10:18:46 GMT"
+    }
+   ],
+   "catalysts": [
+    "M&A",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "code": "STN",
+   "name": "Stantec Inc",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 9631531008,
+   "chg": 14.055644315237693,
+   "gap": 10.528422669081783,
+   "high_chg": 16.211900373284884,
+   "close_pos": 0.7428577310648584,
+   "upper_wick": 2.1562560580471732,
+   "limit_up": false,
+   "tv": 80210126.78527832,
+   "vol_ratio": 2.7113808185847117,
+   "close": 85.69000244140625,
+   "pctb": 0.66023028157038,
+   "bw": 0.16175222930938796,
+   "bw_pctile": 0.8583333333333333,
+   "squeeze": false,
+   "rsi14": 62.438099734434935,
+   "ma5_gap": -0.003897987031000194,
+   "ma20_gap": 0.025917605246879916,
+   "ma60_gap": 0.05371172803808788,
+   "ma120_gap": 0.053033584253385335,
+   "ma_aligned": true,
+   "ret5": -0.008969797217711406,
+   "ret20": 0.08585047842774718,
+   "ret60": 0.004411687007978005,
+   "from_high": -0.3069188542817337,
+   "from_low": 0.14965568489140524,
+   "vol_ratio_prev": 1.2708360160821852,
+   "tv20_avg": 25329537.383537292,
+   "tv_prev": 33365231.78024292,
+   "prev_chg": -0.004900698630225575,
+   "up_days": 0,
+   "prev_close_pos": 0.1268642907368343,
+   "fr": null,
+   "price": 75.12999725341797,
+   "filings": [
+    {
+     "date": "2026-11-12",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1131383/000113138326000022/a6kq32026.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1131383/000117184326007404/f6k_111226.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Stantec Inc. 2026 Q3 - Results - Earnings Call Presentation (TSX:STN:CA) 2026-11-13 - Seeking Alpha",
+     "date": "Fri, 13 Nov 2026 22:29:36 GMT"
+    },
+    {
+     "title": "Stantec (STN) Tops Q3 Earnings and Revenue Estimates - Yahoo Finance",
+     "date": "Thu, 12 Nov 2026 23:35:02 GMT"
+    },
+    {
+     "title": "Stantec (TSE:STN) Shares Climb 14.8% - Time to Buy? - MarketBeat",
+     "date": "Fri, 13 Nov 2026 19:23:11 GMT"
+    },
+    {
+     "title": "Stantec reports third quarter 2026 results with strong net revenue... - Quantisnow",
+     "date": "Thu, 12 Nov 2026 22:26:54 GMT"
+    },
+    {
+     "title": "(STN) Market Dynamics and Trading Signals (STN:CA) - Stock Traders Daily",
+     "date": "Fri, 13 Nov 2026 01:27:36 GMT"
+    },
+    {
+     "title": "Earnings Flash (STN, STN.TO) Stantec Inc. Reports Q3 Revenue CA$1.86B, vs. FactSet Est of CA$1.84B - marketscreener.com",
+     "date": "Thu, 12 Nov 2026 22:04:23 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "code": "NU",
+   "name": "Nu Holdings Ltd.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 63861706752,
+   "chg": 11.749791650778807,
+   "gap": 4.480133021041932,
+   "high_chg": 12.003381956481807,
+   "close_pos": 0.9739132670239214,
+   "upper_wick": 0.25359030570300467,
+   "limit_up": false,
+   "tv": 2014998376.480651,
+   "vol_ratio": 1.794648191648835,
+   "close": 13.220000267028809,
+   "pctb": 0.30571538820212724,
+   "bw": 0.4140875319534332,
+   "bw_pctile": 0.925,
+   "squeeze": false,
+   "rsi14": 22.203672362708303,
+   "ma5_gap": -0.024249411733019755,
+   "ma20_gap": -0.08045083539591202,
+   "ma60_gap": -0.152770987184495,
+   "ma120_gap": -0.13622839797098163,
+   "ma_aligned": false,
+   "ret5": 0.007666111954218513,
+   "ret20": -0.19687710174157902,
+   "ret60": -0.19028061589999012,
+   "from_high": -0.37671231775424063,
+   "from_low": 0.05625001117587103,
+   "vol_ratio_prev": 0.7019684401265763,
+   "tv20_avg": 1080193113.7398338,
+   "tv_prev": 711927029.4086456,
+   "prev_chg": -0.039772709679856466,
+   "up_days": 0,
+   "prev_close_pos": 0.08333316776504668,
+   "fr": null,
+   "price": 11.829999923706055,
+   "filings": [
+    {
+     "date": "2026-11-12",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1691493/000129281426005279/nu20261111_6k.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1691493/000129281426005275/nu20261112_6k.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1691493/000129281426005273/nupr3q26_6k.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1691493/000129281426005272/nufs3q26_6k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Nu Holdings Ltd. (NU) Stock Forecasts - Yahoo Finance",
+     "date": "Fri, 13 Nov 2026 18:46:29 GMT"
+    },
+    {
+     "title": "Stock Market Today, Nov. 13: Nu Holdings Surges on Record Q3 Earnings Beat Driven by Strong Revenue - The Motley Fool",
+     "date": "Fri, 13 Nov 2026 21:53:00 GMT"
+    },
+    {
+     "title": "Why Is Nu Holdings Stock Gaining Friday? - Benzinga",
+     "date": "Fri, 13 Nov 2026 12:22:02 GMT"
+    },
+    {
+     "title": "NU Stock Rises Overnight On Strong Q3 Results: CEO Says New Banking Status Makes Proposition ‘Even More Compelling’ - TradingView",
+     "date": "Fri, 13 Nov 2026 01:15:00 GMT"
+    },
+    {
+     "title": "Nu Holdings Ltd Stock (NU) Moved Up by 9.85% on Nov 13: A Full Analysis - TradingKey",
+     "date": "Fri, 13 Nov 2026 19:15:25 GMT"
+    },
+    {
+     "title": "Nu Holdings Earnings Show a Compounder Priced Like a Brazil Bet - MarketBeat",
+     "date": "Fri, 13 Nov 2026 18:51:34 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "code": "CBRS",
+   "name": "Cerebras Systems Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 25827962880,
+   "chg": 11.222507642663038,
+   "gap": 10.895142225963085,
+   "high_chg": 23.212278712436053,
+   "close_pos": 0.388946765681727,
+   "upper_wick": 11.989771069773019,
+   "limit_up": false,
+   "tv": 3943861532.281494,
+   "vol_ratio": 3.2350434953601828,
+   "close": 108.72000122070312,
+   "pctb": 0.332593659615806,
+   "bw": 0.4519996269428214,
+   "bw_pctile": 0.7037037037037037,
+   "squeeze": false,
+   "rsi14": 42.56456882458442,
+   "ma5_gap": 0.020631898420762962,
+   "ma20_gap": -0.07566760340151868,
+   "ma60_gap": -0.3824586681282789,
+   "ma120_gap": -0.4734056380853642,
+   "ma_aligned": false,
+   "ret5": 0.19630401536224507,
+   "ret20": -0.3124428412537472,
+   "ret60": -0.546803287618514,
+   "from_high": -0.7469845190076866,
+   "from_low": 0.255781148494449,
+   "vol_ratio_prev": 1.624732989186062,
+   "tv20_avg": 1182470865.484314,
+   "tv_prev": 1713019875.0,
+   "prev_chg": -0.032944220129917046,
+   "up_days": 0,
+   "prev_close_pos": 0.3811392079669463,
+   "fr": null,
+   "price": 97.75,
+   "filings": [
+    {
+     "date": "2026-11-12",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2021728/000162828026073494/cbrs-20260930.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/2021728/000162828026073366/cbrs-20261112.htm"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2021728/000164507626000007/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Cerebras stock surges on Q3 results, outlook raise, hyperscaler deals - Yahoo Finance",
+     "date": "Fri, 13 Nov 2026 15:03:07 GMT"
+    },
+    {
+     "title": "Cerebras pops after beating on quarterly revenue and announcing Microsoft deal - CNBC",
+     "date": "Thu, 12 Nov 2026 21:07:22 GMT"
+    },
+    {
+     "title": "Cerebras Stock Jumps 19.39% Premarket - Cerebras Systems (NASDAQ:CBRS) - Benzinga",
+     "date": "Fri, 13 Nov 2026 09:14:43 GMT"
+    },
+    {
+     "title": "Cerebras Systems Ord Shs Class A (Proposed) Stock (CBRS) Moved Up by 12.05% on Nov 13: Drivers Behind the Movement - TradingKey",
+     "date": "Fri, 13 Nov 2026 20:15:27 GMT"
+    },
+    {
+     "title": "Cerebras (NASDAQ:CBRS) Stock Jumps After Microsoft Deal and Raised AI Revenue Forecast - Stocks Down Under",
+     "date": "Fri, 13 Nov 2026 20:03:15 GMT"
+    },
+    {
+     "title": "Options Bulls Target 2 Rallying AI Infrastructure Stocks - Schaeffer's Investment Research",
+     "date": "Fri, 13 Nov 2026 17:34:34 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "code": "TOP",
+   "name": "TOP Financial Group Limited",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 2103010560,
+   "chg": 10.174981618746859,
+   "gap": -2.3331212134247714,
+   "high_chg": 10.174981618746859,
+   "close_pos": 1.0,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "tv": 6758350.0,
+   "vol_ratio": 1.910517336665305,
+   "close": 17.0,
+   "pctb": 0.6967415726186185,
+   "bw": 0.5191728486028039,
+   "bw_pctile": 0.6916666666666667,
+   "squeeze": false,
+   "rsi14": 50.56910698960193,
+   "ma5_gap": 0.045676359516191534,
+   "ma20_gap": 0.10214288269500349,
+   "ma60_gap": 0.04581220161614863,
+   "ma120_gap": 0.30586570413951875,
+   "ma_aligned": false,
+   "ret5": 0.3043111077503653,
+   "ret20": 0.1610233521042368,
+   "ret60": 0.21879940688387145,
+   "from_high": -0.11418567363217358,
+   "from_low": 4.042483854153275,
+   "vol_ratio_prev": 1.2804962733206795,
+   "tv20_avg": 2869642.881846428,
+   "tv_prev": 4267938.084411621,
+   "prev_chg": 0.05612598684242731,
+   "up_days": 1,
+   "prev_close_pos": 0.5925929523463039,
+   "fr": null,
+   "price": 15.430000305175781,
+   "filings": [],
+   "news": [
+    {
+     "title": "Top Stock Reports for Visa, ExxonMobil & Pfizer - Yahoo Finance",
+     "date": "Fri, 13 Nov 2026 20:19:00 GMT"
+    },
+    {
+     "title": "Market Wrap: Stocks Up 2.52%, Led by Energy and Industrials - Morningstar",
+     "date": "Fri, 13 Nov 2026 22:07:30 GMT"
+    },
+    {
+     "title": "Jim Cramer's top 10 things to watch in the stock market Friday - CNBC",
+     "date": "Fri, 13 Nov 2026 14:04:25 GMT"
+    },
+    {
+     "title": "Stock Market Today: Stock Market News And Analysis - Investor's Business Daily",
+     "date": "Fri, 13 Nov 2026 17:35:00 GMT"
+    },
+    {
+     "title": "After-Hours Stock Movers: Top Gainers and Losers Following Today's US Close - ChartMill",
+     "date": "Fri, 13 Nov 2026 22:00:37 GMT"
+    },
+    {
+     "title": "Not Apple. Not Microsoft. This \"Magnificent Seven\" Stock Is My Top Tech Buy for 2027. - The Motley Fool",
+     "date": "Fri, 13 Nov 2026 14:05:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "code": "STVN",
+   "name": "Stevanato Group S.p.A.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 4315432960,
+   "chg": 10.02785911201629,
+   "gap": 2.1587773469935456,
+   "high_chg": 11.768799587662038,
+   "close_pos": 0.847561500386122,
+   "upper_wick": 1.7409404756457407,
+   "limit_up": false,
+   "tv": 23036526.678092957,
+   "vol_ratio": 1.2267528249657134,
+   "close": 15.800000190734863,
+   "pctb": 0.2525788736289829,
+   "bw": 0.6565245285940029,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 26.575337454890985,
+   "ma5_gap": 0.03907380418070949,
+   "ma20_gap": -0.1624380383549292,
+   "ma60_gap": -0.27033757811094783,
+   "ma120_gap": -0.25909047819890274,
+   "ma_aligned": false,
+   "ret5": 0.08705523203704613,
+   "ret20": -0.25402599186092223,
+   "ret60": -0.3385536498272931,
+   "from_high": -0.4019158883887274,
+   "from_low": 0.19170119745877856,
+   "vol_ratio_prev": 0.7539580438772535,
+   "tv20_avg": 17764982.485842705,
+   "tv_prev": 12623875.698184967,
+   "prev_chg": 0.03235081338615964,
+   "up_days": 2,
+   "prev_close_pos": 0.584550479027133,
+   "fr": null,
+   "price": 14.359999656677246,
+   "filings": [
+    {
+     "date": "2026-11-12",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1849853/000119312526458540/xslF345X06/ownership.xml"
+    },
+    {
+     "date": "2026-11-12",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1849853/000119312526458313/transcript_nov_3_2026.htm"
+    },
+    {
+     "date": "2026-11-10",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1849853/000119312526455579/xslF345X06/ownership.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Stevanato Group (NYSE:STVN) Stock Price Up 5.5% - Time to Buy? - MarketBeat",
+     "date": "Thu, 12 Nov 2026 18:42:52 GMT"
+    },
+    {
+     "title": "Stevanato Group (NYSE:STVN) Director William Federici Buys 20,000 Shares of Stock - MarketBeat",
+     "date": "Thu, 12 Nov 2026 22:38:15 GMT"
+    },
+    {
+     "title": "STVN 6-K & SEC Filings - Yahoo Finance",
+     "date": "Thu, 12 Nov 2026 08:00:00 GMT"
+    },
+    {
+     "title": "Live Stevanato Group S.p.A. (STVN) Technical Analysis - Traders Union",
+     "date": "Fri, 13 Nov 2026 10:29:38 GMT"
+    },
+    {
+     "title": "Stevanato Group S.p.A. (STVN) Earnings Date, Reports and Estimates - Traders Union",
+     "date": "Thu, 12 Nov 2026 12:48:32 GMT"
+    },
+    {
+     "title": "Analysts Issue Forecasts for Stevanato Group FY2027 Earnings - MarketBeat",
+     "date": "Fri, 13 Nov 2026 12:30:42 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Policy·Macro"
+   ]
+  }
+ ]
+}
