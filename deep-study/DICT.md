@@ -183,6 +183,8 @@
 - [x] 할인 마진(DM) (discount-margin)
 - [x] 국고채 스트립(원금이자분리채권) (ktb-strips)
 - [x] 국고채 통합발행 (ktb-fungible-issue)
+- [x] 통화안정증권 (msb)
+- [x] 재정증권 (treasury-bill-kr)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
