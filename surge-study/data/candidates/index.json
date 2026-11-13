@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-13",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 846,
+   "top": [
+    "에스원",
+    "셀트리온",
+    "코리안리"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-12",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 846,
@@ -9,8 +21,14 @@
     "프레스티지바이오로직스",
     "케이씨"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 34,
+   "graded": {
+    "avg": -0.87,
+    "up": 3,
+    "n": 10,
+    "hit10": 0,
+    "market_avg": 0.6
+   }
   },
   {
    "date": "2026-11-11",
