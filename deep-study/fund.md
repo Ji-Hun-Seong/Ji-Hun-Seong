@@ -15,7 +15,8 @@
 - [x] 현물금리·선도금리와 부트스트래핑 2: 신용 스프레드 곡선·Z스프레드와 FRN 선도 추정 (20261113-credit-spread-curve-zspread-frn-forward)
 - [x] 국채: 국고채 경과물·지표물, 스트립 (20261113-ktb-benchmark-offtherun-strips)
 - [x] 통안증권·재정증권 (20261113-msb-treasury-bills)
-- [ ] 지방채·특수채·국민주택채권
+- [x] 지방채·특수채·국민주택채권 1: 제1종 국민주택채권과 소액채권 시장 (20261113-national-housing-bond-small-bond-market)
+- [ ] 지방채·특수채·국민주택채권 2: 지방채·지역개발채권의 발행 구조와 평가
 - [ ] 은행채·여전채·금융지주채
 - [ ] 회사채 발행 절차와 수요예측
 - [ ] ABS·MBS·커버드본드의 구조와 현금흐름

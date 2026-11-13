@@ -188,6 +188,8 @@
 - [x] 국고채 통합발행 (ktb-fungible-issue)
 - [x] 통화안정증권 (msb)
 - [x] 재정증권 (treasury-bill-kr)
+- [x] 국민주택채권 (national-housing-bond)
+- [x] 소액채권시장 (small-bond-market)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
