@@ -192,6 +192,8 @@
 - [x] 재정증권 (treasury-bill-kr)
 - [x] 국민주택채권 (national-housing-bond)
 - [x] 소액채권시장 (small-bond-market)
+- [x] 지방채 (local-government-bond)
+- [x] 지역개발채권 (regional-development-bond)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
