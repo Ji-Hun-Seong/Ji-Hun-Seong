@@ -11,6 +11,16 @@
 "chars": 22742
 },
 {
+"id": "20261114-accounting-fraud-red-flags-cases",
+"area": "재무제표 정독",
+"t": "분식 징후 점검표와 실제 사례",
+"date": "2026-11-14",
+"sum": "가공 매출·예정원가 축소의 분개 흔적, M-스코어를 끝까지 계산하고 F-스코어 기저율로 오탐을 따진 뒤, 대우조선해양·Luckin·Wirecard와 금감원 사례, 횡령·배임 공시 88건의 생존편향까지 점검한다.",
+"n_sections": 20,
+"n_qs": 14,
+"chars": 19848
+},
+{
 "id": "20261113-income-statement-revenue-recognition-one-offs",
 "area": "재무제표 정독",
 "t": "손익계산서: 매출 인식과 일회성 항목",

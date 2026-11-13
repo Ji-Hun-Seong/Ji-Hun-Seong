@@ -101,6 +101,7 @@
 - [x] 감사의견 (audit-opinion)
 - [x] 주요사항보고서 (material-event-report)
 - [x] 잠정실적 공시 (preliminary-earnings)
+- [x] 회계감리 (accounting-review)
 - [ ] 최대주주와 특수관계인
 - [ ] 5% 룰(대량보유 보고)
 - [ ] 지주회사
@@ -121,6 +122,8 @@
 - [x] 비지배지분 (non-controlling-interest)
 - [x] 지분법 (equity-method)
 - [ ] 자본잠식
+- [x] 분식회계 (accounting-fraud)
+- [x] M-스코어 (beneish-m-score)
 - [x] 영업권 (goodwill)
 - [x] 손상차손 (impairment-loss)
 - [x] 재고자산평가손실 (inventory-write-down)
