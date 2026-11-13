@@ -114,8 +114,9 @@
 - [x] 부채비율 (debt-ratio)
 - [x] 운전자본 (working-capital)
 - [x] 충당부채와 우발부채 (provision-contingent-liability)
-- [ ] 영업활동현금흐름
-- [ ] 잉여현금흐름(FCF)
+- [x] 영업활동현금흐름 (operating-cash-flow)
+- [x] 잉여현금흐름(FCF) (free-cash-flow)
+- [x] 발생액 (accruals)
 - [ ] 자본잠식
 - [ ] 영업권
 

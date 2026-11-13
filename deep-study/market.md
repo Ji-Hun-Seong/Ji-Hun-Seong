@@ -18,7 +18,7 @@
 - [x] 사업보고서 읽는 순서 (20261112-business-report-reading-order)
 - [x] 손익계산서: 매출 인식과 일회성 항목 (20261113-income-statement-revenue-recognition-one-offs)
 - [x] 재무상태표: 운전자본과 숨은 부채 (20261113-balance-sheet-working-capital-hidden-liabilities)
-- [ ] 현금흐름표: 이익의 질 판별
+- [x] 현금흐름표: 이익의 질 판별 (20261113-cash-flow-statement-earnings-quality)
 - [ ] 연결과 별도, 지배주주 순이익
 - [ ] 영업권·무형자산·재고 손상
 - [ ] 분식 징후 점검표와 실제 사례
