@@ -105,9 +105,9 @@
 - [ ] 최대주주와 특수관계인
 - [ ] 5% 룰(대량보유 보고)
 - [ ] 지주회사
-- [ ] 상장폐지·관리종목
+- [x] 상장폐지·관리종목 (delisting-administrative-issue)
 - [ ] 투자주의·경고·위험 종목
-- [ ] 거래정지
+- [x] 거래정지 (trading-halt)
 
 ### 재무제표
 - [x] 영업이익 (operating-profit)
@@ -121,7 +121,7 @@
 - [x] 연결재무제표 (consolidated-financial-statements)
 - [x] 비지배지분 (non-controlling-interest)
 - [x] 지분법 (equity-method)
-- [ ] 자본잠식
+- [x] 자본잠식 (capital-impairment)
 - [x] 분식회계 (accounting-fraud)
 - [x] M-스코어 (beneish-m-score)
 - [x] 영업권 (goodwill)
