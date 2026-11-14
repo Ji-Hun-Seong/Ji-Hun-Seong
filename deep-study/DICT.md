@@ -130,6 +130,9 @@
 - [x] 영업권 (goodwill)
 - [x] 손상차손 (impairment-loss)
 - [x] 재고자산평가손실 (inventory-write-down)
+- [x] 순차입금 (net-debt)
+- [x] 리스부채 (lease-liability)
+- [x] 감가상각비 (depreciation-amortization)
 
 ### 가치 지표
 - [x] PEG (peg)
