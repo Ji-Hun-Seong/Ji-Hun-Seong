@@ -203,6 +203,8 @@
 - [x] 지방공사채 (local-public-corporation-bond)
 - [x] 은행채 (bank-bond)
 - [x] KOFR(무위험 지표금리) (kofr)
+- [x] 여전채 (yeojeon-bond)
+- [x] 레버리지 배율(여전사) (credit-finance-leverage)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
