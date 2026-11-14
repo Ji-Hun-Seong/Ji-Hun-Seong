@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261114-notes-commitments-litigation-related-parties",
+"area": "재무제표 정독",
+"t": "주석에서 찾는 약정·소송·특수관계자",
+"date": "2026-11-14",
+"sum": "소송을 IAS 37 공시 문구와 거래소 피소 문턱(5%·2.5%)으로 읽고 확률 나무로 끝까지 계산한 뒤, 대웅제약 1심(−19.35%)·DICC 동반매도·Adelphia 공동차입 사례와 특수관계자 세 겹 규제, 코스피 소송 공시 402건 검증까지 점검한다.",
+"n_sections": 20,
+"n_qs": 14,
+"chars": 20420
+},
+{
 "id": "20261114-goodwill-intangible-inventory-impairment",
 "area": "재무제표 정독",
 "t": "영업권·무형자산·재고 손상",

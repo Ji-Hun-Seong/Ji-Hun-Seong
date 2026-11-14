@@ -23,7 +23,7 @@
 - [x] 영업권·무형자산·재고 손상 (20261114-goodwill-intangible-inventory-impairment)
 - [x] 분식 징후 점검표와 실제 사례 (20261114-accounting-fraud-red-flags-cases)
 - [x] 감사의견·계속기업 불확실성 (20261114-audit-opinion-going-concern-uncertainty)
-- [ ] 주석에서 찾는 약정·소송·특수관계자
+- [x] 주석에서 찾는 약정·소송·특수관계자 (20261114-notes-commitments-litigation-related-parties)
 
 ## 기업가치 평가
 - [ ] PER의 분해와 함정

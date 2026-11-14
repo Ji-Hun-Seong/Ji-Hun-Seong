@@ -102,7 +102,9 @@
 - [x] 주요사항보고서 (material-event-report)
 - [x] 잠정실적 공시 (preliminary-earnings)
 - [x] 회계감리 (accounting-review)
-- [ ] 최대주주와 특수관계인
+- [x] 최대주주와 특수관계인 (largest-shareholder-related-party)
+- [x] 대규모내부거래 (large-scale-internal-transaction)
+- [x] 동반매도청구권 (drag-along-right)
 - [ ] 5% 룰(대량보유 보고)
 - [ ] 지주회사
 - [x] 상장폐지·관리종목 (delisting-administrative-issue)
