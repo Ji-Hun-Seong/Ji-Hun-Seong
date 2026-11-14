@@ -131,10 +131,11 @@
 - [x] 재고자산평가손실 (inventory-write-down)
 
 ### 가치 지표
-- [ ] PEG
+- [x] PEG (peg)
+- [x] 이익수익률 (earnings-yield)
 - [ ] PSR
 - [ ] BPS
-- [ ] 컨센서스
+- [x] 컨센서스 (consensus)
 
 ### 거래 제도
 - [ ] 호가단위

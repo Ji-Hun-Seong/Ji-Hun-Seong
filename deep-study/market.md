@@ -26,7 +26,7 @@
 - [x] 주석에서 찾는 약정·소송·특수관계자 (20261114-notes-commitments-litigation-related-parties)
 
 ## 기업가치 평가
-- [ ] PER의 분해와 함정
+- [x] PER의 분해와 함정 (20261114-per-decomposition-traps)
 - [ ] PBR-ROE와 저PBR의 조건
 - [ ] EV/EBITDA와 순차입금 조정
 - [ ] DCF 전 과정 직접 계산

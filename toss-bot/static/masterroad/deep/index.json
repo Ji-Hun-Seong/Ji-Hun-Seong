@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261114-per-decomposition-traps",
+"area": "기업가치 평가",
+"t": "PER의 분해와 함정",
+"date": "2026-11-14",
+"sum": "PER을 ROE·성장률·할인율로 분해하고, 분모(기간·지배지분·희석·일회성)와 평균법·경기 정점·자사주가 배수를 비트는 방식을 끝까지 계산한다",
+"n_sections": 24,
+"n_qs": 14,
+"chars": 18096
+},
+{
 "id": "20261114-notes-commitments-litigation-related-parties",
 "area": "재무제표 정독",
 "t": "주석에서 찾는 약정·소송·특수관계자",
