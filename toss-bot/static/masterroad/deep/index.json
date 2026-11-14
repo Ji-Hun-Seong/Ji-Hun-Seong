@@ -11,6 +11,16 @@
 "chars": 18096
 },
 {
+"id": "20261114-pbr-roe-low-pbr-conditions",
+"area": "기업가치 평가",
+"t": "PBR-ROE와 저PBR의 조건",
+"date": "2026-11-14",
+"sum": "PBR을 (ROE − g) ÷ (r − g)와 잔여이익으로 분해해 내재 ROE·PBR 일정 기대수익률을 계산하고, 자사주·레버리지·분모 함정, 연구·일본 TSE·한국 밸류업 제도, 실패 사례로 '저PBR이 싼 조건'을 정리한다",
+"n_sections": 23,
+"n_qs": 14,
+"chars": 21856
+},
+{
 "id": "20261114-notes-commitments-litigation-related-parties",
 "area": "재무제표 정독",
 "t": "주석에서 찾는 약정·소송·특수관계자",

@@ -27,7 +27,7 @@
 
 ## 기업가치 평가
 - [x] PER의 분해와 함정 (20261114-per-decomposition-traps)
-- [ ] PBR-ROE와 저PBR의 조건
+- [x] PBR-ROE와 저PBR의 조건 (20261114-pbr-roe-low-pbr-conditions)
 - [ ] EV/EBITDA와 순차입금 조정
 - [ ] DCF 전 과정 직접 계산
 - [ ] 할인율과 WACC

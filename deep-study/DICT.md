@@ -110,6 +110,7 @@
 - [x] 상장폐지·관리종목 (delisting-administrative-issue)
 - [ ] 투자주의·경고·위험 종목
 - [x] 거래정지 (trading-halt)
+- [x] 기업가치 제고 계획 (corporate-value-up-plan)
 
 ### 재무제표
 - [x] 영업이익 (operating-profit)
@@ -136,6 +137,8 @@
 - [ ] PSR
 - [ ] BPS
 - [x] 컨센서스 (consensus)
+- [x] 자기자본비용 (cost-of-equity)
+- [x] F-스코어 (piotroski-f-score)
 
 ### 거래 제도
 - [ ] 호가단위
