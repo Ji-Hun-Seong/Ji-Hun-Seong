@@ -199,6 +199,8 @@
 - [x] 지역개발채권 (regional-development-bond)
 - [x] 특수채 (special-bond)
 - [x] 지방공사채 (local-public-corporation-bond)
+- [x] 은행채 (bank-bond)
+- [x] KOFR(무위험 지표금리) (kofr)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
