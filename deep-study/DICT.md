@@ -216,6 +216,8 @@
 - [x] 이중레버리지비율 (double-leverage-ratio)
 - [x] 회사채 수요예측 (bond-book-building)
 - [x] 증권신고서 효력발생일 (registration-effective-date)
+- [x] 관계인수인 거래 (related-underwriter)
+- [x] 불성실 수요예측 참여자 (unfaithful-bookbuilding)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
