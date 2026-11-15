@@ -153,6 +153,9 @@
 - [x] 잔여이익 (residual-income)
 - [x] 지주회사 할인 (holding-company-discount)
 - [x] SOTP (sotp)
+- [x] 정상 이익 (normalized-earnings)
+- [x] 경기조정 PER (cape-ratio)
+- [x] 영업레버리지 (operating-leverage)
 
 ### 거래 제도
 - [ ] 호가단위

@@ -33,7 +33,7 @@
 - [x] 할인율과 WACC (20261115-discount-rate-wacc)
 - [x] 잔여이익 모형 (20261115-residual-income-model)
 - [x] 지주회사 NAV 할인 계산 (20261115-holding-company-nav-discount)
-- [ ] 경기민감주의 정상 이익
+- [x] 경기민감주의 정상 이익 (20261116-cyclical-normalized-earnings)
 - [ ] 적자 성장주의 평가
 - [ ] 금융주 평가
 - [ ] 가치함정 판별 사례
