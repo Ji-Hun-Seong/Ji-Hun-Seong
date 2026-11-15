@@ -231,6 +231,8 @@
 - [x] 유동화 신용보강·조기상환 트리거 (securitization-credit-enhancement)
 - [x] 주택저당증권(MBS) (mbs)
 - [x] 조기상환율(CPR·SMM·PSA) (prepayment-rate-cpr-psa)
+- [x] 이중상환청구권부채권(커버드본드) (covered-bond)
+- [x] 기초자산집합(커버풀)·최소담보비율 (cover-pool)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
