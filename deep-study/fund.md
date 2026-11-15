@@ -26,7 +26,8 @@
 - [x] ABS·MBS·커버드본드 1: 자산유동화증권(ABS)의 구조·신용보강·워터폴과 펀드 장부 (20261115-abs-structure-credit-enhancement-cashflow)
 - [x] ABS·MBS·커버드본드 2: 주택금융공사 MBS의 구조와 조기상환(CPR·PSA) 현금흐름 (20261115-hf-mbs-prepayment-cpr-psa)
 - [x] ABS·MBS·커버드본드 3: 이중상환청구권부채권(커버드본드)의 구조와 회계 (20261115-covered-bond-dual-recourse-cover-pool)
-- [ ] 채권 유통시장과 결제 실무
+- [x] 채권 유통시장과 결제 실무 1: 장내·장외 구조, 15분 보고, T+1 동시결제와 결제일이 장부에 주는 영향 (20261115-bond-secondary-market-settlement-1)
+- [ ] 채권 유통시장과 결제 실무 2: 결제 지연·불이행 사후 처리와 체결가 적정성(민평 괴리) 점검
 - [ ] 세후 수익률과 채권 이자 과세
 - [ ] 국내 채권 가격 공식 유도와 손계산
 - [ ] 이표채 경과이자와 일수 계산 관행

@@ -235,6 +235,8 @@
 - [x] 조기상환율(CPR·SMM·PSA) (prepayment-rate-cpr-psa)
 - [x] 이중상환청구권부채권(커버드본드) (covered-bond)
 - [x] 기초자산집합(커버풀)·최소담보비율 (cover-pool)
+- [x] 채권 동시결제(DVP) (bond-dvp-settlement)
+- [x] 장외채권 거래 보고(15분 보고) (otc-bond-trade-report)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
