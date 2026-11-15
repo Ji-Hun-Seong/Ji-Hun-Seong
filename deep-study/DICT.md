@@ -240,6 +240,8 @@
 - [x] 기초자산집합(커버풀)·최소담보비율 (cover-pool)
 - [x] 채권 동시결제(DVP) (bond-dvp-settlement)
 - [x] 장외채권 거래 보고(15분 보고) (otc-bond-trade-report)
+- [x] 결제 실패(결제 지연·불이행) (settlement-fail)
+- [x] 체결가 괴리(민평 괴리) 점검 (trade-price-deviation)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
