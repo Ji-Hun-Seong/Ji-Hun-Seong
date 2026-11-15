@@ -11,6 +11,16 @@
 "chars": 20698
 },
 {
+"id": "20261115-holding-company-nav-discount",
+"area": "기업가치 평가",
+"t": "지주회사 NAV 할인 계산",
+"date": "2026-11-15",
+"sum": "지주회사의 순자산가치(NAV)를 별도 기준으로 직접 쌓고, 할인율을 자사주·세금·본사비용·피라미드 구조까지 고려해 계산한 뒤, 할인의 '수준'이 아니라 '변화'를 판단하는 방법",
+"n_sections": 17,
+"n_qs": 13,
+"chars": 16146
+},
+{
 "id": "20261115-ev-ebitda-net-debt-adjustments",
 "area": "기업가치 평가",
 "t": "EV/EBITDA와 순차입금 조정",

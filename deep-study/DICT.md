@@ -106,7 +106,7 @@
 - [x] 대규모내부거래 (large-scale-internal-transaction)
 - [x] 동반매도청구권 (drag-along-right)
 - [ ] 5% 룰(대량보유 보고)
-- [ ] 지주회사
+- [x] 지주회사 (holding-company)
 - [x] 상장폐지·관리종목 (delisting-administrative-issue)
 - [ ] 투자주의·경고·위험 종목
 - [x] 거래정지 (trading-halt)
@@ -151,6 +151,8 @@
 - [x] CAPM (capm)
 - [x] F-스코어 (piotroski-f-score)
 - [x] 잔여이익 (residual-income)
+- [x] 지주회사 할인 (holding-company-discount)
+- [x] SOTP (sotp)
 
 ### 거래 제도
 - [ ] 호가단위
