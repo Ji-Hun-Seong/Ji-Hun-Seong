@@ -23,7 +23,9 @@
 - [x] 은행채·여전채·금융지주채 3: 금융지주채와 지주·자회사 신용 구조 (20261114-financial-holding-bond-structure)
 - [x] 회사채 발행 절차와 수요예측 1: 증권신고서 효력·수요예측·배정·납입과 펀드 장부 (20261115-corporate-bond-issuance-bookbuilding)
 - [x] 회사채 발행 절차와 수요예측 2: 인수단·미매각·관계인수인 거래와 불성실 수요예측 제재 (20261115-underwriting-unsold-related-underwriter-sanction)
-- [ ] ABS·MBS·커버드본드의 구조와 현금흐름
+- [x] ABS·MBS·커버드본드 1: 자산유동화증권(ABS)의 구조·신용보강·워터폴과 펀드 장부 (20261115-abs-structure-credit-enhancement-cashflow)
+- [ ] ABS·MBS·커버드본드 2: 주택금융공사 MBS의 구조와 조기상환(CPR·PSA) 현금흐름
+- [ ] ABS·MBS·커버드본드 3: 이중상환청구권부채권(커버드본드)의 구조와 회계
 - [ ] 채권 유통시장과 결제 실무
 - [ ] 세후 수익률과 채권 이자 과세
 - [ ] 국내 채권 가격 공식 유도와 손계산
