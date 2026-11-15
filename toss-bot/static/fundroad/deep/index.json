@@ -11,6 +11,16 @@
 "chars": 20155
 },
 {
+"id": "20261115-hf-mbs-prepayment-cpr-psa",
+"area": "채권 백과",
+"t": "ABS·MBS·커버드본드 2: 주택금융공사 MBS의 구조와 조기상환(CPR·PSA) 현금흐름",
+"date": "2026-11-15",
+"sum": "공사법상 신탁 수익증권인 MBS의 네 가지 구조, 1% 단위 콜과 클린업콜, SMM·CPR·PSA 변환, 150% PSA 풀 현금흐름과 콜 배분, 윤년 경과이자와 분개까지 원 단위로 푼다.",
+"n_sections": 18,
+"n_qs": 15,
+"chars": 23445
+},
+{
 "id": "20261115-corporate-bond-issuance-bookbuilding",
 "area": "채권 백과",
 "t": "회사채 발행 절차와 수요예측 1: 증권신고서 효력·수요예측·배정·납입과 펀드 장부",

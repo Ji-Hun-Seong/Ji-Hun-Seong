@@ -226,6 +226,8 @@
 - [x] 불성실 수요예측 참여자 (unfaithful-bookbuilding)
 - [x] 자산유동화증권(ABS) (abs)
 - [x] 유동화 신용보강·조기상환 트리거 (securitization-credit-enhancement)
+- [x] 주택저당증권(MBS) (mbs)
+- [x] 조기상환율(CPR·SMM·PSA) (prepayment-rate-cpr-psa)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
