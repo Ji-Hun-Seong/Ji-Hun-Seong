@@ -144,6 +144,9 @@
 - [x] 현금흐름할인법 (dcf)
 - [x] 터미널 가치 (terminal-value)
 - [x] 가중평균자본비용 (wacc)
+- [x] 베타 (beta)
+- [x] 시장위험프리미엄 (equity-risk-premium)
+- [x] CAPM (capm)
 - [x] F-스코어 (piotroski-f-score)
 
 ### 거래 제도

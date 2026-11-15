@@ -30,7 +30,7 @@
 - [x] PBR-ROE와 저PBR의 조건 (20261114-pbr-roe-low-pbr-conditions)
 - [x] EV/EBITDA와 순차입금 조정 (20261115-ev-ebitda-net-debt-adjustments)
 - [x] DCF 전 과정 직접 계산 (20261115-dcf-full-walkthrough)
-- [ ] 할인율과 WACC
+- [x] 할인율과 WACC (20261115-discount-rate-wacc)
 - [ ] 잔여이익 모형
 - [ ] 지주회사 NAV 할인 계산
 - [ ] 경기민감주의 정상 이익
