@@ -133,6 +133,8 @@
 - [x] 순차입금 (net-debt)
 - [x] 리스부채 (lease-liability)
 - [x] 감가상각비 (depreciation-amortization)
+- [x] 클린서플러스 (clean-surplus)
+- [x] 기타포괄손익 (other-comprehensive-income)
 
 ### 가치 지표
 - [x] PEG (peg)
@@ -148,6 +150,7 @@
 - [x] 시장위험프리미엄 (equity-risk-premium)
 - [x] CAPM (capm)
 - [x] F-스코어 (piotroski-f-score)
+- [x] 잔여이익 (residual-income)
 
 ### 거래 제도
 - [ ] 호가단위

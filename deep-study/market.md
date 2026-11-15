@@ -31,7 +31,7 @@
 - [x] EV/EBITDA와 순차입금 조정 (20261115-ev-ebitda-net-debt-adjustments)
 - [x] DCF 전 과정 직접 계산 (20261115-dcf-full-walkthrough)
 - [x] 할인율과 WACC (20261115-discount-rate-wacc)
-- [ ] 잔여이익 모형
+- [x] 잔여이익 모형 (20261115-residual-income-model)
 - [ ] 지주회사 NAV 할인 계산
 - [ ] 경기민감주의 정상 이익
 - [ ] 적자 성장주의 평가
