@@ -11,6 +11,16 @@
 "chars": 16085
 },
 {
+"id": "20261115-dcf-full-walkthrough",
+"area": "기업가치 평가",
+"t": "DCF 전 과정 직접 계산",
+"date": "2026-11-15",
+"sum": "FCFF 정의부터 성장-재투자 연결, 5년 예측표, 할인율 원칙, g÷ROIC로 맞춘 터미널 가치, EV→주당가치 브리지, 민감도표·역DCF까지 가정 회사 하나로 끝까지 계산하고, 한국 합병 수익가치·IAS 36 사용가치·Dell 판결·Kaplan-Ruback 연구로 DCF의 쓰임과 한계를 정리한다",
+"n_sections": 21,
+"n_qs": 13,
+"chars": 18685
+},
+{
 "id": "20261114-per-decomposition-traps",
 "area": "기업가치 평가",
 "t": "PER의 분해와 함정",

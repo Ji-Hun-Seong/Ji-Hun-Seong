@@ -29,7 +29,7 @@
 - [x] PER의 분해와 함정 (20261114-per-decomposition-traps)
 - [x] PBR-ROE와 저PBR의 조건 (20261114-pbr-roe-low-pbr-conditions)
 - [x] EV/EBITDA와 순차입금 조정 (20261115-ev-ebitda-net-debt-adjustments)
-- [ ] DCF 전 과정 직접 계산
+- [x] DCF 전 과정 직접 계산 (20261115-dcf-full-walkthrough)
 - [ ] 할인율과 WACC
 - [ ] 잔여이익 모형
 - [ ] 지주회사 NAV 할인 계산

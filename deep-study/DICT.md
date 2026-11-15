@@ -141,6 +141,9 @@
 - [ ] BPS
 - [x] 컨센서스 (consensus)
 - [x] 자기자본비용 (cost-of-equity)
+- [x] 현금흐름할인법 (dcf)
+- [x] 터미널 가치 (terminal-value)
+- [x] 가중평균자본비용 (wacc)
 - [x] F-스코어 (piotroski-f-score)
 
 ### 거래 제도
