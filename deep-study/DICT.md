@@ -244,6 +244,8 @@
 - [x] 장외채권 거래 보고(15분 보고) (otc-bond-trade-report)
 - [x] 결제 실패(결제 지연·불이행) (settlement-fail)
 - [x] 체결가 괴리(민평 괴리) 점검 (trade-price-deviation)
+- [x] 채권 보유기간 과세(보유기간이자상당액) (holding-period-interest-tax)
+- [x] 세후수익률·세전환산수익률 (after-tax-yield)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
