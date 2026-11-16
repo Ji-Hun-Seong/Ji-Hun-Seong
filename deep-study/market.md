@@ -34,7 +34,8 @@
 - [x] 잔여이익 모형 (20261115-residual-income-model)
 - [x] 지주회사 NAV 할인 계산 (20261115-holding-company-nav-discount)
 - [x] 경기민감주의 정상 이익 (20261116-cyclical-normalized-earnings)
-- [ ] 적자 성장주의 평가
+- [x] 적자 성장주의 평가 ①: 생존·단위경제·확률 가중·역산 (20261116-loss-making-growth-stock-valuation)
+- [ ] 적자 성장주의 평가 ②: 기술특례 상장사의 추정 실적과 실제 — DART로 괴리 직접 계산
 - [ ] 금융주 평가
 - [ ] 가치함정 판별 사례
 

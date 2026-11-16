@@ -135,11 +135,13 @@
 - [x] 감가상각비 (depreciation-amortization)
 - [x] 클린서플러스 (clean-surplus)
 - [x] 기타포괄손익 (other-comprehensive-income)
+- [x] 주식보상비용 (stock-based-compensation)
+- [x] 런웨이 (cash-runway)
 
 ### 가치 지표
 - [x] PEG (peg)
 - [x] 이익수익률 (earnings-yield)
-- [ ] PSR
+- [x] PSR (psr)
 - [ ] BPS
 - [x] 컨센서스 (consensus)
 - [x] 자기자본비용 (cost-of-equity)
