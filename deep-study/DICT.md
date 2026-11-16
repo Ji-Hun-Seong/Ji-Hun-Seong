@@ -97,6 +97,9 @@
 - [ ] 회사채와 신용등급
 
 ### 공시·지배구조
+- [x] 기술특례상장 (tech-special-listing)
+- [x] 추정 실적 괴리율 (forecast-deviation-rate)
+- [x] 환매청구권(풋백옵션) (ipo-putback-option)
 - [x] 사업보고서 (business-report)
 - [x] 감사의견 (audit-opinion)
 - [x] 주요사항보고서 (material-event-report)

@@ -35,7 +35,8 @@
 - [x] 지주회사 NAV 할인 계산 (20261115-holding-company-nav-discount)
 - [x] 경기민감주의 정상 이익 (20261116-cyclical-normalized-earnings)
 - [x] 적자 성장주의 평가 ①: 생존·단위경제·확률 가중·역산 (20261116-loss-making-growth-stock-valuation)
-- [ ] 적자 성장주의 평가 ②: 기술특례 상장사의 추정 실적과 실제 — DART로 괴리 직접 계산
+- [x] 적자 성장주의 평가 ②: 기술특례 상장사의 추정 실적과 실제 — DART로 괴리 직접 계산 (20261116-tech-special-listing-forecast-vs-actual)
+- [ ] 적자 성장주의 평가 ③: DART 원문 대조 — 증권신고서 추정치·사업보고서 괴리율 공시 전수 표본과 상장 후 초과수익
 - [ ] 금융주 평가
 - [ ] 가치함정 판별 사례
 
