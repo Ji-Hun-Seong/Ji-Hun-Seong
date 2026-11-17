@@ -1,0 +1,262 @@
+{
+ "date": "2026-11-16",
+ "context": {
+  "n_gainers_list": 38,
+  "n_surge": 3,
+  "asof": "2026-11-16T16:03-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-16",
+   "code": "CGON",
+   "name": "CG Oncology, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 7572457472,
+   "chg": 13.951608925448,
+   "gap": 23.655911442420074,
+   "high_chg": 26.27687502877687,
+   "close_pos": 0.4151786995872439,
+   "upper_wick": 2.620963586356797,
+   "limit_up": false,
+   "tv": 837787469.9371338,
+   "vol_ratio": 8.184174783011992,
+   "close": 84.77999877929688,
+   "pctb": 0.9041276552737455,
+   "bw": 0.30639984930409886,
+   "bw_pctile": 0.85,
+   "squeeze": false,
+   "rsi14": 67.46464372776208,
+   "ma5_gap": 0.020464164961682352,
+   "ma20_gap": 0.12382465267549447,
+   "ma60_gap": 0.07031624968355321,
+   "ma120_gap": 0.07941983440726852,
+   "ma_aligned": false,
+   "ret5": -0.020923758160134143,
+   "ret20": 0.24310782661171126,
+   "ret60": -0.04136063727906358,
+   "from_high": -0.08114115840156788,
+   "from_low": 1.0102676276694509,
+   "vol_ratio_prev": 3.024271379485003,
+   "tv20_avg": 82630866.08901978,
+   "tv_prev": 246546725.05645752,
+   "prev_chg": 0.060584460549614416,
+   "up_days": 1,
+   "prev_close_pos": 0.7906688563894012,
+   "fr": null,
+   "price": 74.4000015258789,
+   "filings": [
+    {
+     "date": "2026-11-16",
+     "form": "8-K",
+     "items": "7.01,8.01,9.01",
+     "items_kr": "IR 자료, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1991792/000119312526462199/ck0001991792-20261116.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "CG Oncology, Inc. (CGON) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 16 Nov 2026 17:45:37 GMT"
+    },
+    {
+     "title": "CGON Nov 2026 55.000 call (CGON261120C00055000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 16 Nov 2026 18:17:40 GMT"
+    },
+    {
+     "title": "Why Is CG Oncology Stock Soaring Today? - CG Oncology (NASDAQ:CGON) - Benzinga",
+     "date": "Mon, 16 Nov 2026 18:09:22 GMT"
+    },
+    {
+     "title": "One NASDAQ- Listed Biotechnology Stock at Resistance Level – CGON - Kalkine",
+     "date": "Mon, 16 Nov 2026 18:37:23 GMT"
+    },
+    {
+     "title": "One NASDAQ- Listed Biotechnology Stock at Resistance Level – CGON - kalkine.ca",
+     "date": "Mon, 16 Nov 2026 18:57:08 GMT"
+    },
+    {
+     "title": "CGON Nov 2026 105.000 call (CGON261120C00105000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 15 Nov 2026 04:14:17 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-16",
+   "code": "TU",
+   "name": "Telus Corporation",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 15216299008,
+   "chg": 12.192262537044328,
+   "gap": 12.661195281536862,
+   "high_chg": 14.067993515014443,
+   "close_pos": 0.746031649919316,
+   "upper_wick": 1.406798233477592,
+   "limit_up": false,
+   "tv": 452081043.5836792,
+   "vol_ratio": 7.3500849144748255,
+   "close": 9.569999694824219,
+   "pctb": 0.2914841384542652,
+   "bw": 0.12858113941045932,
+   "bw_pctile": 0.36666666666666664,
+   "squeeze": false,
+   "rsi14": 46.39639871846752,
+   "ma5_gap": -0.017507514057304552,
+   "ma20_gap": -0.026811207062704123,
+   "ma60_gap": -0.03150726287467731,
+   "ma120_gap": -0.13036832097984463,
+   "ma_aligned": false,
+   "ret5": -0.06366629479299035,
+   "ret20": 0.010663525718303868,
+   "ret60": -0.1487026603514775,
+   "from_high": -0.4141483868723852,
+   "from_low": 0.11649213115693358,
+   "vol_ratio_prev": 0.7226076991276031,
+   "tv20_avg": 56720767.694592476,
+   "tv_prev": 40392960.73551178,
+   "prev_chg": 0.001173623787591227,
+   "up_days": 1,
+   "prev_close_pos": 0.21428328144903644,
+   "fr": null,
+   "price": 8.529999732971191,
+   "filings": [
+    {
+     "date": "2026-11-16",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/868675/000110465926128445/tm2629951d1_6k.htm"
+    }
+   ],
+   "news": [],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-16",
+   "code": "MOH",
+   "name": "Molina Healthcare Inc",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 12167298048,
+   "chg": 11.265449532625404,
+   "gap": 1.7566435530507185,
+   "high_chg": 11.470713709099112,
+   "close_pos": 0.9788693953022439,
+   "upper_wick": 0.20526417647372883,
+   "limit_up": false,
+   "tv": 413524962.50305176,
+   "vol_ratio": 1.8070791953144894,
+   "close": 233.08999633789062,
+   "pctb": 0.5116808715184792,
+   "bw": 0.13240766721463387,
+   "bw_pctile": 0.30833333333333335,
+   "squeeze": false,
+   "rsi14": 53.55308096715044,
+   "ma5_gap": 0.00882220136195877,
+   "ma20_gap": 0.0015466369487957543,
+   "ma60_gap": 0.03572305100823625,
+   "ma120_gap": 0.024964861468999233,
+   "ma_aligned": false,
+   "ret5": 0.0023924589064445723,
+   "ret20": 0.010272014258019713,
+   "ret60": 0.06372500708936313,
+   "from_high": -0.14455467346446793,
+   "from_low": 0.7304643128855977,
+   "vol_ratio_prev": 0.363807700212029,
+   "tv20_avg": 207214794.5778656,
+   "tv_prev": 76023922.99346924,
+   "prev_chg": -0.0017155139379599893,
+   "up_days": 0,
+   "prev_close_pos": 0.6409166617550431,
+   "fr": null,
+   "price": 209.49000549316406,
+   "filings": [
+    {
+     "date": "2026-11-16",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1179929/000121149326000010/xslF345X06/wk-form4_1794864895.xml"
+    },
+    {
+     "date": "2026-11-16",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1179929/000162828026074068/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-13",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1179929/000122886126000012/xslF345X06/wk-form4_1794609643.xml"
+    },
+    {
+     "date": "2026-11-13",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1179929/000132092926000006/xslF345X06/wk-form4_1794609608.xml"
+    },
+    {
+     "date": "2026-11-13",
+     "form": "4/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1179929/000132092926000005/xslF345X06/wk-form4a_1794609547.xml"
+    },
+    {
+     "date": "2026-11-13",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1179929/000164977326000010/xslF345X06/wk-form4_1794609504.xml"
+    },
+    {
+     "date": "2026-11-13",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1179929/000155560326000008/xslF345X06/wk-form4_1794609438.xml"
+    },
+    {
+     "date": "2026-11-13",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1179929/000195004726011069/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Molina Healthcare, Inc. (MOH) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 16 Nov 2026 18:27:29 GMT"
+    },
+    {
+     "title": "Molina Healthcare climbs 8% as sector moves higher (MOH:NYSE) - Seeking Alpha",
+     "date": "Mon, 16 Nov 2026 15:41:07 GMT"
+    },
+    {
+     "title": "LVMH Moet Hennessy Louis Vuitton SE (MOH.SG) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Sun, 15 Nov 2026 21:51:23 GMT"
+    },
+    {
+     "title": "MOH Dec 2026 160.000 call (MOH261218C00160000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 15 Nov 2026 23:36:59 GMT"
+    },
+    {
+     "title": "MOH Nov 2026 260.000 put (MOH261120P00260000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 16 Nov 2026 03:10:47 GMT"
+    },
+    {
+     "title": "MOH Dec 2026 280.000 put (MOH261218P00280000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Sun, 15 Nov 2026 21:47:47 GMT"
+    }
+   ],
+   "catalysts": []
+  }
+ ]
+}
