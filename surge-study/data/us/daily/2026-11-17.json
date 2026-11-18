@@ -1,0 +1,261 @@
+{
+ "date": "2026-11-17",
+ "context": {
+  "n_gainers_list": 37,
+  "n_surge": 3,
+  "asof": "2026-11-17T16:03-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-17",
+   "code": "SLS",
+   "name": "SELLAS Life Sciences Group, Inc",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 3903902720,
+   "chg": 156.3587705005673,
+   "gap": 222.75771469242565,
+   "high_chg": 233.19946571256676,
+   "close_pos": 0.29914520957316837,
+   "upper_wick": 10.441751020141105,
+   "limit_up": true,
+   "tv": 2296619239.251137,
+   "vol_ratio": 15.685563875355589,
+   "close": 19.149999618530273,
+   "pctb": 0.1594845103162632,
+   "bw": 0.6555065474289091,
+   "bw_pctile": 0.8166666666666667,
+   "squeeze": false,
+   "rsi14": 18.157182184667377,
+   "ma5_gap": -0.06973849798692766,
+   "ma20_gap": -0.22321013298865067,
+   "ma60_gap": -0.34476559860464384,
+   "ma120_gap": -0.3375016814768699,
+   "ma_aligned": false,
+   "ret5": -0.12937064608212134,
+   "ret20": -0.2878932361124925,
+   "ret60": -0.516817608553706,
+   "from_high": -0.529596993932097,
+   "from_low": 4.374100623790486,
+   "vol_ratio_prev": 1.0588323592920483,
+   "tv20_avg": 73170697.14534521,
+   "tv_prev": 59541874.32765961,
+   "prev_chg": -0.04961836344758108,
+   "up_days": 0,
+   "prev_close_pos": 0.19999991707183984,
+   "fr": null,
+   "price": 7.46999979019165,
+   "filings": [
+    {
+     "date": "2026-11-17",
+     "form": "424B5",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1390478/000110465926129063/tm2629996d1_424b5.htm"
+    },
+    {
+     "date": "2026-11-17",
+     "form": "8-K",
+     "items": "7.01,8.01,9.01",
+     "items_kr": "IR 자료, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1390478/000110465926128825/tm2629947d1_8k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "SLS Stock Jumps After-Hours: Retail Eyes Lilly’s Cancer Deal for Valuation Clues — 2 Big Investors Grab Shares - Yahoo Finance",
+     "date": "Tue, 17 Nov 2026 02:06:20 GMT"
+    },
+    {
+     "title": "SELLAS Life Sciences stock soars 240% on positive cancer trial - Investing.com",
+     "date": "Tue, 17 Nov 2026 16:15:04 GMT"
+    },
+    {
+     "title": "SLS Stock Today Surges 281% - Coinpedia",
+     "date": "Tue, 17 Nov 2026 13:55:38 GMT"
+    },
+    {
+     "title": "SELLAS surges on late-stage trial win for cancer vaccine - Seeking Alpha",
+     "date": "Tue, 17 Nov 2026 13:52:22 GMT"
+    },
+    {
+     "title": "‘Pharma Bro’ Shkreli Calls SLS Results ‘Sketch,’ Compares Leukemia Vaccine Data To Capricor’s Deramiocel - Yahoo Finance",
+     "date": "Tue, 17 Nov 2026 20:53:35 GMT"
+    },
+    {
+     "title": "SLS: SELLAS plans $150M common stock offering - Quantisnow",
+     "date": "Tue, 17 Nov 2026 22:09:58 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-17",
+   "code": "BILL",
+   "name": "BILL Holdings, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 5572091392,
+   "chg": 12.580246487820945,
+   "gap": -1.5096351387426488,
+   "high_chg": 13.569314133595412,
+   "close_pos": 0.9447674493822369,
+   "upper_wick": 0.9890676457744864,
+   "limit_up": false,
+   "tv": 657675556.1584473,
+   "vol_ratio": 6.652294749000036,
+   "close": 64.87999725341797,
+   "pctb": 1.118776223944811,
+   "bw": 0.19868748261370747,
+   "bw_pctile": 0.35,
+   "squeeze": false,
+   "rsi14": 78.7815193395551,
+   "ma5_gap": 0.050568771384741584,
+   "ma20_gap": 0.12294309023681027,
+   "ma60_gap": 0.1988184741130996,
+   "ma120_gap": 0.29216939449813983,
+   "ma_aligned": true,
+   "ret5": 0.07099051472465301,
+   "ret20": 0.26132639090136656,
+   "ret60": 0.20514432111869718,
+   "from_high": -0.014366344023445388,
+   "from_low": 0.8347660410085422,
+   "vol_ratio_prev": 1.8146528799464003,
+   "tv20_avg": 78480258.628788,
+   "tv_prev": 151405538.80615234,
+   "prev_chg": 0.057819411753790906,
+   "up_days": 2,
+   "prev_close_pos": 0.7729729785459408,
+   "fr": null,
+   "price": 57.630001068115234,
+   "filings": [
+    {
+     "date": "2026-11-17",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1786352/000195004726011244/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-17",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1786352/000195004726011225/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "BILL Stock Hits Fresh 21-Month High On Report Of TPG Nearing Take-Private Deal - Yahoo Finance",
+     "date": "Tue, 17 Nov 2026 18:56:46 GMT"
+    },
+    {
+     "title": "BILL Holdings (BILL) Stock Still Looks Undervalued After A 78% Five Year Fall - Yahoo! Finance Canada",
+     "date": "Wed, 18 Nov 2026 01:14:00 GMT"
+    },
+    {
+     "title": "Bill Holdings shares surge on reports of looming TPG take-private deal - Investing.com",
+     "date": "Tue, 17 Nov 2026 16:48:03 GMT"
+    },
+    {
+     "title": "BILL Holdings Hits 52-Week High As TPG Eyes Buyout - Benzinga",
+     "date": "Tue, 17 Nov 2026 19:11:35 GMT"
+    },
+    {
+     "title": "Bill Gates Has Earned $2.6 Billion in Dividends From a Landfill Stock the EPA Keeps Citing for Methane Leaks, and a Filing Shows He Just Bought 3.7M More Shares - Barchart.com",
+     "date": "Wed, 18 Nov 2026 00:30:03 GMT"
+    },
+    {
+     "title": "Bill Holdings may be worth $76 to $91/share in takeover - analyst (BILL:NYSE) - Seeking Alpha",
+     "date": "Tue, 17 Nov 2026 18:45:44 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A",
+    "Guidance·Buyback"
+   ]
+  },
+  {
+   "date": "2026-11-17",
+   "code": "ACM",
+   "name": "AECOM",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 10363922432,
+   "chg": 11.075860385237068,
+   "gap": 9.6551724137931,
+   "high_chg": 15.241383519665952,
+   "close_pos": 0.43018820122012663,
+   "upper_wick": 4.165523134428879,
+   "limit_up": false,
+   "tv": 334336395.93200684,
+   "vol_ratio": 3.1582791003731328,
+   "close": 80.52999877929688,
+   "pctb": 0.9153992257926535,
+   "bw": 0.25938821726127215,
+   "bw_pctile": 0.8416666666666667,
+   "squeeze": false,
+   "rsi14": 85.82630275425946,
+   "ma5_gap": 0.02404023330485594,
+   "ma20_gap": 0.10774966463006908,
+   "ma60_gap": 0.14578916295115407,
+   "ma120_gap": 0.09257501038140203,
+   "ma_aligned": true,
+   "ret5": 0.03261644987022638,
+   "ret20": 0.24956910423979073,
+   "ret60": 0.1189998298429551,
+   "from_high": -0.44896256012707114,
+   "from_low": 0.28568896585781633,
+   "vol_ratio_prev": 1.8792553063820594,
+   "tv20_avg": 87310530.3894043,
+   "tv_prev": 170295250.0,
+   "prev_chg": 0.028368794326241176,
+   "up_days": 2,
+   "prev_close_pos": 0.9285712123184611,
+   "fr": null,
+   "price": 72.5,
+   "filings": [
+    {
+     "date": "2026-11-16",
+     "form": "8-K",
+     "items": "2.02,8.01,9.01",
+     "items_kr": "실적 발표, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/868857/000110465926128300/tm2629784d1_8k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Is AECOM (ACM) Fully Valued As Strong Earnings And 2027 Guidance Lift Interest? - Yahoo Finance",
+     "date": "Wed, 18 Nov 2026 00:23:00 GMT"
+    },
+    {
+     "title": "Why Aecom Stock Popped Today - Yahoo Finance",
+     "date": "Tue, 17 Nov 2026 16:44:42 GMT"
+    },
+    {
+     "title": "Biggest stock movers Tuesday: Managed care stocks, ACM, RCAT, and more - Seeking Alpha",
+     "date": "Tue, 17 Nov 2026 14:51:36 GMT"
+    },
+    {
+     "title": "What's Happening With Aecom (NYSE:ACM) Stock? Shares Jump 14% on Record Backlog and a Higher Fiscal 2027 Outlook - kalkine.ca",
+     "date": "Tue, 17 Nov 2026 19:43:00 GMT"
+    },
+    {
+     "title": "AECOM Stock (ACM) Closed Up by 11.08% on Nov 17: A Full Analysis - TradingKey",
+     "date": "Tue, 17 Nov 2026 21:15:29 GMT"
+    },
+    {
+     "title": "Why Is AECOM Stock Surging Tuesday? - AECOM (NYSE:ACM) - Benzinga",
+     "date": "Tue, 17 Nov 2026 10:35:31 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  }
+ ]
+}
