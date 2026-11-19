@@ -1,0 +1,768 @@
+{
+ "date": "2026-11-18",
+ "context": {
+  "n_gainers_list": 177,
+  "n_surge": 10,
+  "asof": "2026-11-18T16:04-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-18",
+   "code": "PLBL",
+   "name": "Polibeli Group Ltd",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 3253520640,
+   "chg": 16.842108235134678,
+   "gap": 0.5263152941442195,
+   "high_chg": 18.02632078404578,
+   "close_pos": 0.9323307327192294,
+   "upper_wick": 1.1842125489111015,
+   "limit_up": false,
+   "tv": 2680872.034549713,
+   "vol_ratio": 1.5202940880249773,
+   "close": 8.880000114440918,
+   "pctb": 1.0658099320128867,
+   "bw": 0.5387551764362108,
+   "bw_pctile": 0.8,
+   "squeeze": false,
+   "rsi14": 80.80229144148409,
+   "ma5_gap": 0.0812348857407521,
+   "ma20_gap": 0.30483302975096316,
+   "ma60_gap": 0.33540280315958193,
+   "ma120_gap": 0.1907046571367923,
+   "ma_aligned": true,
+   "ret5": 0.4179103946494602,
+   "ret20": 0.4179103946494602,
+   "ret60": 0.3403879721991325,
+   "from_high": -0.3531914974780793,
+   "from_low": 0.49019608759779243,
+   "vol_ratio_prev": 0.82402094030001,
+   "tv20_avg": 1244901.3144207,
+   "tv_prev": 1244119.9843883514,
+   "prev_chg": 0.0284167851070396,
+   "up_days": 2,
+   "prev_close_pos": 0.6341459727016441,
+   "fr": null,
+   "price": 7.599999904632568,
+   "filings": [],
+   "news": [],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-18",
+   "code": "TENB",
+   "name": "Tenable Holdings, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 4669400576,
+   "chg": 15.751300703110015,
+   "gap": 1.1658051314202833,
+   "high_chg": 16.94300822294594,
+   "close_pos": 0.9250815748861182,
+   "upper_wick": 1.1917075198359324,
+   "limit_up": false,
+   "tv": 219901557.50198364,
+   "vol_ratio": 1.3441758842004643,
+   "close": 44.68000030517578,
+   "pctb": 0.08856036782235192,
+   "bw": 0.33045620325761343,
+   "bw_pctile": 0.5416666666666666,
+   "squeeze": false,
+   "rsi14": 27.430857330310616,
+   "ma5_gap": -0.05563440337737624,
+   "ma20_gap": -0.13596277871913454,
+   "ma60_gap": -0.0148915104143591,
+   "ma120_gap": 0.06057063324346723,
+   "ma_aligned": false,
+   "ret5": -0.08007627940094342,
+   "ret20": -0.009748616536115917,
+   "ret60": 0.13730112068257228,
+   "from_high": -0.274708801413832,
+   "from_low": 1.453909701044616,
+   "vol_ratio_prev": 0.9575141878033128,
+   "tv20_avg": 166222471.98347092,
+   "tv_prev": 132174114.77508545,
+   "prev_chg": -0.059224966548181435,
+   "up_days": 0,
+   "prev_close_pos": 0.19999976880644013,
+   "fr": null,
+   "price": 38.599998474121094,
+   "filings": [
+    {
+     "date": "2026-11-16",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1660280/000165157926000010/xslF345X06/wk-form4_1794869722.xml"
+    },
+    {
+     "date": "2026-11-16",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1660280/000120658726000022/xslF345X06/wk-form4_1794869716.xml"
+    },
+    {
+     "date": "2026-11-16",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1660280/000134594326000014/xslF345X06/wk-form4_1794869710.xml"
+    },
+    {
+     "date": "2026-11-16",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1660280/000119312526462464/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Tenable Holdings, Inc. (TENB) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Wed, 18 Nov 2026 18:49:04 GMT"
+    },
+    {
+     "title": "Tenable Holdings jumps 12% as peers trade higher (TENB:NASDAQ) - Seeking Alpha",
+     "date": "Wed, 18 Nov 2026 17:11:49 GMT"
+    },
+    {
+     "title": "Tenable co-CEO Stephen Vintz sells $4.03 million in TENB stock By Investing.com - Investing.com South Africa",
+     "date": "Wed, 18 Nov 2026 09:44:20 GMT"
+    },
+    {
+     "title": "Tenable Holdings, Inc. (TENB) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Wed, 18 Nov 2026 14:43:20 GMT"
+    },
+    {
+     "title": "Three December conferences put Tenable's CFO in Arizona and California; its co-CEO joins him in San Francisco. - Stock Titan",
+     "date": "Wed, 18 Nov 2026 14:00:00 GMT"
+    },
+    {
+     "title": "Tenable (NASDAQ:TENB) Stock Price Up 8.2% - What's Next? - MarketBeat",
+     "date": "Wed, 18 Nov 2026 17:44:35 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-18",
+   "code": "MFP",
+   "name": "Midera Food Processing, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2183726336,
+   "chg": 13.948548492798407,
+   "gap": -0.7080463644637658,
+   "high_chg": 15.081424476600013,
+   "close_pos": 0.9387755697839003,
+   "upper_wick": 1.1328759838016262,
+   "limit_up": false,
+   "tv": 41308366.955566406,
+   "vol_ratio": 1.953915366872959,
+   "close": 48.279998779296875,
+   "pctb": 0.44327240212874514,
+   "bw": 0.15567277908192673,
+   "bw_pctile": 0.45121951219512196,
+   "squeeze": false,
+   "rsi14": 51.39838644708488,
+   "ma5_gap": -0.0409253689854836,
+   "ma20_gap": -0.00883094281126029,
+   "ma60_gap": -0.012592171077255965,
+   "ma120_gap": null,
+   "ma_aligned": false,
+   "ret5": -0.06032382371919365,
+   "ret20": 0.012667274793594752,
+   "ret60": -0.130871816781851,
+   "from_high": -0.7881500053405761,
+   "from_low": 1.0176189967564175,
+   "vol_ratio_prev": 1.4260796762715413,
+   "tv20_avg": 18610658.56912613,
+   "tv_prev": 25981283.34503174,
+   "prev_chg": -0.024407123321265267,
+   "up_days": 0,
+   "prev_close_pos": 0.004357398060737624,
+   "fr": null,
+   "price": 42.369998931884766,
+   "filings": [
+    {
+     "date": "2026-11-17",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2088281/000119312526465503/ck0002088281-20261003.htm"
+    },
+    {
+     "date": "2026-11-17",
+     "form": "8-K",
+     "items": "2.02,7.01,9.01",
+     "items_kr": "실적 발표, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/2088281/000119312526464750/ck0002088281-20261117.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Midera Food Processing (MFP) Stock Trades At A Discount To Fair Value - Yahoo Finance Singapore",
+     "date": "Wed, 18 Nov 2026 05:27:00 GMT"
+    },
+    {
+     "title": "Midera Food Processing adds 11%, rebounding from recent weakness (MFP:NASDAQ) - Seeking Alpha",
+     "date": "Wed, 18 Nov 2026 17:29:09 GMT"
+    },
+    {
+     "title": "Midera Food Processing (Nasdaq:MFP) - Stock Analysis - Simply Wall St",
+     "date": "Wed, 18 Nov 2026 07:12:41 GMT"
+    },
+    {
+     "title": "Midera Food Processing (MFP) Stock Forecast and Price Target 2026 $MFP - MarketBeat",
+     "date": "Wed, 18 Nov 2026 22:50:12 GMT"
+    },
+    {
+     "title": "Midera Food Processing, Inc. (MFP) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Tue, 17 Nov 2026 15:49:51 GMT"
+    },
+    {
+     "title": "MIDERA FOOD PROCESSING ($MFP) Releases Q3 2026 Earnings - Quiver Quantitative",
+     "date": "Tue, 17 Nov 2026 12:30:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-18",
+   "code": "QLYS",
+   "name": "Qualys, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 6885533184,
+   "chg": 12.921513460135525,
+   "gap": 1.7232464294896221,
+   "high_chg": 13.665767085026136,
+   "close_pos": 0.9376803569064306,
+   "upper_wick": 0.7442536248906171,
+   "limit_up": false,
+   "tv": 247792618.901062,
+   "vol_ratio": 1.296906130960369,
+   "close": 197.24000549316406,
+   "pctb": 0.15033057539999545,
+   "bw": 0.3836492993059298,
+   "bw_pctile": 0.7666666666666667,
+   "squeeze": false,
+   "rsi14": 30.67182884070118,
+   "ma5_gap": -0.013609671487265329,
+   "ma20_gap": -0.13415042973649938,
+   "ma60_gap": -0.07600915002678565,
+   "ma120_gap": 0.046210570019877606,
+   "ma_aligned": false,
+   "ret5": -0.0025127202322688946,
+   "ret20": -0.08295271145323246,
+   "ret60": -0.021237299127745524,
+   "from_high": -0.2584589432989106,
+   "from_low": 1.3442490022961908,
+   "vol_ratio_prev": 0.9852357366008891,
+   "tv20_avg": 193148873.11813354,
+   "tv_prev": 162774971.29364014,
+   "prev_chg": -0.04032743563219521,
+   "up_days": 0,
+   "prev_close_pos": 0.3945028932465421,
+   "fr": null,
+   "price": 174.6699981689453,
+   "filings": [
+    {
+     "date": "2026-11-17",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1107843/000155824226000033/xslF345X06/form4-11172026_091144.xml"
+    },
+    {
+     "date": "2026-11-17",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1107843/000181477726000030/xslF345X06/form4-11172026_091141.xml"
+    },
+    {
+     "date": "2026-11-16",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1107843/000195004726011184/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Qualys, Inc. (QLYS) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Wed, 18 Nov 2026 14:55:02 GMT"
+    },
+    {
+     "title": "Qualys rises 9% as choppy trading continues (QLYS:NASDAQ) - Seeking Alpha",
+     "date": "Wed, 18 Nov 2026 17:08:42 GMT"
+    },
+    {
+     "title": "Qualys, Inc. (QLYS) stock price, news, quote and history - Yahoo Finance Australia",
+     "date": "Tue, 17 Nov 2026 06:29:53 GMT"
+    },
+    {
+     "title": "Qualys (NASDAQ:QLYS) Stock: Insider Sumedh Thakar Sells 3,200 Shares - MarketBeat",
+     "date": "Tue, 17 Nov 2026 22:39:03 GMT"
+    },
+    {
+     "title": "Qualys (NASDAQ:QLYS) CFO Sells $369,440.74 in Stock - MarketBeat",
+     "date": "Tue, 17 Nov 2026 22:14:44 GMT"
+    },
+    {
+     "title": "129,505 Shares of Qualys, Inc. $QLYS Bought by Aberdeen Group plc - MarketBeat",
+     "date": "Tue, 17 Nov 2026 08:21:07 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-18",
+   "code": "NTSK",
+   "name": "Netskope, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 9603854336,
+   "chg": 12.733806861972452,
+   "gap": 0.23980448990774672,
+   "high_chg": 13.875297823106902,
+   "close_pos": 0.9202142522368029,
+   "upper_wick": 1.1414909611344564,
+   "limit_up": false,
+   "tv": 155981524.93076324,
+   "vol_ratio": 1.1436168837771188,
+   "close": 23.5049991607666,
+   "pctb": 0.19687993209989493,
+   "bw": 0.30382895838322455,
+   "bw_pctile": 0.35833333333333334,
+   "squeeze": false,
+   "rsi14": 26.35530283326294,
+   "ma5_gap": -0.04471730150282571,
+   "ma20_gap": -0.09209665449514126,
+   "ma60_gap": 0.08641376816784163,
+   "ma120_gap": 0.33078737881432785,
+   "ma_aligned": false,
+   "ret5": -0.027518663147916955,
+   "ret20": 0.05196774482869859,
+   "ret60": 0.4850427662478356,
+   "from_high": -0.21939344454749632,
+   "from_low": 1.7201566190783386,
+   "vol_ratio_prev": 0.9235027657961034,
+   "tv20_avg": 134675665.01345634,
+   "tv_prev": 110327777.01854706,
+   "prev_chg": -0.046203119884798194,
+   "up_days": 0,
+   "prev_close_pos": 0.32571165120524337,
+   "fr": null,
+   "price": 20.850000381469727,
+   "filings": [
+    {
+     "date": "2026-11-16",
+     "form": "SCHEDULE 13G/A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2063196/000119312526463386/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "NTSK Dec 2026 16.000 call (NTSK261218C00016000) Seasonal returns chart - Yahoo Finance UK",
+     "date": "Wed, 18 Nov 2026 03:47:05 GMT"
+    },
+    {
+     "title": "Netskope (NASDAQ:NTSK) Stock Price Up 5.9% - Here's What Happened - MarketBeat",
+     "date": "Wed, 18 Nov 2026 17:44:36 GMT"
+    },
+    {
+     "title": "Netskope (NTSK) Stock Looks Near Fair Value On Cash Flow - Simply Wall St",
+     "date": "Tue, 17 Nov 2026 05:15:16 GMT"
+    },
+    {
+     "title": "NTSK Nov 2026 24.000 put (NTSK261120P00024000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Tue, 17 Nov 2026 22:12:38 GMT"
+    },
+    {
+     "title": "New Analyst Forecast: $NTSK Given $28 Price Target - Quiver Quantitative",
+     "date": "Tue, 17 Nov 2026 20:21:00 GMT"
+    },
+    {
+     "title": "NTSK Jun 2027 10.000 put (NTSK270617P00010000) Seasonal returns chart - Yahoo Finance UK",
+     "date": "Tue, 17 Nov 2026 15:54:19 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-18",
+   "code": "FSLY",
+   "name": "Fastly, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2885479936,
+   "chg": 12.578616653984987,
+   "gap": 0.6289332318799801,
+   "high_chg": 16.477993094917952,
+   "close_pos": 0.7718908222018716,
+   "upper_wick": 3.89937644093295,
+   "limit_up": false,
+   "tv": 178181966.2027359,
+   "vol_ratio": 1.6494351675027652,
+   "close": 17.899999618530273,
+   "pctb": 0.22827946566160728,
+   "bw": 0.8111874610007864,
+   "bw_pctile": 0.9666666666666667,
+   "squeeze": false,
+   "rsi14": 15.021995050723973,
+   "ma5_gap": -0.04020285825734393,
+   "ma20_gap": -0.22041629035173793,
+   "ma60_gap": -0.31086793402353574,
+   "ma120_gap": -0.2780329968888886,
+   "ma_aligned": false,
+   "ret5": -0.020935970282004557,
+   "ret20": -0.2795650277122982,
+   "ret60": -0.3068875654590977,
+   "from_high": -0.5433658886305588,
+   "from_low": 1.0203303493950107,
+   "vol_ratio_prev": 0.7653930732319707,
+   "tv20_avg": 118033365.25784016,
+   "tv_prev": 72801328.25336456,
+   "prev_chg": 0.0025220657452023065,
+   "up_days": 1,
+   "prev_close_pos": 0.6774182301451225,
+   "fr": null,
+   "price": 15.899999618530273,
+   "filings": [
+    {
+     "date": "2026-11-18",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1517413/000195004726011322/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-18",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1517413/000195004726011321/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-18",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1517413/000195004726011309/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-16",
+     "form": "SCHEDULE 13G",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1517413/000149511526000064/xslSCHEDULE_13G_X02/primary_doc.xml"
+    }
+   ],
+   "news": [],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-18",
+   "code": "OKTA",
+   "name": "Okta, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 34196721664,
+   "chg": 12.07173606892351,
+   "gap": 1.9365217215698394,
+   "high_chg": 12.352477166673381,
+   "close_pos": 0.9772935379245927,
+   "upper_wick": 0.28074109774988365,
+   "limit_up": false,
+   "tv": 1032194851.2207031,
+   "vol_ratio": 1.086930997760965,
+   "close": 195.61000061035156,
+   "pctb": 0.23645598751942115,
+   "bw": 0.3838341472800577,
+   "bw_pctile": 0.7,
+   "squeeze": false,
+   "rsi14": 22.917602378062384,
+   "ma5_gap": -0.030785652257406815,
+   "ma20_gap": -0.1011571913012479,
+   "ma60_gap": -0.09210471492483241,
+   "ma120_gap": 0.06469834869633417,
+   "ma_aligned": false,
+   "ret5": -0.021417399143006333,
+   "ret20": -0.10040207482406027,
+   "ret60": 0.33267154050039327,
+   "from_high": -0.2572766243143284,
+   "from_low": 1.785508996348033,
+   "vol_ratio_prev": 0.6051703634337048,
+   "tv20_avg": 931181265.8914948,
+   "tv_prev": 509831320.38879395,
+   "prev_chg": -0.020648680896444893,
+   "up_days": 0,
+   "prev_close_pos": 0.5592479972834056,
+   "fr": null,
+   "price": 174.5399932861328,
+   "filings": [],
+   "news": [
+    {
+     "title": "Okta, Inc. (OKTA) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Wed, 18 Nov 2026 17:33:09 GMT"
+    },
+    {
+     "title": "Okta Stock Rallies Amid Concerns Over Digital Infrastructure Vulnerability - Benzinga",
+     "date": "Wed, 18 Nov 2026 19:29:50 GMT"
+    },
+    {
+     "title": "Okta vs. SentinelOne: Which Technology Stock Is a Better Buy for 2027? - The Motley Fool",
+     "date": "Wed, 18 Nov 2026 18:45:02 GMT"
+    },
+    {
+     "title": "Should Okta Stock Holders Look At Salesforce Instead? - Trefis",
+     "date": "Wed, 18 Nov 2026 08:22:08 GMT"
+    },
+    {
+     "title": "OKTA Stock Quote Price and Forecast - CNN",
+     "date": "Tue, 17 Nov 2026 18:33:51 GMT"
+    },
+    {
+     "title": "Okta rallies 9% amid peer strength (OKTA:NASDAQ) - Seeking Alpha",
+     "date": "Wed, 18 Nov 2026 17:46:39 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-18",
+   "code": "ATEN",
+   "name": "A10 Networks, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2331587840,
+   "chg": 10.519125175809263,
+   "gap": 1.0928951069668846,
+   "high_chg": 11.782782700426475,
+   "close_pos": 0.8865034030958724,
+   "upper_wick": 1.2636575246172062,
+   "limit_up": false,
+   "tv": 60189601.135253906,
+   "vol_ratio": 1.620145551785862,
+   "close": 32.36000061035156,
+   "pctb": 0.8813850808573985,
+   "bw": 0.3114847577991983,
+   "bw_pctile": 0.8666666666666667,
+   "squeeze": false,
+   "rsi14": 60.583397731923725,
+   "ma5_gap": 0.009237584256297726,
+   "ma20_gap": 0.11879563953909456,
+   "ma60_gap": 0.11609471298652596,
+   "ma120_gap": 0.001376573565406991,
+   "ma_aligned": false,
+   "ret5": 0.053616398777649676,
+   "ret20": 0.18879422185632655,
+   "ret60": 0.16052323495405818,
+   "from_high": -0.239282945964999,
+   "from_low": 0.7723970868829606,
+   "vol_ratio_prev": 0.6273299582148428,
+   "tv20_avg": 30036087.551383972,
+   "tv_prev": 21605712.50667572,
+   "prev_chg": 0.0068776053460857245,
+   "up_days": 2,
+   "prev_close_pos": 0.9160846809259843,
+   "fr": null,
+   "price": 29.280000686645508,
+   "filings": [],
+   "news": [
+    {
+     "title": "A10 Networks, Inc. (ATEN) stock price, news, quote and history - Yahoo Finance Singapore",
+     "date": "Wed, 18 Nov 2026 16:07:04 GMT"
+    },
+    {
+     "title": "A10 Networks rises 8% amid sector strength (ATEN:NYSE) - Seeking Alpha",
+     "date": "Wed, 18 Nov 2026 17:30:33 GMT"
+    },
+    {
+     "title": "A10 Networks, Inc. (ATEN) Stock Forecasts - Yahoo Finance",
+     "date": "Wed, 18 Nov 2026 20:29:06 GMT"
+    },
+    {
+     "title": "A10 Networks (NYSE:ATEN) Stock Price Up 6.3% - Time to Buy? - MarketBeat",
+     "date": "Wed, 18 Nov 2026 18:24:36 GMT"
+    },
+    {
+     "title": "On Its Earnings Call, Nvidia Had 3 Words for Anyone Who Thinks It Should Bring Back Its Former CEO - Inc.com",
+     "date": "Wed, 18 Nov 2026 01:05:47 GMT"
+    },
+    {
+     "title": "A10 Networks (ATEN) Upgraded to Strong Buy: Here's Why - Yahoo Finance",
+     "date": "Wed, 18 Nov 2026 16:00:02 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-18",
+   "code": "S",
+   "name": "SentinelOne, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 8123466752,
+   "chg": 10.354612640933002,
+   "gap": 2.742316473603612,
+   "high_chg": 11.229314623340114,
+   "close_pos": 0.9149427444432557,
+   "upper_wick": 0.8747019824071209,
+   "limit_up": false,
+   "tv": 262266913.7145996,
+   "vol_ratio": 1.0394646527624887,
+   "close": 23.34000015258789,
+   "pctb": 0.10570382510633612,
+   "bw": 0.24454756410177123,
+   "bw_pctile": 0.4666666666666667,
+   "squeeze": false,
+   "rsi14": 28.529974431562962,
+   "ma5_gap": -0.05046246309896174,
+   "ma20_gap": -0.09642416910489149,
+   "ma60_gap": -0.07756053051721701,
+   "ma120_gap": 0.02521842170677746,
+   "ma_aligned": false,
+   "ret5": -0.09731116760343561,
+   "ret20": -0.03863638097589661,
+   "ret60": 0.015850140660092826,
+   "from_high": -0.20188680684791416,
+   "from_low": 0.7908551115205387,
+   "vol_ratio_prev": 0.8845148112974358,
+   "tv20_avg": 253032160.4512787,
+   "tv_prev": 201318386.36894226,
+   "prev_chg": -0.03644652011857363,
+   "up_days": 0,
+   "prev_close_pos": 0.3808048658064897,
+   "fr": null,
+   "price": 21.149999618530273,
+   "filings": [],
+   "news": [
+    {
+     "title": "Wall Street Betting on Lockheed Martin Corporation (LMT)’s Business Fundamentals, Growing Backlog - Yahoo Finance",
+     "date": "Wed, 18 Nov 2026 23:37:43 GMT"
+    },
+    {
+     "title": "US Stock Futures Rally as Nvidia Results Ease AI Trade Worries - Bloomberg.com",
+     "date": "Wed, 18 Nov 2026 21:13:26 GMT"
+    },
+    {
+     "title": "What Target (TGT)'s Raised 2026 Outlook Means For Shareholders - Yahoo Finance",
+     "date": "Thu, 19 Nov 2026 01:14:00 GMT"
+    },
+    {
+     "title": "SSTI: SoundThinking deregisters unsold S-8 shares after merger - Quantisnow",
+     "date": "Wed, 18 Nov 2026 21:25:05 GMT"
+    },
+    {
+     "title": "Novo Nordisk A/S Stock (NVO) Moved Down by 3.12% on Nov 18: What Investors Need To Know - TradingKey",
+     "date": "Wed, 18 Nov 2026 20:15:34 GMT"
+    },
+    {
+     "title": "REG - TempletonEmerg.Mkt. - Holding(s) in Company - TradingView",
+     "date": "Wed, 18 Nov 2026 15:39:18 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-18",
+   "code": "SAIL",
+   "name": "SailPoint, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 12702783488,
+   "chg": 10.257679204758507,
+   "gap": 1.2884054754704444,
+   "high_chg": 12.71060701322062,
+   "close_pos": 0.7924524982266058,
+   "upper_wick": 2.452927808462125,
+   "limit_up": false,
+   "tv": 122626425.0,
+   "vol_ratio": 1.338940494367937,
+   "close": 22.25,
+   "pctb": 0.425803749559209,
+   "bw": 0.2181462257585007,
+   "bw_pctile": 0.30833333333333335,
+   "squeeze": false,
+   "rsi14": 39.64497375327838,
+   "ma5_gap": -0.02427231589101364,
+   "ma20_gap": -0.016185631999091066,
+   "ma60_gap": 0.011258492816589083,
+   "ma120_gap": 0.11664712280801548,
+   "ma_aligned": true,
+   "ret5": 0.011022105751210542,
+   "ret20": 0.049402016929479986,
+   "ret60": 0.11307232428589353,
+   "from_high": -0.10786916195977958,
+   "from_low": 0.9592232943187955,
+   "vol_ratio_prev": 0.8129637417580932,
+   "tv20_avg": 84188930.68202972,
+   "tv_prev": 66707009.00878906,
+   "prev_chg": -0.04224012351870432,
+   "up_days": 0,
+   "prev_close_pos": 0.344000244140625,
+   "fr": null,
+   "price": 20.18000030517578,
+   "filings": [
+    {
+     "date": "2026-11-18",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2030781/000195004726011289/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "BILL or SAIL: Which Is the Better Value Stock Right Now? - Yahoo Finance",
+     "date": "Tue, 17 Nov 2026 15:40:02 GMT"
+    },
+    {
+     "title": "Metal meltdown: SAIL, NALCO, Hindalco drag Nifty Metal 2% lower; here's why - Business Standard",
+     "date": "Wed, 18 Nov 2026 06:49:44 GMT"
+    },
+    {
+     "title": "Responsive Playbooks and the SAIL Inflection - Stock Traders Daily",
+     "date": "Tue, 17 Nov 2026 22:40:01 GMT"
+    },
+    {
+     "title": "SAIL Dec 2026 5.000 put (SAIL261218P00005000) interactive stock chart - Yahoo Finance UK",
+     "date": "Tue, 17 Nov 2026 22:15:01 GMT"
+    },
+    {
+     "title": "Nifty Metal falls nearly 2%, Hindustan Zinc, SAIL, NALCO among top losers; what triggered the selloff? - Moneycontrol.com",
+     "date": "Wed, 18 Nov 2026 05:16:37 GMT"
+    },
+    {
+     "title": "Hindalco, SAIL, Hindustan Zinc shares in focus as NIFTY Metal tumbles 2% on Nov 18; check details - Upstox",
+     "date": "Wed, 18 Nov 2026 06:01:19 GMT"
+    }
+   ],
+   "catalysts": []
+  }
+ ]
+}
