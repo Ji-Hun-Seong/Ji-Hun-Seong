@@ -38,7 +38,7 @@
 - [x] 적자 성장주의 평가 ②: 기술특례 상장사의 추정 실적과 실제 — DART로 괴리 직접 계산 (20261116-tech-special-listing-forecast-vs-actual)
 - [ ] 적자 성장주의 평가 ③: DART 원문 대조 — 증권신고서 추정치·사업보고서 괴리율 공시 전수 표본과 상장 후 초과수익
 - [x] 금융주 평가 ①: 은행 — 자본비율이 정하는 환원 여력과 PBR-ROE (20261120-bank-valuation-capital-pbr-roe)
-- [ ] 금융주 평가 ②: 보험사 — K-ICS·CSM과 내재가치
+- [x] 금융주 평가 ②: 보험사 — K-ICS·CSM과 내재가치 (20261120-insurer-valuation-kics-csm)
 - [ ] 금융주 평가 ③: 증권사·카드·캐피탈 — 순자본비율과 이익 변동성
 - [ ] 가치함정 판별 사례
 
