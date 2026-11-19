@@ -162,6 +162,14 @@
 - [x] 경기조정 PER (cape-ratio)
 - [x] 영업레버리지 (operating-leverage)
 
+### 금융주
+- [x] 보통주자본비율 (cet1-ratio)
+- [x] 위험가중자산 (risk-weighted-assets)
+- [x] 완충자본 (capital-buffer)
+- [ ] 순이자마진(NIM)
+- [ ] 대손비용률
+- [ ] 신종자본증권(조건부자본증권)
+
 ### 거래 제도
 - [ ] 호가단위
 - [ ] 동시호가(단일가매매)
