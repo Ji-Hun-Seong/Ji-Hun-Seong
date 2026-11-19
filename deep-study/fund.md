@@ -29,7 +29,7 @@
 - [x] 채권 유통시장과 결제 실무 1: 장내·장외 구조, 15분 보고, T+1 동시결제와 결제일이 장부에 주는 영향 (20261115-bond-secondary-market-settlement-1)
 - [x] 채권 유통시장과 결제 실무 2: 결제 지연·불이행 사후 처리와 체결가 적정성(민평 괴리) 점검 (20261116-bond-settlement-fail-price-check-2)
 - [x] 세후 수익률과 채권 이자 과세 (20261116-after-tax-yield-bond-interest-tax)
-- [ ] 국내 채권 가격 공식 유도와 손계산
+- [x] 국내 채권 가격 공식 유도와 손계산 (20261120-bond-price-formula-derivation)
 - [ ] 이표채 경과이자와 일수 계산 관행
 - [ ] 복리채·단리채·할인채의 평가와 이자 인식
 - [ ] FRN 금리 재설정과 경과이자

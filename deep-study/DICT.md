@@ -249,10 +249,11 @@
 - [x] 체결가 괴리(민평 괴리) 점검 (trade-price-deviation)
 - [x] 채권 보유기간 과세(보유기간이자상당액) (holding-period-interest-tax)
 - [x] 세후수익률·세전환산수익률 (after-tax-yield)
+- [x] 단수기간(단리할인 구간) (odd-period-discount)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
-- [ ] 원본
+- [x] 원본 (fund-principal)
 - [ ] 집합투자규약
 - [ ] 투자신탁과 투자회사
 - [ ] 수탁회사·일반사무관리회사
