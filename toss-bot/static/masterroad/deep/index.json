@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261120-value-trap-identification-cases",
+"area": "기업가치 평가",
+"t": "가치함정 판별 사례: 싼 배수가 계속 싼 이유를 숫자로 찾기",
+"date": "2026-11-20",
+"sum": "저PBR 묶음의 다수는 시장을 못 이긴다. 깔린 ROE 역산·배수 유지 수익·부실 지표·장부의 질로 함정을 거르고, 이마트·한국전력·인텔의 공개 숫자로 함정의 세 가지 모양을 계산한다.",
+"n_sections": 15,
+"n_qs": 12,
+"chars": 16609
+},
+{
 "id": "20261120-securities-card-capital-ncr-earnings-volatility",
 "area": "기업가치 평가",
 "t": "금융주 평가 ③: 증권사·카드·캐피탈 — 순자본비율과 이익 변동성",

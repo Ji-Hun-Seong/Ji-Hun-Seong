@@ -138,6 +138,8 @@
 - [x] 감가상각비 (depreciation-amortization)
 - [x] 클린서플러스 (clean-surplus)
 - [x] 기타포괄손익 (other-comprehensive-income)
+- [x] 이자보상배율 (interest-coverage-ratio)
+- [x] 알트만 Z-스코어 (altman-z-score)
 - [x] 주식보상비용 (stock-based-compensation)
 - [x] 런웨이 (cash-runway)
 
@@ -161,6 +163,7 @@
 - [x] 정상 이익 (normalized-earnings)
 - [x] 경기조정 PER (cape-ratio)
 - [x] 영업레버리지 (operating-leverage)
+- [x] 가치함정 (value-trap)
 
 ### 금융주
 - [x] 보통주자본비율 (cet1-ratio)

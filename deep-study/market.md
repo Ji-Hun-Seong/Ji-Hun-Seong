@@ -40,7 +40,7 @@
 - [x] 금융주 평가 ①: 은행 — 자본비율이 정하는 환원 여력과 PBR-ROE (20261120-bank-valuation-capital-pbr-roe)
 - [x] 금융주 평가 ②: 보험사 — K-ICS·CSM과 내재가치 (20261120-insurer-valuation-kics-csm)
 - [x] 금융주 평가 ③: 증권사·카드·캐피탈 — 순자본비율과 이익 변동성 (20261120-securities-card-capital-ncr-earnings-volatility)
-- [ ] 가치함정 판별 사례
+- [x] 가치함정 판별 사례 (20261120-value-trap-identification-cases)
 
 ## 공시와 이벤트
 - [ ] DART 공시 유형별 읽는 법
