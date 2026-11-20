@@ -277,12 +277,13 @@
 - [x] 이자수익·평가손익 구분 (interest-valuation-split)
 - [x] 금리 결정일 (rate-fixing-date)
 - [x] 룩백·관찰기간 이동 (lookback-observation-shift)
+- [x] 후순위채 (subordinated-bond)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
 - [x] 원본 (fund-principal)
 - [x] 집합투자규약 (fund-bylaws)
-- [ ] 투자신탁과 투자회사
+- [x] 투자신탁과 투자회사 (investment-trust-company)
 - [ ] 수탁회사·일반사무관리회사
 - [ ] 개방형·폐쇄형·환매금지형
 - [ ] 단위형·추가형
