@@ -1,0 +1,167 @@
+{
+ "date": "2026-11-19",
+ "context": {
+  "n_gainers_list": 31,
+  "n_surge": 2,
+  "asof": "2026-11-19T16:03-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-19",
+   "code": "INSM",
+   "name": "Insmed Incorporated",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 31691679744,
+   "chg": 20.584309711123616,
+   "gap": -0.25041990326845065,
+   "high_chg": 24.432390256129842,
+   "close_pos": 0.8516253774179797,
+   "upper_wick": 3.84808054500623,
+   "limit_up": false,
+   "tv": 2080888612.7105713,
+   "vol_ratio": 3.908425529605687,
+   "close": 144.4600067138672,
+   "pctb": 0.7348816063193677,
+   "bw": 0.36895509489843176,
+   "bw_pctile": 0.8333333333333334,
+   "squeeze": false,
+   "rsi14": 60.665119247724455,
+   "ma5_gap": -0.007900341156264812,
+   "ma20_gap": 0.08666076534945844,
+   "ma60_gap": 0.062289060028235754,
+   "ma120_gap": 0.07667652796087032,
+   "ma_aligned": false,
+   "ret5": -0.007867469550659978,
+   "ret20": 0.27392600899025643,
+   "ret60": -0.03301312743595319,
+   "from_high": -0.43689775298821243,
+   "from_low": 0.32536789313749503,
+   "vol_ratio_prev": 0.520279862503964,
+   "tv20_avg": 401008900.6114578,
+   "tv_prev": 232915165.93322754,
+   "prev_chg": -0.01690462455503028,
+   "up_days": 0,
+   "prev_close_pos": 0.2701956017239474,
+   "fr": null,
+   "price": 119.80000305175781,
+   "filings": [
+    {
+     "date": "2026-11-19",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1104506/000162828026075141/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Sanofi Reportedly Mulls The Biggest Biotech Deal In Years - Investor's Business Daily",
+     "date": "Thu, 19 Nov 2026 21:07:00 GMT"
+    },
+    {
+     "title": "Sanofi Weighs Takeover of Insmed; INSM Stock Surges 21% in Biggest Day Since August - BigGo Finance",
+     "date": "Thu, 19 Nov 2026 18:05:00 GMT"
+    },
+    {
+     "title": "ANT, INTU, AMD, INSM, GME: 5 Trending Stocks Today - Anthropic (NASDAQ:ANT) - Benzinga",
+     "date": "Fri, 20 Nov 2026 01:10:56 GMT"
+    },
+    {
+     "title": "Insmed shares jump 18% as Sanofi weighs potential takeover - Yahoo! Finance Canada",
+     "date": "Thu, 19 Nov 2026 17:07:00 GMT"
+    },
+    {
+     "title": "Insmed may be worth $170 to $210 a share in takeover, analyst - Seeking Alpha",
+     "date": "Thu, 19 Nov 2026 19:01:26 GMT"
+    },
+    {
+     "title": "An officer at Insmed (INSM) proposes selling 101,100 shares acquired through a stock plan. - Stock Titan",
+     "date": "Thu, 19 Nov 2026 23:02:56 GMT"
+    }
+   ],
+   "catalysts": [
+    "M&A"
+   ]
+  },
+  {
+   "date": "2026-11-19",
+   "code": "TU",
+   "name": "Telus Corporation",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 17140199424,
+   "chg": 13.354358291521073,
+   "gap": 5.467923150097498,
+   "high_chg": 14.300732112991255,
+   "close_pos": 0.8988762720563889,
+   "upper_wick": 0.9463738214701667,
+   "limit_up": false,
+   "tv": 315723554.17928696,
+   "vol_ratio": 2.913373882102853,
+   "close": 10.779999732971191,
+   "pctb": 0.9560072281647891,
+   "bw": 0.14360859497486056,
+   "bw_pctile": 0.45,
+   "squeeze": false,
+   "rsi14": 61.79775672193157,
+   "ma5_gap": 0.04758759164460291,
+   "ma20_gap": 0.06548655733512598,
+   "ma60_gap": 0.08226014508388557,
+   "ma120_gap": -0.022886621544547348,
+   "ma_aligned": true,
+   "ret5": 0.09815247072131705,
+   "ret20": 0.13484488055001753,
+   "ret60": -0.032553377142201856,
+   "from_high": -0.3404992941355114,
+   "from_low": 0.24476444961725385,
+   "vol_ratio_prev": 1.7481310310257019,
+   "tv20_avg": 91884842.70086288,
+   "tv_prev": 157699578.79543304,
+   "prev_chg": 0.02699783950547352,
+   "up_days": 1,
+   "prev_close_pos": 0.695653526003172,
+   "fr": null,
+   "price": 9.510000228881836,
+   "filings": [
+    {
+     "date": "2026-11-16",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/868675/000110465926128445/tm2629951d1_6k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "TU Financials: Revenue C$20.51B, Net Income C$1.11B - Quantisnow",
+     "date": "Thu, 19 Nov 2026 17:10:11 GMT"
+    },
+    {
+     "title": "Telus Corporation (TU) Stock Forecasts - Yahoo Finance",
+     "date": "Wed, 18 Nov 2026 19:47:25 GMT"
+    },
+    {
+     "title": "Mochida Pharmaceutical Co., Ltd. Stock Price Today | 4534/JPY Live Chart & News - Traders Union",
+     "date": "Fri, 20 Nov 2026 00:33:48 GMT"
+    },
+    {
+     "title": "BCE explores potential Telus deal as Quebecor's C$31B proposal faces scrutiny - report (BCE:NYSE) - Seeking Alpha",
+     "date": "Thu, 19 Nov 2026 06:09:31 GMT"
+    },
+    {
+     "title": "Telus upgraded by National Bank Financial - Quantisnow",
+     "date": "Thu, 19 Nov 2026 15:10:11 GMT"
+    },
+    {
+     "title": "Analysts’ Opinions Are Mixed on These Communication Services Stocks: Seek Limited (OtherSKLTF) and Telus (TU) - The Globe and Mail",
+     "date": "Thu, 19 Nov 2026 00:20:49 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  }
+ ]
+}
