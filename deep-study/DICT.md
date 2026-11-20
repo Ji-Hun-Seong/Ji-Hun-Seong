@@ -281,6 +281,8 @@
 - [x] 금리 결정일 (rate-fixing-date)
 - [x] 룩백·관찰기간 이동 (lookback-observation-shift)
 - [x] 후순위채 (subordinated-bond)
+- [x] 지급여력비율(K-ICS) (kics-ratio)
+- [x] 보험사 자본성증권(기본자본·보완자본) (insurer-capital-securities)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
