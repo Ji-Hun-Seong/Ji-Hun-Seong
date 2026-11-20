@@ -267,6 +267,8 @@
 - [x] Act/Act(ICMA)·ISDA·AFB (act-act-icma)
 - [x] 채권 이자 기준일 (bond-record-date)
 - [x] 국채전문유통시장(KTS) (ktb-specialized-market)
+- [x] 유효이자율법 (effective-interest-method)
+- [x] 이자수익·평가손익 구분 (interest-valuation-split)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
