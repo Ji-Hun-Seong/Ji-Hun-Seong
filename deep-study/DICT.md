@@ -108,7 +108,10 @@
 - [x] 최대주주와 특수관계인 (largest-shareholder-related-party)
 - [x] 대규모내부거래 (large-scale-internal-transaction)
 - [x] 동반매도청구권 (drag-along-right)
-- [ ] 5% 룰(대량보유 보고)
+- [x] 5% 룰(대량보유 보고) (five-percent-rule)
+- [x] 임원·주요주주 소유상황 보고 (insider-ownership-report)
+- [x] 내부자거래 사전공시 (insider-trading-plan-disclosure)
+- [ ] 단기매매차익 반환
 - [x] 지주회사 (holding-company)
 - [x] 상장폐지·관리종목 (delisting-administrative-issue)
 - [ ] 투자주의·경고·위험 종목
