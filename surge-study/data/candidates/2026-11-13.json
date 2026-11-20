@@ -2075,5 +2075,74 @@
   "up": 3,
   "avg": -0.87,
   "market_avg": 0.6
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "012750",
+    "name": "에스원",
+    "score": 70,
+    "next_chg": 0.76
+   },
+   {
+    "code": "068270",
+    "name": "셀트리온",
+    "score": 66,
+    "next_chg": -0.7
+   },
+   {
+    "code": "003690",
+    "name": "코리안리",
+    "score": 64,
+    "next_chg": -4.08
+   },
+   {
+    "code": "017800",
+    "name": "현대엘리베이터",
+    "score": 63,
+    "next_chg": -8.64
+   },
+   {
+    "code": "003470",
+    "name": "유안타증권",
+    "score": 61,
+    "next_chg": -5.2
+   },
+   {
+    "code": "375500",
+    "name": "DL이앤씨",
+    "score": 60,
+    "next_chg": -7.04
+   },
+   {
+    "code": "005500",
+    "name": "삼진제약",
+    "score": 60,
+    "next_chg": 3.86
+   },
+   {
+    "code": "187660",
+    "name": "페니트리움바이오",
+    "score": 58,
+    "next_chg": -6.14
+   },
+   {
+    "code": "034230",
+    "name": "파라다이스",
+    "score": 58,
+    "next_chg": -2.06
+   },
+   {
+    "code": "020560",
+    "name": "아시아나항공",
+    "score": 56,
+    "next_chg": -3.41
+   }
+  ],
+  "n": 10,
+  "hit10": 0,
+  "up": 2,
+  "avg": -3.26,
+  "market_avg": -3.86
  }
 }

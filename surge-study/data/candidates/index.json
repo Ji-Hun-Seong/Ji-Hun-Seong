@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-20",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 873,
+   "top": [
+    "IPARK현대산업개발",
+    "롯데손해보험",
+    "CJ CGV"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-13",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 846,
@@ -9,8 +21,14 @@
     "셀트리온",
     "코리안리"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 64,
+   "graded": {
+    "avg": -3.26,
+    "up": 2,
+    "n": 10,
+    "hit10": 0,
+    "market_avg": -3.86
+   }
   },
   {
    "date": "2026-11-12",
