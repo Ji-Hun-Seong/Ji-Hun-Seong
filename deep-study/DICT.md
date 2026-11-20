@@ -169,6 +169,9 @@
 - [x] 지급여력비율(K-ICS) (kics-ratio)
 - [x] 보험계약마진(CSM) (contractual-service-margin)
 - [x] 해약환급금준비금 (surrender-reserve)
+- [x] 순자본비율(NCR) (net-capital-ratio)
+- [x] 여전사 레버리지 규제 (credit-finance-leverage-limit)
+- [x] 종합금융투자사업자(종투사) (comprehensive-investment-bank)
 - [ ] 순이자마진(NIM)
 - [ ] 대손비용률
 - [ ] 신종자본증권(조건부자본증권)
