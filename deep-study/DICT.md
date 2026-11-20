@@ -262,6 +262,8 @@
 - [x] 세후수익률·세전환산수익률 (after-tax-yield)
 - [x] 단수기간(단리할인 구간) (odd-period-discount)
 - [x] Act/Act(ICMA)·ISDA·AFB (act-act-icma)
+- [x] 채권 이자 기준일 (bond-record-date)
+- [x] 국채전문유통시장(KTS) (ktb-specialized-market)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
