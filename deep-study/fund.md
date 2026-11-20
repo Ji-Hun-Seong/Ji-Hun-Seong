@@ -33,7 +33,7 @@
 - [x] 이표채 경과이자와 일수 계산 관행 1: 해외 이표채(실제/실제·30/360·실제/360)와 외화 장부 대사 (20261120-foreign-coupon-accrued-daycount-1)
 - [x] 이표채 경과이자와 일수 계산 관행 2: 국내 결제일 기준·이표 권리자 확정(기준일)과 장내 국채 결제금액 (20261120-domestic-record-date-kts-settlement-2)
 - [x] 복리채·단리채·할인채의 평가와 이자 인식 (20261120-compound-simple-discount-bond-interest-recognition)
-- [ ] FRN 금리 재설정과 경과이자
+- [x] FRN 금리 재설정과 경과이자 (20261120-frn-rate-reset-accrued-interest)
 - [ ] 콜옵션부 채권·신종자본증권·후순위채
 - [ ] 물가연동국고채의 원금 조정 회계
 - [ ] 채권평가회사 가격 산출과 평가사 간 괴리
