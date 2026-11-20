@@ -114,6 +114,9 @@
 - [ ] 투자주의·경고·위험 종목
 - [x] 거래정지 (trading-halt)
 - [x] 기업가치 제고 계획 (corporate-value-up-plan)
+- [x] 조회공시 (inquiry-disclosure)
+- [x] 공정공시 (fair-disclosure)
+- [x] 불성실공시법인 (unfaithful-disclosure-corporation)
 
 ### 재무제표
 - [x] 영업이익 (operating-profit)
