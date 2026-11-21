@@ -88,6 +88,7 @@
 ### 배당
 - [ ] 주식배당
 - [ ] 분기배당·중간배당
+- [x] 배당가능이익 (distributable-profit)
 - [ ] 배당소득세와 금융소득종합과세
 - [ ] 우선주
 
@@ -97,6 +98,8 @@
 - [ ] 회사채와 신용등급
 
 ### 공시·지배구조
+- [x] 자기주식 취득 신탁계약 (buyback-trust)
+- [x] 자기주식 소각 의무 (treasury-stock-mandatory-cancellation)
 - [x] 기술특례상장 (tech-special-listing)
 - [x] 추정 실적 괴리율 (forecast-deviation-rate)
 - [x] 환매청구권(풋백옵션) (ipo-putback-option)
