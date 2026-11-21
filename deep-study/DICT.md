@@ -288,6 +288,8 @@
 - [x] 보험사 자본성증권(기본자본·보완자본) (insurer-capital-securities)
 - [x] 물가연동계수 (inflation-index-ratio)
 - [x] 손익분기 인플레이션(BEI) (breakeven-inflation)
+- [x] 민평 평균 방식(평가사 수·평균 순서) (pricing-agency-average)
+- [x] 평가사 간 괴리 (pricing-agency-divergence)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)

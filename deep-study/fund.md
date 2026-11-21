@@ -37,7 +37,7 @@
 - [x] 콜옵션부 채권·신종자본증권·후순위채 1: 콜 가정·미행사·이자 이연·청산 순위를 장부로 (20261121-callable-hybrid-subordinated-bond-1)
 - [x] 콜옵션부 채권·신종자본증권·후순위채 2: 보험사 자본성증권 인정 요건(K-ICS)과 외화 신종자본증권 실무 (20261121-insurer-kics-capital-securities-fx-hybrid-2)
 - [x] 물가연동국고채의 원금 조정 회계 (20261121-inflation-linked-ktb-principal-accounting)
-- [ ] 채권평가회사 가격 산출과 평가사 간 괴리
+- [x] 채권평가회사 가격 산출과 평가사 간 괴리 (20261121-bond-pricing-agency-divergence)
 - [ ] 듀레이션·컨벡시티로 평가손익 검증
 - [ ] 신용등급 변경과 평가 스프레드
 - [ ] 채권 부도·기한이익상실·회생 회계
