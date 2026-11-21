@@ -129,6 +129,9 @@
 - [x] 합병가액 (merger-valuation)
 - [x] 합병 차익거래 (merger-arbitrage)
 - [x] 합병 외부평가 (merger-external-valuation)
+- [x] 분할비율 (split-ratio)
+- [x] 재상장·변경상장 (relisting-change-listing)
+- [x] 중복상장 (duplicate-listing)
 
 ### 재무제표
 - [x] 영업이익 (operating-profit)
