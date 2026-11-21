@@ -303,6 +303,8 @@
 - [x] 유효듀레이션·음의 컨벡시티 (effective-duration)
 - [x] 등급전망·등급감시 (rating-outlook-watch)
 - [x] 등급 하락 자산 처리 (downgraded-asset-handling)
+- [x] 부도채권 분류·상각 (distressed-bond-writedown)
+- [x] 회생채권 (rehabilitation-claim)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
