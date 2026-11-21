@@ -293,6 +293,8 @@
 - [x] 손익분기 인플레이션(BEI) (breakeven-inflation)
 - [x] 민평 평균 방식(평가사 수·평균 순서) (pricing-agency-average)
 - [x] 평가사 간 괴리 (pricing-agency-divergence)
+- [x] 채권 손익 요인분해 (bond-pnl-attribution)
+- [x] 유효듀레이션·음의 컨벡시티 (effective-duration)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
