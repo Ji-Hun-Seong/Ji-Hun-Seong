@@ -286,6 +286,8 @@
 - [x] 후순위채 (subordinated-bond)
 - [x] 지급여력비율(K-ICS) (kics-ratio)
 - [x] 보험사 자본성증권(기본자본·보완자본) (insurer-capital-securities)
+- [x] 물가연동계수 (inflation-index-ratio)
+- [x] 손익분기 인플레이션(BEI) (breakeven-inflation)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
