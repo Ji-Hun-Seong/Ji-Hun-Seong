@@ -1,0 +1,96 @@
+{
+ "date": "2026-11-20",
+ "context": {
+  "n_gainers_list": 27,
+  "n_surge": 1,
+  "asof": "2026-11-20T16:00-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-20",
+   "code": "GAP",
+   "name": "Gap, Inc. (The)",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 7355596800,
+   "chg": 11.442253931736612,
+   "gap": 7.7700852226471495,
+   "high_chg": 17.935065288367944,
+   "close_pos": 0.42180144054497726,
+   "upper_wick": 6.492811356631341,
+   "limit_up": false,
+   "tv": 586713686.9636536,
+   "vol_ratio": 4.058472315166474,
+   "close": 20.940000534057617,
+   "pctb": -0.06964822122057171,
+   "bw": 0.22529187582193105,
+   "bw_pctile": 0.9333333333333333,
+   "squeeze": false,
+   "rsi14": 31.47954233233743,
+   "ma5_gap": -0.04918527201810141,
+   "ma20_gap": -0.12833711631740896,
+   "ma60_gap": -0.1474849133236582,
+   "ma120_gap": -0.11274451460892365,
+   "ma_aligned": false,
+   "ret5": -0.11576466279871322,
+   "ret20": -0.17983408814165303,
+   "ret60": -0.11158386503871376,
+   "from_high": -0.3600136060997735,
+   "from_low": 0.03754833143335712,
+   "vol_ratio_prev": 3.6818758598032977,
+   "tv20_avg": 145511528.510046,
+   "tv_prev": 421174112.5213623,
+   "prev_chg": -0.05292334823513534,
+   "up_days": 0,
+   "prev_close_pos": 0.10606161315492876,
+   "fr": null,
+   "price": 18.790000915527344,
+   "filings": [
+    {
+     "date": "2026-11-19",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/39911/000162828026075088/gps-20261119.htm"
+    },
+    {
+     "date": "2026-11-18",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/39911/000166668926000012/xslF345X06/edgardoc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Gap stock pops even as warm fall weather leads the retail giant to cut its forecast - Yahoo Finance",
+     "date": "Fri, 20 Nov 2026 14:46:20 GMT"
+    },
+    {
+     "title": "Gap Stock Heads for Best Day in Over a Year After Earnings - Schaeffer's Investment Research",
+     "date": "Fri, 20 Nov 2026 15:31:34 GMT"
+    },
+    {
+     "title": "Gap Inc. shares jump 15% after a profit beat, even as it cuts its full-year forecast - Startup Fortune",
+     "date": "Fri, 20 Nov 2026 18:24:21 GMT"
+    },
+    {
+     "title": "Gap, Inc. (The) Stock 12‑Month Price Target Cut to $24.09, Implies 28% Upside - TradingView",
+     "date": "Fri, 20 Nov 2026 19:20:00 GMT"
+    },
+    {
+     "title": "S&P 500 Downward Gap Stocks in Nov. 20, 2026 Session - ChartMill",
+     "date": "Fri, 20 Nov 2026 15:35:59 GMT"
+    },
+    {
+     "title": "Gap shares rise as Old Navy recovery overshadows slow holiday start - Reuters",
+     "date": "Thu, 19 Nov 2026 23:21:40 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  }
+ ]
+}
