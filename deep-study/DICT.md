@@ -132,6 +132,9 @@
 - [x] 분할비율 (split-ratio)
 - [x] 재상장·변경상장 (relisting-change-listing)
 - [x] 중복상장 (duplicate-listing)
+- [x] 안분비례 (tender-offer-proration)
+- [x] 대항공개매수 (competing-tender-offer)
+- [x] 의무공개매수 (mandatory-tender-offer)
 
 ### 재무제표
 - [x] 영업이익 (operating-profit)

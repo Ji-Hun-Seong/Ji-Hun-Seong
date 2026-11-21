@@ -50,7 +50,7 @@
 - [x] 자사주 공시의 진짜 의미 (20261121-treasury-stock-disclosure-meaning)
 - [x] 합병·분할·공개매수 이벤트 전략 ①: 합병 — 합병가액·합병비율·매수청구권과 차익거래 (20261121-merger-event-ratio-appraisal-arbitrage)
 - [x] 합병·분할·공개매수 이벤트 전략 ②: 분할 — 인적·물적분할, 분할비율, 재상장과 자회사 상장 (20261122-spin-off-split-ratio-relisting-subsidiary-ipo)
-- [ ] 합병·분할·공개매수 이벤트 전략 ③: 공개매수 — 응모·안분 계산, 경쟁 공개매수, 의무공개매수 개정안
+- [x] 합병·분할·공개매수 이벤트 전략 ③: 공개매수 — 응모·안분 계산, 경쟁 공개매수, 의무공개매수 개정안 (20261122-tender-offer-proration-competing-mandatory)
 - [ ] 지수 편출입 이벤트
 - [ ] 보호예수 해제와 오버행
 
