@@ -39,7 +39,7 @@
 - [x] 물가연동국고채의 원금 조정 회계 (20261121-inflation-linked-ktb-principal-accounting)
 - [x] 채권평가회사 가격 산출과 평가사 간 괴리 (20261121-bond-pricing-agency-divergence)
 - [x] 듀레이션·컨벡시티로 평가손익 검증 (20261121-duration-convexity-pnl-validation)
-- [ ] 신용등급 변경과 평가 스프레드
+- [x] 신용등급 변경과 평가 스프레드 (20261122-credit-rating-change-valuation-spread)
 - [ ] 채권 부도·기한이익상실·회생 회계
 - [ ] 사이드포켓(부실자산 분리) 절차와 회계
 - [ ] CB 전환·리픽싱 조항 읽기와 평가
