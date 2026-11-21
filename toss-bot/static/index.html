@@ -387,7 +387,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 
 <section id="t-pick">
   <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
-  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button><button data-k="screen">🔎 필터</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button><button data-k="fear">😱 공포</button><button data-k="screen">🔎 필터</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -1550,7 +1550,7 @@ function finChart(a) {
 // ── 발굴 탭 ──────────────────────────────────────────
 let pKind = "hero"; const PK = {};
 try { pKind = localStorage.getItem("p-kind") || "hero"; } catch (e) {}
-if (!["hero", "surge", "fund", "etf", "screen"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
+if (!["hero", "surge", "fund", "etf", "fear", "screen"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
 document.querySelectorAll("#p-seg button").forEach(b => {
   b.classList.toggle("act", b.dataset.k === pKind);
   b.onclick = () => { pKind = b.dataset.k; try { localStorage.setItem("p-kind", pKind); } catch (e) {}
@@ -1899,9 +1899,69 @@ function fxhRender() {
   if (L.m) line("fxh-c1", L.m.d, [{data: reb(L.m.unh), color: "#4f8cff", label: "환노출"}, {data: reb(L.m.hed), color: "#f59e0b", label: "환헤지(H)"}, {data: reb(L.m.usd), color: "#9aa4b2", label: "달러 그대로", dash: [4, 3]}]);
   if (P.m) line("fxh-c2", P.m.d, [{data: reb(P.m.unh), color: "#4f8cff", label: "환노출"}, {data: reb(P.m.hed), color: "#f59e0b", label: "환헤지(H)"}]);
 }
+// 😱 공포지수 — CNN 공포·탐욕 + VIX, 공포 때 사면 더 벌었는지 QQQ·SPY 백테스트 (chartpage/fear.py)
+let frSym = "QQQ", frPer = "all", frSig = "vix";
+try { frSym = localStorage.getItem("fr-sym") || "QQQ"; frPer = localStorage.getItem("fr-per") || "all"; frSig = localStorage.getItem("fr-sig") || "vix"; } catch (e) {}
+const FR_KO = {"extreme fear": "극도 공포", "fear": "공포", "neutral": "중립", "greed": "탐욕", "extreme greed": "극도 탐욕"};
+const FR_COL = {xfear: "#e5484d", fear: "#f5a524", mid: "#9aa4b2", calm: "#2fbf71", greed: "#2fbf71", xgreed: "#12a150"};
+function fearRender(d) {
+  if (d.error && !d.assets) { $("p-out").innerHTML = `<div class="card"><div class="empty">${esc(d.error)}</div></div>`; return; }
+  const pc = v => v == null ? `<span class="mut">-</span>` : `<span class="${cls(v)}">${v > 0 ? "+" : ""}${Number(v).toFixed(1)}%</span>`;
+  const usd = v => v == null ? "-" : "$" + fmtN(v);
+  const Z = Object.fromEntries((d.zones || []).map(z => [z[0], z])), CB = Object.fromEntries((d.cnn_bands || []).map(z => [z[0], z]));
+  const V = d.vix || {}, C = d.cnn || {};
+  const gauge = (score, zone, name) => `<div style="flex:1;text-align:center;padding:10px 4px;border:1px solid var(--line);border-radius:12px">
+      <div class="tiny mut">${name}</div><div style="font-size:30px;font-weight:800;color:${FR_COL[zone] || "var(--txt)"}">${score == null ? "-" : score}</div>`;
+  let h = `<div class="card"><div class="label">😱 지금 공포지수</div><div style="display:flex;gap:8px;margin-top:8px">
+    ${gauge(C.score != null ? Math.round(C.score) : null, C.zone, "CNN 공포·탐욕 (0~100)")}<div class="small" style="font-weight:700;color:${FR_COL[C.zone] || "var(--sub)"}">${C.rating ? esc(FR_KO[C.rating] || C.rating) : "못 받음"}</div>
+      ${C.prev ? `<div class="tiny mut" style="margin-top:4px">1주 전 ${C.prev.previous_1_week ?? "-"} · 1달 전 ${C.prev.previous_1_month ?? "-"} · 1년 전 ${C.prev.previous_1_year ?? "-"}</div>` : ""}</div>
+    ${gauge(V.now, V.zone, "VIX 변동성 지수")}<div class="small" style="font-weight:700;color:${FR_COL[V.zone] || "var(--sub)"}">${esc((Z[V.zone] || [])[1] || "-")}</div>
+      <div class="tiny mut" style="margin-top:4px">1990년 이후 ${V.pct ?? "-"}%의 날보다 높음 · 1주 전 ${V.w1 ?? "-"}</div></div></div>
+    <canvas id="fr-vix" style="margin-top:10px"></canvas>
+    <div class="tiny mut" style="margin-top:6px;line-height:1.6">CNN 지수: 낮을수록 공포(0~25 극도 공포 · 75~100 극도 탐욕) · VIX: 높을수록 공포(30↑ 극도 공포 · 20~30 공포 · 15~20 보통 · 15↓ 안심) · ${esc(V.date || "")} 기준</div></div>`;
+  const A = (d.assets || {})[frSym] || Object.values(d.assets || {})[0];
+  if (!A) { $("p-out").innerHTML = h + `<div class="card"><div class="empty">가격 데이터를 못 받았어요</div></div>`; return; }
+  const chips = (attr, cur, list) => `<div class="seg" style="margin-top:8px">${list.map(([k, n]) => `<button ${attr}="${k}" class="${k === cur ? "act" : ""}">${n}</button>`).join("")}</div>`;
+  h += `<div class="card">${chips("data-frs", frSym, Object.entries(d.assets).map(([k, a]) => [k, a.name]))}`;
+  // ① 구간별 그 뒤 수익률
+  const useCnn = frSig === "cnn" && A.fwd_cnn, F = useCnn ? A.fwd_cnn : A.fwd, rowsZ = useCnn ? d.cnn_bands : d.zones;
+  h += `<div class="label" style="margin-top:12px">① 그날 샀다면 — 공포 구간별 그 뒤 수익률</div>
+    ${A.fwd_cnn ? chips("data-frg", frSig, [["vix", "VIX 기준 (1999~)"], ["cnn", `CNN 기준 (${esc((A.fwd_cnn.from || "").slice(0, 4))}~)`]]) : ""}
+    <table class="tbl" style="margin-top:8px"><thead><tr><th>구간 (날 비중)</th><th>1개월</th><th>3개월</th><th>6개월</th><th>1년</th></tr></thead><tbody>
+    ${rowsZ.map(z => `<tr><td><span style="color:${FR_COL[z[0]]}">●</span> ${esc(z[1])} <span class="tiny">${F.share[z[0]]}%</span></td>${["1m", "3m", "6m", "12m"].map(k => { const x = F[z[0]][k]; return `<td>${x ? pc(x.avg) + `<div class="tiny mut">오를 확률 ${x.win}%</div>` : "-"}</td>`; }).join("")}</tr>`).join("")}
+    <tr class="mn"><td>아무 날이나</td>${["1m", "3m", "6m", "12m"].map(k => { const x = F.all[k]; return `<td>${x ? pc(x.avg) + `<div class="tiny mut">오를 확률 ${x.win}%</div>` : "-"}</td>`; }).join("")}</tr></tbody></table>
+    <div class="tiny mut" style="margin-top:6px;line-height:1.6">평균 수익률(배당 재투자) · 매일을 하나씩 세서 공포가 길게 이어진 시기(2008·2020·2022)가 많이 들어가요 — 표본이 서로 독립은 아니에요</div>`;
+  // ② 적립 전략 비교
+  const P = A.periods[frPer] || A.periods.all;
+  const S = [["A", "매주 금요일 $100", "기본 적립식"], ["B", "공포 때 더 사기", "VIX 30↑ $300 · 20~30 $150 · 그 밖 $100"], ["C", "공포만 기다리기", "매주 $100 모아 두고 VIX 25↑ 금요일에만 전부 매수"]];
+  if (P.D) S.push(["D", "공포만 기다리기 (CNN)", `CNN 25 미만 금요일에만 · ${esc(P.D.from)}~ (같은 기간 기본 적립: 수익률 ${P.D.base.ret}% · 연 ${P.D.base.irr}%)`]);
+  const best = Math.max(...S.filter(s => s[0] !== "D").map(s => P[s[0]].irr ?? -99));   // D는 기간이 달라 왕관 비교에서 뺌
+  h += `<div class="label" style="margin-top:16px">② 매주 사기 — 전략 비교</div>
+    ${chips("data-frp", frPer, Object.entries(A.periods).map(([k, p]) => [k, p.label]))}
+    <div class="tiny mut" style="margin-top:6px">${esc(P.from)} ~ ${esc(P.to)} · ${P.weeks}주</div>
+    <table class="tbl" style="margin-top:6px"><thead><tr><th>전략</th><th>넣은 돈</th><th>지금 가치</th><th>수익률</th><th>연 수익률</th></tr></thead><tbody>
+    ${S.map(([k, n, why]) => { const x = P[k]; const top = k !== "D" && x.irr === best; return `<tr${top ? ' class="mn"' : ""}><td>${k}. ${esc(n)}${top ? " 👑" : ""}<div class="tiny mut" style="white-space:normal;max-width:150px">${why}</div></td>
+      <td>${usd(x.put)}${x.cash ? `<div class="tiny mut">현금 ${usd(x.cash)}</div>` : ""}</td><td>${usd(x.value)}</td><td>${pc(x.ret)}</td><td>${pc(x.irr)}<div class="tiny mut">매수 ${x.buys}번</div></td></tr>`; }).join("")}</tbody></table>
+    <canvas id="fr-dca" style="margin-top:10px"></canvas>
+    <div class="tiny mut" style="margin-top:6px;line-height:1.6">연 수익률 = 돈을 넣은 시점까지 따진 IRR(넣은 돈이 다른 B도 공평하게 비교) · 수익률 = 지금 가치 ÷ 넣은 돈 − 1 · C·D는 기다리는 동안 현금 이자 0으로 계산(실제로는 MMF 이자만큼 조금 나아짐) · 수수료·세금·환율 제외, 달러 기준</div>`;
+  // ③ 요일 비교
+  h += `<div class="label" style="margin-top:16px">③ 무슨 요일에 사면 좋을까? (매주 $100)</div>
+    <table class="tbl" style="margin-top:6px"><thead><tr><th>요일</th><th>수익률</th><th>연 수익률</th></tr></thead><tbody>
+    ${P.weekday.map(w => `<tr><td>${w.day}요일</td><td>${pc(w.ret)}</td><td>${pc(w.irr)}</td></tr>`).join("")}</tbody></table>
+    <div class="tiny mut" style="margin-top:6px">휴장이면 그 주의 바로 앞 거래일 · 요일 차이는 대개 0.1%p 안팎 — 요일보다 '꾸준히'가 훨씬 중요해요</div>
+    <div class="tiny mut" style="margin-top:10px">과거 결과일 뿐 앞으로를 보장하지 않아요 · 투자 권유 아님 · 데이터 야후(QQQ·SPY·^VIX), CNN${d.took ? ` · 계산 ${d.took}초` : ""}</div></div>`;
+  $("p-out").innerHTML = h;
+  const bind = (attr, fn) => $("p-out").querySelectorAll(`[${attr}]`).forEach(b => b.onclick = () => { fn(b.getAttribute(attr)); fearRender(d); });
+  bind("data-frs", v => { frSym = v; try { localStorage.setItem("fr-sym", v); } catch (e) {} });
+  bind("data-frp", v => { frPer = v; try { localStorage.setItem("fr-per", v); } catch (e) {} });
+  bind("data-frg", v => { frSig = v; try { localStorage.setItem("fr-sig", v); } catch (e) {} });
+  if (V.spark) line("fr-vix", V.spark_d, [{data: V.spark, color: "#e5484d", label: "VIX (최근 1년)"}, {data: V.spark.map(() => 30), color: "#9aa4b2", label: "30 극도 공포", dash: [4, 3]}]);
+  if (P.m) line("fr-dca", P.m.d, [{data: P.m.A, color: "#4f8cff", label: "A 매주 금요일"}, {data: P.m.B, color: "#e5484d", label: "B 공포 때 더"}, {data: P.m.C, color: "#f5a524", label: "C 공포만 기다리기"}, {data: P.m.putA, color: "#9aa4b2", label: "A·C 넣은 돈", dash: [4, 3]}]);
+}
 function pRender(d) {
   if (d.kind === "fund") return fundRender(d);
   if (d.kind === "etf") return etfRender(d);
+  if (d.kind === "fear") return fearRender(d);
   if (d.error) { $("p-out").innerHTML = `<div class="card"><div class="empty">${esc(d.error)}${d.kind === "surge" || pKind === "surge" ? "<br><br>급등 후보는 평일 장 마감 후(18:45쯤) 처음 만들어집니다." : ""}</div></div>`; return; }
   pItems = d.items.concat(d.more || []);
   const open = i => `data-pi="${i}"`;

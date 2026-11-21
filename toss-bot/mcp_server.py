@@ -153,6 +153,19 @@ def t_stock(query: str):
     return trim(d, 12)
 
 
+def t_fear_index(asset: str = "QQQ"):
+    d = dash("/api/picks?k=fear", timeout=120)
+    if d.get("error") and not d.get("assets"):
+        return d
+    out = {k: d.get(k) for k in ("vix", "cnn", "zones", "cnn_bands")}
+    if isinstance(out.get("vix"), dict):
+        out["vix"] = {k: v for k, v in out["vix"].items() if k not in ("spark", "spark_d")}
+    A = (d.get("assets") or {}).get(asset.upper()) or {}
+    out["asset"] = {"name": A.get("name"), "fwd": A.get("fwd"), "fwd_cnn": A.get("fwd_cnn"),
+                    "periods": {k: {x: v for x, v in p.items() if x != "m"} for k, p in (A.get("periods") or {}).items()}}
+    return out
+
+
 def t_news_radar(limit: int = 15):
     d = dash("/api/radar", timeout=60)
     if d.get("loading"):
@@ -343,6 +356,8 @@ TOOLS = {
     "my_fund": (t_my_fund, "내 펀드: 토스 실제 계좌를 공모펀드처럼 기준가로 산출한 성과(코스피 대비), 보유 종목 비중·수익률, 최근 체결. 미국 모의 펀드 요약 포함.", S()),
     "stock": (t_stock, "종목 상세: 시세·이동평균·수급·재무·공시·밸류. 한국은 이름이나 6자리 코드, 해외는 티커나 이름.",
               {**S(query={"type": "string", "description": "종목명 또는 코드 (예: 삼성전자, 005930, AAPL)"}), "required": ["query"]}),
+    "fear_index": (t_fear_index, "공포지수: 지금 CNN 공포·탐욕 지수와 VIX, 그리고 QQQ·SPY 백테스트 — VIX 구간별 그 뒤 1·3·6·12개월 수익률, 매주 금요일 적립 vs 공포 때 더 사기 vs 공포만 기다리기(전체·10년·5년), 요일별 적립 비교.",
+                   S(asset={"type": "string", "enum": ["QQQ", "SPY"], "default": "QQQ"})),
     "news_radar": (t_news_radar, "뉴스·공시 레이더: 오늘·어제 공시와 뉴스 중 주가에 영향이 클 만한 것(수주·실적·자사주 등) 순위.",
                    S(limit={"type": "integer", "default": 15})),
 }

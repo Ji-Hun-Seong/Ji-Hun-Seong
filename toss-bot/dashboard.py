@@ -1160,7 +1160,8 @@ PICKS = {"hero_us": (lambda: picks_hero_db("us"), 60), "hero_eu": (lambda: picks
          "hero": (lambda: picks_hero_db("kr"), 60), "surge": (picks_surge, 900), "value": (picks_value, 3600), "ackman": (picks_ackman, 3600),
          "fund": (lambda: __import__("fund_sim").summary(), 120),
          "etf": (lambda: __import__("etf").summary(), 600),
-         "fxh": (lambda: __import__("fx_hedge").summary(), 6 * 3600)}     # 💱 환헤지 vs 환노출 백테스트
+         "fxh": (lambda: __import__("fx_hedge").summary(), 6 * 3600),     # 💱 환헤지 vs 환노출 백테스트
+         "fear": (lambda: __import__("fear").summary(), 3 * 3600)}        # 😱 공포지수 + 공포 때 매수 백테스트
 
 
 def picks(kind):

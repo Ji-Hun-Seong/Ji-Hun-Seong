@@ -39,6 +39,7 @@
 - 설치: `bash setup/dashboard.sh` → 폰에 Tailscale 앱 설치·같은 계정 로그인 → `http://toss-bot:8080` → 사파리 공유 → **홈 화면에 추가**
 - 실전 전환은 안전을 위해 대시보드에서 못 하고 서버 명령으로만
 - **📦 ETF (발굴 탭)**: KRX Open API 'ETF 일별매매정보'(`.env`의 `KRX_API_KEY`)를 대시보드가 매시간 `state/etf.db`에 모아 수익률(1·3·6개월·1·3년, 모멘텀) 순위 + 초보용 설명. 연결 확인 `python chartpage/etf.py fetch 20261105`, 순위 `python chartpage/etf.py show`
+- **😱 공포 (발굴 탭)**: CNN 공포·탐욕 지수 + VIX 지금 값, QQQ·SPY 백테스트(`chartpage/fear.py`, 3시간 캐시) — VIX 구간별 그 뒤 1·3·6·12개월 수익률, 매주 금요일 적립 vs 공포 때 더 사기 vs 공포만 기다리기(전체·10년·5년), 요일 비교. 확인 `python chartpage/fear.py`, MCP 도구 `fear_index`
 - **🏦 펀드 › 👤 내 펀드**: 토스 실제 계좌를 공모펀드처럼 기준가로 (`chartpage/my_fund.py`, cron 16:10 `fund_sim.py run`이 부름). 산 돈 = 설정, 판 돈 = 환매로 처리해 입출금과 무관한 수익률. 한국 모의 펀드 2개는 2026-11-06 종료(백업 남김)
 - **🔌 MCP 서버 (Claude 앱에서 대화로 조회)**: `mcp_server.py` — 대시보드 API를 읽는 조회 전용 도구 7개(급등주·대가 순위·자바 20선·ETF·내 펀드·종목 상세·뉴스 레이더), 주문 기능 없음. 설치 `bash setup/mcp.sh` → Tailscale Funnel로 `https://<서버>.ts.net/<MCP_SECRET>/mcp` 하나만 공개 → Claude 앱 커스텀 커넥터에 등록
 - **📱 공개 앱 (`https://<서버>.ts.net/app/`)**: 대시보드와 똑같은 화면을 누구나 — 종목 검색·차트·수급·재무·밸류·공시·리포트·호가 보기·발굴·감시·자동·펀드. `mcp_server.py`가 읽기 주소만 골라 대시보드로 넘기고 `X-Toss-Public: 1`을 붙여 항상 👀 보기 전용. **매수·매도·정정·체결내역·예약·긴급 정지·계좌 탭은 없음**(서버에서 403/404). 내 펀드는 기준가·수익률만(보유 종목·매매내역 숨김, `show_my_fund=false`면 통째로). 소개 페이지(`/`) 맨 위 '📱 앱 직접 써 보기' 버튼
