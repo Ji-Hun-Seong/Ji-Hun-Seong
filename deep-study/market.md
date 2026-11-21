@@ -46,7 +46,7 @@
 - [x] DART 공시 유형별 읽는 법 ①: 공시 지도와 거래소 공시(수시·조회·공정·정정·불성실) (20261121-dart-disclosure-types-map-exchange-disclosure)
 - [x] DART 공시 유형별 읽는 법 ②: 지분공시 — 5% 보고·임원 주요주주 소유상황 보고·최대주주 변경 (20261121-dart-equity-disclosure-5pct-insider-ownership)
 - [x] 잠정실적·컨센서스 서프라이즈 (20261121-preliminary-earnings-consensus-surprise)
-- [ ] 유상증자·CB 공시의 주가 영향
+- [x] 유상증자·CB 공시의 주가 영향 (20261121-rights-offering-cb-disclosure-price-impact)
 - [ ] 자사주 공시의 진짜 의미
 - [ ] 합병·분할·공개매수 이벤트 전략
 - [ ] 지수 편출입 이벤트
