@@ -126,6 +126,9 @@
 - [x] 조회공시 (inquiry-disclosure)
 - [x] 공정공시 (fair-disclosure)
 - [x] 불성실공시법인 (unfaithful-disclosure-corporation)
+- [x] 합병가액 (merger-valuation)
+- [x] 합병 차익거래 (merger-arbitrage)
+- [x] 합병 외부평가 (merger-external-valuation)
 
 ### 재무제표
 - [x] 영업이익 (operating-profit)
