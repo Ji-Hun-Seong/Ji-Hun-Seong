@@ -1161,12 +1161,16 @@ PICKS = {"hero_us": (lambda: picks_hero_db("us"), 60), "hero_eu": (lambda: picks
          "fund": (lambda: __import__("fund_sim").summary(), 120),
          "etf": (lambda: __import__("etf").summary(), 600),
          "fxh": (lambda: __import__("fx_hedge").summary(), 6 * 3600),     # 💱 환헤지 vs 환노출 백테스트
-         "fear": (lambda: __import__("fear").summary(), 3 * 3600)}        # 😱 공포지수 + 공포 때 매수 백테스트
+         "fear": (lambda: __import__("fear").summary(), 3 * 3600)}        # 🌡️ 공포지수 (ETF 탭 안 접는 칸) + 공포 때 매수 백테스트
 
 
 def picks(kind):
     fn, ttl = PICKS.get(kind, PICKS["hero"])
-    return swr("picks:" + kind, ttl, fn)
+    v = swr("picks:" + kind, ttl, fn)
+    if kind == "fear" and isinstance(v, dict) and v.get("error") and not v.get("vix"):
+        with _lock:                                  # 야후가 잠깐 막힌 실패를 3시간 붙잡고 있지 않게 — 다음에 열 때 다시 받음
+            _cache.pop("picks:" + kind, None)
+    return v
 
 
 # ── 종목 상세: 시세·이평선·볼린저·수급·재무·공시·밸류를 한 번에 ─────────────────────

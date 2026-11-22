@@ -1,8 +1,8 @@
-"""😱 공포지수 — 지금 시장 심리 + '공포 때 사면 정말 더 벌까?' 백테스트 (QQQ·SPY)
+"""🌡️ 공포지수 — 지금 시장 심리 + '공포 때 사면 정말 더 벌까?' 백테스트 (QQQ·SPY)
 
 지금 값
   · CNN 공포·탐욕 지수(0~100) — production.dataviz.cnn.io (막히면 생략)
-  · VIX(변동성 지수) — 야후 ^VIX. 1990년부터 있어 긴 백테스트는 VIX로 함
+  · VIX(변동성 지수) — 야후 ^VIX (막히면 FRED VIXCLS). 1990년부터 있어 긴 백테스트는 VIX로 함
     구간: 극도 공포 VIX 30↑ · 공포 20~30 · 보통 15~20 · 안심(탐욕) 15 미만
 
 백테스트 (배당 재투자 수정주가 adjclose, 수수료·세금·환율 제외, 달러 기준)
@@ -31,19 +31,42 @@ CNN_URL = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata/"
 
 # ── 데이터 ──────────────────────────────────────────
 def _yahoo_adj(symbol: str):
-    """야후 일봉 전체 → 수정주가(배당 재투자) Series"""
+    """야후 일봉 전체 → 수정주가(배당 재투자) Series
+    야후가 서버 요청을 가끔 막음(429 등) → query1·query2 번갈아 두 번씩 시도"""
     import pandas as pd
     import requests
     from data_sources import UA
-    r = requests.get(f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}",
-                     params={"range": "max", "interval": "1d", "events": "div,splits"}, headers=UA, timeout=20)
-    r.raise_for_status()
-    res = r.json()["chart"]["result"][0]
+    last = None
+    for i, host in enumerate(("query1", "query2", "query1", "query2")):
+        if i:
+            time.sleep(1.5 * i)
+        try:
+            r = requests.get(f"https://{host}.finance.yahoo.com/v8/finance/chart/{symbol}",
+                             params={"range": "max", "interval": "1d", "events": "div,splits"}, headers=UA, timeout=20)
+            r.raise_for_status()
+            res = r.json()["chart"]["result"][0]
+            break
+        except Exception as e:
+            last = e
+    else:
+        raise last
     ind = res["indicators"]
     px = (ind.get("adjclose") or [{}])[0].get("adjclose") or ind["quote"][0]["close"]
     idx = pd.to_datetime(res["timestamp"], unit="s", utc=True).tz_convert("America/New_York").tz_localize(None).normalize()
     s = pd.Series(px, index=idx, dtype="float64").dropna()
     return s[~s.index.duplicated(keep="last")]
+
+
+def _vix():
+    """VIX 일별 — 야후 ^VIX, 막히면 FRED VIXCLS(미 연준 세인트루이스, 1990~)로"""
+    try:
+        return _yahoo_adj("^VIX"), "야후"
+    except Exception as e:
+        try:
+            from fx_hedge import _fred
+            return _fred("VIXCLS"), "FRED"
+        except Exception:
+            raise e
 
 
 def _cnn():
@@ -231,9 +254,9 @@ def summary():
     t0 = time.time()
     out = {"kind": "fear", "zones": [[k, n, lo, hi] for k, n, lo, hi in ZONES], "cnn_bands": [[k, n, lo, hi] for k, n, lo, hi in CNN_BANDS]}
     try:
-        vix = _yahoo_adj("^VIX")
+        vix, out["vix_src"] = _vix()
     except Exception as e:
-        return {**out, "error": f"야후에서 VIX를 못 받았어요 ({type(e).__name__})"}
+        return {**out, "error": f"VIX를 못 받았어요 — 잠시 뒤 다시 열어 보세요 ({type(e).__name__})"}
     vnow = float(vix.iloc[-1])
     out["vix"] = {"now": round(vnow, 2), "date": vix.index[-1].strftime("%Y-%m-%d"), "zone": zone_of(vnow),
                   "pct": round(float((vix < vnow).mean() * 100)),          # 1990년 이후 하루하루 중 지금보다 낮았던 날의 비율

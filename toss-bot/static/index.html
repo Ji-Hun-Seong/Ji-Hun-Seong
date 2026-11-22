@@ -387,7 +387,7 @@ details summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px}
 
 <section id="t-pick">
   <div class="ironbar fomo" id="p-iron">🧘 <b>FOMO 금지</b> · 여기 목록은 공부·관찰용 — 이미 급등한 종목은 쫓지 않고, 원칙에 맞는 가격까지 기다린다</div>
-  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button><button data-k="fear">😱 공포</button><button data-k="screen">🔎 필터</button></div>
+  <div class="seg" id="p-seg"><button data-k="hero" class="act">🏛️ 대가</button><button data-k="surge">🚀 급등</button><button data-k="fund">🏦 펀드</button><button data-k="etf">📦 ETF</button><button data-k="screen">🔎 필터</button></div>
   <div id="p-out"><div class="card"><div class="empty">불러오는 중…</div></div></div>
 </section>
 
@@ -1550,7 +1550,7 @@ function finChart(a) {
 // ── 발굴 탭 ──────────────────────────────────────────
 let pKind = "hero"; const PK = {};
 try { pKind = localStorage.getItem("p-kind") || "hero"; } catch (e) {}
-if (!["hero", "surge", "fund", "etf", "fear", "screen"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
+if (!["hero", "surge", "fund", "etf", "screen"].includes(pKind)) pKind = "hero";   // 애크먼 탭은 뺌(대가 탭 🇺🇸 미국과 겹쳐서) — 데이터 수집은 그대로
 document.querySelectorAll("#p-seg button").forEach(b => {
   b.classList.toggle("act", b.dataset.k === pKind);
   b.onclick = () => { pKind = b.dataset.k; try { localStorage.setItem("p-kind", pKind); } catch (e) {}
@@ -1850,7 +1850,9 @@ function etfRender(d) {
       ${x.sibs && !eFull && !(eLow && nFee) ? `<div class="tiny mut" style="margin-top:2px">같은 지수 ETF ${x.sibs + 1}개 중 1년 수익 1등 (${x.sib_names.map(esc).join(", ")}${x.sibs > 3 ? " 등" : ""})</div>` : ""}</div>`).join("");
   const fOpen = !!($("e-fxh") && $("e-fxh").open);
   const fxhBox = `<details id="e-fxh" style="margin:10px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:12px"${fOpen ? " open" : ""}><summary style="font-size:15px;font-weight:700;color:var(--txt)">💱 환헤지(H) vs 환노출 — S&P500·나스닥100 백테스트 <span class="tiny" style="color:var(--blue)">${fOpen ? "접기" : "펼치기"}</span></summary><div id="fxh-out"></div></details>`;
-  $("p-out").innerHTML = (gOpen ? ETF_GUIDE.replace('id="e-guide">', 'id="e-guide" open>').replace(">펼치기<", ">접기<") : ETF_GUIDE).replace("<!--FXH-->", fxhBox) + head + `<div class="card">${rows || `<div class="empty">${d.empty ? "아직 받은 데이터가 없어요 — 서버가 KRX에서 받는 중" : "이 분류에 해당하는 ETF가 없어요"}</div>`}</div>`;
+  const rOpen = !!($("e-fear") && $("e-fear").open);
+  const frBox = `<details class="card" id="e-fear"${rOpen ? " open" : ""}><summary style="font-size:15px;font-weight:700;color:var(--txt)">🌡️ 공포지수 — 공포 때 사면 더 벌까? (QQQ·SPY) <span class="tiny" style="color:var(--blue)">${rOpen ? "접기" : "펼치기"}</span></summary><div id="fr-out"></div></details>`;
+  $("p-out").innerHTML = (gOpen ? ETF_GUIDE.replace('id="e-guide">', 'id="e-guide" open>').replace(">펼치기<", ">접기<") : ETF_GUIDE).replace("<!--FXH-->", fxhBox) + frBox + head + `<div class="card">${rows || `<div class="empty">${d.empty ? "아직 받은 데이터가 없어요 — 서버가 KRX에서 받는 중" : "이 분류에 해당하는 ETF가 없어요"}</div>`}</div>`;
   $("p-out").querySelectorAll("[data-ec]").forEach(b => b.onclick = () => { eCat = b.dataset.ec; try { localStorage.setItem("e-cat", eCat); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-el]").forEach(b => b.onclick = () => { eLow = b.dataset.el === "1"; try { localStorage.setItem("e-low", eLow ? "1" : "0"); } catch (e) {} etfRender(d); });
   $("p-out").querySelectorAll("[data-ek]").forEach(b => b.onclick = () => { eKr = b.dataset.ek; try { localStorage.setItem("e-kr", eKr); } catch (e) {} etfRender(d); });
@@ -1859,6 +1861,7 @@ function etfRender(d) {
   $("p-out").querySelectorAll("[data-ec2]").forEach(el => el.onclick = () => openStock(el.dataset.ec2));
   const g = $("e-guide"); if (g) g.ontoggle = (ev) => { if (ev && ev.target !== g) return; const s = g.querySelector("summary .tiny"); if (s) s.textContent = g.open ? "접기" : "펼치기"; };
   const fx = $("e-fxh"); if (fx) { fx.ontoggle = () => { const s = fx.querySelector("summary .tiny"); if (s) s.textContent = fx.open ? "접기" : "펼치기"; if (fx.open) fxhLoad(); }; if (fx.open) fxhLoad(); }
+  const fr = $("e-fear"); if (fr) { fr.ontoggle = () => { const s = fr.querySelector("summary .tiny"); if (s) s.textContent = fr.open ? "접기" : "펼치기"; if (fr.open) frLoad(); }; if (fr.open) frLoad(); }
 }
 // 💱 환헤지(H) vs 환노출 — 서버 chartpage/fx_hedge.py (6시간 캐시)
 let FXH = null, fxIdx = "sp";
@@ -1899,20 +1902,28 @@ function fxhRender() {
   if (L.m) line("fxh-c1", L.m.d, [{data: reb(L.m.unh), color: "#4f8cff", label: "환노출"}, {data: reb(L.m.hed), color: "#f59e0b", label: "환헤지(H)"}, {data: reb(L.m.usd), color: "#9aa4b2", label: "달러 그대로", dash: [4, 3]}]);
   if (P.m) line("fxh-c2", P.m.d, [{data: reb(P.m.unh), color: "#4f8cff", label: "환노출"}, {data: reb(P.m.hed), color: "#f59e0b", label: "환헤지(H)"}]);
 }
-// 😱 공포지수 — CNN 공포·탐욕 + VIX, 공포 때 사면 더 벌었는지 QQQ·SPY 백테스트 (chartpage/fear.py)
+// 🌡️ 공포지수 — ETF 탭 안 접는 칸. CNN 공포·탐욕 + VIX, 공포 때 사면 더 벌었는지 QQQ·SPY 백테스트 (chartpage/fear.py, 3시간 캐시)
+let FR = null;
+async function frLoad() {
+  if (FR && !FR.error) return fearRender(FR);
+  $("fr-out").innerHTML = `<div class="empty">계산 중… (처음 한 번 20초쯤)</div>`;
+  try { FR = await (await fetch("api/picks?k=fear", {cache: "no-store"})).json(); } catch (e) { $("fr-out").innerHTML = `<div class="empty">불러오기 실패: ${esc(e.message)}</div>`; return; }
+  fearRender(FR);
+}
 let frSym = "QQQ", frPer = "all", frSig = "vix";
 try { frSym = localStorage.getItem("fr-sym") || "QQQ"; frPer = localStorage.getItem("fr-per") || "all"; frSig = localStorage.getItem("fr-sig") || "vix"; } catch (e) {}
 const FR_KO = {"extreme fear": "극도 공포", "fear": "공포", "neutral": "중립", "greed": "탐욕", "extreme greed": "극도 탐욕"};
 const FR_COL = {xfear: "#e5484d", fear: "#f5a524", mid: "#9aa4b2", calm: "#2fbf71", greed: "#2fbf71", xgreed: "#12a150"};
 function fearRender(d) {
-  if (d.error && !d.assets) { $("p-out").innerHTML = `<div class="card"><div class="empty">${esc(d.error)}</div></div>`; return; }
+  const out = $("fr-out"); if (!out) return;
+  if (d.error && !d.assets) { out.innerHTML = `<div class="empty">${esc(d.error)}</div>`; return; }
   const pc = v => v == null ? `<span class="mut">-</span>` : `<span class="${cls(v)}">${v > 0 ? "+" : ""}${Number(v).toFixed(1)}%</span>`;
   const usd = v => v == null ? "-" : "$" + fmtN(v);
   const Z = Object.fromEntries((d.zones || []).map(z => [z[0], z])), CB = Object.fromEntries((d.cnn_bands || []).map(z => [z[0], z]));
   const V = d.vix || {}, C = d.cnn || {};
   const gauge = (score, zone, name) => `<div style="flex:1;text-align:center;padding:10px 4px;border:1px solid var(--line);border-radius:12px">
       <div class="tiny mut">${name}</div><div style="font-size:30px;font-weight:800;color:${FR_COL[zone] || "var(--txt)"}">${score == null ? "-" : score}</div>`;
-  let h = `<div class="card"><div class="label">😱 지금 공포지수</div><div style="display:flex;gap:8px;margin-top:8px">
+  let h = `<div style="margin-top:10px"><div class="label">지금 공포지수</div><div style="display:flex;gap:8px;margin-top:8px">
     ${gauge(C.score != null ? Math.round(C.score) : null, C.zone, "CNN 공포·탐욕 (0~100)")}<div class="small" style="font-weight:700;color:${FR_COL[C.zone] || "var(--sub)"}">${C.rating ? esc(FR_KO[C.rating] || C.rating) : "못 받음"}</div>
       ${C.prev ? `<div class="tiny mut" style="margin-top:4px">1주 전 ${C.prev.previous_1_week ?? "-"} · 1달 전 ${C.prev.previous_1_month ?? "-"} · 1년 전 ${C.prev.previous_1_year ?? "-"}</div>` : ""}</div>
     ${gauge(V.now, V.zone, "VIX 변동성 지수")}<div class="small" style="font-weight:700;color:${FR_COL[V.zone] || "var(--sub)"}">${esc((Z[V.zone] || [])[1] || "-")}</div>
@@ -1920,9 +1931,9 @@ function fearRender(d) {
     <canvas id="fr-vix" style="margin-top:10px"></canvas>
     <div class="tiny mut" style="margin-top:6px;line-height:1.6">CNN 지수: 낮을수록 공포(0~25 극도 공포 · 75~100 극도 탐욕) · VIX: 높을수록 공포(30↑ 극도 공포 · 20~30 공포 · 15~20 보통 · 15↓ 안심) · ${esc(V.date || "")} 기준</div></div>`;
   const A = (d.assets || {})[frSym] || Object.values(d.assets || {})[0];
-  if (!A) { $("p-out").innerHTML = h + `<div class="card"><div class="empty">가격 데이터를 못 받았어요</div></div>`; return; }
+  if (!A) { out.innerHTML = h + `<div class="empty">가격 데이터를 못 받았어요</div>`; return; }
   const chips = (attr, cur, list) => `<div class="seg" style="margin-top:8px">${list.map(([k, n]) => `<button ${attr}="${k}" class="${k === cur ? "act" : ""}">${n}</button>`).join("")}</div>`;
-  h += `<div class="card">${chips("data-frs", frSym, Object.entries(d.assets).map(([k, a]) => [k, a.name]))}`;
+  h += `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:6px">${chips("data-frs", frSym, Object.entries(d.assets).map(([k, a]) => [k, a.name]))}`;
   // ① 구간별 그 뒤 수익률
   const useCnn = frSig === "cnn" && A.fwd_cnn, F = useCnn ? A.fwd_cnn : A.fwd, rowsZ = useCnn ? d.cnn_bands : d.zones;
   h += `<div class="label" style="margin-top:12px">① 그날 샀다면 — 공포 구간별 그 뒤 수익률</div>
@@ -1940,7 +1951,7 @@ function fearRender(d) {
     ${chips("data-frp", frPer, Object.entries(A.periods).map(([k, p]) => [k, p.label]))}
     <div class="tiny mut" style="margin-top:6px">${esc(P.from)} ~ ${esc(P.to)} · ${P.weeks}주</div>
     <table class="tbl" style="margin-top:6px"><thead><tr><th>전략</th><th>넣은 돈</th><th>지금 가치</th><th>수익률</th><th>연 수익률</th></tr></thead><tbody>
-    ${S.map(([k, n, why]) => { const x = P[k]; const top = k !== "D" && x.irr === best; return `<tr${top ? ' class="mn"' : ""}><td>${k}. ${esc(n)}${top ? " 👑" : ""}<div class="tiny mut" style="white-space:normal;max-width:150px">${why}</div></td>
+    ${S.map(([k, n, why]) => { const x = P[k]; const top = k !== "D" && x.irr === best; return `<tr${top ? ' class="mn"' : ""}><td>${k}. ${esc(n)}${top ? " 🏆" : ""}<div class="tiny mut" style="white-space:normal;max-width:150px">${why}</div></td>
       <td>${usd(x.put)}${x.cash ? `<div class="tiny mut">현금 ${usd(x.cash)}</div>` : ""}</td><td>${usd(x.value)}</td><td>${pc(x.ret)}</td><td>${pc(x.irr)}<div class="tiny mut">매수 ${x.buys}번</div></td></tr>`; }).join("")}</tbody></table>
     <canvas id="fr-dca" style="margin-top:10px"></canvas>
     <div class="tiny mut" style="margin-top:6px;line-height:1.6">연 수익률 = 돈을 넣은 시점까지 따진 IRR(넣은 돈이 다른 B도 공평하게 비교) · 수익률 = 지금 가치 ÷ 넣은 돈 − 1 · C·D는 기다리는 동안 현금 이자 0으로 계산(실제로는 MMF 이자만큼 조금 나아짐) · 수수료·세금·환율 제외, 달러 기준</div>`;
@@ -1950,8 +1961,8 @@ function fearRender(d) {
     ${P.weekday.map(w => `<tr><td>${w.day}요일</td><td>${pc(w.ret)}</td><td>${pc(w.irr)}</td></tr>`).join("")}</tbody></table>
     <div class="tiny mut" style="margin-top:6px">휴장이면 그 주의 바로 앞 거래일 · 요일 차이는 대개 0.1%p 안팎 — 요일보다 '꾸준히'가 훨씬 중요해요</div>
     <div class="tiny mut" style="margin-top:10px">과거 결과일 뿐 앞으로를 보장하지 않아요 · 투자 권유 아님 · 데이터 야후(QQQ·SPY·^VIX), CNN${d.took ? ` · 계산 ${d.took}초` : ""}</div></div>`;
-  $("p-out").innerHTML = h;
-  const bind = (attr, fn) => $("p-out").querySelectorAll(`[${attr}]`).forEach(b => b.onclick = () => { fn(b.getAttribute(attr)); fearRender(d); });
+  out.innerHTML = h;
+  const bind = (attr, fn) => out.querySelectorAll(`[${attr}]`).forEach(b => b.onclick = () => { fn(b.getAttribute(attr)); fearRender(d); });
   bind("data-frs", v => { frSym = v; try { localStorage.setItem("fr-sym", v); } catch (e) {} });
   bind("data-frp", v => { frPer = v; try { localStorage.setItem("fr-per", v); } catch (e) {} });
   bind("data-frg", v => { frSig = v; try { localStorage.setItem("fr-sig", v); } catch (e) {} });
@@ -1961,7 +1972,6 @@ function fearRender(d) {
 function pRender(d) {
   if (d.kind === "fund") return fundRender(d);
   if (d.kind === "etf") return etfRender(d);
-  if (d.kind === "fear") return fearRender(d);
   if (d.error) { $("p-out").innerHTML = `<div class="card"><div class="empty">${esc(d.error)}${d.kind === "surge" || pKind === "surge" ? "<br><br>급등 후보는 평일 장 마감 후(18:45쯤) 처음 만들어집니다." : ""}</div></div>`; return; }
   pItems = d.items.concat(d.more || []);
   const open = i => `data-pi="${i}"`;
