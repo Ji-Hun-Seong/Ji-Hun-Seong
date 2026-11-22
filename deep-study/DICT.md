@@ -88,6 +88,9 @@
 - [x] 재고자산회전일수 (inventory-days)
 - [x] D램 고정거래가격 (dram-contract-price)
 - [x] HBM(고대역폭 메모리) (hbm)
+- [x] 장기공급계약(LTA) (long-term-supply-agreement)
+- [x] 트레이드 레시오(웨이퍼 투입 비율) (wafer-trade-ratio)
+- [x] 비트 그로스와 평균판매단가(ASP) (bit-growth-asp)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)

@@ -57,7 +57,7 @@
 
 ## 산업 분석
 - [x] 반도체 사이클과 메모리 지표 ①: 가격·재고·가동률·설비투자로 사이클 위치 읽기 (20261123-memory-cycle-indicators-price-inventory-capex)
-- [ ] 반도체 사이클과 메모리 지표 ②: HBM·AI 수요 구조와 한국 수출·잠정실적으로 회사별 이익 추정
+- [x] 반도체 사이클과 메모리 지표 ②: HBM·AI 수요 구조와 한국 수출·잠정실적으로 회사별 이익 추정 (20261123-hbm-ai-demand-korea-exports-earnings-estimation)
 - [ ] 2차전지 밸류체인
 - [ ] 조선 수주잔고 읽기
 - [ ] 방산 수출 계약 구조
