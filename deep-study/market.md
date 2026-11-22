@@ -53,7 +53,7 @@
 - [x] 합병·분할·공개매수 이벤트 전략 ③: 공개매수 — 응모·안분 계산, 경쟁 공개매수, 의무공개매수 개정안 (20261122-tender-offer-proration-competing-mandatory)
 - [x] 지수 편출입 이벤트 ①: 코스피200 정기변경 — 선정 규칙·패시브 수요·발표 전후 수익률 (20261122-kospi200-index-rebalancing-event)
 - [x] 지수 편출입 이벤트 ②: MSCI·FTSE·S&P 500 리뷰 — 발표·반영 일정, 외국인 한도·유동비율, 사전 예측과 반영일 수익률 (20261122-msci-ftse-sp500-index-review-events)
-- [ ] 보호예수 해제와 오버행
+- [x] 보호예수 해제와 오버행 (20261122-lockup-expiry-overhang)
 
 ## 산업 분석
 - [ ] 반도체 사이클과 메모리 지표

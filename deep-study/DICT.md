@@ -81,8 +81,8 @@
 - [x] MSCI 지수 정기변경 (msci-index-review)
 - [x] 외국인 투자 여유분 (foreign-room)
 - [x] S&P 500 편입 요건 (sp500-eligibility)
-- [ ] 사이드카
-- [ ] 서킷브레이커
+- [x] 사이드카 (sidecar)
+- [x] 서킷브레이커 (circuit-breaker)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
@@ -109,6 +109,7 @@
 - [x] 기술특례상장 (tech-special-listing)
 - [x] 추정 실적 괴리율 (forecast-deviation-rate)
 - [x] 환매청구권(풋백옵션) (ipo-putback-option)
+- [x] 유통가능물량 (tradable-shares-after-listing)
 - [x] 사업보고서 (business-report)
 - [x] 감사의견 (audit-opinion)
 - [x] 주요사항보고서 (material-event-report)
