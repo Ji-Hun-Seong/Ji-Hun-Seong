@@ -324,8 +324,8 @@
 - [x] 투자신탁과 투자회사 (investment-trust-company)
 - [x] 환매연기 (redemption-deferral)
 - [x] 수익자총회 (beneficiaries-meeting)
-- [ ] 수탁회사·일반사무관리회사
-- [ ] 개방형·폐쇄형·환매금지형
+- [x] 수탁회사·일반사무관리회사
+- [x] 개방형·폐쇄형·환매금지형
 - [ ] 단위형·추가형
 - [ ] 공모펀드·사모펀드
 - [ ] ETF와 PDF
