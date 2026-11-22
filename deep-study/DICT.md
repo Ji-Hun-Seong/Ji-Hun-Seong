@@ -319,6 +319,8 @@
 - [x] 원본 (fund-principal)
 - [x] 집합투자규약 (fund-bylaws)
 - [x] 투자신탁과 투자회사 (investment-trust-company)
+- [x] 환매연기 (redemption-deferral)
+- [x] 수익자총회 (beneficiaries-meeting)
 - [ ] 수탁회사·일반사무관리회사
 - [ ] 개방형·폐쇄형·환매금지형
 - [ ] 단위형·추가형
