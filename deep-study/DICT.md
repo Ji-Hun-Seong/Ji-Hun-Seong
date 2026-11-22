@@ -308,6 +308,8 @@
 - [x] 등급 하락 자산 처리 (downgraded-asset-handling)
 - [x] 부도채권 분류·상각 (distressed-bond-writedown)
 - [x] 회생채권 (rehabilitation-claim)
+- [x] 출자전환 (debt-equity-swap)
+- [x] 회생계획 인가·권리변경 (rehabilitation-plan-confirmation)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)

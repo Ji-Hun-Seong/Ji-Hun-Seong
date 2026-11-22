@@ -41,7 +41,7 @@
 - [x] 듀레이션·컨벡시티로 평가손익 검증 (20261121-duration-convexity-pnl-validation)
 - [x] 신용등급 변경과 평가 스프레드 (20261122-credit-rating-change-valuation-spread)
 - [x] 채권 부도·기한이익상실·회생 회계 1: 이자 연체부터 회생 개시까지 — 부실 분류, 원금 상각, 이자 계상 중지 (20261122-bond-default-acceleration-rehabilitation-1)
-- [ ] 채권 부도·기한이익상실·회생 회계 2: 회생계획 인가 뒤 — 권리변경 채권 평가, 상각 환입, 출자전환, 악화단계
+- [x] 채권 부도·기한이익상실·회생 회계 2: 회생계획 인가 뒤 — 권리변경 채권 평가, 상각 환입, 출자전환, 악화단계 (20261122-bond-default-acceleration-rehabilitation-2)
 - [ ] 사이드포켓(부실자산 분리) 절차와 회계
 - [ ] CB 전환·리픽싱 조항 읽기와 평가
 - [ ] BW 분리형·비분리형 처리
