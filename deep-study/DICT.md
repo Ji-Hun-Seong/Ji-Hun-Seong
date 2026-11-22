@@ -324,6 +324,8 @@
 - [x] 회생계획 인가·권리변경 (rehabilitation-plan-confirmation)
 - [x] 전환사채(CB) 펀드 처리 (convertible-bond)
 - [x] 리픽싱(전환가액 조정) (refixing)
+- [x] 패리티·전환 프리미엄 (cb-parity-premium)
+- [x] TF 모형(CB 이항트리) (tf-binomial-cb)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
