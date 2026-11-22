@@ -78,6 +78,9 @@
 - [x] 코스피200 정기변경 (kospi200-periodic-rebalancing)
 - [x] 유동주식비율 (free-float-ratio)
 - [x] 패시브 펀드 (passive-index-fund)
+- [x] MSCI 지수 정기변경 (msci-index-review)
+- [x] 외국인 투자 여유분 (foreign-room)
+- [x] S&P 500 편입 요건 (sp500-eligibility)
 - [ ] 사이드카
 - [ ] 서킷브레이커
 
