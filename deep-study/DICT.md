@@ -75,6 +75,9 @@
 - [x] 미결제약정 (open-interest)
 - [x] 델타 헤지 (delta-hedging)
 - [x] 풋콜비율 (put-call-ratio)
+- [x] 코스피200 정기변경 (kospi200-periodic-rebalancing)
+- [x] 유동주식비율 (free-float-ratio)
+- [x] 패시브 펀드 (passive-index-fund)
 - [ ] 사이드카
 - [ ] 서킷브레이커
 

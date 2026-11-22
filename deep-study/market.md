@@ -51,7 +51,8 @@
 - [x] 합병·분할·공개매수 이벤트 전략 ①: 합병 — 합병가액·합병비율·매수청구권과 차익거래 (20261121-merger-event-ratio-appraisal-arbitrage)
 - [x] 합병·분할·공개매수 이벤트 전략 ②: 분할 — 인적·물적분할, 분할비율, 재상장과 자회사 상장 (20261122-spin-off-split-ratio-relisting-subsidiary-ipo)
 - [x] 합병·분할·공개매수 이벤트 전략 ③: 공개매수 — 응모·안분 계산, 경쟁 공개매수, 의무공개매수 개정안 (20261122-tender-offer-proration-competing-mandatory)
-- [ ] 지수 편출입 이벤트
+- [x] 지수 편출입 이벤트 ①: 코스피200 정기변경 — 선정 규칙·패시브 수요·발표 전후 수익률 (20261122-kospi200-index-rebalancing-event)
+- [ ] 지수 편출입 이벤트 ②: MSCI·FTSE·S&P 500 리뷰 — 발표·반영 일정, 외국인 한도·유동비율, 사전 예측과 반영일 수익률
 - [ ] 보호예수 해제와 오버행
 
 ## 산업 분석
