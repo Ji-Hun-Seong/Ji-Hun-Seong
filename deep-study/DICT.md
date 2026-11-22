@@ -84,6 +84,11 @@
 - [x] 사이드카 (sidecar)
 - [x] 서킷브레이커 (circuit-breaker)
 
+### 산업 분석
+- [x] 재고자산회전일수 (inventory-days)
+- [x] D램 고정거래가격 (dram-contract-price)
+- [x] HBM(고대역폭 메모리) (hbm)
+
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
 - [ ] 신주배정기준일
