@@ -49,7 +49,7 @@
 - [x] BW 분리형·비분리형 처리 (20261123-bw-detachable-non-detachable)
 - [x] 교환사채와 메자닌 평가 모형 (20261123-exchangeable-bond-mezzanine-valuation)
 - [x] 채권 대차와 레포 거래 회계 1: 채권 대차 — 수수료·이표 보전·세금 귀속·담보·부도·차입 매도의 장부 (20261123-bond-lending-borrowing-accounting-1)
-- [ ] 채권 대차와 레포 거래 회계 2: 환매조건부매매(RP 매도·매수)의 구조·이자 귀속·펀드 장부
+- [x] 채권 대차와 레포 거래 회계 2: 환매조건부매매(RP 매도·매수)의 구조·이자 귀속·펀드 장부 (20261124-repo-rp-sell-buy-fund-accounting-2)
 
 ## 대체자산
 - [ ] 실물 부동산 취득부대비용과 평가
