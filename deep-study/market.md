@@ -62,7 +62,7 @@
 - [x] 2차전지 밸류체인 ②: 수요(전기차·ESS)·LFP 전환·중국 경쟁과 수주잔고, 외국 법인 제한(FEOC) 위험 (20261123-battery-demand-ess-lfp-china-backlog-feoc)
 - [x] 조선 수주잔고 읽기 (20261124-shipbuilding-order-backlog-reading)
 - [x] 방산 수출 계약 구조 (20261124-defense-export-contract-structure)
-- [ ] 바이오 임상 단계와 기술이전
+- [x] 바이오 임상 단계와 기술이전 (20261124-biotech-clinical-phases-licensing-deals)
 - [ ] 은행 NIM과 대손비용
 - [ ] 자동차 판매·환율 민감도
 - [ ] 화학·정유 스프레드

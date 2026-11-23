@@ -100,6 +100,9 @@
 - [x] 헤비테일 (heavy-tail-payment)
 - [x] 절충교역 (defense-offset)
 - [x] 지체상금 (liquidated-damages-delay)
+- [x] 기술이전(라이선스 아웃) (license-out)
+- [x] 계약금·마일스톤·로열티 (upfront-milestone-royalty)
+- [x] 임상 단계별 승인 확률(LOA) (likelihood-of-approval)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
