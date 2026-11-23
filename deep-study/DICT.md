@@ -387,6 +387,8 @@
 - [ ] 환헤지 클래스
 
 ### 대체자산
+- [x] 사실상취득가격(취득세 과세표준) (actual-acquisition-price)
+- [x] 공정가액 연 1회 평가(외부평가 우선) (fair-value-annual-valuation)
 - [ ] 임대보증금
 - [ ] 마스터리스·책임임차
 - [ ] WALE와 공실률
