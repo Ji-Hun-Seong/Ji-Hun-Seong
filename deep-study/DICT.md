@@ -97,6 +97,7 @@
 - [x] 금지외국기관(FEOC) 규칙 (prohibited-foreign-entity)
 - [x] 에너지저장장치(ESS) (energy-storage-system)
 - [x] 수주잔고 (order-backlog)
+- [x] 헤비테일 (heavy-tail-payment)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
@@ -184,6 +185,8 @@
 - [x] 알트만 Z-스코어 (altman-z-score)
 - [x] 주식보상비용 (stock-based-compensation)
 - [x] 런웨이 (cash-runway)
+- [x] 계약자산·계약부채 (contract-asset-liability)
+- [x] 진행기준 수익인식 (percentage-of-completion)
 
 ### 가치 지표
 - [x] PEG (peg)

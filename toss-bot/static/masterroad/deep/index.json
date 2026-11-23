@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261124-shipbuilding-order-backlog-reading",
+"area": "산업 분석",
+"t": "조선 수주잔고 읽기",
+"date": "2026-11-24",
+"sum": "진행기준·계약자산·손실부담계약을 한 계약으로 끝까지 계산하고, 조선 3사 잔고 연수·선가 시차·점유율·분식 사례로 잔고의 '가격대와 원가 위험'을 읽는다.",
+"n_sections": 16,
+"n_qs": 12,
+"chars": 18233
+},
+{
 "id": "20261123-memory-cycle-indicators-price-inventory-capex",
 "area": "산업 분석",
 "t": "반도체 사이클과 메모리 지표 ①: 가격·재고·가동률·설비투자로 사이클 위치 읽기",

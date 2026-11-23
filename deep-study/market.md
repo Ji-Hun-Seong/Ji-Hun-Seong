@@ -60,7 +60,7 @@
 - [x] 반도체 사이클과 메모리 지표 ②: HBM·AI 수요 구조와 한국 수출·잠정실적으로 회사별 이익 추정 (20261123-hbm-ai-demand-korea-exports-earnings-estimation)
 - [x] 2차전지 밸류체인 ①: 셀·소재 원가 구조, 메탈 가격 래깅, AMPC가 섞인 이익 읽기 (20261123-battery-value-chain-cost-metal-lag-ampc)
 - [x] 2차전지 밸류체인 ②: 수요(전기차·ESS)·LFP 전환·중국 경쟁과 수주잔고, 외국 법인 제한(FEOC) 위험 (20261123-battery-demand-ess-lfp-china-backlog-feoc)
-- [ ] 조선 수주잔고 읽기
+- [x] 조선 수주잔고 읽기 (20261124-shipbuilding-order-backlog-reading)
 - [ ] 방산 수출 계약 구조
 - [ ] 바이오 임상 단계와 기술이전
 - [ ] 은행 NIM과 대손비용
