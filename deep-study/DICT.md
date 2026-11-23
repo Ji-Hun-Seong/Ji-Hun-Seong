@@ -94,6 +94,9 @@
 - [x] 첨단제조생산세액공제(AMPC) (advanced-manufacturing-production-credit)
 - [x] 메탈 가격 연동·래깅 효과 (metal-price-lagging)
 - [x] 양극재 (cathode-active-material)
+- [x] 금지외국기관(FEOC) 규칙 (prohibited-foreign-entity)
+- [x] 에너지저장장치(ESS) (energy-storage-system)
+- [x] 수주잔고 (order-backlog)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
