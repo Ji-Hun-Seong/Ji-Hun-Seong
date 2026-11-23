@@ -339,6 +339,8 @@
 - [x] 신주인수권증권(워런트) (detachable-warrant)
 - [x] 교환사채(EB) (exchangeable-bond)
 - [x] 자사주 교환사채 (treasury-share-eb)
+- [x] 대차 이표 보전 (lending-coupon-compensation)
+- [x] 채권 차입 매도 (bond-short-sale)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
