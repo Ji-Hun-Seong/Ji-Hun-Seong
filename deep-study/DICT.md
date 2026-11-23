@@ -334,6 +334,8 @@
 - [x] TF 모형(CB 이항트리) (tf-binomial-cb)
 - [x] 신주인수권부사채(BW) (bond-with-warrant)
 - [x] 신주인수권증권(워런트) (detachable-warrant)
+- [x] 교환사채(EB) (exchangeable-bond)
+- [x] 자사주 교환사채 (treasury-share-eb)
 
 ### 펀드 기본·구조
 - [x] 설정조정금·환매조정금 (adjustment-account)
