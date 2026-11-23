@@ -2007,5 +2007,74 @@
   "up": 2,
   "avg": -3.26,
   "market_avg": -3.86
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "294870",
+    "name": "IPARK현대산업개발",
+    "score": 71,
+    "next_chg": -3.51
+   },
+   {
+    "code": "000400",
+    "name": "롯데손해보험",
+    "score": 61,
+    "next_chg": 0.0
+   },
+   {
+    "code": "079160",
+    "name": "CJ CGV",
+    "score": 53,
+    "next_chg": -0.56
+   },
+   {
+    "code": "054930",
+    "name": "유신",
+    "score": 53,
+    "next_chg": -2.34
+   },
+   {
+    "code": "055550",
+    "name": "신한지주",
+    "score": 50,
+    "next_chg": -4.4
+   },
+   {
+    "code": "004990",
+    "name": "롯데지주",
+    "score": 50,
+    "next_chg": -4.05
+   },
+   {
+    "code": "332570",
+    "name": "PS일렉트로닉스",
+    "score": 49.0,
+    "next_chg": -0.66
+   },
+   {
+    "code": "240550",
+    "name": "동방메디컬",
+    "score": 49,
+    "next_chg": -0.72
+   },
+   {
+    "code": "002990",
+    "name": "금호건설",
+    "score": 45,
+    "next_chg": -5.42
+   },
+   {
+    "code": "064290",
+    "name": "인텍플러스",
+    "score": 45,
+    "next_chg": 2.1
+   }
+  ],
+  "n": 10,
+  "hit10": 0,
+  "up": 1,
+  "avg": -1.96,
+  "market_avg": -1.71
  }
 }

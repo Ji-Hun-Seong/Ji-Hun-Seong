@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-23",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 910,
+   "top": [
+    "LS",
+    "한화",
+    "기가비스"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-20",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 873,
@@ -9,8 +21,14 @@
     "롯데손해보험",
     "CJ CGV"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 13,
+   "graded": {
+    "avg": -1.96,
+    "up": 1,
+    "n": 10,
+    "hit10": 0,
+    "market_avg": -1.71
+   }
   },
   {
    "date": "2026-11-13",
