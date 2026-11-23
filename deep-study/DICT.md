@@ -98,6 +98,8 @@
 - [x] 에너지저장장치(ESS) (energy-storage-system)
 - [x] 수주잔고 (order-backlog)
 - [x] 헤비테일 (heavy-tail-payment)
+- [x] 절충교역 (defense-offset)
+- [x] 지체상금 (liquidated-damages-delay)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
@@ -123,6 +125,7 @@
 - [x] 자기주식 소각 의무 (treasury-stock-mandatory-cancellation)
 - [x] 기술특례상장 (tech-special-listing)
 - [x] 추정 실적 괴리율 (forecast-deviation-rate)
+- [x] 단일판매·공급계약 체결 공시 (single-sales-supply-contract)
 - [x] 환매청구권(풋백옵션) (ipo-putback-option)
 - [x] 유통가능물량 (tradable-shares-after-listing)
 - [x] 사업보고서 (business-report)

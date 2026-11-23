@@ -61,7 +61,7 @@
 - [x] 2차전지 밸류체인 ①: 셀·소재 원가 구조, 메탈 가격 래깅, AMPC가 섞인 이익 읽기 (20261123-battery-value-chain-cost-metal-lag-ampc)
 - [x] 2차전지 밸류체인 ②: 수요(전기차·ESS)·LFP 전환·중국 경쟁과 수주잔고, 외국 법인 제한(FEOC) 위험 (20261123-battery-demand-ess-lfp-china-backlog-feoc)
 - [x] 조선 수주잔고 읽기 (20261124-shipbuilding-order-backlog-reading)
-- [ ] 방산 수출 계약 구조
+- [x] 방산 수출 계약 구조 (20261124-defense-export-contract-structure)
 - [ ] 바이오 임상 단계와 기술이전
 - [ ] 은행 NIM과 대손비용
 - [ ] 자동차 판매·환율 민감도
