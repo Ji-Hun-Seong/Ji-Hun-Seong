@@ -46,7 +46,7 @@
 - [x] 사이드포켓(부실자산 분리) 절차와 회계 2: 분리 뒤 별도 펀드의 회수·분배·보수·해지와 재간접·모자형 구조의 전파 (20261122-side-pocket-separate-fund-recovery-termination-2)
 - [x] CB 전환·리픽싱 조항 읽기와 평가 1: 조건표 12칸, 리픽싱·상향·희석 조정 계산, 전환 청구와 상장 전 신주 분개 (20261123-cb-conversion-refixing-terms-1)
 - [x] CB 전환·리픽싱 조항 읽기와 평가 2: 평가 모형 — 채권가치·전환권 분해, 이항 모형, 평가사 가격의 리픽싱·하한 반영과 검증 (20261123-cb-valuation-binomial-tf-model-2)
-- [ ] BW 분리형·비분리형 처리
+- [x] BW 분리형·비분리형 처리 (20261123-bw-detachable-non-detachable)
 - [ ] 교환사채와 메자닌 평가 모형
 - [ ] 채권 대차와 레포 거래 회계
 
