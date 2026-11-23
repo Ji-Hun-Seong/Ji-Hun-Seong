@@ -91,6 +91,9 @@
 - [x] 장기공급계약(LTA) (long-term-supply-agreement)
 - [x] 트레이드 레시오(웨이퍼 투입 비율) (wafer-trade-ratio)
 - [x] 비트 그로스와 평균판매단가(ASP) (bit-growth-asp)
+- [x] 첨단제조생산세액공제(AMPC) (advanced-manufacturing-production-credit)
+- [x] 메탈 가격 연동·래깅 효과 (metal-price-lagging)
+- [x] 양극재 (cathode-active-material)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
