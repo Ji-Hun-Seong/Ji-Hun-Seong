@@ -2043,5 +2043,74 @@
   "up": 1,
   "avg": -1.96,
   "market_avg": -1.71
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "006260",
+    "name": "LS",
+    "score": 59,
+    "next_chg": 5.3
+   },
+   {
+    "code": "000880",
+    "name": "한화",
+    "score": 57,
+    "next_chg": 4.09
+   },
+   {
+    "code": "420770",
+    "name": "기가비스",
+    "score": 55,
+    "next_chg": 3.69
+   },
+   {
+    "code": "090460",
+    "name": "비에이치",
+    "score": 54,
+    "next_chg": 6.05
+   },
+   {
+    "code": "267250",
+    "name": "HD현대",
+    "score": 53,
+    "next_chg": 3.16
+   },
+   {
+    "code": "234340",
+    "name": "헥토파이낸셜",
+    "score": 53,
+    "next_chg": 7.98
+   },
+   {
+    "code": "0009K0",
+    "name": "에임드바이오",
+    "score": 53,
+    "next_chg": 2.47
+   },
+   {
+    "code": "358570",
+    "name": "지아이이노베이션",
+    "score": 52.0,
+    "next_chg": 2.56
+   },
+   {
+    "code": "033270",
+    "name": "유나이티드제약",
+    "score": 52,
+    "next_chg": -0.06
+   },
+   {
+    "code": "086450",
+    "name": "동국제약",
+    "score": 51,
+    "next_chg": 0.8
+   }
+  ],
+  "n": 10,
+  "hit10": 0,
+  "up": 9,
+  "avg": 3.6,
+  "market_avg": 1.44
  }
 }

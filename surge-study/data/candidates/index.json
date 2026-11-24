@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-24",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 436,
+   "top": [
+    "하나금융지주",
+    "셀트리온",
+    "동국제약"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-23",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 910,
@@ -9,8 +21,14 @@
     "한화",
     "기가비스"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 36,
+   "graded": {
+    "avg": 3.6,
+    "up": 9,
+    "n": 10,
+    "hit10": 0,
+    "market_avg": 1.44
+   }
   },
   {
    "date": "2026-11-20",
