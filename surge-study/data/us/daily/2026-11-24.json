@@ -1,0 +1,2073 @@
+{
+ "date": "2026-11-24",
+ "context": {
+  "n_gainers_list": 237,
+  "n_surge": 27,
+  "asof": "2026-11-24T16:03-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-24",
+   "code": "AMTM",
+   "name": "Amentum Holdings, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 6063758848,
+   "chg": 20.096850824182443,
+   "gap": 13.9467366649773,
+   "high_chg": 22.7602946719762,
+   "close_pos": 0.7736621089150877,
+   "upper_wick": 2.663443847793761,
+   "limit_up": false,
+   "tv": 255554072.1382141,
+   "vol_ratio": 5.5413737009800625,
+   "close": 24.799999237060547,
+   "pctb": 0.10768587680849896,
+   "bw": 0.12896948872046174,
+   "bw_pctile": 0.35833333333333334,
+   "squeeze": false,
+   "rsi14": 36.248010018891556,
+   "ma5_gap": -0.008736575999364726,
+   "ma20_gap": -0.050596551885824126,
+   "ma60_gap": 0.019803432599589055,
+   "ma120_gap": -0.014272774034106983,
+   "ma_aligned": false,
+   "ret5": -0.038192814208157566,
+   "ret20": -0.06434073837467968,
+   "ret60": 0.01674052986353014,
+   "from_high": -0.4581474865439584,
+   "from_low": 0.16534991076255956,
+   "vol_ratio_prev": 1.8709617792117226,
+   "tv20_avg": 40502241.89376831,
+   "tv_prev": 68975128.72581482,
+   "prev_chg": 0.015240878250580625,
+   "up_days": 1,
+   "prev_close_pos": 0.3492057244755541,
+   "fr": null,
+   "price": 20.649999618530273,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011286/000179503826000007/xslF345X06/wk-form4_1795556224.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011286/000204490426000005/xslF345X06/wk-form4_1795556162.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011286/000203703726000007/xslF345X06/wk-form4_1795556100.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011286/000155271526000007/xslF345X06/wk-form4_1795556034.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011286/000205755326000005/xslF345X06/wk-form4_1795555965.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011286/000203438826000007/xslF345X06/wk-form4_1795555897.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011286/000117300326000004/xslF345X06/wk-form4_1795555811.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2011286/000191949226000009/xslF345X06/wk-form4_1795555722.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Why Is Amentum Stock Surging Today? - Amentum Holdings (NYSE:AMTM) - Benzinga",
+     "date": "Tue, 24 Nov 2026 20:23:36 GMT"
+    },
+    {
+     "title": "Amentum (NYSE:AMTM) Jumps 20% Despite a Revenue Miss as a First-Ever Buyback Steals the Show - kalkine.com",
+     "date": "Tue, 24 Nov 2026 21:15:00 GMT"
+    },
+    {
+     "title": "Amentum Holdings climbs 16% on earnings beat, buyback plan (AMTM:NYSE) - Seeking Alpha",
+     "date": "Tue, 24 Nov 2026 15:40:25 GMT"
+    },
+    {
+     "title": "AMTM: Amentum Holdings Inc. filed SEC Form 8-K: Results of... - Quantisnow",
+     "date": "Tue, 24 Nov 2026 11:07:46 GMT"
+    },
+    {
+     "title": "Amentum Holdings (AMTM) Q4 Earnings Top Estimates - Yahoo Finance",
+     "date": "Mon, 23 Nov 2026 21:45:02 GMT"
+    },
+    {
+     "title": "Stephen A. Arnette Acquires 40,677 RSUs at Amentum Holdings (NYSE:AMTM) - Kalkine Media",
+     "date": "Wed, 25 Nov 2026 02:25:10 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "M&A",
+    "Guidance·Buyback"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "ANF",
+   "name": "Abercrombie & Fitch Company",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 7133218816,
+   "chg": 19.686728199405266,
+   "gap": 13.129229506641881,
+   "high_chg": 27.006058211982765,
+   "close_pos": 0.528440488981126,
+   "upper_wick": 7.319330012577502,
+   "limit_up": false,
+   "tv": 789969168.6828613,
+   "vol_ratio": 4.49352897022896,
+   "close": 168.10000610351562,
+   "pctb": 0.16580642175819713,
+   "bw": 0.25126747001896915,
+   "bw_pctile": 0.6,
+   "squeeze": false,
+   "rsi14": 37.27245571831296,
+   "ma5_gap": -0.005170717080086429,
+   "ma20_gap": -0.08397197490140418,
+   "ma60_gap": -0.04619725868513125,
+   "ma120_gap": 0.14057014027664372,
+   "ma_aligned": false,
+   "ret5": -0.036495898801477966,
+   "ret20": -0.14739269962378698,
+   "ret60": -0.05369897129112566,
+   "from_high": -0.18343025030091753,
+   "from_low": 1.0156428865257863,
+   "vol_ratio_prev": 2.1681540724027477,
+   "tv20_avg": 159319953.18618774,
+   "tv_prev": 302318618.4310913,
+   "prev_chg": 0.018343958910133962,
+   "up_days": 2,
+   "prev_close_pos": 0.3891753185464842,
+   "fr": null,
+   "price": 140.4499969482422,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "8-K/A",
+     "items": "5.02,7.01,9.01",
+     "items_kr": "임원 변동, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1018840/000101884026000055/anf-20260818.htm"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "8-K",
+     "items": "2.02,9.01",
+     "items_kr": "실적 발표, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1018840/000101884026000052/anf-20261124.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Abercrombie & Fitch (ANF) Has Investors Rushing Back. Here’s Why - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 02:19:00 GMT"
+    },
+    {
+     "title": "3 Retail Stocks Soar After Upbeat Earnings Reports - Schaeffer's Investment Research",
+     "date": "Tue, 24 Nov 2026 16:46:41 GMT"
+    },
+    {
+     "title": "ANF: Abercrombie & Fitch Company filed SEC Form 8-K: Results of... - Quantisnow",
+     "date": "Tue, 24 Nov 2026 14:50:48 GMT"
+    },
+    {
+     "title": "Abercrombie Defies Freight Headwinds, Delivers Record Sales, Raises Outlook - Benzinga",
+     "date": "Tue, 24 Nov 2026 17:58:07 GMT"
+    },
+    {
+     "title": "Sat Out Abercrombie & Fitch's Rally? Here Is What Holders Saw - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 01:09:00 GMT"
+    },
+    {
+     "title": "GigaCloud Technology leads quant ratings among mid-cap consumer discretionary stocks (ANF:NYSE) - Seeking Alpha",
+     "date": "Tue, 24 Nov 2026 16:48:21 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Guidance·Buyback"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "KSS",
+   "name": "Kohl's Corporation",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2871825408,
+   "chg": 19.481127415742417,
+   "gap": 4.575468294558682,
+   "high_chg": 19.999998200614556,
+   "close_pos": 0.9666664932713965,
+   "upper_wick": 0.5188707848721348,
+   "limit_up": false,
+   "tv": 292168884.1199875,
+   "vol_ratio": 3.0254981730812105,
+   "close": 25.329999923706055,
+   "pctb": -0.17569005794173395,
+   "bw": 0.1582340207853512,
+   "bw_pctile": 0.14166666666666666,
+   "squeeze": false,
+   "rsi14": 40.36624132486628,
+   "ma5_gap": -0.06665490605514579,
+   "ma20_gap": -0.10691715467280749,
+   "ma60_gap": 0.01934515035458184,
+   "ma120_gap": 0.09458904867509266,
+   "ma_aligned": false,
+   "ret5": -0.09285408636575498,
+   "ret20": -0.10359403361982278,
+   "ret60": 0.21142861502511168,
+   "from_high": -0.17187498253770195,
+   "from_low": 0.8629174472535563,
+   "vol_ratio_prev": 2.3492454352897756,
+   "tv20_avg": 89908001.7129612,
+   "tv_prev": 180816926.5071869,
+   "prev_chg": -0.047190976946541396,
+   "up_days": 0,
+   "prev_close_pos": 0.1421323777868358,
+   "fr": null,
+   "price": 21.200000762939453,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "8-K",
+     "items": "2.02,7.01,8.01,9.01",
+     "items_kr": "실적 발표, IR 자료, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/885639/000119312526473133/d168523d8k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Kohl’s Corp. (KSS) Delivers a Long-Awaited Surprise to Investors - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 02:14:00 GMT"
+    },
+    {
+     "title": "KSS Stock Rally: Kohl’s Comparable Sales Return To Growth In Q3 As Retailer Raises FY26 Outlook - TradingView",
+     "date": "Tue, 24 Nov 2026 16:08:35 GMT"
+    },
+    {
+     "title": "Kohl's Shares Rally on Confidence in Holiday Readiness - Benzinga",
+     "date": "Tue, 24 Nov 2026 17:03:59 GMT"
+    },
+    {
+     "title": "KSS: Kohl's Corporation filed SEC Form 8-K: Results of Operations... - Quantisnow",
+     "date": "Tue, 24 Nov 2026 12:10:48 GMT"
+    },
+    {
+     "title": "Kohl's stock soars after retailer posts sales growth for first time in 4 years - Yahoo Finance",
+     "date": "Tue, 24 Nov 2026 20:05:47 GMT"
+    },
+    {
+     "title": "Kohl's advances 8% in premarket after Q3 beat, outlook raised (KSS:NYSE) - Seeking Alpha",
+     "date": "Tue, 24 Nov 2026 13:38:50 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "CELC",
+   "name": "Celcuity Inc.",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 3328348160,
+   "chg": 18.481095321118634,
+   "gap": -0.08709151226865552,
+   "high_chg": 18.86430594868851,
+   "close_pos": 0.9799816866727156,
+   "upper_wick": 0.3832106275698624,
+   "limit_up": false,
+   "tv": 124184107.87124634,
+   "vol_ratio": 1.7610772695923103,
+   "close": 68.0199966430664,
+   "pctb": 0.1788238233610139,
+   "bw": 0.3300585200741958,
+   "bw_pctile": 0.5666666666666667,
+   "squeeze": false,
+   "rsi14": 32.36895824083892,
+   "ma5_gap": 0.02269489392272428,
+   "ma20_gap": -0.10600693354455226,
+   "ma60_gap": -0.2060243126795307,
+   "ma120_gap": -0.30698497444830963,
+   "ma_aligned": false,
+   "ret5": -0.05217103951351243,
+   "ret20": -0.1275076415687426,
+   "ret60": -0.350859359310311,
+   "from_high": -0.6198516870398405,
+   "from_low": 0.07913532000182699,
+   "vol_ratio_prev": 1.182160280051924,
+   "tv20_avg": 65960395.83787918,
+   "tv_prev": 72411232.8075409,
+   "prev_chg": 0.07610124628701587,
+   "up_days": 1,
+   "prev_close_pos": 0.8551139750267137,
+   "fr": null,
+   "price": 57.40999984741211,
+   "filings": [],
+   "news": [
+    {
+     "title": "Celcuity Inc. (CELC) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 17:07:50 GMT"
+    },
+    {
+     "title": "CELC Jan 2029 50.000 call (CELC290119C00050000) stock price, news, quote and history - Yahoo Finance Australia",
+     "date": "Tue, 24 Nov 2026 18:13:37 GMT"
+    },
+    {
+     "title": "CELC Dec 2026 160.000 call (CELC261218C00160000) interactive stock chart - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 14:04:27 GMT"
+    },
+    {
+     "title": "CELC Jan 2029 50.000 put (CELC290119P00050000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 11:25:34 GMT"
+    },
+    {
+     "title": "CELC Mar 2027 70.000 put (CELC270319P00070000) interactive stock chart - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 04:38:03 GMT"
+    },
+    {
+     "title": "CELC Jan 2029 50.000 put (CELC290119P00050000) Stock Historical Prices & Data - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 23 Nov 2026 19:35:27 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-24",
+   "code": "COGT",
+   "name": "Cogent Biosciences, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 5743556608,
+   "chg": 17.431510511519544,
+   "gap": 3.521877444405308,
+   "high_chg": 24.959084624666914,
+   "close_pos": 0.6534553753441569,
+   "upper_wick": 7.527574113147366,
+   "limit_up": false,
+   "tv": 234635068.069458,
+   "vol_ratio": 3.2897507694443804,
+   "close": 33.0099983215332,
+   "pctb": 0.26291080166662756,
+   "bw": 0.25694271702492505,
+   "bw_pctile": 0.9,
+   "squeeze": false,
+   "rsi14": 40.38462040596679,
+   "ma5_gap": 0.016820420791257673,
+   "ma20_gap": -0.060918342797038005,
+   "ma60_gap": -0.10024964459743246,
+   "ma120_gap": -0.18348968130566845,
+   "ma_aligned": false,
+   "ret5": 0.0244169119261628,
+   "ret20": -0.09058554677718555,
+   "ret60": -0.18921251528849758,
+   "from_high": -0.3571918384494446,
+   "from_low": 0.06638846583762126,
+   "vol_ratio_prev": 0.8856597613409054,
+   "tv20_avg": 64449413.07366371,
+   "tv_prev": 54139861.17553711,
+   "prev_chg": 0.052217871974391095,
+   "up_days": 1,
+   "prev_close_pos": 0.46875004656610375,
+   "fr": null,
+   "price": 28.110000610351562,
+   "filings": [],
+   "news": [
+    {
+     "title": "Cogent Biosciences, Inc. (COGT) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 15:56:53 GMT"
+    },
+    {
+     "title": "Cogent Biosciences (COGT) is Making a Monster Move After This Milestone - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 02:10:00 GMT"
+    },
+    {
+     "title": "COGT Stock Heads For Best Session In Over A Year After FDA Approves Gastrointestinal Cancer Drug - TradingView",
+     "date": "Tue, 24 Nov 2026 16:33:21 GMT"
+    },
+    {
+     "title": "Cogent Bio jumps on FDA nod for lead asset in tumor indication - Seeking Alpha",
+     "date": "Tue, 24 Nov 2026 15:00:30 GMT"
+    },
+    {
+     "title": "Cogent Biosciences Wins FDA Approval for First New Stomach Cancer Treatment in Over 20 Years - Benzinga",
+     "date": "Tue, 24 Nov 2026 18:15:55 GMT"
+    },
+    {
+     "title": "Cogent Biosciences Announces FDA Approval and Launch of EKITNA™... - Quantisnow",
+     "date": "Tue, 24 Nov 2026 14:30:48 GMT"
+    }
+   ],
+   "catalysts": [
+    "FDA·Clinical",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "NAMS",
+   "name": "NewAmsterdam Pharma Company N.V",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 2932288512,
+   "chg": 16.929703210712677,
+   "gap": 0.7651833982768474,
+   "high_chg": 19.928263258262312,
+   "close_pos": 0.8498925318420366,
+   "upper_wick": 2.9985600475496272,
+   "limit_up": false,
+   "tv": 90736397.8313446,
+   "vol_ratio": 1.9918471187159346,
+   "close": 24.450000762939453,
+   "pctb": 0.8483286077346454,
+   "bw": 0.1533049829626889,
+   "bw_pctile": 0.2,
+   "squeeze": false,
+   "rsi14": 54.697674649673345,
+   "ma5_gap": 0.06727235825007738,
+   "ma20_gap": 0.05340051127417689,
+   "ma60_gap": -0.03155961219535719,
+   "ma120_gap": -0.19410708065913673,
+   "ma_aligned": false,
+   "ret5": 0.07451186182718916,
+   "ret20": 0.0706604768176089,
+   "ret60": -0.19266408666462087,
+   "from_high": -0.5045610960730629,
+   "from_low": 0.16815644095130877,
+   "vol_ratio_prev": 1.1857368909259562,
+   "tv20_avg": 36953865.68509102,
+   "tv_prev": 45439520.668411255,
+   "prev_chg": 0.13579576429770723,
+   "up_days": 1,
+   "prev_close_pos": 0.9582245612846871,
+   "fr": null,
+   "price": 20.90999984741211,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1936258/000196858226001174/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "NewAmsterdam Pharma Company N.V. (NAMS) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 13:44:16 GMT"
+    },
+    {
+     "title": "NewAmsterdam Pharma (NAMS) inks Menarini supply pact for obicetrapib drugs - Stock Titan",
+     "date": "Wed, 25 Nov 2026 01:39:48 GMT"
+    },
+    {
+     "title": "After a $1.26M share sale, Futurum B.V. is expected to sell more NewAmsterdam Pharma (NAMS) shares. - Stock Titan",
+     "date": "Tue, 24 Nov 2026 21:14:40 GMT"
+    },
+    {
+     "title": "Three chats featuring NewAmsterdam Pharma executives will be webcast Nov. 30-Dec. 2 - Stock Titan",
+     "date": "Tue, 24 Nov 2026 13:00:00 GMT"
+    },
+    {
+     "title": "NAMS Feb 2027 25.000 put (NAMS270219P00025000) interactive stock chart - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 09:30:15 GMT"
+    },
+    {
+     "title": "NewAmsterdam Pharma stock maintained at Buy by Stifel ahead of trial By Investing.com - Investing.com India",
+     "date": "Mon, 23 Nov 2026 12:54:49 GMT"
+    }
+   ],
+   "catalysts": [
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "STOK",
+   "name": "Stoke Therapeutics, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2147941888,
+   "chg": 16.743694036046787,
+   "gap": 1.102031221257116,
+   "high_chg": 16.956994338503616,
+   "close_pos": 0.9869420332206497,
+   "upper_wick": 0.21330030245681836,
+   "limit_up": false,
+   "tv": 53190948.24714661,
+   "vol_ratio": 1.587839990588835,
+   "close": 32.84000015258789,
+   "pctb": 1.0862988597180483,
+   "bw": 0.08507857563413543,
+   "bw_pctile": 0.016666666666666666,
+   "squeeze": true,
+   "rsi14": 56.47726701311041,
+   "ma5_gap": 0.04208340015836787,
+   "ma20_gap": 0.04988147188072922,
+   "ma60_gap": 0.0504434078972289,
+   "ma120_gap": -0.02489192032233456,
+   "ma_aligned": true,
+   "ret5": 0.056327452019221846,
+   "ret20": 0.10487039168521828,
+   "ret60": -0.11037323168367785,
+   "from_high": -0.3005967601441353,
+   "from_low": 0.27573696753182153,
+   "vol_ratio_prev": 0.7509575008075308,
+   "tv20_avg": 27287723.44291687,
+   "tv_prev": 22889380.317115784,
+   "prev_chg": 0.04923534953818476,
+   "up_days": 1,
+   "prev_close_pos": 0.6700000762939453,
+   "fr": null,
+   "price": 28.1299991607666,
+   "filings": [],
+   "news": [
+    {
+     "title": "Why Is Stoke (STOK) Stock Up Today? Biotech Rally on Insmed Deal - Yahoo Finance",
+     "date": "Tue, 24 Nov 2026 20:45:35 GMT"
+    },
+    {
+     "title": "Stoke Therapeutics, Inc. (STOK) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 23 Nov 2026 20:43:17 GMT"
+    },
+    {
+     "title": "Stoke Therapeutics to Present at the Evercore Healthcare Conference - Quantisnow",
+     "date": "Tue, 24 Nov 2026 13:05:48 GMT"
+    },
+    {
+     "title": "Stoke Therapeutics (NASDAQ:STOK) Shares Climb 8.4% - Here's Why - MarketBeat",
+     "date": "Tue, 24 Nov 2026 19:05:10 GMT"
+    },
+    {
+     "title": "Alector, Inc. (ALEC) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 10:43:53 GMT"
+    },
+    {
+     "title": "Stoke Therapeutics' (STOK) Buy Rating Reiterated at HC Wainwright - MarketBeat",
+     "date": "Mon, 23 Nov 2026 16:40:24 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "KYMR",
+   "name": "Kymera Therapeutics, Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 14847794176,
+   "chg": 15.66137116211559,
+   "gap": 6.730072956436395,
+   "high_chg": 19.704732223819654,
+   "close_pos": 0.688364759460882,
+   "upper_wick": 4.043361061704081,
+   "limit_up": false,
+   "tv": 1133767076.0635376,
+   "vol_ratio": 4.674839454557842,
+   "close": 173.9199981689453,
+   "pctb": 1.1897787745301514,
+   "bw": 0.2542566509307914,
+   "bw_pctile": 0.6833333333333333,
+   "squeeze": false,
+   "rsi14": 63.311981968666096,
+   "ma5_gap": 0.197747391193555,
+   "ma20_gap": 0.17538084109518182,
+   "ma60_gap": 0.2736402059421179,
+   "ma120_gap": 0.33566989716170537,
+   "ma_aligned": false,
+   "ret5": 0.19483509686421274,
+   "ret20": 0.30938697241645596,
+   "ret60": 0.27270413182560405,
+   "from_high": -0.06885881477319833,
+   "from_low": 1.3609671590435308,
+   "vol_ratio_prev": 7.691044433257249,
+   "tv20_avg": 186602630.18993378,
+   "tv_prev": 1183096084.5825195,
+   "prev_chg": 0.30404993756745435,
+   "up_days": 1,
+   "prev_close_pos": 0.5646042813017165,
+   "fr": null,
+   "price": 150.3699951171875,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000162828026075828/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000162828026075827/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "8-K",
+     "items": "1.01,8.01,9.01",
+     "items_kr": "계약 체결, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526476205/d94169d8k.htm"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "424B5",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526475984/d159724d424b5.htm"
+    },
+    {
+     "date": "2026-11-23",
+     "form": "424B5",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526472631/d159724d424b5.htm"
+    },
+    {
+     "date": "2026-11-23",
+     "form": "8-K",
+     "items": "7.01,9.01",
+     "items_kr": "IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526470995/d159818d8k.htm"
+    },
+    {
+     "date": "2026-11-23",
+     "form": "8-K",
+     "items": "7.01,8.01,9.01",
+     "items_kr": "IR 자료, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526470926/d188151d8k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Kymera Therapeutics (KYMR) Gets a Massive 16% Lift From Wall Street - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 02:08:00 GMT"
+    },
+    {
+     "title": "Kymera Therapeutics: KT-621 Dermatology Potential Is Worth The Premium (NASDAQ:KYMR) - Seeking Alpha",
+     "date": "Tue, 24 Nov 2026 17:40:52 GMT"
+    },
+    {
+     "title": "Merrill Lynch and BTIG are named in a proposed Kymera Therapeutics (KYMR) stock sale. - Stock Titan",
+     "date": "Tue, 24 Nov 2026 23:11:17 GMT"
+    },
+    {
+     "title": "NVDA, DELL, OTLY, ZM, KYMR: 5 Trending Stocks Today - NVIDIA (NASDAQ:NVDA) - Benzinga",
+     "date": "Tue, 24 Nov 2026 01:02:22 GMT"
+    },
+    {
+     "title": "Is Kymera Therapeutics (KYMR) Pricey After Strong KT 621 Phase 2b Eczema Data? - Yahoo Finance",
+     "date": "Tue, 24 Nov 2026 07:13:00 GMT"
+    },
+    {
+     "title": "Kymera Therapeutics (NASDAQ:KYMR) Stock Price Expected to Rise, UBS Group Analyst Says - MarketBeat",
+     "date": "Tue, 24 Nov 2026 17:18:57 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "FDA·Clinical",
+    "Contract·Partnership"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "IRON",
+   "name": "Disc Medicine, Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 4023077632,
+   "chg": 15.296258380559014,
+   "gap": 0.27407866998807595,
+   "high_chg": 15.505085914327932,
+   "close_pos": 0.9862893155771733,
+   "upper_wick": 0.2088275337689317,
+   "limit_up": false,
+   "tv": 83834656.5246582,
+   "vol_ratio": 1.0413009129213484,
+   "close": 88.33999633789062,
+   "pctb": 0.22145728694251637,
+   "bw": 0.15691782428777762,
+   "bw_pctile": 0.5,
+   "squeeze": false,
+   "rsi14": 42.857142857142854,
+   "ma5_gap": 0.0017781703997172826,
+   "ma20_gap": -0.043708316504195044,
+   "ma60_gap": 0.055497932045802,
+   "ma120_gap": 0.03489032351679211,
+   "ma_aligned": false,
+   "ret5": 0.00039177973790494036,
+   "ret20": -0.013391718600121116,
+   "ret60": -0.0426089726943365,
+   "from_high": -0.2299497211398791,
+   "from_low": 0.9155000686645507,
+   "vol_ratio_prev": 0.6338024433328205,
+   "tv20_avg": 73556629.1135025,
+   "tv_prev": 45772789.640808105,
+   "prev_chg": 0.01969661124508182,
+   "up_days": 1,
+   "prev_close_pos": 0.2737228411441873,
+   "fr": null,
+   "price": 76.62000274658203,
+   "filings": [],
+   "news": [
+    {
+     "title": "Disc Medicine, Inc. (IRON) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 20:08:43 GMT"
+    },
+    {
+     "title": "Iron Mountain Inc. stock underperforms Tuesday when compared to competitors - MarketWatch",
+     "date": "Tue, 24 Nov 2026 21:56:00 GMT"
+    },
+    {
+     "title": "IRON Stock Alert: Halper Sadeh LLC Investigates Disc Medicine, Inc. for Potential Breaches of Fiduciary Duties - The National Law Review",
+     "date": "Tue, 24 Nov 2026 09:32:13 GMT"
+    },
+    {
+     "title": "IRON Stock Alert: Halper Sadeh LLC Investigates Disc Medicine, Inc. for Potential Breaches of Fiduciary Duties - The Joplin Globe",
+     "date": "Tue, 24 Nov 2026 08:39:04 GMT"
+    },
+    {
+     "title": "Why Did Iron Mountain Stock Fall Again? - Trefis",
+     "date": "Mon, 23 Nov 2026 08:08:13 GMT"
+    },
+    {
+     "title": "IRON Stock Alert: Halper Sadeh LLC Investigates Disc Medicine, Inc. for Potential Breaches of Fiduciary Duties - lincolnjournal.com",
+     "date": "Tue, 24 Nov 2026 08:39:00 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-24",
+   "code": "DKS",
+   "name": "Dick's Sporting Goods Inc",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 13620881408,
+   "chg": 14.588165083502114,
+   "gap": 11.281515701073852,
+   "high_chg": 18.119250057961022,
+   "close_pos": 0.48358845340309414,
+   "upper_wick": 3.5310849744589077,
+   "limit_up": false,
+   "tv": 882565529.4494629,
+   "vol_ratio": 2.9150698792133056,
+   "close": 153.1699981689453,
+   "pctb": 0.08006308404772522,
+   "bw": 0.14726766946227737,
+   "bw_pctile": 0.5333333333333333,
+   "squeeze": false,
+   "rsi14": 47.22628494604438,
+   "ma5_gap": -0.028024205824871196,
+   "ma20_gap": -0.061843130933467716,
+   "ma60_gap": -0.02915255314230103,
+   "ma120_gap": -0.2257107941477121,
+   "ma_aligned": false,
+   "ret5": -0.09074210486600842,
+   "ret20": -0.07482002961142997,
+   "ret60": -0.010511497575242945,
+   "from_high": -0.45302399747048017,
+   "from_low": 0.11252597978664491,
+   "vol_ratio_prev": 1.9802283214652254,
+   "tv20_avg": 279985263.4540558,
+   "tv_prev": 501636769.12841797,
+   "prev_chg": 0.01073722623021034,
+   "up_days": 1,
+   "prev_close_pos": 0.33949205521353487,
+   "fr": null,
+   "price": 133.6699981689453,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "8-K",
+     "items": "2.02,8.01,9.01",
+     "items_kr": "실적 발표, 기타 중요사항, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1089063/000108906326000039/dks-20261123.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Dick's Sporting Goods Inc (DKS) Stock Forecasts - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 01:03:36 GMT"
+    },
+    {
+     "title": "DELL, AMBA, KSS, DKS, ANT: 5 Trending Stocks Today - Dell Technologies (NYSE:DELL) - Benzinga",
+     "date": "Wed, 25 Nov 2026 01:07:44 GMT"
+    },
+    {
+     "title": "Dick’s Sporting Goods Shares Jump on Q3 Beat, Better Outlook - WWD",
+     "date": "Tue, 24 Nov 2026 13:25:38 GMT"
+    },
+    {
+     "title": "Dick's Sporting Goods (NYSE:DKS) Surges 18% as Third-Quarter Beat and Raised Outlook Ease Foot Locker Fears - kalkine.com",
+     "date": "Tue, 24 Nov 2026 21:15:00 GMT"
+    },
+    {
+     "title": "DICK'S Sporting Goods (DKS) Beat Expectations, Is The Stock Still Below Fair Value? - Simply Wall St",
+     "date": "Wed, 25 Nov 2026 01:09:01 GMT"
+    },
+    {
+     "title": "DKS: Dick's Sporting Goods Inc filed SEC Form 8-K: Results of... - Quantisnow",
+     "date": "Tue, 24 Nov 2026 12:05:48 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "INSM",
+   "name": "Insmed Incorporated",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 37327556608,
+   "chg": 14.125694597821536,
+   "gap": 14.353752552769162,
+   "high_chg": 14.434237575329334,
+   "close_pos": 0.11537897238768743,
+   "upper_wick": 0.08048502256016471,
+   "limit_up": false,
+   "tv": 13431674548.187256,
+   "vol_ratio": 17.72710124228624,
+   "close": 170.14999389648438,
+   "pctb": 1.0701187841400004,
+   "bw": 0.46400060836187274,
+   "bw_pctile": 0.925,
+   "squeeze": false,
+   "rsi14": 84.39377744073084,
+   "ma5_gap": 0.10185646417680516,
+   "ma20_gap": 0.26453546267949135,
+   "ma60_gap": 0.3083655241585115,
+   "ma120_gap": 0.32785487330200613,
+   "ma_aligned": true,
+   "ret5": 0.21329752335865715,
+   "ret20": 0.5974498383464333,
+   "ret60": 0.2577188728396711,
+   "from_high": -0.29922445904634254,
+   "from_low": 0.6494080909902582,
+   "vol_ratio_prev": 1.0532129314369656,
+   "tv20_avg": 537002361.6923904,
+   "tv_prev": 689466688.0645752,
+   "prev_chg": 0.05490691577370965,
+   "up_days": 1,
+   "prev_close_pos": 0.8953317218457288,
+   "fr": null,
+   "price": 149.08999633789062,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1104506/000179696026000022/xslF345X06/wk-form4_1795556599.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1104506/000162828026075714/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "DEFA14A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1104506/000114036126045488/ef20086521_defa14a.htm"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "DEFA14A",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1104506/000114036126045368/ef20088426_defa14a.htm"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "8-K",
+     "items": "1.01,7.01,9.01",
+     "items_kr": "계약 체결, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/1104506/000114036126045364/ef20086426_8-k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Insmed Inc. (INSM) Stages a Monster 14% Rally — Here’s What Sparked Buying - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 02:01:00 GMT"
+    },
+    {
+     "title": "INSM Stock Alert: Halper Sadeh LLC is Investigating Whether Insmed Incorporated is Obtaining a Fair Price for its Shareholders - mykxlg.com",
+     "date": "Tue, 24 Nov 2026 20:25:24 GMT"
+    },
+    {
+     "title": "Insmed Incorporated (INSM) Sanofi - M&A Call - Slideshow - Seeking Alpha",
+     "date": "Wed, 25 Nov 2026 03:35:40 GMT"
+    },
+    {
+     "title": "Sanofi (SNY) Stock Is Trending After Hours on $41 Billion Insmed Acquisition - Benzinga",
+     "date": "Wed, 25 Nov 2026 03:07:59 GMT"
+    },
+    {
+     "title": "INSM: Insmed agrees to be acquired by Sanofi for $175 per share in cash - Quantisnow",
+     "date": "Tue, 24 Nov 2026 20:56:32 GMT"
+    },
+    {
+     "title": "Should you buy Insmed stock today, Nov. 24? Why Sanofi’s $41 billion buyout caps INSM’s upside - Clarin.com",
+     "date": "Tue, 24 Nov 2026 13:41:50 GMT"
+    }
+   ],
+   "catalysts": [
+    "M&A",
+    "Contract·Partnership"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "MMED",
+   "name": "MiniMed Group, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 5365342720,
+   "chg": 14.055026782164703,
+   "gap": -0.17941854383279887,
+   "high_chg": 15.370823610741159,
+   "close_pos": 0.9211465417524631,
+   "upper_wick": 1.3157968285764643,
+   "limit_up": false,
+   "tv": 248386746.02508545,
+   "vol_ratio": 1.8866762992174457,
+   "close": 19.06999969482422,
+   "pctb": 0.18377187192529038,
+   "bw": 0.2195596945175038,
+   "bw_pctile": 0.475,
+   "squeeze": false,
+   "rsi14": 39.44498991127899,
+   "ma5_gap": -0.0019102633915012435,
+   "ma20_gap": -0.0694309511979253,
+   "ma60_gap": -0.14476436093955802,
+   "ma120_gap": -0.08273410004521342,
+   "ma_aligned": false,
+   "ret5": -0.10348527317170397,
+   "ret20": -0.10396573150704869,
+   "ret60": -0.16815925392873476,
+   "from_high": -0.3155956158620201,
+   "from_low": 0.5699530434031972,
+   "vol_ratio_prev": 0.8245077603550081,
+   "tv20_avg": 125236495.15877724,
+   "tv_prev": 94906060.10246277,
+   "prev_chg": 0.044347225129443,
+   "up_days": 1,
+   "prev_close_pos": 0.431817639957258,
+   "fr": null,
+   "price": 16.719999313354492,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "8-K",
+     "items": "2.02,7.01,9.01",
+     "items_kr": "실적 발표, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/2062583/000162828026075612/mmed-20261124.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "MiniMed Group, Inc. (MMED) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 15:07:53 GMT"
+    },
+    {
+     "title": "symbol__ Stock Quote Price and Forecast - CNN",
+     "date": "Mon, 23 Nov 2026 22:23:23 GMT"
+    },
+    {
+     "title": "MiniMed (MMED) Q2 2027 Earnings Call Transcript - The Motley Fool",
+     "date": "Tue, 24 Nov 2026 23:53:11 GMT"
+    },
+    {
+     "title": "MiniMed Group (MMED) is Turning Heads With This Massive Surge - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 01:57:00 GMT"
+    },
+    {
+     "title": "MiniMed Delivers Strong Fiscal Q2 with Accelerating Pump Demand... - Quantisnow",
+     "date": "Tue, 24 Nov 2026 11:51:34 GMT"
+    },
+    {
+     "title": "MiniMed stock surges on strong Q2 results and faster product rollout - Quiver Quantitative",
+     "date": "Tue, 24 Nov 2026 21:21:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "ERAS",
+   "name": "Erasca, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 5555639808,
+   "chg": 13.966879283166488,
+   "gap": 0.5399554169283505,
+   "high_chg": 14.25485596325533,
+   "close_pos": 0.9797979943935496,
+   "upper_wick": 0.2879766800888256,
+   "limit_up": false,
+   "tv": 168706641.1869049,
+   "vol_ratio": 1.7749184146078447,
+   "close": 15.829999923706055,
+   "pctb": 0.25467074545967944,
+   "bw": 0.23453505685197143,
+   "bw_pctile": 0.6,
+   "squeeze": false,
+   "rsi14": 46.283448313016955,
+   "ma5_gap": 0.0011532489031644833,
+   "ma20_gap": -0.05753831066106596,
+   "ma60_gap": -0.07358309174130007,
+   "ma120_gap": -0.1406054455320802,
+   "ma_aligned": false,
+   "ret5": -0.08074118736431368,
+   "ret20": -0.07338221778460752,
+   "ret60": -0.22961731478963154,
+   "from_high": -0.4279242195012566,
+   "from_low": 3.943060721055857,
+   "vol_ratio_prev": 0.8315158258945841,
+   "tv20_avg": 88789875.11986256,
+   "tv_prev": 70166725.73432922,
+   "prev_chg": 0.020573158979334316,
+   "up_days": 1,
+   "prev_close_pos": 0.18571449980449672,
+   "fr": null,
+   "price": 13.890000343322754,
+   "filings": [],
+   "news": [
+    {
+     "title": "(UN2PRE.MI) latest stock news and headlines - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 17:43:22 GMT"
+    },
+    {
+     "title": "Erasca Surges as Investors Continue to React to Encouraging ERAS-0015 Clinical Data - Quiver Quantitative",
+     "date": "Tue, 24 Nov 2026 21:21:00 GMT"
+    },
+    {
+     "title": "Two December investor talks featuring Erasca management will be webcast live. - Stock Titan",
+     "date": "Tue, 24 Nov 2026 13:01:00 GMT"
+    },
+    {
+     "title": "Grand Theft Auto VI Made $3.79 Billion In One Day. Taylor Swift’s Entire Eras Tour Made About Half That. - Yahoo Finance Singapore",
+     "date": "Tue, 24 Nov 2026 15:15:00 GMT"
+    },
+    {
+     "title": "These are the favorite stocks of healthcare hedge funds – Goldman - TradingView",
+     "date": "Mon, 23 Nov 2026 16:08:49 GMT"
+    },
+    {
+     "title": "Oklahoma City home connects two different eras - KFOR",
+     "date": "Mon, 23 Nov 2026 17:46:09 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-24",
+   "code": "IMNM",
+   "name": "Immunome, Inc.",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 2178445824,
+   "chg": 13.25966682637345,
+   "gap": 0.061377047091948356,
+   "high_chg": 15.101282665538873,
+   "close_pos": 0.8775513699429975,
+   "upper_wick": 1.841615839165441,
+   "limit_up": false,
+   "tv": 37219186.53907776,
+   "vol_ratio": 1.4024610678531702,
+   "close": 18.450000762939453,
+   "pctb": 0.08715523552155072,
+   "bw": 0.25880586615404116,
+   "bw_pctile": 0.43333333333333335,
+   "squeeze": false,
+   "rsi14": 27.936343133461634,
+   "ma5_gap": -0.013325227044086452,
+   "ma20_gap": -0.10684664685800627,
+   "ma60_gap": -0.21283745240671292,
+   "ma120_gap": -0.25713532367261094,
+   "ma_aligned": false,
+   "ret5": -0.07495739063451778,
+   "ret20": -0.08943535655159884,
+   "ret60": -0.40914033021968066,
+   "from_high": -0.458083792250771,
+   "from_low": 0.04758847046403214,
+   "vol_ratio_prev": 0.9097762371773194,
+   "tv20_avg": 26520548.222022057,
+   "tv_prev": 21035278.18222046,
+   "prev_chg": 0.03824100389997498,
+   "up_days": 1,
+   "prev_close_pos": 0.50179283753713,
+   "fr": null,
+   "price": 16.290000915527344,
+   "filings": [],
+   "news": [
+    {
+     "title": "Immunome (IMNM) Stock May Be Fully Priced As Book Value Lags - Yahoo Finance",
+     "date": "Tue, 24 Nov 2026 22:22:50 GMT"
+    },
+    {
+     "title": "IMNM Dec 2026 19.000 put (IMNM261218P00019000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 18:10:10 GMT"
+    },
+    {
+     "title": "IMNM261218C00016000 Interactive Stock Chart | IMNM Dec 2026 16.000 call Stock - Yahoo Finance",
+     "date": "Tue, 24 Nov 2026 22:04:16 GMT"
+    },
+    {
+     "title": "IMNM Dec 2026 34.000 call (IMNM261218C00034000) stock price, news, quote and history - Yahoo Finance Australia",
+     "date": "Tue, 24 Nov 2026 23:01:30 GMT"
+    },
+    {
+     "title": "IMNM Jan 2027 19.000 put (IMNM270115P00019000) interactive stock chart - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 06:09:54 GMT"
+    },
+    {
+     "title": "Immunome (IMNM) Stock Is Up 13.8% Today Without Company News - GuruFocus",
+     "date": "Tue, 24 Nov 2026 21:55:33 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-24",
+   "code": "TRAX",
+   "name": "First Tracks Biotherapeutics, I",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2064339456,
+   "chg": 12.4771078865896,
+   "gap": -0.5952429817168703,
+   "high_chg": 13.965197874319358,
+   "close_pos": 0.9057974019138729,
+   "upper_wick": 1.48808998772974,
+   "limit_up": false,
+   "tv": 48206357.04803467,
+   "vol_ratio": 1.697122743900857,
+   "close": 49.130001068115234,
+   "pctb": 0.23455093659674744,
+   "bw": 0.22060661920186214,
+   "bw_pctile": 0.225,
+   "squeeze": false,
+   "rsi14": 45.215828794233495,
+   "ma5_gap": 0.0025246869663078098,
+   "ma20_gap": -0.05855982044769226,
+   "ma60_gap": 0.07843420718643435,
+   "ma120_gap": 0.19533960857281985,
+   "ma_aligned": false,
+   "ret5": -0.06185569121927337,
+   "ret20": 0.004599833602692893,
+   "ret60": 0.04347825294522689,
+   "from_high": -0.2026286732652528,
+   "from_low": 1.9673912712497845,
+   "vol_ratio_prev": 0.9029861654471509,
+   "tv20_avg": 27070257.661743164,
+   "tv_prev": 22936368.160247803,
+   "prev_chg": 0.04899137717169322,
+   "up_days": 1,
+   "prev_close_pos": 0.6258993003193091,
+   "fr": null,
+   "price": 43.68000030517578,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2091349/000147891626000016/xslF345X06/form4-11242026_041126.xml"
+    },
+    {
+     "date": "2026-11-23",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/2091349/000195004726011425/xsl144X01/primary_doc.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "symbol__ Stock Quote Price and Forecast - CNN",
+     "date": "Tue, 24 Nov 2026 10:41:50 GMT"
+    },
+    {
+     "title": "After exercising options at $6.58 per share, a First Tracks (TRAX) director sold shares. - Stock Titan",
+     "date": "Tue, 24 Nov 2026 21:06:45 GMT"
+    },
+    {
+     "title": "First Tracks Biotherapeutics (NASDAQ:TRAX) Director John Schmid Sells 15,000 Shares of Stock - MarketBeat",
+     "date": "Tue, 24 Nov 2026 22:20:18 GMT"
+    },
+    {
+     "title": "A director proposes selling First Tracks (TRAX) shares with a market value of about $648K. - Stock Titan",
+     "date": "Mon, 23 Nov 2026 21:05:06 GMT"
+    },
+    {
+     "title": "First Tracks Biotherapeutics Director Sold Shares Worth Over $647K - TradingView",
+     "date": "Tue, 24 Nov 2026 21:10:01 GMT"
+    },
+    {
+     "title": "2021 Chevrolet Trax LT / $ 10,600.00 - Brownwood News",
+     "date": "Mon, 23 Nov 2026 22:14:18 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "TRVI",
+   "name": "Trevi Therapeutics, Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 2186861056,
+   "chg": 12.216533042966127,
+   "gap": 0.21945671399969946,
+   "high_chg": 12.54572160216727,
+   "close_pos": 0.973837169007142,
+   "upper_wick": 0.32918855920112927,
+   "limit_up": false,
+   "tv": 49023572.48764038,
+   "vol_ratio": 1.8951663118443447,
+   "close": 15.34000015258789,
+   "pctb": 0.44026645856202024,
+   "bw": 0.17031336127407948,
+   "bw_pctile": 0.4,
+   "squeeze": false,
+   "rsi14": 48.64285995522362,
+   "ma5_gap": 0.008707189914652247,
+   "ma20_gap": -0.010173420223106855,
+   "ma60_gap": -0.03495663690874251,
+   "ma120_gap": -0.1336403519533298,
+   "ma_aligned": false,
+   "ret5": 0.028592935705918032,
+   "ret20": 0.09272580545074804,
+   "ret60": -0.18582493562272717,
+   "from_high": -0.3239366696088134,
+   "from_low": 0.39205707750672625,
+   "vol_ratio_prev": 0.642381092583175,
+   "tv20_avg": 23309509.35479164,
+   "tv_prev": 14763600.082397461,
+   "prev_chg": 0.02397001390864295,
+   "up_days": 1,
+   "prev_close_pos": 0.020000457763671875,
+   "fr": null,
+   "price": 13.670000076293945,
+   "filings": [],
+   "news": [
+    {
+     "title": "(TRVI) Trading Strategy and Analysis (TRVI:CA) - Stock Traders Daily",
+     "date": "Wed, 25 Nov 2026 03:42:52 GMT"
+    },
+    {
+     "title": "TRVI Jan 2029 17.000 call (TRVI290119C00017000) interactive stock chart - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 16:35:54 GMT"
+    },
+    {
+     "title": "Trevi Therapeutics (TRVI) Stock Is Up 11.3% Today Without Compan - GuruFocus",
+     "date": "Tue, 24 Nov 2026 20:37:11 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-24",
+   "code": "PRAX",
+   "name": "Praxis Precision Medicines, Inc",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 9629029376,
+   "chg": 12.211723203379488,
+   "gap": 1.4983733236207275,
+   "high_chg": 12.599346148462942,
+   "close_pos": 0.9663698420433033,
+   "upper_wick": 0.38762294508346906,
+   "limit_up": false,
+   "tv": 230946089.453125,
+   "vol_ratio": 1.2846603430104435,
+   "close": 344.489990234375,
+   "pctb": 0.5659001531060287,
+   "bw": 0.3137243192547797,
+   "bw_pctile": 0.5416666666666666,
+   "squeeze": false,
+   "rsi14": 57.32293662561661,
+   "ma5_gap": 0.00419998527007448,
+   "ma20_gap": 0.02067448067197475,
+   "ma60_gap": 0.03772309570502941,
+   "ma120_gap": -0.005263675635973075,
+   "ma_aligned": true,
+   "ret5": -0.01053917275101901,
+   "ret20": 0.14813561906431483,
+   "ret60": -0.10949963741841917,
+   "from_high": -0.2182327719456506,
+   "from_low": 0.7932243310308782,
+   "vol_ratio_prev": 1.24172299120062,
+   "tv20_avg": 160332935.82061768,
+   "tv_prev": 194300300.0,
+   "prev_chg": 0.021868679840194805,
+   "up_days": 1,
+   "prev_close_pos": 0.3091389957886534,
+   "fr": null,
+   "price": 307.0,
+   "filings": [],
+   "news": [
+    {
+     "title": "Praxis Precision Medicines, Inc. (PRAX) stock price, news, quote and history - Yahoo Finance Australia",
+     "date": "Wed, 25 Nov 2026 00:08:04 GMT"
+    },
+    {
+     "title": "Weekly Recap: Ulixacaltamide FDA date and B. Riley Securities rating - TradingView",
+     "date": "Mon, 23 Nov 2026 11:00:00 GMT"
+    },
+    {
+     "title": "PRAX Dec 2026 380.000 call (PRAX261218C00380000) interactive stock chart – Yahoo Finance - Yahoo Finance Singapore",
+     "date": "Mon, 23 Nov 2026 18:48:37 GMT"
+    },
+    {
+     "title": "These are the favorite stocks of healthcare hedge funds – Goldman - TradingView",
+     "date": "Mon, 23 Nov 2026 16:08:49 GMT"
+    },
+    {
+     "title": "Praxis Precision Medicines (PRAX) Stock Up 11.9% Today as Health Care Rallies - GuruFocus",
+     "date": "Tue, 24 Nov 2026 22:41:15 GMT"
+    }
+   ],
+   "catalysts": [
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "VRDN",
+   "name": "Viridian Therapeutics, Inc.",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 4054036736,
+   "chg": 11.947323443749426,
+   "gap": 0.07839926734845015,
+   "high_chg": 12.323613610514727,
+   "close_pos": 0.9692704303722286,
+   "upper_wick": 0.37629016676531374,
+   "limit_up": false,
+   "tv": 127166972.71766663,
+   "vol_ratio": 1.1795794761582288,
+   "close": 35.70000076293945,
+   "pctb": 0.8120629174088521,
+   "bw": 0.3730367716858048,
+   "bw_pctile": 0.8333333333333334,
+   "squeeze": false,
+   "rsi14": 73.225348452426,
+   "ma5_gap": 0.03896525484878488,
+   "ma20_gap": 0.11641094327305201,
+   "ma60_gap": 0.3545810842329482,
+   "ma120_gap": 0.4721292312311349,
+   "ma_aligned": true,
+   "ret5": 0.07013423510389472,
+   "ret20": 0.36632387237206343,
+   "ret60": 0.3817157493529022,
+   "from_high": -0.06999129372411672,
+   "from_low": 1.4195750114759291,
+   "vol_ratio_prev": 0.7441720206733065,
+   "tv20_avg": 86428108.45555305,
+   "tv_prev": 70827688.64440918,
+   "prev_chg": 0.06441923778883019,
+   "up_days": 1,
+   "prev_close_pos": 0.8749995529652708,
+   "fr": null,
+   "price": 31.889999389648438,
+   "filings": [],
+   "news": [
+    {
+     "title": "Viridian Therapeutics, Inc. (VRDN) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 23 Nov 2026 19:37:07 GMT"
+    },
+    {
+     "title": "A live webcast will carry Viridian management's fireside chat from Florida Dec. 1. - Stock Titan",
+     "date": "Tue, 24 Nov 2026 21:01:00 GMT"
+    },
+    {
+     "title": "VRDN Stock Rises 34% in a Month on Lumvoa Launch & Pipeline Progress - Zacks Investment Research",
+     "date": "Mon, 23 Nov 2026 14:00:04 GMT"
+    },
+    {
+     "title": "VRDN Stock Rises 34% in a Month on Lumvoa Launch & Pipeline Progress - Yahoo Finance",
+     "date": "Mon, 23 Nov 2026 13:22:00 GMT"
+    },
+    {
+     "title": "(VRDN) as a Liquidity Pulse for Institutional Tactics - Stock Traders Daily",
+     "date": "Tue, 24 Nov 2026 04:36:01 GMT"
+    },
+    {
+     "title": "Why Viridian Therapeutics (VRDN) Stock Is Up 10.7% Today Without Company News - GuruFocus",
+     "date": "Tue, 24 Nov 2026 20:37:11 GMT"
+    }
+   ],
+   "catalysts": [
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "LEGN",
+   "name": "Legend Biotech Corporation",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 3429372416,
+   "chg": 11.898734757885343,
+   "gap": 1.0759498369729892,
+   "high_chg": 11.962027344980996,
+   "close_pos": 0.9945053707040786,
+   "upper_wick": 0.06329258709566397,
+   "limit_up": false,
+   "tv": 51348024.88632202,
+   "vol_ratio": 1.0105023633361923,
+   "close": 17.68000030517578,
+   "pctb": 0.16338377302042154,
+   "bw": 0.5946897902111115,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 28.77429561575741,
+   "ma5_gap": -0.00641429029425955,
+   "ma20_gap": -0.20018223340414143,
+   "ma60_gap": -0.18246613106162524,
+   "ma120_gap": -0.2906222497508617,
+   "ma_aligned": false,
+   "ret5": -0.01188240044421307,
+   "ret20": -0.22511031566012785,
+   "ret60": -0.2052313451845441,
+   "from_high": -0.5786666615804037,
+   "from_low": 0.04324857795797721,
+   "vol_ratio_prev": 1.2029502516995476,
+   "tv20_avg": 55946105.650610924,
+   "tv_prev": 53652060.647678375,
+   "prev_chg": 0.03606558627769596,
+   "up_days": 1,
+   "prev_close_pos": 0.49315118601731506,
+   "fr": null,
+   "price": 15.800000190734863,
+   "filings": [],
+   "news": [
+    {
+     "title": "LEGN Mar 2027 22.500 put (LEGN270319P00022500) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 23 Nov 2026 19:21:30 GMT"
+    },
+    {
+     "title": "LEGN Mar 2027 22.500 put (LEGN270319P00022500) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 23 Nov 2026 19:06:53 GMT"
+    },
+    {
+     "title": "LEGN Reiterates by HC Wainwright & Co. -- Price Target Maintained at $65 - GuruFocus",
+     "date": "Mon, 23 Nov 2026 17:45:53 GMT"
+    }
+   ],
+   "catalysts": [
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "PBLS",
+   "name": "Parabilis Medicines, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 4151044096,
+   "chg": 11.695312788782196,
+   "gap": 0.13481296958495204,
+   "high_chg": 13.616444212302614,
+   "close_pos": 0.8646081190548247,
+   "upper_wick": 1.9211314235204306,
+   "limit_up": false,
+   "tv": 26869911.505126953,
+   "vol_ratio": 1.03042472612663,
+   "close": 33.13999938964844,
+   "pctb": 0.7717095021493667,
+   "bw": 0.14411208931383823,
+   "bw_pctile": 0.041237113402061855,
+   "squeeze": true,
+   "rsi14": 51.59090905806907,
+   "ma5_gap": 0.0487063575681399,
+   "ma20_gap": 0.03915662404116804,
+   "ma60_gap": -0.04931270112211439,
+   "ma120_gap": null,
+   "ma_aligned": false,
+   "ret5": 0.04288222427549915,
+   "ret20": 0.1853775174734238,
+   "ret60": -0.24137050336836496,
+   "from_high": -0.30171807709458875,
+   "from_low": 0.30935570503467646,
+   "vol_ratio_prev": 0.551474769969409,
+   "tv20_avg": 22314946.22387886,
+   "tv_prev": 13666002.035140991,
+   "prev_chg": 0.0812682033102925,
+   "up_days": 1,
+   "prev_close_pos": 0.5934425962961156,
+   "fr": null,
+   "price": 29.670000076293945,
+   "filings": [],
+   "news": [
+    {
+     "title": "Parabilis Medicines, Inc. (PBLS) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 18:13:17 GMT"
+    },
+    {
+     "title": "Parabilis Medicines, Inc. (PBLS) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 18:01:31 GMT"
+    },
+    {
+     "title": "Top Parabilis Medicines (PBLS) Competitors 2026 - MarketBeat",
+     "date": "Tue, 24 Nov 2026 23:18:06 GMT"
+    },
+    {
+     "title": "Parabilis Medicines (NASDAQ:PBLS) Stock Price Up 10.7% - Should You Buy? - MarketBeat",
+     "date": "Tue, 24 Nov 2026 19:05:10 GMT"
+    },
+    {
+     "title": "(O314H.NX) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 18:15:29 GMT"
+    },
+    {
+     "title": "Sanofi (SNY) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 00:06:46 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "CYTK",
+   "name": "Cytokinetics, Incorporated",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 8344270336,
+   "chg": 11.358989600960978,
+   "gap": 1.0410811471692982,
+   "high_chg": 11.489124744357127,
+   "close_pos": 0.9880750149793408,
+   "upper_wick": 0.13013514339616272,
+   "limit_up": false,
+   "tv": 181652744.62738037,
+   "vol_ratio": 1.4085592992038942,
+   "close": 59.900001525878906,
+   "pctb": 0.31606021223436775,
+   "bw": 0.3088179910055083,
+   "bw_pctile": 0.9416666666666667,
+   "squeeze": false,
+   "rsi14": 34.26883108961596,
+   "ma5_gap": 0.03841700609126142,
+   "ma20_gap": -0.05680391572376209,
+   "ma60_gap": -0.15201419380581926,
+   "ma120_gap": -0.2420073470926718,
+   "ma_aligned": false,
+   "ret5": 0.011660762985396422,
+   "ret20": -0.11427628320468497,
+   "ret60": -0.2538493043693605,
+   "from_high": -0.3908956810938916,
+   "from_low": 0.06895868922391979,
+   "vol_ratio_prev": 0.9043510600508748,
+   "tv20_avg": 121923389.81624603,
+   "tv_prev": 102023494.73648071,
+   "prev_chg": 0.05927534873154938,
+   "up_days": 1,
+   "prev_close_pos": 0.8970593185158591,
+   "fr": null,
+   "price": 53.790000915527344,
+   "filings": [],
+   "news": [
+    {
+     "title": "Cytokinetics, Incorporated (CYTK) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 16:45:16 GMT"
+    },
+    {
+     "title": "Cytokinetics climbs 7% as peers advance, health care sector rises (CYTK:NASDAQ) - Seeking Alpha",
+     "date": "Tue, 24 Nov 2026 15:23:52 GMT"
+    },
+    {
+     "title": "Two investor talks will be webcast in December, with replays online for 90 days. - Stock Titan",
+     "date": "Tue, 24 Nov 2026 21:00:00 GMT"
+    },
+    {
+     "title": "CYTK Feb 2027 57.500 put (CYTK270219P00057500) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 04:50:55 GMT"
+    },
+    {
+     "title": "CYTK Feb 2027 65.000 put (CYTK270219P00065000) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 23 Nov 2026 22:53:49 GMT"
+    },
+    {
+     "title": "CYTK261120C00072500 interactive stock chart | CYTK Nov 2026 72.500 call stock - Yahoo Finance Australia",
+     "date": "Tue, 24 Nov 2026 17:37:40 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-24",
+   "code": "MIRM",
+   "name": "Mirum Pharmaceuticals, Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 7162093056,
+   "chg": 11.18881232431399,
+   "gap": 1.175639691533381,
+   "high_chg": 11.462456063516901,
+   "close_pos": 0.9747895328476929,
+   "upper_wick": 0.2736437392029026,
+   "limit_up": false,
+   "tv": 103412645.13702393,
+   "vol_ratio": 1.4862936478527897,
+   "close": 109.70999908447266,
+   "pctb": 0.9132955114817911,
+   "bw": 0.1816112040580017,
+   "bw_pctile": 0.4083333333333333,
+   "squeeze": false,
+   "rsi14": 71.58754280216203,
+   "ma5_gap": 0.039178512423442724,
+   "ma20_gap": 0.07505909547197587,
+   "ma60_gap": 0.09579353556290515,
+   "ma120_gap": -0.004067306407844029,
+   "ma_aligned": true,
+   "ret5": 0.07741860882433849,
+   "ret20": 0.18494058060180318,
+   "ret60": 0.012415340609883474,
+   "from_high": -0.24100001408503602,
+   "from_low": 0.5604440883985167,
+   "vol_ratio_prev": 0.9654753435279259,
+   "tv20_avg": 58495323.695259094,
+   "tv_prev": 59586811.894226074,
+   "prev_chg": 0.026422563071872185,
+   "up_days": 5,
+   "prev_close_pos": 0.7147763620156258,
+   "fr": null,
+   "price": 98.66999816894531,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1759425/000197420026000015/xslF345X06/form4-11242026_111158.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "144",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1759425/000195004726011472/xsl144X01/primary_doc.xml"
+    },
+    {
+     "date": "2026-11-23",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1759425/000161474026000016/xslF345X06/form4-11232026_091157.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Mirum Pharmaceuticals (MIRM) Stock Gets Fair Value Bump After Phase 3 Wins And Target Hikes - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 00:17:00 GMT"
+    },
+    {
+     "title": "Jolanda Howe sold 616 shares of Mirum Pharmaceuticals (MIRM) at $100 apiece. - Stock Titan",
+     "date": "Tue, 24 Nov 2026 23:46:43 GMT"
+    },
+    {
+     "title": "Mirum will webcast two investor talks on Dec. 1 and 2. - Stock Titan",
+     "date": "Mon, 23 Nov 2026 21:01:00 GMT"
+    },
+    {
+     "title": "A stock sale by the CEO of Mirum Pharmaceuticals (MIRM) came alongside an option exercise at $2.936 a share. - Stock Titan",
+     "date": "Mon, 23 Nov 2026 21:34:49 GMT"
+    },
+    {
+     "title": "One NASDAQ-Listed Pharmaceuticals Company Near Resistance Level: MIRM - kalkine.com",
+     "date": "Tue, 24 Nov 2026 21:00:00 GMT"
+    },
+    {
+     "title": "MIRM Mar 2027 125.000 call (MIRM270319C00125000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Mon, 23 Nov 2026 04:51:08 GMT"
+    }
+   ],
+   "catalysts": [
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "DLTR",
+   "name": "Dollar Tree, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 29017024512,
+   "chg": 11.178998641737481,
+   "gap": 7.800136857400419,
+   "high_chg": 12.86124989551405,
+   "close_pos": 0.7445403208342356,
+   "upper_wick": 1.6822512537765775,
+   "limit_up": false,
+   "tv": 989218685.9588623,
+   "vol_ratio": 2.7565714482719983,
+   "close": 154.64999389648438,
+   "pctb": 0.5883956290777628,
+   "bw": 0.1569149757370635,
+   "bw_pctile": 0.45,
+   "squeeze": false,
+   "rsi14": 54.54381300628326,
+   "ma5_gap": -0.005647289717828019,
+   "ma20_gap": 0.013870597991999745,
+   "ma60_gap": 0.10885841945705876,
+   "ma120_gap": 0.11853215290359942,
+   "ma_aligned": true,
+   "ret5": 0.0028839882052968946,
+   "ret20": 0.11351271327584289,
+   "ret60": 0.08451592126102847,
+   "from_high": -0.06355182179410046,
+   "from_low": 0.6197020325123443,
+   "vol_ratio_prev": 1.6893099870943245,
+   "tv20_avg": 319389763.10066223,
+   "tv_prev": 519830632.80944824,
+   "prev_chg": 0.008263259888156016,
+   "up_days": 1,
+   "prev_close_pos": 0.8312347700420482,
+   "fr": null,
+   "price": 139.10000610351562,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "10-Q",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/935703/000093570326000137/dltr-20261031.htm"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "8-K",
+     "items": "2.02,7.01,9.01",
+     "items_kr": "실적 발표, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/935703/000093570326000136/dltr-20261124.htm"
+    }
+   ],
+   "news": [],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "PCVX",
+   "name": "Vaxcyte, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 10001392640,
+   "chg": 11.036904412806825,
+   "gap": -0.2109011306923314,
+   "high_chg": 11.81018844603987,
+   "close_pos": 0.9422573899757551,
+   "upper_wick": 0.7732840332330517,
+   "limit_up": false,
+   "tv": 112732074.54452515,
+   "vol_ratio": 1.1557507392257642,
+   "close": 63.18000030517578,
+   "pctb": 0.12022146051555428,
+   "bw": 0.21745193049478934,
+   "bw_pctile": 0.7166666666666667,
+   "squeeze": false,
+   "rsi14": 43.96791276550893,
+   "ma5_gap": -0.01410401576958309,
+   "ma20_gap": -0.08258357657138438,
+   "ma60_gap": -0.07885326461009412,
+   "ma120_gap": -0.031798336260701277,
+   "ma_aligned": false,
+   "ret5": -0.07644861285200655,
+   "ret20": -0.05119225666722815,
+   "ret60": -0.049051518400631045,
+   "from_high": -0.373002738006844,
+   "from_low": 0.3419811197683542,
+   "vol_ratio_prev": 0.7985365414539423,
+   "tv20_avg": 95777193.58898163,
+   "tv_prev": 70664111.89498901,
+   "prev_chg": 0.027261277358177072,
+   "up_days": 1,
+   "prev_close_pos": 0.15540732110914648,
+   "fr": null,
+   "price": 56.900001525878906,
+   "filings": [],
+   "news": [
+    {
+     "title": "Vaxcyte, Inc. (PCVX) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 21:28:29 GMT"
+    },
+    {
+     "title": "Biomind Labs Inc (BMND): Mapping the Market Sensitivity Behind Its High-Beta Reading - kalkine.ca",
+     "date": "Mon, 23 Nov 2026 08:15:00 GMT"
+    },
+    {
+     "title": "Arch Biopartners, Inc. (TSXV:ARCH) Advances as Kidney Injury Drug Programme Keeps Clinical Spotlight Bright - kalkine.ca",
+     "date": "Mon, 23 Nov 2026 10:14:00 GMT"
+    },
+    {
+     "title": "Vaxcyte (PCVX) Stock Is Up 10.3% Today as Biotech Stocks Rally - GuruFocus",
+     "date": "Tue, 24 Nov 2026 21:11:23 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "SNY",
+   "name": "Sanofi",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 124622938112,
+   "chg": 10.96857177230084,
+   "gap": 7.611719774315429,
+   "high_chg": 11.075476276408548,
+   "close_pos": 0.9698799749057241,
+   "upper_wick": 0.10690450410771198,
+   "limit_up": false,
+   "tv": 716090271.0533142,
+   "vol_ratio": 3.0561209911600082,
+   "close": 51.900001525878906,
+   "pctb": 0.5466312597224006,
+   "bw": 0.1733338493673038,
+   "bw_pctile": 0.875,
+   "squeeze": false,
+   "rsi14": 59.72972346013769,
+   "ma5_gap": -0.0006410158597505156,
+   "ma20_gap": 0.008082775748530224,
+   "ma60_gap": 0.08182085313675569,
+   "ma120_gap": 0.07577625890632467,
+   "ma_aligned": true,
+   "ret5": -0.03347796966972716,
+   "ret20": 0.11916725133131023,
+   "ret60": 0.04350738010300881,
+   "from_high": -0.0758743352356821,
+   "from_low": 0.19708218129214639,
+   "vol_ratio_prev": 0.6828988331392458,
+   "tv20_avg": 208027426.02758408,
+   "tv_prev": 143579224.4052887,
+   "prev_chg": 0.005374032621237479,
+   "up_days": 2,
+   "prev_close_pos": 0.8571416594355086,
+   "fr": null,
+   "price": 46.77000045776367,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1121404/000119312526473314/d130092d6k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Sanofi (SNY) Stock Is Trending After Hours on $41 Billion Insmed Acquisition - Benzinga",
+     "date": "Wed, 25 Nov 2026 03:07:59 GMT"
+    },
+    {
+     "title": "Sanofi (SNY) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 00:06:46 GMT"
+    },
+    {
+     "title": "Sanofi nears 19-month high after $41B Insmed deal - Seeking Alpha",
+     "date": "Tue, 24 Nov 2026 17:58:06 GMT"
+    },
+    {
+     "title": "Sanofi SA Stock (SNY) Closed Up by 10.97% on Nov 24: What Investors Need To Know - TradingKey",
+     "date": "Tue, 24 Nov 2026 21:15:43 GMT"
+    },
+    {
+     "title": "What Sanofi needs to get right for $41B Insmed deal to pay off - TradingView",
+     "date": "Tue, 24 Nov 2026 17:45:23 GMT"
+    },
+    {
+     "title": "SNY: Sanofi agrees to buy Insmed for $41.0 billion in cash - Quantisnow",
+     "date": "Tue, 24 Nov 2026 13:00:48 GMT"
+    }
+   ],
+   "catalysts": [
+    "M&A"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "DNTH",
+   "name": "Dianthus Therapeutics, Inc.",
+   "market": "NasdaqCM",
+   "sector": "",
+   "mcap": 5695467520,
+   "chg": 10.354607425827345,
+   "gap": 1.0911074559203815,
+   "high_chg": 11.009270234481704,
+   "close_pos": 0.9339935406112247,
+   "upper_wick": 0.6546628086543721,
+   "limit_up": false,
+   "tv": 99208225.40130615,
+   "vol_ratio": 1.1947042775017052,
+   "close": 101.13999938964844,
+   "pctb": 0.8773081091080475,
+   "bw": 0.1730551429620268,
+   "bw_pctile": 0.3416666666666667,
+   "squeeze": false,
+   "rsi14": 62.97478273699514,
+   "ma5_gap": 0.060788429614426764,
+   "ma20_gap": 0.06529510876242517,
+   "ma60_gap": 0.02395181127936552,
+   "ma120_gap": -0.030702340018810892,
+   "ma_aligned": false,
+   "ret5": 0.023450568426081952,
+   "ret20": 0.15530063545266937,
+   "ret60": -0.13407025040619458,
+   "from_high": -0.22251439038592713,
+   "from_low": 1.5571986924018235,
+   "vol_ratio_prev": 0.7995673363529651,
+   "tv20_avg": 70393155.14530182,
+   "tv_prev": 59618325.99258423,
+   "prev_chg": 0.08397395881552816,
+   "up_days": 1,
+   "prev_close_pos": 0.9271028970316656,
+   "fr": null,
+   "price": 91.6500015258789,
+   "filings": [],
+   "news": [
+    {
+     "title": "Dianthus Therapeutics (NASDAQ:DNTH) Stock Jumps 7.2% - Should You Buy? - MarketBeat",
+     "date": "Tue, 24 Nov 2026 17:38:48 GMT"
+    },
+    {
+     "title": "5 Biotech Stocks Investors Can Consider Adding to Their Portfolio - TradingView",
+     "date": "Mon, 23 Nov 2026 12:53:00 GMT"
+    },
+    {
+     "title": "Dianthus (DNTH) Stock Is Up 9.1% Today as Biotech Stocks Rally - GuruFocus",
+     "date": "Tue, 24 Nov 2026 20:37:11 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "code": "ABVX",
+   "name": "Abivax SA",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 6794095104,
+   "chg": 10.100727709401136,
+   "gap": 0.3404816292205126,
+   "high_chg": 13.767913356744277,
+   "close_pos": 0.7268885277721353,
+   "upper_wick": 3.6671856473431603,
+   "limit_up": false,
+   "tv": 266660201.09710693,
+   "vol_ratio": 2.0212305981804866,
+   "close": 77.61000061035156,
+   "pctb": -0.19592380569014597,
+   "bw": 0.2492099711273079,
+   "bw_pctile": 0.5583333333333333,
+   "squeeze": false,
+   "rsi14": 25.88032941528182,
+   "ma5_gap": -0.09690728892697387,
+   "ma20_gap": -0.1734311515228475,
+   "ma60_gap": -0.25363707292481663,
+   "ma120_gap": -0.3414834560580118,
+   "ma_aligned": false,
+   "ret5": -0.1569190605287195,
+   "ret20": -0.18508672989861819,
+   "ret60": -0.3781208750535353,
+   "from_high": -0.5263723913422598,
+   "from_low": 0.12424237649187675,
+   "vol_ratio_prev": 1.9007899014770488,
+   "tv20_avg": 134168094.67037201,
+   "tv_prev": 210588868.61801147,
+   "prev_chg": -0.037021846959759075,
+   "up_days": 0,
+   "prev_close_pos": 0.012544744059875688,
+   "fr": null,
+   "price": 70.48999786376953,
+   "filings": [],
+   "news": [
+    {
+     "title": "ABIVAX Société Anonyme (ABVX.PA) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Mon, 23 Nov 2026 17:16:41 GMT"
+    },
+    {
+     "title": "Abivax (NASDAQ:ABVX) Shares Climb 10.5% - Here's Why - MarketBeat",
+     "date": "Tue, 24 Nov 2026 19:05:09 GMT"
+    },
+    {
+     "title": "ABIVAX Société Anonyme (ABVX.VI) interactive stock chart - Yahoo Finance UK",
+     "date": "Mon, 23 Nov 2026 12:47:26 GMT"
+    },
+    {
+     "title": "Abivax: Maintaining Hold On Additional Obefazimod Safety Data And More (NASDAQ:ABVX) - Seeking Alpha",
+     "date": "Mon, 23 Nov 2026 13:14:34 GMT"
+    },
+    {
+     "title": "ABVX Dec 2026 105.000 call (ABVX261211C00105000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 01:10:16 GMT"
+    },
+    {
+     "title": "ABVX Dec 2028 105.000 put (ABVX281215P00105000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Mon, 23 Nov 2026 22:27:17 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  }
+ ]
+}
