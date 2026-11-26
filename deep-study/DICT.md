@@ -226,8 +226,9 @@
 - [x] 순자본비율(NCR) (net-capital-ratio)
 - [x] 여전사 레버리지 규제 (credit-finance-leverage-limit)
 - [x] 종합금융투자사업자(종투사) (comprehensive-investment-bank)
-- [ ] 순이자마진(NIM)
-- [ ] 대손비용률
+- [x] 순이자마진(NIM) (net-interest-margin)
+- [x] 대손비용률 (credit-cost-ratio)
+- [x] 고정이하여신비율 (npl-ratio)
 - [ ] 신종자본증권(조건부자본증권)
 
 ### 거래 제도

@@ -63,7 +63,7 @@
 - [x] 조선 수주잔고 읽기 (20261124-shipbuilding-order-backlog-reading)
 - [x] 방산 수출 계약 구조 (20261124-defense-export-contract-structure)
 - [x] 바이오 임상 단계와 기술이전 (20261124-biotech-clinical-phases-licensing-deals)
-- [ ] 은행 NIM과 대손비용
+- [x] 은행 NIM과 대손비용 (20261127-bank-nim-credit-cost)
 - [ ] 자동차 판매·환율 민감도
 - [ ] 화학·정유 스프레드
 - [ ] 건설 PF와 미청구공사
