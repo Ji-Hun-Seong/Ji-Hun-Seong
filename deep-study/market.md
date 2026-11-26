@@ -64,7 +64,7 @@
 - [x] 방산 수출 계약 구조 (20261124-defense-export-contract-structure)
 - [x] 바이오 임상 단계와 기술이전 (20261124-biotech-clinical-phases-licensing-deals)
 - [x] 은행 NIM과 대손비용 (20261127-bank-nim-credit-cost)
-- [ ] 자동차 판매·환율 민감도
+- [x] 자동차 판매·환율 민감도 (20261127-auto-sales-fx-sensitivity)
 - [ ] 화학·정유 스프레드
 - [ ] 건설 PF와 미청구공사
 - [ ] 콘텐츠·게임 흥행 산업

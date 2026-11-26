@@ -103,6 +103,9 @@
 - [x] 기술이전(라이선스 아웃) (license-out)
 - [x] 계약금·마일스톤·로열티 (upfront-milestone-royalty)
 - [x] 임상 단계별 승인 확률(LOA) (likelihood-of-approval)
+- [x] 도매판매·소매판매 (wholesale-retail-sales)
+- [x] 환율 민감도 (fx-sensitivity)
+- [x] 판매 인센티브 (sales-incentive)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
