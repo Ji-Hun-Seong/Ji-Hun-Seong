@@ -53,7 +53,7 @@
 
 ## 대체자산
 - [x] 실물 부동산 취득부대비용과 평가 (20261124-real-estate-acquisition-cost-initial-valuation)
-- [ ] 임대차 계약 회계: 렌트프리·핏아웃·보증금
+- [x] 임대차 계약 회계: 렌트프리·핏아웃·보증금 (20261127-lease-rent-free-fitout-deposit)
 - [ ] 부동산펀드 감정평가 주기와 기준가 영향
 - [ ] PF 대출 구조와 이자 유예 회계
 - [ ] PF 손상 사례와 평가 조정

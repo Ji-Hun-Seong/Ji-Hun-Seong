@@ -392,7 +392,8 @@
 ### 대체자산
 - [x] 사실상취득가격(취득세 과세표준) (actual-acquisition-price)
 - [x] 공정가액 연 1회 평가(외부평가 우선) (fair-value-annual-valuation)
-- [ ] 임대보증금
+- [x] 임대보증금 (tenant-deposit)
+- [x] 임대차 조건변경(임대인) (lease-modification-lessor)
 - [ ] 마스터리스·책임임차
 - [ ] WALE와 공실률
 - [ ] 인수금융
