@@ -1,0 +1,393 @@
+{
+ "date": "2026-11-25",
+ "context": {
+  "n_gainers_list": 249,
+  "n_surge": 5,
+  "asof": "2026-11-25T16:03-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-25",
+   "code": "BZ",
+   "name": "KANZHUN LIMITED - American Depo",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 6273831936,
+   "chg": 12.558872921622498,
+   "gap": 0.8634270983343129,
+   "high_chg": 12.715854903166136,
+   "close_pos": 0.9867552889476673,
+   "upper_wick": 0.15698198154363194,
+   "limit_up": false,
+   "tv": 121816867.29621887,
+   "vol_ratio": 1.289286126237699,
+   "close": 14.34000015258789,
+   "pctb": 0.20766311551061817,
+   "bw": 0.5416822956055911,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 20.719605297128723,
+   "ma5_gap": -0.02075327282556827,
+   "ma20_gap": -0.15835371468039483,
+   "ma60_gap": -0.17846646221824936,
+   "ma120_gap": -0.165490808012697,
+   "ma_aligned": false,
+   "ret5": -0.026737996744830572,
+   "ret20": -0.23483483105072,
+   "ret60": -0.2661290712443032,
+   "from_high": -0.43340007003366643,
+   "from_low": 0.05115510655225397,
+   "vol_ratio_prev": 1.0148162011260313,
+   "tv20_avg": 94980827.27675915,
+   "tv_prev": 82897904.51068878,
+   "prev_chg": -0.018489967610338942,
+   "up_days": 0,
+   "prev_close_pos": 0.4074061646218593,
+   "fr": null,
+   "price": 12.739999771118164,
+   "filings": [
+    {
+     "date": "2026-11-25",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1842827/000110465926131805/tm2630442d1_6k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "KANZHUN LIMITED Sponsored ADR (BZ) Beats Q3 Earnings Estimates - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 11:25:02 GMT"
+    },
+    {
+     "title": "Kanzhun (BZ) Q3 2026 Earnings Call Transcript - The Motley Fool",
+     "date": "Wed, 25 Nov 2026 18:37:59 GMT"
+    },
+    {
+     "title": "Kanzhun Limited (NasdaqGS:BZ) announces an Equity Buyback for $500 million worth of its shares. - marketscreener.com",
+     "date": "Wed, 25 Nov 2026 12:35:54 GMT"
+    },
+    {
+     "title": "KANZHUN (NASDAQ:BZ) Declares Share Repurchase Plan - MarketBeat",
+     "date": "Thu, 26 Nov 2026 03:19:42 GMT"
+    },
+    {
+     "title": "KANZHUN LIMITED Announces US$500 Million New Share Repurchase Program - Quiver Quantitative",
+     "date": "Wed, 25 Nov 2026 11:21:00 GMT"
+    },
+    {
+     "title": "S&P/TSX Venture Composite: Benz Mining Corp. (TSXV:BZ) — Small-Cap Growth Stock: Why Investors Are Watching This Mining Stock Closely Today - kalkine.ca",
+     "date": "Wed, 25 Nov 2026 16:01:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Guidance·Buyback"
+   ]
+  },
+  {
+   "date": "2026-11-25",
+   "code": "HPQ",
+   "name": "HP Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 28090787840,
+   "chg": 11.488901299625276,
+   "gap": 7.193987796928414,
+   "high_chg": 14.710088133294864,
+   "close_pos": 0.6170211902512507,
+   "upper_wick": 3.221186833669577,
+   "limit_up": false,
+   "tv": 1216999335.0963593,
+   "vol_ratio": 2.715780429753537,
+   "close": 31.149999618530273,
+   "pctb": 0.27329375970709663,
+   "bw": 0.1610095444398946,
+   "bw_pctile": 0.325,
+   "squeeze": false,
+   "rsi14": 35.60057623476018,
+   "ma5_gap": -0.011183438014300995,
+   "ma20_gap": -0.036501868471241705,
+   "ma60_gap": -0.10071612579365685,
+   "ma120_gap": -0.024262459111876633,
+   "ma_aligned": false,
+   "ret5": -0.026819873736306787,
+   "ret20": -0.16795714679744933,
+   "ret60": -0.06928713830742572,
+   "from_high": -0.22881587394210068,
+   "from_low": 0.591116251925135,
+   "vol_ratio_prev": 1.9905444305151667,
+   "tv20_avg": 416133937.057457,
+   "tv_prev": 756400076.458168,
+   "prev_chg": -0.03321796183890324,
+   "up_days": 0,
+   "prev_close_pos": 0.1965824227238567,
+   "fr": null,
+   "price": 27.940000534057617,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "8-K",
+     "items": "2.02,7.01,9.01",
+     "items_kr": "실적 발표, IR 자료, 재무제표·첨부",
+     "url": "https://www.sec.gov/Archives/edgar/data/47217/000004721726000054/hpq-20261124.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "HP Shares Decline 1.65% as PC Margin Pressure and Cautious Earnings Outlook Overshadow Quarterly Beat - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 11:21:05 GMT"
+    },
+    {
+     "title": "HP Stock Pops After Strong Q4 Results and Guidance - Benzinga",
+     "date": "Wed, 25 Nov 2026 19:19:47 GMT"
+    },
+    {
+     "title": "HP results have analysts assessing PC demand and margin recovery - TradingView",
+     "date": "Wed, 25 Nov 2026 15:03:45 GMT"
+    },
+    {
+     "title": "HP Inc Stock (HPQ) Closed Up by 11.49% on Nov 25: What Signal Does It Send? - TradingKey",
+     "date": "Wed, 25 Nov 2026 21:15:26 GMT"
+    },
+    {
+     "title": "New Analyst Forecast: $HPQ Given $24 Price Target - Quiver Quantitative",
+     "date": "Wed, 25 Nov 2026 14:21:00 GMT"
+    },
+    {
+     "title": "HPQ: HP Inc. filed SEC Form 8-K: Results of Operations and... - Quantisnow",
+     "date": "Tue, 24 Nov 2026 21:21:36 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-25",
+   "code": "LI",
+   "name": "Li Auto Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 11610020864,
+   "chg": 11.028040431870089,
+   "gap": 6.588784451151053,
+   "high_chg": 11.401871857721058,
+   "close_pos": 0.9722222590151992,
+   "upper_wick": 0.3738314258509739,
+   "limit_up": false,
+   "tv": 124728121.2015152,
+   "vol_ratio": 3.5271964348405977,
+   "close": 11.880000114440918,
+   "pctb": 0.151692252759771,
+   "bw": 0.19891022738558148,
+   "bw_pctile": 0.775,
+   "squeeze": false,
+   "rsi14": 38.23528286794073,
+   "ma5_gap": -0.019068590323702783,
+   "ma20_gap": -0.06928197320371354,
+   "ma60_gap": -0.07360645955989698,
+   "ma120_gap": -0.11858591012139874,
+   "ma_aligned": false,
+   "ret5": -0.07519446054508294,
+   "ret20": -0.049733606415060416,
+   "ret60": -0.11570252298079176,
+   "from_high": -0.4673967283227314,
+   "from_low": 0.033317265309535715,
+   "vol_ratio_prev": 1.2589506731872246,
+   "tv20_avg": 34287996.671447754,
+   "tv_prev": 39045369.30398941,
+   "prev_chg": 0.0,
+   "up_days": 0,
+   "prev_close_pos": 0.8787879663612982,
+   "fr": null,
+   "price": 10.699999809265137,
+   "filings": [
+    {
+     "date": "2026-11-25",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1791706/000110465926131768/tm2630657d1_6k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Li Auto’s Losses Narrow and a Weak Sales Outlook Isn’t Spoiling the Stock’s Rally - Barron's",
+     "date": "Wed, 25 Nov 2026 15:45:00 GMT"
+    },
+    {
+     "title": "Li Auto Inc. (LI) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 22:26:35 GMT"
+    },
+    {
+     "title": "Li Auto upgraded by Analyst with a new price target - Quantisnow",
+     "date": "Wed, 25 Nov 2026 20:21:27 GMT"
+    },
+    {
+     "title": "PANW, META, AMZN, LI, SPCX: 5 Trending Stocks Today - SpaceX (NASDAQ:SPCX) - Benzinga",
+     "date": "Thu, 26 Nov 2026 01:01:05 GMT"
+    },
+    {
+     "title": "Li Auto Inc. Stock 12‑Month Price Target Cut to $14.66, Implies 37% Upside - TradingView",
+     "date": "Wed, 25 Nov 2026 22:20:00 GMT"
+    },
+    {
+     "title": "Why is Li Auto stock surging today? - Investing.com",
+     "date": "Wed, 25 Nov 2026 15:27:25 GMT"
+    }
+   ],
+   "catalysts": [
+    "Analyst"
+   ]
+  },
+  {
+   "date": "2026-11-25",
+   "code": "ASTS",
+   "name": "AST SpaceMobile, Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 10426942464,
+   "chg": 10.254237445665826,
+   "gap": -4.067800747050255,
+   "high_chg": 12.987290188623035,
+   "close_pos": 0.8451379793557605,
+   "upper_wick": 2.7330527429572165,
+   "limit_up": false,
+   "tv": 687942792.1028137,
+   "vol_ratio": 1.3754813261202805,
+   "close": 26.020000457763672,
+   "pctb": 0.12503332773188475,
+   "bw": 0.7363209439880013,
+   "bw_pctile": 0.975,
+   "squeeze": false,
+   "rsi14": 33.388612009328824,
+   "ma5_gap": -0.04515292134489646,
+   "ma20_gap": -0.27609581408849815,
+   "ma60_gap": -0.5023161912640759,
+   "ma120_gap": -0.6009322778392537,
+   "ma_aligned": false,
+   "ret5": -0.1446176059822859,
+   "ret20": -0.43755955918972045,
+   "ret60": -0.6006768021863186,
+   "from_high": -0.823696397177181,
+   "from_low": 0.04795736686291807,
+   "vol_ratio_prev": 0.8068033893119921,
+   "tv20_avg": 610837955.3159809,
+   "tv_prev": 365967565.9154892,
+   "prev_chg": -0.0806388659396946,
+   "up_days": 0,
+   "prev_close_pos": 0.3927272449840199,
+   "fr": null,
+   "price": 23.600000381469727,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1780312/000110465926131559/xslF345X06/tm2630590-1_4seq1.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "ASTS Stock Eyes Worst Month Since 2024: Bulls Cheer Director’s Dip Buy And Bet On A Launch-Fueled Comeback - Yahoo Finance",
+     "date": "Wed, 25 Nov 2026 03:41:00 GMT"
+    },
+    {
+     "title": "AST SpaceMobile Surges 9%, Erasing Early Losses as Space Stocks Diverge; SpaceX Eases, Rocket Lab Holds Steady - 24/7 Wall St.",
+     "date": "Wed, 25 Nov 2026 19:02:00 GMT"
+    },
+    {
+     "title": "Three Reasons To Rethink AST SpaceMobile Stock Now - Trefis",
+     "date": "Tue, 24 Nov 2026 10:37:18 GMT"
+    },
+    {
+     "title": "ASTS Stock Eyes Worst Month Since 2024: Bulls Cheer Director’s Dip Buy And Bet On A Launch-Fueled Comeback - TradingView",
+     "date": "Wed, 25 Nov 2026 03:41:00 GMT"
+    },
+    {
+     "title": "Why Is AST SpaceMobile Stock Falling on Tuesday? - Benzinga",
+     "date": "Tue, 24 Nov 2026 18:01:43 GMT"
+    },
+    {
+     "title": "AST SpaceMobile (NASDAQ:ASTS) Stock Price Up 10.3% - Here's What Happened - MarketBeat",
+     "date": "Wed, 25 Nov 2026 22:27:08 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-25",
+   "code": "LBTYB",
+   "name": "Liberty Global Ltd.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 4081770240,
+   "chg": 0.7383113673992581,
+   "gap": 2.953245469596988,
+   "high_chg": 9.844141134102657,
+   "close_pos": 0.4278348944420466,
+   "upper_wick": 6.890895664505657,
+   "limit_up": false,
+   "tv": 238231.9948196411,
+   "vol_ratio": 2.4234853216739536,
+   "close": 12.279999732971191,
+   "pctb": 0.5609695815735652,
+   "bw": 0.24720519185554138,
+   "bw_pctile": 0.925,
+   "squeeze": false,
+   "rsi14": 55.64303831244135,
+   "ma5_gap": -0.05357145554424936,
+   "ma20_gap": 0.015071997110245317,
+   "ma60_gap": -0.006466017075615449,
+   "ma120_gap": -0.022225223051119514,
+   "ma_aligned": false,
+   "ret5": -0.026357896590629704,
+   "ret20": 0.036564569994260054,
+   "ret60": -0.028685307161774865,
+   "from_high": -0.5798000867215728,
+   "from_low": 0.1950980204245254,
+   "vol_ratio_prev": 4.275966641394996,
+   "tv20_avg": 95922.74901390076,
+   "tv_prev": 343757.9881668091,
+   "prev_chg": -0.06013883350707072,
+   "up_days": 0,
+   "prev_close_pos": 0.49795894217658077,
+   "fr": null,
+   "price": 12.1899995803833,
+   "filings": [],
+   "news": [
+    {
+     "title": "T-Mobile US, Inc. (TMUS) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Wed, 25 Nov 2026 17:30:34 GMT"
+    },
+    {
+     "title": "EN Transat Market Leaders Selec (EMSG.AS) latest stock news and headlines - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 17:42:27 GMT"
+    },
+    {
+     "title": "Solactive GBS Developed Markets Large Cap USD Index PR (DE000SL0BAP0.SG) latest stock news and headlines - Yahoo Finance UK",
+     "date": "Tue, 24 Nov 2026 17:39:58 GMT"
+    },
+    {
+     "title": "Comcast Corporation (CMCSA) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Tue, 24 Nov 2026 20:07:14 GMT"
+    },
+    {
+     "title": "STX Taiwan I (QKEB.Z) latest stock news and headlines - Yahoo Finance Australia",
+     "date": "Tue, 24 Nov 2026 18:16:44 GMT"
+    },
+    {
+     "title": "Liberty Global (LBTYB) Stock Is Up 6.4% Today Without Company Ne - GuruFocus",
+     "date": "Wed, 25 Nov 2026 15:33:45 GMT"
+    }
+   ],
+   "catalysts": []
+  }
+ ]
+}
