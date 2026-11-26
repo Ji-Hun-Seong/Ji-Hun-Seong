@@ -372,7 +372,7 @@
 - [ ] 판매수수료(선취·후취)
 - [ ] 환매수수료
 - [ ] 기준가 오류와 투자자 보전
-- [ ] 평가위원회
+- [x] 평가위원회 (valuation-committee)
 
 ### 주식 기업행위(펀드 처리)
 - [ ] 미수배당금
@@ -395,6 +395,7 @@
 - [x] 공정가액 연 1회 평가(외부평가 우선) (fair-value-annual-valuation)
 - [x] 임대보증금 (tenant-deposit)
 - [x] 임대차 조건변경(임대인) (lease-modification-lessor)
+- [x] 감정평가 기준시점·반영일 (appraisal-base-date)
 - [ ] 마스터리스·책임임차
 - [ ] WALE와 공실률
 - [ ] 인수금융
