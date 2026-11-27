@@ -375,7 +375,7 @@
 - [x] 수익자총회 (beneficiaries-meeting)
 - [x] 수탁회사·일반사무관리회사
 - [x] 개방형·폐쇄형·환매금지형
-- [ ] 단위형·추가형
+- [x] 단위형·추가형 (unit-additional-fund)
 - [ ] 공모펀드·사모펀드
 - [ ] ETF와 PDF
 - [ ] TDF
@@ -413,7 +413,7 @@
 - [ ] 마스터리스·책임임차
 - [ ] WALE와 공실률
 - [ ] 인수금융
-- [ ] 리츠
+- [x] 리츠 (reits)
 - [ ] 개발형 펀드의 건설중인자산
 - [x] 이자유보금 (interest-reserve)
 - [x] 책임준공 (completion-guarantee)
