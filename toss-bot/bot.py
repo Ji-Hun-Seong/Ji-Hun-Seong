@@ -78,8 +78,7 @@ def log(*a):
 
 
 def tg(text, force=False):
-    if not force and os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
-        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
+    # 토스 자동매매 알림은 TELEGRAM_OFF 와 상관없이 보냄 (2026-11-27 요청)
     tok, chat = os.environ.get("TG_TOKEN"), os.environ.get("TG_CHAT_ID")
     if not tok or not chat:
         log("[텔레그램 미설정]", text[:300]); return
