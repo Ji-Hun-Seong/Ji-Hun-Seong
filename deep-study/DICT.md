@@ -118,6 +118,9 @@
 - [x] 본인·대리인 판단(총액·순액 인식) (principal-agent-revenue)
 - [x] 콘텐츠 상각 (content-amortization)
 - [x] 부율 (box-office-revenue-split)
+- [x] 소매판매액지수 (retail-sales-index)
+- [x] 주요 유통업체 매출 동향 (major-retailer-sales-trend)
+- [x] 소비자심리지수 (consumer-sentiment-index)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)

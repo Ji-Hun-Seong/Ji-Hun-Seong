@@ -69,7 +69,7 @@
 - [x] 건설 PF와 미청구공사 (20261127-construction-pf-unbilled-receivables)
 - [x] 콘텐츠·게임 흥행 산업 ①: 게임 — 흥행 수명곡선, 앱마켓·수익 배분 수수료, 이연 매출과 확률형 아이템 규제 (20261127-game-hit-lifecycle-fees-deferred-revenue)
 - [x] 콘텐츠·게임 흥행 산업 ②: 엔터·드라마·영화 — 음반·공연·IP 매출 구조와 흥행 변동성 (20261128-entertainment-drama-film-revenue-hit-volatility)
-- [ ] 음식료·유통 내수 지표
+- [x] 음식료·유통 내수 지표 (20261128-food-retail-domestic-demand-indicators)
 
 ## 거시와 자금 흐름
 - [ ] 금리와 주식 밸류에이션
