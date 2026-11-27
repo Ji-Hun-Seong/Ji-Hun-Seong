@@ -88,7 +88,7 @@ def main(telegram=False):
                                                     for kk, v in s.items()} for k, s in results.items()}},
                   f, ensure_ascii=False, indent=2)
 
-    if telegram:
+    if telegram and not os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
         tok, chat = os.environ.get("TELEGRAM_TOKEN"), os.environ.get("TELEGRAM_CHAT_ID")
         if tok and chat:
             r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",

@@ -379,6 +379,8 @@ def _tg_token():
 
 
 def send_telegram(messages):
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     import time
     import requests
     if isinstance(messages, str):
@@ -411,6 +413,8 @@ def send_telegram(messages):
 
 def find_chats():
     """봇이 들어가 있는 그룹을 찾아, 각 그룹 안에 그 그룹의 chat ID를 알려 준다(로그에는 ID를 남기지 않음)."""
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     import requests
     tok = _tg_token()
     if not tok:

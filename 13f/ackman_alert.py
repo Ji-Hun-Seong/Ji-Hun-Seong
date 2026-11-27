@@ -86,6 +86,8 @@ def diff_message(label, cik, new, old):
 
 
 def send(text):
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     requests.post(
         f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage",
         json={"chat_id": os.environ["TG_CHAT_ID"], "text": text,

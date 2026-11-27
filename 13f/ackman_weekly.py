@@ -516,6 +516,8 @@ def build(res, D, state, week, asof, last_q):
 
 
 def send(text):
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     tok, chat = os.environ["TG_TOKEN"], os.environ["TG_CHAT_ID"]
     for _ in range(2):
         r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",

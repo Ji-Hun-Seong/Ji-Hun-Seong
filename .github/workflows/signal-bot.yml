@@ -80,6 +80,7 @@ jobs:
           TOKEN: ${{ secrets.VALUE_TG_TOKEN }}
           CHAT: ${{ secrets.TG_CHAT_ID }}
         run: |
+          [ -f TELEGRAM_OFF ] && { echo "텔레그램 꺼짐(TELEGRAM_OFF) — 건너뜀"; exit 0; }
           curl -s -o /dev/null "https://api.telegram.org/bot$TOKEN/sendMessage" \
             --data-urlencode "chat_id=$CHAT" \
             --data-urlencode "text=⚠️ 저녁 일일 신호 봇 실행 실패 ($(TZ=Asia/Seoul date '+%m/%d %H:%M')). 다음 예약 실행 때 자동으로 다시 시도합니다. 확인: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

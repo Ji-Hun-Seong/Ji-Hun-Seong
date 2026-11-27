@@ -141,6 +141,8 @@ def message(label, style, cik):
 
 
 def send(text):
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     r = requests.post(f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage",
                       json={"chat_id": os.environ["TG_CHAT_ID"], "text": text,
                             "parse_mode": "HTML", "disable_web_page_preview": True}, timeout=30)
@@ -149,6 +151,8 @@ def send(text):
 
 
 def find_chats():
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     r = requests.get(f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/getUpdates", timeout=30).json()
     chats = {}
     for u in r.get("result", []):

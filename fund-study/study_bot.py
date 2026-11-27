@@ -173,6 +173,8 @@ def messages(d: dict, total: int) -> list[str]:
 
 
 def tg(method: str, **kw):
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     tok = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
     chat = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
     if not tok or not chat:
