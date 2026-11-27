@@ -56,7 +56,8 @@
 - [x] 임대차 계약 회계: 렌트프리·핏아웃·보증금 (20261127-lease-rent-free-fitout-deposit)
 - [x] 부동산펀드 감정평가 주기와 기준가 영향 (20261127-real-estate-appraisal-cycle-nav-impact)
 - [x] PF 대출 구조와 이자 유예 회계 (20261127-pf-loan-structure-interest-deferral)
-- [ ] PF 손상 사례와 평가 조정
+- [x] PF 손상 사례와 평가 조정 1: 회수가능액 평가 — 담보 매각가율·회수 순위·회수 기간 할인과 책임준공 소송 (20261127-pf-impairment-recovery-valuation-1)
+- [ ] PF 손상 사례와 평가 조정 2: 부실 PF 매각·정상화 펀드 수익증권(종류형 선·후순위)과 경공매 취득 자산의 평가
 - [ ] 상장 리츠·공모 부동산펀드 특수 처리
 - [ ] 비상장주식 평가 모형별 계산
 - [ ] PEF 캐피탈콜과 분배 회계
