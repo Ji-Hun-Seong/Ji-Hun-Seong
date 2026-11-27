@@ -11,6 +11,16 @@
 "chars": 18603
 },
 {
+"id": "20261127-construction-pf-unbilled-receivables",
+"area": "산업 분석",
+"t": "건설 PF와 미청구공사",
+"date": "2026-11-27",
+"sum": "건설사 위험을 장부 밖 PF 신용보강과 장부 안 미청구공사 두 축으로 나눠, 책임준공·자기자본비율·원가율 변경을 끝까지 계산하고 당국 통계와 사례로 점검한다",
+"n_sections": 18,
+"n_qs": 13,
+"chars": 20150
+},
+{
 "id": "20261127-bank-nim-credit-cost",
 "area": "산업 분석",
 "t": "은행 NIM과 대손비용",
