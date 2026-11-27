@@ -281,11 +281,12 @@ def buyback_digest(day: str, rows, key: str, now) -> str:
 
 
 def broadcast(text: str):
-    send(text)
+    # 공시 알림은 TELEGRAM_OFF 예외 (2026-11-27: "공시만 텔레그램 켜줘")
+    send(text, force=True)
     for gchat in [g.strip() for g in os.environ.get("GROUP_CHAT_ID", "").split(",") if g.strip()]:
         os.environ["TELEGRAM_CHAT_ID"] = gchat
         try:
-            send(text)
+            send(text, force=True)
         except SystemExit as ex:
             print("::warning::그룹 전송 실패", ex)
 

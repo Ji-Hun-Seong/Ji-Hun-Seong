@@ -476,8 +476,9 @@ def build_message(x, res, state, names):
     return msgs
 
 
-def send(text):
-    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+def send(text, force=False):
+    """force=True: TELEGRAM_OFF 여도 보냄(공시 알림 전용)."""
+    if not force and os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
         print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     tok = os.environ.get("TELEGRAM_TOKEN", "")
     m = re.search(r"\d{6,}:[A-Za-z0-9_-]{30,}", tok)

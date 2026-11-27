@@ -77,8 +77,8 @@ def log(*a):
         f.write(msg + "\n")
 
 
-def tg(text):
-    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+def tg(text, force=False):
+    if not force and os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
         print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     tok, chat = os.environ.get("TG_TOKEN"), os.environ.get("TG_CHAT_ID")
     if not tok or not chat:
@@ -325,7 +325,7 @@ def watch(a):
                 s["seen"] = {d: v for d, v in s["seen"].items() if d >= (now() - dt.timedelta(days=7)).strftime("%Y%m%d")}
                 s["seen"][day] = sorted(seen)
             if msgs:
-                tg(f"📢 <b>자사주 공시</b> [{'💰 실전' if peek()['mode'] == 'live' else '🧪 가상'}]\n\n" + "\n\n".join(msgs))
+                tg(f"📢 <b>자사주 공시</b> [{'💰 실전' if peek()['mode'] == 'live' else '🧪 가상'}]\n\n" + "\n\n".join(msgs), force=True)
             errs = 0
             process_late(a, sess)
             check_now_orders(a)
