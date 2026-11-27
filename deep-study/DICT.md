@@ -106,6 +106,9 @@
 - [x] 도매판매·소매판매 (wholesale-retail-sales)
 - [x] 환율 민감도 (fx-sensitivity)
 - [x] 판매 인센티브 (sales-incentive)
+- [x] 정제마진 (refining-margin)
+- [x] 에틸렌 스프레드 (ethylene-spread)
+- [x] 납사분해설비(NCC) (naphtha-cracking-center)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
