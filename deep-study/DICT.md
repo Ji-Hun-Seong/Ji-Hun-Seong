@@ -115,6 +115,9 @@
 - [x] 확률형 아이템 (probability-item)
 - [x] 앱마켓 수수료 (app-store-commission)
 - [x] 부킹(결제 기준 매출) (bookings)
+- [x] 본인·대리인 판단(총액·순액 인식) (principal-agent-revenue)
+- [x] 콘텐츠 상각 (content-amortization)
+- [x] 부율 (box-office-revenue-split)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)
