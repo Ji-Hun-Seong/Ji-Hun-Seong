@@ -1968,5 +1968,74 @@
   "up": 9,
   "avg": 3.6,
   "market_avg": 1.44
+ },
+ "graded": {
+  "results": [
+   {
+    "code": "086790",
+    "name": "하나금융지주",
+    "score": 56,
+    "next_chg": -0.75
+   },
+   {
+    "code": "068270",
+    "name": "셀트리온",
+    "score": 55,
+    "next_chg": 2.08
+   },
+   {
+    "code": "086450",
+    "name": "동국제약",
+    "score": 53,
+    "next_chg": -1.55
+   },
+   {
+    "code": "047810",
+    "name": "한국항공우주",
+    "score": 50,
+    "next_chg": 4.22
+   },
+   {
+    "code": "006360",
+    "name": "GS건설",
+    "score": 45,
+    "next_chg": 5.91
+   },
+   {
+    "code": "000810",
+    "name": "삼성화재",
+    "score": 45,
+    "next_chg": 2.35
+   },
+   {
+    "code": "100090",
+    "name": "SK오션플랜트",
+    "score": 45,
+    "next_chg": 5.64
+   },
+   {
+    "code": "055550",
+    "name": "신한지주",
+    "score": 44.5,
+    "next_chg": -0.83
+   },
+   {
+    "code": "092870",
+    "name": "엑시콘",
+    "score": 43,
+    "next_chg": 6.06
+   },
+   {
+    "code": "328130",
+    "name": "루닛",
+    "score": 43,
+    "next_chg": 4.23
+   }
+  ],
+  "n": 10,
+  "hit10": 0,
+  "up": 7,
+  "avg": 2.74,
+  "market_avg": 4.1
  }
 }

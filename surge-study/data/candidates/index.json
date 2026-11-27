@@ -1,6 +1,18 @@
 {
  "dates": [
   {
+   "date": "2026-11-27",
+   "method": "v2-rules-news-2026-11-04",
+   "n_scored": 757,
+   "top": [
+    "삼표시멘트",
+    "대한광통신",
+    "가온전선"
+   ],
+   "n_surge": null,
+   "graded": null
+  },
+  {
    "date": "2026-11-24",
    "method": "v2-rules-news-2026-11-04",
    "n_scored": 436,
@@ -9,8 +21,14 @@
     "셀트리온",
     "동국제약"
    ],
-   "n_surge": null,
-   "graded": null
+   "n_surge": 83,
+   "graded": {
+    "avg": 2.74,
+    "up": 7,
+    "n": 10,
+    "hit10": 0,
+    "market_avg": 4.1
+   }
   },
   {
    "date": "2026-11-23",
