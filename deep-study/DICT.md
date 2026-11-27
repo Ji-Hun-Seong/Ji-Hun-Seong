@@ -112,6 +112,9 @@
 - [x] 부동산 PF (real-estate-project-financing)
 - [x] 책임준공 확약 (completion-guarantee)
 - [x] PF 유동화증권 (pf-asset-backed-short-term-securities)
+- [x] 확률형 아이템 (probability-item)
+- [x] 앱마켓 수수료 (app-store-commission)
+- [x] 부킹(결제 기준 매출) (bookings)
 
 ### 증자·감자
 - [x] 1차 발행가액·2차 발행가액·확정 발행가액 (issue-price-stages)

@@ -67,7 +67,8 @@
 - [x] 자동차 판매·환율 민감도 (20261127-auto-sales-fx-sensitivity)
 - [x] 화학·정유 스프레드 (20261127-refining-petrochemical-spreads)
 - [x] 건설 PF와 미청구공사 (20261127-construction-pf-unbilled-receivables)
-- [ ] 콘텐츠·게임 흥행 산업
+- [x] 콘텐츠·게임 흥행 산업 ①: 게임 — 흥행 수명곡선, 앱마켓·수익 배분 수수료, 이연 매출과 확률형 아이템 규제 (20261127-game-hit-lifecycle-fees-deferred-revenue)
+- [ ] 콘텐츠·게임 흥행 산업 ②: 엔터·드라마·영화 — 음반·공연·IP 매출 구조와 흥행 변동성
 - [ ] 음식료·유통 내수 지표
 
 ## 거시와 자금 흐름
