@@ -1,6 +1,7 @@
 """buyback_quality.py — '좋은 자사주 공시' 판별 (토스봇 실매매 + 장중 공시 알림 공용, requests만 사용)
 
 매수 = [① 52주 고점 대비 -30% 이하  또는  ② 1년 안 재매입]  그리고  [③ 매입 규모가 시총의 1% 이상 (금액 모르면 통과)]
+      그리고  [④ 시총 5조 미만 (2026-11-27 추가)]   ※ ⭐ 확실 등급은 표시용 (아래 CAP_MAX 설명)
   백테스트(README 8차, 2014~2026 자사주 원공시 1,315건, 다음 날 시가 → 10일 초과수익):
   ①② 둘 다 아님: IS -0.6%·OOS 0.0% → 제외 / 규모 1% 미만: IS +0.1%·OOS +0.5% → 제외
   최종: 거래당 IS +1.7%·OOS +2.6%, 7종목 포트폴리오 연 20.4%·MDD -27%·Sharpe 1.64, 손실 연도 없음
@@ -25,6 +26,10 @@ VU_PAT = r"기업가치제고계획"
 SIZE_MIN = 0.01        # 시총 대비 1% 미만이면 제외
 BIG = 0.03             # 아빠 기준(연 3%) — 알림 표시용
 DD_MAX = -0.30         # 52주 고점 대비 -30%
+CAP_MAX = 5e12         # 시총 5조 이상은 제외 (2026-11-27 백테스트: 좋은 공시라도 10일 초과수익 +0.1%, 5조 미만은 +2.5%)
+# ⭐ 확실 등급 점수(공시 시점에 아는 것만): 시총 1조 미만 +1, 3천억 미만 +1, 52주 고점 -30%↓ +1, 직전 20일 -10%↓ +1
+#   좋은 공시 & 5조 미만 & 규모 1%↑ 중 3점↑(⭐): 10일 초과수익 ~2020 +3.7% / 2021~ +3.8%, 승률 64~67%, 연 20건
+#   4점(⭐⭐): +5.5% / +7.3%, 연 8건 (표본 적음). 매수 규칙은 같고 표시만 다름.
 NUM = r"(-?[\d,]+(?:\.\d+)?)"
 
 
@@ -152,7 +157,21 @@ def assess(*, code: str, corp_code: str | None, rcept_no: str, trust: bool, key:
                 msg = f"밸류업 약속 연 {yearly / 1e8:,.0f}억(시총의 {r['pledge_pct']:.1%}) 이행"
                 r["notes"].append(msg)
     r["small"] = r.get("pct") is not None and r["pct"] < SIZE_MIN
-    r["good"] = bool(r["reasons"]) and not r["small"]
+    r["cap"] = cap
+    r["huge"] = bool(cap and cap >= CAP_MAX)
+    if r["huge"]:
+        r["notes"].append(f"시총 {cap / 1e12:,.1f}조 → 5조 이상 대형주 제외(백테스트 초과수익 0%)")
+    pts = 0
+    if cap:
+        pts += (cap < 1e12) + (cap < 3e11)
+    if r.get("dd") is not None and r["dd"] <= DD_MAX:
+        pts += 1
+    if closes and len(closes) >= 21 and closes[-21] > 0:
+        r["ret20"] = closes[-1] / closes[-21] - 1
+        pts += r["ret20"] <= -0.10
+    r["score"] = int(pts)
+    r["stars"] = 2 if pts >= 4 else 1 if pts >= 3 else 0
+    r["good"] = bool(r["reasons"]) and not r["small"] and not r["huge"]
     return r
 
 

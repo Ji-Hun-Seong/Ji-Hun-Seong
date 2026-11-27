@@ -5,7 +5,8 @@ daily_signals.py — 코스피 일일 신호 봇 (평일 장 마감 후 텔레�
   1) 시장: 코스피200 200일선 추세 + 시장 전체 외국인 20일 순매수 → ETF 비중 판단
   2) 모의 포트폴리오 두 개(각 가상 1천만 원, 합산 성적 함께 표시)
      A. 스퀴즈 돌파(BB·RSI): 최대 15종목, RSI<40 청산
-     B. 자사주 공시 스윙(DART): 자사주 취득·신탁계약 공시 다음 날 시가 매수, 10거래일 보유 또는 RSI>70 익절
+     B. 자사주 공시 스윙(DART): 좋은 자사주 공시(buyback_quality, 시총 5조 미만) 다음 날 시가 매수, 최대 5종목,
+        10거래일 보유, 종가가 매수가 -10% 이하면 다음 날 시가 손절 (2026-11-27 변경, README 12차)
   3) 우선주 괴리: 우선주가 보통주 대비 고평가(괴리 BB 상단 & RSI>70) → 보통주로 갈아타기
   4) 외국인 60일 순매수 상위(참고)
 
@@ -31,6 +32,8 @@ import pandas as pd
 import requests
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import buyback_quality as BQ  # noqa: E402
 ROOT = os.path.dirname(HERE)
 STATE = os.path.join(HERE, "state.json")
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36"}
@@ -44,7 +47,8 @@ SELL_COST = 0.00015 + 0.002 + 0.001
 START_CASH = 10_000_000
 PREF_LIQ = 3e8
 # 자사주 공시 스윙(백테스트 2015~2026: 연 12.9%, MDD -29%, Sharpe 1.01 / 스퀴즈와 50:50 합산 연 15.9%, MDD -26%, Sharpe 1.17)
-BB_MAX_POS, BB_HOLD, BB_TAKE, BB_LIQ = 10, 10, 70, 3e8
+# 2026-11-27(README 12차): 좋은 공시 & 5조 미만, 5종목, 10일 + 손절 -10% → 연 27.9%, MDD -19%, Sharpe 1.75
+BB_MAX_POS, BB_HOLD, BB_STOP, BB_LIQ = 5, 10, 0.10, 3e8
 DART = "https://opendart.fss.or.kr/api"
 
 
@@ -209,7 +213,7 @@ def dart_buybacks(since: date, until: date):
         for it in j.get("list", []):
             nm = re.sub(r"\s+", "", it.get("report_nm", ""))
             if BUYBACK.search(nm) and it.get("stock_code"):
-                out.append({"code": it["stock_code"], "corp": it.get("corp_name", ""), "dt": it["rcept_dt"],
+                out.append({"code": it["stock_code"], "corp": it.get("corp_name", ""), "dt": it["rcept_dt"], "corp_code": it.get("corp_code"),
                             "kind": "신탁" if "신탁" in nm else "직접", "rcept_no": it["rcept_no"]})
         if page >= int(j.get("total_page", 1)):
             break
@@ -310,8 +314,9 @@ def step(state, x, names, buybacks):
     sells = []
     for code, p in sl["positions"].items():
         p["days"] = p.get("days", 0) + 1
-        r = x["r14"][code].iloc[-1] if code in x["r14"] else np.nan
-        why = f"RSI {r:.0f} > {BB_TAKE} 익절" if np.isfinite(r) and r > BB_TAKE else (f"{BB_HOLD}거래일 경과" if p["days"] >= BB_HOLD else "")
+        cl = C[code].iloc[-1] if code in C else np.nan
+        stop = np.isfinite(cl) and cl <= p["entry_px"] * (1 - BB_STOP)
+        why = f"손절(-{BB_STOP:.0%} 이탈)" if stop else (f"{BB_HOLD}거래일 경과" if p["days"] >= BB_HOLD else "")
         if why:
             sl["pending_sell"].append(code)
             sells.append((p["name"], why, C[code].iloc[-1] / p["entry_px"] - 1))
@@ -332,6 +337,16 @@ def step(state, x, names, buybacks):
                 skipped.append(f"{nm}: 거래대금 부족"); continue
             if c in sl["positions"] or c in [b for b in sl["pending_buy"]]:
                 continue
+            try:                                   # 좋은 공시만 (토스봇과 같은 판별: 재매입·고점 -30%, 규모 1%↑, 시총 5조 미만)
+                qv = BQ.assess(code=c, corp_code=e.get("corp_code"), rcept_no=e["rcept_no"], trust=e["kind"] == "신탁",
+                               key=(os.environ.get("DART_API_KEY") or "").strip(), day=e["dt"],
+                               closes=[float(v) for v in C[c].dropna().tolist()])
+            except Exception as ex:
+                print("::warning::품질 판별 실패", c, ex); qv = {"good": True, "stars": 0}
+            if not qv["good"]:
+                skipped.append(f"{nm}: 약한 공시" + (" (시총 5조↑)" if qv.get("huge") else "")); continue
+            if qv.get("stars"):
+                events[-1] += " " + "⭐" * qv["stars"]
             cand.append(c)
         cand = sorted(set(cand), key=lambda c: x["r14"][c].iloc[-1] if np.isfinite(x["r14"][c].iloc[-1]) else 99)
         slots = BB_MAX_POS - (len(sl["positions"]) - len(sl["pending_sell"]))
@@ -427,7 +442,7 @@ def build_message(x, res, state, names):
     if res is not None:
         rb = res["buyback"]
         L = [f"🏢 [2/3] 자사주 공시 스윙 · {day}", "",
-             f"B. 최대 {BB_MAX_POS}종목, 공시 다음 날 시가 매수 · {BB_HOLD}거래일 보유 · RSI>{BB_TAKE} 익절"]
+             f"B. 좋은 공시·시총 5조 미만, 최대 {BB_MAX_POS}종목 · 다음 날 시가 매수 · {BB_HOLD}거래일 보유 · -{BB_STOP:.0%} 손절"]
         if not rb["ok"]:
             L.append("⚠️ DART 조회 실패 — 오늘 공시 신호 없음 (다음 실행 때 다시 확인)")
         elif rb["events"]:
@@ -462,6 +477,8 @@ def build_message(x, res, state, names):
 
 
 def send(text):
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "TELEGRAM_OFF")):
+        print("텔레그램 꺼짐(저장소 TELEGRAM_OFF 파일) — 전송 안 함"); return
     tok = os.environ.get("TELEGRAM_TOKEN", "")
     m = re.search(r"\d{6,}:[A-Za-z0-9_-]{30,}", tok)
     tok = m.group(0) if m else tok.strip()

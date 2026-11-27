@@ -389,7 +389,7 @@ def main():
             try:
                 qv = BQ.assess(code=e["code"], corp_code=e.get("corp_code"), rcept_no=e["rcept_no"], trust="신탁" in e["kind"],
                                key=key, day=day, closes=q.get("closes"), price=q.get("price"), text=txt)
-                e["bb"].append(f"⭐ 좋은 공시 → 토스봇 매수: {' / '.join(qv['reasons'])}" if qv["good"] else
+                e["bb"].append(f"{'⭐' * max(1, qv.get('stars', 0))} {'확실 등급' if qv.get('stars') else '좋은 공시'} → 토스봇 매수: {' / '.join(qv['reasons'])}" if qv["good"] else
                                f"▫️ 약한 공시 → 토스봇 매수 안 함 ({' / '.join(qv['notes']) or '첫 매입·고점 근처'})")
                 e["bb"] += [f"  · {x}" for x in qv["notes"]] if qv["good"] else []
             except Exception as ex:
