@@ -390,7 +390,8 @@
 - [x] 평가위원회 (valuation-committee)
 
 ### 주식 기업행위(펀드 처리)
-- [ ] 미수배당금
+- [x] 미수배당금 (dividend-receivable)
+- [x] 단수주(펀드 처리) (fractional-shares-fund)
 - [x] 신주인수권 평가(펀드) (rights-offering-fund)
 - [ ] 권리 통지(예탁결제원)
 - [ ] 합병·분할 장부 승계
