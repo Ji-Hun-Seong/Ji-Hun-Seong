@@ -55,7 +55,7 @@
 - [x] 실물 부동산 취득부대비용과 평가 (20261124-real-estate-acquisition-cost-initial-valuation)
 - [x] 임대차 계약 회계: 렌트프리·핏아웃·보증금 (20261127-lease-rent-free-fitout-deposit)
 - [x] 부동산펀드 감정평가 주기와 기준가 영향 (20261127-real-estate-appraisal-cycle-nav-impact)
-- [ ] PF 대출 구조와 이자 유예 회계
+- [x] PF 대출 구조와 이자 유예 회계 (20261127-pf-loan-structure-interest-deferral)
 - [ ] PF 손상 사례와 평가 조정
 - [ ] 상장 리츠·공모 부동산펀드 특수 처리
 - [ ] 비상장주식 평가 모형별 계산

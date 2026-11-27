@@ -399,6 +399,8 @@
 - [x] 임대보증금 (tenant-deposit)
 - [x] 임대차 조건변경(임대인) (lease-modification-lessor)
 - [x] 감정평가 기준시점·반영일 (appraisal-base-date)
+- [x] PF 사업성 평가 등급 (pf-feasibility-grade)
+- [x] PF 대주단 협약 (pf-lender-agreement)
 - [ ] 마스터리스·책임임차
 - [ ] WALE와 공실률
 - [ ] 인수금융
