@@ -436,6 +436,8 @@
 - [x] 신탁 공매 (trust-public-sale)
 - [ ] 선박·항공기 잔존가치
 - [x] 비유동성 할인·지배력 할증 (illiquidity-control-adjustment)
+- [x] 지분 배분 모형(OPM·PWERM) (equity-allocation-opm-pwerm)
+- [x] 상환전환우선주(RCPS) 펀드 처리 (rcps-fund)
 
 ### 결산·세무·통제
 - [x] 상증세법 비상장주식 평가(보충적 평가방법) (inheritance-tax-share-valuation)
