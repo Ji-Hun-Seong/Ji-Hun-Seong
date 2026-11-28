@@ -1277,6 +1277,56 @@ def fin_long(q):
     return {"name": it.get("name"), "code": it["code"], **dart_fin.build(it["corp_code"], cl)}
 
 
+# ── 📚 학습 앱 기록 동기화 (마스터로드·펀드로드·자문패스) ───────────────────
+# 기록은 원래 브라우저에만 있어서 주소가 바뀌거나 사파리가 지우면 사라졌다 → 사용자가 정한 '동기화 코드'로 서버에 보관.
+# 코드는 해시로만 파일 이름이 되고 원문은 저장하지 않음. 주문·계좌와 무관한 공부 기록이라 공개 주소(보기 전용)에서도 허용.
+STUDY_APPS = {"masterroad", "fundroad", "jamunpass"}
+STUDY_MAX, STUDY_FILES = 1_500_000, 2000
+_study_lock = threading.Lock()
+
+
+def _study_path(app, code):
+    import hashlib
+    if app not in STUDY_APPS or not isinstance(code, str) or not (6 <= len(code) <= 64):
+        return None
+    d = os.path.join(bot.STATE_DIR, "study")
+    os.makedirs(d, exist_ok=True)
+    return os.path.join(d, f"{app}-{hashlib.sha256(f'{app}:{code}'.encode()).hexdigest()[:40]}.json")
+
+
+def study_get(app, code):
+    fp = _study_path(app, code)
+    if not fp:
+        return {"error": "코드는 6~64자로 정해 주세요"}
+    try:
+        with open(fp, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {"data": None, "ts": 0}
+
+
+def study_put(body):
+    app, code, data, ts = body.get("app"), body.get("k"), body.get("data"), body.get("ts")
+    fp = _study_path(app, code)
+    if not fp:
+        return {"ok": False, "error": "코드는 6~64자로 정해 주세요"}
+    if not isinstance(data, str) or len(data) > STUDY_MAX:
+        return {"ok": False, "error": "기록이 너무 커요"}
+    try:
+        json.loads(data)
+    except ValueError:
+        return {"ok": False, "error": "기록 형식이 맞지 않아요"}
+    ts = int(ts) if isinstance(ts, (int, float)) and ts > 0 else int(time.time() * 1000)
+    with _study_lock:
+        if not os.path.exists(fp) and len(os.listdir(os.path.dirname(fp))) >= STUDY_FILES:
+            return {"ok": False, "error": "서버 저장 공간이 찼어요"}
+        tmp = fp + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump({"data": data, "ts": ts, "saved": int(time.time())}, f, ensure_ascii=False)
+        os.replace(tmp, fp)
+    return {"ok": True, "ts": ts}
+
+
 class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
@@ -1553,6 +1603,10 @@ class H(BaseHTTPRequestHandler):
                 return J(200, mt.orderbook(code) if path == "/api/orderbook" else {**mt.info(code), "enabled": True})
             except Exception as e:
                 return J(200, {"error": f"{type(e).__name__}: {str(e)[:200]}"})
+        if path == "/api/study":                  # 📚 학습 기록 불러오기 (동기화 코드)
+            q = parse_qs(urlparse(self.path).query)
+            out = study_get((q.get("app") or [""])[0], (q.get("k") or [""])[0])
+            return self._send(200, json.dumps(out, ensure_ascii=False), "application/json; charset=utf-8")
         if path == "/api/data":
             try:
                 d = data()
@@ -1582,6 +1636,16 @@ class H(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self._auth():
             return
+        if self.path.split("?")[0] == "/api/study":   # 📚 학습 기록 저장 — 공부 기록뿐이라 보기 전용(공개 주소)도 허용
+            J = lambda c, o: self._send(c, json.dumps(o, ensure_ascii=False), "application/json; charset=utf-8")
+            n = int(self.headers.get("Content-Length") or 0)
+            if n > STUDY_MAX + 4096:
+                return J(413, {"ok": False, "error": "기록이 너무 커요"})
+            try:
+                body = json.loads(self.rfile.read(n) or b"{}")
+            except ValueError:
+                return J(400, {"ok": False, "error": "형식 오류"})
+            return J(200, study_put(body if isinstance(body, dict) else {}))
         if self._role()[0] == "viewer":   # 보기 전용은 아무것도 바꿀 수 없음
             return self._send(403, json.dumps({"error": "보기 전용"}, ensure_ascii=False), "application/json; charset=utf-8")
         if self.path in ("/api/order", "/api/order/cancel", "/api/order/modify", "/api/reserve/cancel"):   # 💸 실제 주문 — 주인만(위에서 보기 전용 차단)

@@ -253,10 +253,11 @@ PUB_STATIC = {"", "index.html", "kchart.js", "icons.js", "manifest.json", "icon-
               "fundrule/index.html", "fundrule/data.js", "fundrule/data2.js", "fundrule/data4.js",
               "fundroad/index.html", "fundroad/data.js", "fundroad/quiz.js", "deep.js"}
 PUB_DEEP = re.compile(r"^(?:(?:fundroad|masterroad)/deep/(?:index|topics/[\w-]+)\.json"   # 매일 쌓이는 심화 글
-                      r"|(?:fundroad|masterroad)/dict/terms\.json|dict\.js|bondcalc\.js"        # 백과·채권 계산기
+                      r"|(?:fundroad|masterroad)/dict/terms\.json|dict\.js|bondcalc\.js|calc\.js|sync\.js"        # 백과·채권 계산기
                       r"|jamunpass/(?:index\.html|[\w-]+\.js))$")                                # 자문패스
 PUB_API = {"/api/data", "/api/radar", "/api/scan", "/api/stock", "/api/stock-extra", "/api/picks", "/api/search",
-           "/api/chart", "/api/fin", "/api/screen", "/api/popular", "/api/doc", "/api/orderbook", "/api/mini", "/api/dividend"}
+           "/api/chart", "/api/fin", "/api/screen", "/api/popular", "/api/doc", "/api/orderbook", "/api/mini", "/api/dividend",
+           "/api/study"}
 PUB_BLOCKED = {"/api/trade", "/api/fills", "/api/reserve", "/api/ob-stream", "/api/order", "/api/stop"}
 _pub_sem = threading.BoundedSemaphore(int(os.environ.get("PUB_MAX_CONC", "12")))   # 한꺼번에 몰려도 서버가 버티게
 _ob_cache = {}                                    # 호가: 같은 종목은 3초 동안 같은 답 (토스 API 아끼기)
@@ -338,6 +339,22 @@ def pub_proxy(rest: str, query: str):
         except Exception:
             pass
     return code, body, ctype, cache
+
+
+def pub_study_post(raw: bytes):
+    """📚 공개 앱의 학습 기록 저장 — 공개 주소에서 넘기는 유일한 POST (공부 기록뿐, 주문·계좌와 무관)"""
+    req = urllib.request.Request(DASH + "/api/study", data=raw, method="POST",
+                                 headers={"X-Toss-Public": "1", "Content-Type": "application/json"})
+    pw = os.environ.get("DASH_PASSWORD")
+    if pw:
+        req.add_header("Authorization", "Basic " + base64.b64encode(f"public:{pw}".encode()).decode())
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return r.status, r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+    except Exception as e:
+        return 502, json.dumps({"ok": False, "error": f"대시보드 연결 실패 — {type(e).__name__}"}, ensure_ascii=False).encode()
 
 
 S = lambda **p: {"type": "object", "properties": p, "additionalProperties": False}
@@ -455,6 +472,12 @@ class H(BaseHTTPRequestHandler):
         self._send(405 if self._ok_path() else 404)
 
     def do_POST(self):
+        if self.path.split("?")[0] == "/app/api/study":
+            n = int(self.headers.get("Content-Length") or 0)
+            if n > 1_600_000:
+                return self._send(413, json.dumps({"ok": False, "error": "기록이 너무 커요"}, ensure_ascii=False).encode())
+            code, body = pub_study_post(self.rfile.read(n))
+            return self._send(code, body, "application/json; charset=utf-8")
         if not self._ok_path():
             return self._send(404)
         n = int(self.headers.get("Content-Length") or 0)
