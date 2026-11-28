@@ -430,8 +430,10 @@
 - [x] NPL (npl)
 - [x] 신탁 공매 (trust-public-sale)
 - [ ] 선박·항공기 잔존가치
+- [x] 비유동성 할인·지배력 할증 (illiquidity-control-adjustment)
 
 ### 결산·세무·통제
+- [x] 상증세법 비상장주식 평가(보충적 평가방법) (inheritance-tax-share-valuation)
 - [ ] 분배 가능 이익과 유보
 - [ ] 비과세 손익 범위
 - [ ] 배당소득 원천징수(펀드 환매·분배)
