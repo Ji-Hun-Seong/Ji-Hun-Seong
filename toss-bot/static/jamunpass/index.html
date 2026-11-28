@@ -188,6 +188,7 @@ textarea{width:100%;min-height:120px;border:1.5px solid var(--line);border-radiu
 .empty{text-align:center;color:var(--sub);padding:30px 10px;font-size:15px}
 .backhome{display:inline-block;padding:6px 2px 8px;color:var(--sub);font-weight:700;font-size:14px;text-decoration:none}
 </style>
+<script src="../sync.js" data-app="jamunpass" data-key="jamunpass-v1"></script>
 </head>
 <body>
 <div id="app"></div>
@@ -589,6 +590,7 @@ function vPrefs() {
     <label>${ic("text")}<span>글자 크기</span><select id="fs">${[["s", "작게"], ["m", "보통"], ["l", "크게"]].map(([v, l]) => `<option value="${v}" ${S.font === v ? "selected" : ""}>${l}</option>`).join("")}</select></label></div>
   <div class="lbl">학습 기록</div>
   <div class="set">
+    <button onclick="StudySync.open()">${ic("refresh")}<span>기록 동기화 (서버 저장)</span><span class="v">${window.StudySync && StudySync.code ? "켜짐" : "꺼짐"}</span></button>
     <button data-act="exportRec">${ic("export")}<span>학습 기록 내보내기</span><span class="v">${ic("right")}</span></button>
     <button data-act="importRec">${ic("import")}<span>다른 기기에서 가져오기</span><span class="v">${ic("right")}</span></button>
     <button data-act="resetRec" style="color:var(--bad)">${ic("trash")}<span>이 시험 기록 초기화</span></button></div>
@@ -684,5 +686,6 @@ document.addEventListener("change", e => {
 window.addEventListener("hashchange", () => { const h = location.hash.slice(1); if (TABS.some(t => t[0] === h) && h !== V.tab) { V.tab = h; V.stack = []; render(); } });
 render();
 </script>
+<script src="../calc.js"></script>
 </body>
 </html>
