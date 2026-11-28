@@ -1,0 +1,1074 @@
+{
+ "date": "2026-11-27",
+ "context": {
+  "n_gainers_list": 250,
+  "n_surge": 15,
+  "asof": "2026-11-27T13:02-05:00"
+ },
+ "surgers": [
+  {
+   "date": "2026-11-27",
+   "code": "XP",
+   "name": "XP Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 8423278592,
+   "chg": 18.06809844172006,
+   "gap": 20.152887442773746,
+   "high_chg": 20.50034564894223,
+   "close_pos": 0.4927534629407976,
+   "upper_wick": 0.34745820616847667,
+   "limit_up": false,
+   "tv": 406405891.5250778,
+   "vol_ratio": 2.189430000215096,
+   "close": 16.989999771118164,
+   "pctb": 0.4378609995659727,
+   "bw": 0.18380078323785168,
+   "bw_pctile": 0.45,
+   "squeeze": false,
+   "rsi14": 46.933967356750934,
+   "ma5_gap": 0.05128580000850835,
+   "ma20_gap": -0.011421196949391477,
+   "ma60_gap": -0.30376581108148515,
+   "ma120_gap": -0.2241332652843634,
+   "ma_aligned": false,
+   "ret5": 0.02347083313352072,
+   "ret20": -0.10565567390574027,
+   "ret60": -0.23130337226790387,
+   "from_high": -0.560342177067457,
+   "from_low": 0.10352763691863442,
+   "vol_ratio_prev": 0.8487332779148477,
+   "tv20_avg": 158889358.67017746,
+   "tv_prev": 147068681.5088272,
+   "prev_chg": 0.05190058642603579,
+   "up_days": 3,
+   "prev_close_pos": 0.8114758263156208,
+   "fr": null,
+   "price": 14.390000343322754,
+   "filings": [],
+   "news": [
+    {
+     "title": "XP (XP) Stock Still Looks Undervalued Despite A 33% Five Year Fall - Yahoo Finance",
+     "date": "Sat, 28 Nov 2026 01:10:00 GMT"
+    },
+    {
+     "title": "What's Going on with XP Shares on Friday? - Benzinga",
+     "date": "Fri, 27 Nov 2026 16:05:12 GMT"
+    },
+    {
+     "title": "Brazilian stocks surge as Bradesco chairman named finance minister (EWZ:NYSEARCA) - Seeking Alpha",
+     "date": "Fri, 27 Nov 2026 14:44:29 GMT"
+    },
+    {
+     "title": "XP: 3 Key Takeaways for Long-Term Investors - The Globe and Mail",
+     "date": "Fri, 27 Nov 2026 13:19:09 GMT"
+    },
+    {
+     "title": "XP Nov 2026 8.000 call (XP261127C00008000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 15:27:46 GMT"
+    },
+    {
+     "title": "XP, Inter & Co, Sandisk And Other Big Stocks Moving Higher On Friday - Benzinga",
+     "date": "Fri, 27 Nov 2026 15:02:20 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-27",
+   "code": "VERA",
+   "name": "Vera Therapeutics, Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 2476955648,
+   "chg": 16.13558753062103,
+   "gap": 15.661013328422936,
+   "high_chg": 20.30509043548068,
+   "close_pos": 0.5823423120017098,
+   "upper_wick": 4.16950290485964,
+   "limit_up": false,
+   "tv": 96065035.2935791,
+   "vol_ratio": 1.9706302994950435,
+   "close": 34.2599983215332,
+   "pctb": 0.5708467042217792,
+   "bw": 0.2645591862925652,
+   "bw_pctile": 0.65,
+   "squeeze": false,
+   "rsi14": 47.65223947683502,
+   "ma5_gap": 0.07062495107720701,
+   "ma20_gap": 0.01874314642042396,
+   "ma60_gap": -0.039312207862087445,
+   "ma120_gap": -0.11231586185341413,
+   "ma_aligned": false,
+   "ret5": 0.15324472587903015,
+   "ret20": -0.04654171005823082,
+   "ret60": -0.13818286898894028,
+   "from_high": -0.4736842033622286,
+   "from_low": 0.17623604823523475,
+   "vol_ratio_prev": 1.4561250333725386,
+   "tv20_avg": 41651425.57844162,
+   "tv_prev": 59531000.0,
+   "prev_chg": 0.017592281231748608,
+   "up_days": 3,
+   "prev_close_pos": 0.9042552112184501,
+   "fr": null,
+   "price": 29.5,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1831828/000210808026000005/xslF345X06/form4-11242026_101138.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Here's Why Vera Therapeutics Stock Surged Today (Hint: It's Not Great News For Vertex Shareholders) - The Motley Fool",
+     "date": "Fri, 27 Nov 2026 18:07:13 GMT"
+    },
+    {
+     "title": "Review Delay May Give Vera Therapeutics Stock More Time To Build TRUTAKNA Share - Yahoo Finance",
+     "date": "Fri, 27 Nov 2026 19:10:18 GMT"
+    },
+    {
+     "title": "Vertex Stock Drops After FDA Delays Rival Drug. Why Vera Therapeutics Is Soaring - TradingView",
+     "date": "Fri, 27 Nov 2026 14:30:53 GMT"
+    },
+    {
+     "title": "The FDA Gave Vertex Three Extra Months. Vera Stock Exploded. - Money Morning",
+     "date": "Fri, 27 Nov 2026 10:45:22 GMT"
+    },
+    {
+     "title": "Vertex falls on “disappointing” FDA delay on kidney drug review; Vera rises - Seeking Alpha",
+     "date": "Fri, 27 Nov 2026 14:50:53 GMT"
+    },
+    {
+     "title": "Here's Why Vera Therapeutics Stock Surged Today (Hint: It's Not Great News For Vertex Shareholders) - AOL.com",
+     "date": "Fri, 27 Nov 2026 18:27:13 GMT"
+    }
+   ],
+   "catalysts": [
+    "FDA·Clinical"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "AYA",
+   "name": "Aya Gold & Silver Inc.",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 3293422080,
+   "chg": 15.005032480628788,
+   "gap": 8.05638683257206,
+   "high_chg": 15.156093335228515,
+   "close_pos": 0.9806447325837664,
+   "upper_wick": 0.1510608545997257,
+   "limit_up": false,
+   "tv": 29518416.19720459,
+   "vol_ratio": 1.4202353872020572,
+   "close": 22.84000015258789,
+   "pctb": 0.25586463864294534,
+   "bw": 0.4695668649743036,
+   "bw_pctile": 0.9,
+   "squeeze": false,
+   "rsi14": 34.05846730588999,
+   "ma5_gap": 0.059991489413685706,
+   "ma20_gap": -0.11463787626180089,
+   "ma60_gap": -0.222832375463897,
+   "ma120_gap": -0.16277891120819366,
+   "ma_aligned": false,
+   "ret5": -0.02071006223241978,
+   "ret20": -0.21470937558732606,
+   "ret60": -0.24687144564653296,
+   "from_high": -0.3524616706570489,
+   "from_low": 0.6495017170494235,
+   "vol_ratio_prev": 1.3631218824118259,
+   "tv20_avg": 19750139.89294052,
+   "tv_prev": 23798238.731384277,
+   "prev_chg": 0.05694516459230248,
+   "up_days": 3,
+   "prev_close_pos": 0.9288702995653003,
+   "fr": null,
+   "price": 19.860000610351562,
+   "filings": [],
+   "news": [
+    {
+     "title": "Aya Gold & Silver Inc. (AYA.TO) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 18:29:35 GMT"
+    },
+    {
+     "title": "What Could Move the Stock Next: Aya Gold & Silver Inc. (TSX:AYA) — Mid-cap Growth Stock on the S&P/TSX Composite Index - kalkine.ca",
+     "date": "Fri, 27 Nov 2026 15:04:00 GMT"
+    },
+    {
+     "title": "Top Aya Gold & Silver (AYA) Competitors 2026 - MarketBeat",
+     "date": "Thu, 26 Nov 2026 19:27:08 GMT"
+    },
+    {
+     "title": "Aya Gold & Silver Inc. (TSX:AYA): What an Elevated One-Year Beta of 4.69 Reveals About Market Sensitivity - kalkine.ca",
+     "date": "Fri, 27 Nov 2026 13:40:00 GMT"
+    },
+    {
+     "title": "How a silver rebound lifted TSX:AYA on the S&P/TSX Composite - kalkine.ca",
+     "date": "Fri, 27 Nov 2026 09:04:00 GMT"
+    },
+    {
+     "title": "Aya Gold & Silver Inc. Stock Watch: What Is Driving TSX:AYA Today and What Comes Next | S&P/TSX Composite Index | Mid Cap Growth Stock - kalkine.ca",
+     "date": "Thu, 26 Nov 2026 15:18:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "COHR",
+   "name": "Coherent Corp.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 44077379584,
+   "chg": 14.06799046907068,
+   "gap": 7.640547452896773,
+   "high_chg": 14.271879123077348,
+   "close_pos": 0.9764006355579361,
+   "upper_wick": 0.20388865400667064,
+   "limit_up": false,
+   "tv": 1601306917.9595947,
+   "vol_ratio": 0.6668148394585076,
+   "close": 223.7899932861328,
+   "pctb": 0.30855212123890696,
+   "bw": 0.31399471611341406,
+   "bw_pctile": 0.38333333333333336,
+   "squeeze": false,
+   "rsi14": 56.46748096161211,
+   "ma5_gap": -0.02914686924128529,
+   "ma20_gap": -0.06011362234210471,
+   "ma60_gap": -0.23729982277971207,
+   "ma120_gap": -0.3274953623742478,
+   "ma_aligned": false,
+   "ret5": -0.0782277494031336,
+   "ret20": -0.18114276288596765,
+   "ret60": -0.27879276799696295,
+   "from_high": -0.5541136308149858,
+   "from_low": 0.2553749934338778,
+   "vol_ratio_prev": 0.882236912325973,
+   "tv20_avg": 2219516607.4173737,
+   "tv_prev": 1840556507.9040527,
+   "prev_chg": -0.000254805597014518,
+   "up_days": 0,
+   "prev_close_pos": 0.850561017448578,
+   "fr": null,
+   "price": 196.19000244140625,
+   "filings": [
+    {
+     "date": "2026-11-25",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/820318/000089914026001413/xslF345X06/form4.xml"
+    },
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/820318/000089914026001411/xslF345X06/form4.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "Coherent’s Director Has Now Bought $50 Million of COHR Stock in 3 Trading Days - 24/7 Wall St.",
+     "date": "Thu, 26 Nov 2026 17:22:00 GMT"
+    },
+    {
+     "title": "Why Did A Coherent (COHR) Director Triple Their Stake? - Simply Wall St",
+     "date": "Fri, 27 Nov 2026 16:13:27 GMT"
+    },
+    {
+     "title": "Coherent Corp. (COHR) Stock Forecasts - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 09:07:12 GMT"
+    },
+    {
+     "title": "COHR Nov 2026 227.500 call (COHR261127C00227500) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 03:45:19 GMT"
+    },
+    {
+     "title": "COHR Dec 2026 265.000 call (COHR261211C00265000) Interactive Stock Chart - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 06:30:02 GMT"
+    },
+    {
+     "title": "COHR Nov 2026 285.000 call (COHR261127C00285000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 17:54:31 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-27",
+   "code": "AXTI",
+   "name": "AXT Inc",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 2390321920,
+   "chg": 13.727327868940463,
+   "gap": 8.16135286964126,
+   "high_chg": 15.134459730669004,
+   "close_pos": 0.906638839952071,
+   "upper_wick": 1.4071318617285542,
+   "limit_up": false,
+   "tv": 292371147.41363525,
+   "vol_ratio": 0.6319510746540751,
+   "close": 36.369998931884766,
+   "pctb": 0.1970386313124693,
+   "bw": 0.7592053481445011,
+   "bw_pctile": 0.825,
+   "squeeze": false,
+   "rsi14": 45.076857355043884,
+   "ma5_gap": -0.04245764458742629,
+   "ma20_gap": -0.23000989138875128,
+   "ma60_gap": -0.4543593357682675,
+   "ma120_gap": -0.4961868816548515,
+   "ma_aligned": false,
+   "ret5": -0.10193768620885735,
+   "ret20": -0.503261868490706,
+   "ret60": -0.430048134122878,
+   "from_high": -0.7766135881239812,
+   "from_low": 2.1600790418852447,
+   "vol_ratio_prev": 0.9401012401030052,
+   "tv20_avg": 532553601.9808483,
+   "tv_prev": 383229126.5144348,
+   "prev_chg": 0.01266623240964626,
+   "up_days": 1,
+   "prev_close_pos": 0.7720846377553944,
+   "fr": null,
+   "price": 31.979999542236328,
+   "filings": [],
+   "news": [
+    {
+     "title": "AXT Inc (AXTI) Stock forecasts - Yahoo Finance UK",
+     "date": "Fri, 27 Nov 2026 22:40:14 GMT"
+    },
+    {
+     "title": "AXT Inc (AXTI) Stock Forecasts - Yahoo Finance",
+     "date": "Thu, 26 Nov 2026 05:33:32 GMT"
+    },
+    {
+     "title": "AXT Inc (AXTI) Stock Forecasts - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 18:33:23 GMT"
+    },
+    {
+     "title": "AXT Jumps 11% as AI Chip Rally Extends and Strong Indium Phosphide Demand Stays in Focus - Quiver Quantitative",
+     "date": "Fri, 27 Nov 2026 17:32:00 GMT"
+    },
+    {
+     "title": "The Technical Signals Behind (AXTI) That Institutions Follow - Stock Traders Daily",
+     "date": "Thu, 26 Nov 2026 23:54:01 GMT"
+    },
+    {
+     "title": "AI Optics Need This Wafer. Can AXT (AXTI) Keep Shipping It? - Yahoo Finance",
+     "date": "Thu, 26 Nov 2026 14:45:02 GMT"
+    }
+   ],
+   "catalysts": [
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "ELPC",
+   "name": "Companhia Paranaense de Energia",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 8693534720,
+   "chg": 13.359149318810658,
+   "gap": 14.617620910301987,
+   "high_chg": 15.004842228292837,
+   "close_pos": 0.291665673254973,
+   "upper_wick": 0.3872213179908399,
+   "limit_up": false,
+   "tv": 6640741.021633148,
+   "vol_ratio": 0.9498685158199756,
+   "close": 11.710000038146973,
+   "pctb": 0.32527061245630756,
+   "bw": 0.10443286882832895,
+   "bw_pctile": 0.4166666666666667,
+   "squeeze": false,
+   "rsi14": 46.594973625273795,
+   "ma5_gap": 0.016532162802133543,
+   "ma20_gap": -0.018247491209804734,
+   "ma60_gap": -0.14665712901316152,
+   "ma120_gap": -0.122183360807675,
+   "ma_aligned": false,
+   "ret5": -0.005774823641392812,
+   "ret20": -0.05748176206643818,
+   "ret60": -0.12159866303946054,
+   "from_high": -0.2880772046340553,
+   "from_low": 0.1659142577867887,
+   "vol_ratio_prev": 0.6718658199934004,
+   "tv20_avg": 6302099.069652557,
+   "tv_prev": 4311741.968154907,
+   "prev_chg": 0.022772231044496216,
+   "up_days": 1,
+   "prev_close_pos": 0.6999990463293215,
+   "fr": null,
+   "price": 10.329999923706055,
+   "filings": [],
+   "news": [
+    {
+     "title": "Brazilian stocks surge as Bradesco chairman named finance minister (EWZ:NYSEARCA) - Seeking Alpha",
+     "date": "Fri, 27 Nov 2026 14:44:29 GMT"
+    },
+    {
+     "title": "Companhia Paranaense de Energia (ELPC) Shares Surge 13.4% -- What GF Score of 56 Tells Investors - GuruFocus",
+     "date": "Sat, 28 Nov 2026 00:40:12 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-27",
+   "code": "SA",
+   "name": "Seabridge Gold, Inc.",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2325878528,
+   "chg": 13.322805250863556,
+   "gap": 6.0558169162240105,
+   "high_chg": 13.691418708830415,
+   "close_pos": 0.957317243368472,
+   "upper_wick": 0.3686134579668668,
+   "limit_up": false,
+   "tv": 17097640.363693237,
+   "vol_ratio": 0.523432584584268,
+   "close": 21.520000457763672,
+   "pctb": 0.14797193696294553,
+   "bw": 0.5498484949361896,
+   "bw_pctile": 0.9916666666666667,
+   "squeeze": false,
+   "rsi14": 35.190216546248024,
+   "ma5_gap": 0.04123259442379856,
+   "ma20_gap": -0.19356210063622648,
+   "ma60_gap": -0.2928647338950895,
+   "ma120_gap": -0.3132110804936321,
+   "ma_aligned": false,
+   "ret5": -0.25675145447468484,
+   "ret20": -0.28876407383939273,
+   "ret60": -0.3653074958992323,
+   "from_high": -0.5259610803763162,
+   "from_low": 0.1391721466230489,
+   "vol_ratio_prev": 0.7862291350531108,
+   "tv20_avg": 31797977.802877426,
+   "tv_prev": 22039793.73435974,
+   "prev_chg": 0.04054793266400902,
+   "up_days": 1,
+   "prev_close_pos": 0.9282053990713652,
+   "fr": null,
+   "price": 18.989999771118164,
+   "filings": [],
+   "news": [
+    {
+     "title": "Kering SA (KER.PA) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 09:08:25 GMT"
+    },
+    {
+     "title": "SA Asks: What's the best-positioned chip stock right now? (AMD:NASDAQ) - Seeking Alpha",
+     "date": "Fri, 27 Nov 2026 20:15:51 GMT"
+    },
+    {
+     "title": "SA Asks: What's the best-positioned chip stock right now? - TradingView",
+     "date": "Fri, 27 Nov 2026 20:15:51 GMT"
+    },
+    {
+     "title": "Suzano S.A. (SUZ) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 15:10:40 GMT"
+    },
+    {
+     "title": "FTH_C Stock Price and Chart — GPW:FTH_C - TradingView",
+     "date": "Sat, 28 Nov 2026 00:19:02 GMT"
+    },
+    {
+     "title": "SGS SA (SGSN.SW) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 09:49:54 GMT"
+    }
+   ],
+   "catalysts": [
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "SKE",
+   "name": "Skeena Resources Limited",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 3661267456,
+   "chg": 12.3794795476031,
+   "gap": 5.7848051768074615,
+   "high_chg": 12.880833448818763,
+   "close_pos": 0.9403664908639763,
+   "upper_wick": 0.5013539012156718,
+   "limit_up": false,
+   "tv": 12716695.733642578,
+   "vol_ratio": 0.6415948719456614,
+   "close": 29.139999389648438,
+   "pctb": 0.2605774384739557,
+   "bw": 0.3177369136773125,
+   "bw_pctile": 0.8833333333333333,
+   "squeeze": false,
+   "rsi14": 39.3391512226712,
+   "ma5_gap": 0.026361635838344055,
+   "ma20_gap": -0.07607338576400169,
+   "ma60_gap": -0.1368462976191107,
+   "ma120_gap": -0.12310019650005577,
+   "ma_aligned": false,
+   "ret5": -0.04175902376453533,
+   "ret20": -0.12546372213204393,
+   "ret60": -0.14478889953280027,
+   "from_high": -0.331183905106627,
+   "from_low": 0.30959602547061893,
+   "vol_ratio_prev": 1.1175949955746238,
+   "tv20_avg": 18821144.61959839,
+   "tv_prev": 19317850.227355957,
+   "prev_chg": 0.038446176140175536,
+   "up_days": 1,
+   "prev_close_pos": 0.9097347737816088,
+   "fr": null,
+   "price": 25.93000030517578,
+   "filings": [],
+   "news": [
+    {
+     "title": "Skeena Resources (TSX:SKE) Stock Looks Richly Priced Against Book Value - Yahoo Finance",
+     "date": "Fri, 27 Nov 2026 23:09:29 GMT"
+    },
+    {
+     "title": "(SKE) Trading Advice (SKE:CA) - Stock Traders Daily",
+     "date": "Fri, 27 Nov 2026 20:43:08 GMT"
+    },
+    {
+     "title": "Skeena Resources (NYSE:SKE) Stock Jumps 11.1% - What's Next? - MarketBeat",
+     "date": "Fri, 27 Nov 2026 17:46:44 GMT"
+    },
+    {
+     "title": "Public market insider buying at Skeena Resources (SKE) - The Globe and Mail",
+     "date": "Fri, 27 Nov 2026 23:17:33 GMT"
+    },
+    {
+     "title": "Canada stocks higher at close of trade; S&P/TSX Composite up 1.20% - Investing.com",
+     "date": "Fri, 27 Nov 2026 21:42:26 GMT"
+    },
+    {
+     "title": "SKE Jan 2027 25.000 call (SKE270115C00025000) interactive stock chart - Yahoo Finance UK",
+     "date": "Thu, 26 Nov 2026 12:43:55 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "EXK",
+   "name": "Endeavour Silver Corporation",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 2035081216,
+   "chg": 11.889251383507315,
+   "gap": 6.84039227079567,
+   "high_chg": 12.540716574432853,
+   "close_pos": 0.9148936601935148,
+   "upper_wick": 0.6514651909255247,
+   "limit_up": false,
+   "tv": 56957108.05120468,
+   "vol_ratio": 0.9224028735597016,
+   "close": 6.869999885559082,
+   "pctb": 0.18436406424453936,
+   "bw": 0.4507675335062442,
+   "bw_pctile": 0.9,
+   "squeeze": false,
+   "rsi14": 34.408599393934864,
+   "ma5_gap": 0.0295103673943935,
+   "ma20_gap": -0.14227843224642434,
+   "ma60_gap": -0.2750172379470607,
+   "ma120_gap": -0.29129997381713846,
+   "ma_aligned": false,
+   "ret5": -0.06402440243253826,
+   "ret20": -0.22961103787708503,
+   "ret60": -0.4003906246362021,
+   "from_high": -0.5947194705552575,
+   "from_low": 0.14126389142719487,
+   "vol_ratio_prev": 1.0383574145175516,
+   "tv20_avg": 62814860.737416744,
+   "tv_prev": 56308096.77557945,
+   "prev_chg": 0.06228367536498469,
+   "up_days": 1,
+   "prev_close_pos": 0.9382713651024641,
+   "fr": null,
+   "price": 6.139999866485596,
+   "filings": [],
+   "news": [
+    {
+     "title": "Endeavour Silver Corp. (EXK) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 23:14:10 GMT"
+    },
+    {
+     "title": "Endeavour Silver (NYSE:EXK) Stock Jumps 11.3% - Should You Buy? - MarketBeat",
+     "date": "Fri, 27 Nov 2026 18:43:42 GMT"
+    },
+    {
+     "title": "Understanding Momentum Shifts in (EXK) - Stock Traders Daily",
+     "date": "Fri, 27 Nov 2026 05:20:01 GMT"
+    },
+    {
+     "title": "One NYSE - Listed Mining Stock at Resistance Level – EXK - kalkine.co.uk",
+     "date": "Thu, 26 Nov 2026 04:55:57 GMT"
+    },
+    {
+     "title": "EXK Dec 2026 5.000 put (EXK261218P00005000) interactive stock chart - Yahoo Finance UK",
+     "date": "Thu, 26 Nov 2026 17:48:03 GMT"
+    },
+    {
+     "title": "EXK Dec 2026 4.000 call (EXK261218C00004000) interactive stock chart - Yahoo Finance UK",
+     "date": "Thu, 26 Nov 2026 11:28:36 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "ITUB",
+   "name": "Itau Unibanco Banco Holding SA",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 84428718080,
+   "chg": 11.337205232511472,
+   "gap": 14.389531317596681,
+   "high_chg": 14.389531317596681,
+   "close_pos": 0.04545346173269784,
+   "upper_wick": 0.0,
+   "limit_up": false,
+   "tv": 314744797.7302551,
+   "vol_ratio": 1.5195578905832077,
+   "close": 7.659999847412109,
+   "pctb": 0.2993699384503929,
+   "bw": 0.17375291023182068,
+   "bw_pctile": 0.5583333333333333,
+   "squeeze": false,
+   "rsi14": 41.12554970415471,
+   "ma5_gap": 0.02686568872252515,
+   "ma20_gap": -0.034860057074233564,
+   "ma60_gap": -0.16325453614592544,
+   "ma120_gap": -0.15020635822226613,
+   "ma_aligned": false,
+   "ret5": 0.007320672224507607,
+   "ret20": -0.07027026678716475,
+   "ret60": -0.1041666317420693,
+   "from_high": -0.3254901722457394,
+   "from_low": 0.05683561790329361,
+   "vol_ratio_prev": 1.200401030169242,
+   "tv20_avg": 192713124.90846395,
+   "tv_prev": 224473075.7338524,
+   "prev_chg": 0.023809572804273094,
+   "up_days": 3,
+   "prev_close_pos": 0.7142859089131788,
+   "fr": null,
+   "price": 6.880000114440918,
+   "filings": [],
+   "news": [
+    {
+     "title": "ITUB Dec 2026 5.000 put (ITUB261218P00005000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 08:48:23 GMT"
+    },
+    {
+     "title": "Itau Unibanco (NYSE:ITUB) Shares Gap Up - Still a Buy? - MarketBeat",
+     "date": "Fri, 27 Nov 2026 15:33:56 GMT"
+    },
+    {
+     "title": "Discipline and Rules-Based Execution in ITUB Response - Stock Traders Daily",
+     "date": "Thu, 26 Nov 2026 15:48:02 GMT"
+    },
+    {
+     "title": "Bradesco's U.S. shares jump 17% as chairman Trabuco is tapped as finance minister - Quantisnow",
+     "date": "Fri, 27 Nov 2026 22:10:42 GMT"
+    },
+    {
+     "title": "Brazilian stocks surge as Bradesco chairman named finance minister (EWZ:NYSEARCA) - Seeking Alpha",
+     "date": "Fri, 27 Nov 2026 14:44:29 GMT"
+    },
+    {
+     "title": "ITUB Futures Price - CoinGlass",
+     "date": "Fri, 27 Nov 2026 13:13:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "SBS",
+   "name": "Companhia de saneamento Basico ",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 19078187008,
+   "chg": 11.316866230206957,
+   "gap": 13.786009421556322,
+   "high_chg": 14.197531651537233,
+   "close_pos": 0.1764689382804699,
+   "upper_wick": 0.41152222998090987,
+   "limit_up": false,
+   "tv": 71675464.97840881,
+   "vol_ratio": 1.14780799143348,
+   "close": 5.409999847412109,
+   "pctb": 0.751495921312591,
+   "bw": 0.13579782993184936,
+   "bw_pctile": 0.3333333333333333,
+   "squeeze": false,
+   "rsi14": 57.97872799130331,
+   "ma5_gap": 0.045161319035355696,
+   "ma20_gap": 0.034152600350960904,
+   "ma60_gap": -0.08780927986266085,
+   "ma120_gap": -0.09141893269068291,
+   "ma_aligned": false,
+   "ret5": 0.04967602880961475,
+   "ret20": 0.04291851773629629,
+   "ret60": -0.002053337223750229,
+   "from_high": -0.3210393771033162,
+   "from_low": 0.11981565959541363,
+   "vol_ratio_prev": 0.8779954991807999,
+   "tv20_avg": 54249733.38227749,
+   "tv_prev": 50199913.379096985,
+   "prev_chg": 0.03624735057992656,
+   "up_days": 3,
+   "prev_close_pos": 0.9230788981403367,
+   "fr": null,
+   "price": 4.860000133514404,
+   "filings": [
+    {
+     "date": "2026-11-27",
+     "form": "6-K",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1170858/000129281426005408/sbs20261126_6k.htm"
+    }
+   ],
+   "news": [
+    {
+     "title": "Lawsuit Filed Over 'Spouse's Blind Stock Trust' Decision, Claiming \"No Relevance\" - SBS 뉴스",
+     "date": "Fri, 27 Nov 2026 11:15:00 GMT"
+    },
+    {
+     "title": "R$200M in solar investments stayed out of the 2025 asset base regulators validated for Sabesp (SBS). - Stock Titan",
+     "date": "Fri, 27 Nov 2026 11:03:51 GMT"
+    },
+    {
+     "title": "Kakao Founder Kim Beom-su's Acquittal in SM Entertainment Stock Manipulation Case Finalized as Prosecution Drops Appeal - news.sbs.co.kr",
+     "date": "Fri, 27 Nov 2026 10:13:00 GMT"
+    },
+    {
+     "title": "Kim Beom-su Acquitted of SM Stock Manipulation Charges as Prosecution Drops Appeal - news.sbs.co.kr",
+     "date": "Fri, 27 Nov 2026 09:07:24 GMT"
+    },
+    {
+     "title": "Share Prices of Companies Buying Back Own Stock Rise Over 3% on Average Next Trading Day After Disclosure - SBS 뉴스",
+     "date": "Fri, 27 Nov 2026 01:28:00 GMT"
+    },
+    {
+     "title": "Musk Promises Two Shares of SpaceX Stock to Every Child in the U.S. - news.sbs.co.kr",
+     "date": "Thu, 26 Nov 2026 07:28:00 GMT"
+    }
+   ],
+   "catalysts": [
+    "Policy·Macro"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "AAOI",
+   "name": "Applied Optoelectronics, Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 3712554752,
+   "chg": 10.480823933381501,
+   "gap": 9.994599452155061,
+   "high_chg": 10.561857912111726,
+   "close_pos": 0.9912540009831464,
+   "upper_wick": 0.08103397873022929,
+   "limit_up": false,
+   "tv": 295359361.0191345,
+   "vol_ratio": 0.4656935135016618,
+   "close": 40.900001525878906,
+   "pctb": 0.21098436051230524,
+   "bw": 0.9177964023751545,
+   "bw_pctile": 0.9666666666666667,
+   "squeeze": false,
+   "rsi14": 39.506699566772724,
+   "ma5_gap": -0.007559915453661414,
+   "ma20_gap": -0.26525751415196086,
+   "ma60_gap": -0.547382036063434,
+   "ma120_gap": -0.6488837496402041,
+   "ma_aligned": false,
+   "ret5": -0.09242462302393728,
+   "ret20": -0.5497445888088606,
+   "ret60": -0.6419382853631184,
+   "from_high": -0.8415714437118371,
+   "from_low": 0.49093840400778266,
+   "vol_ratio_prev": 0.8279538407540921,
+   "tv20_avg": 768344706.4803314,
+   "tv_prev": 474192887.86354065,
+   "prev_chg": -0.03593752638747194,
+   "up_days": 0,
+   "prev_close_pos": 0.9208331611422468,
+   "fr": null,
+   "price": 37.02000045776367,
+   "filings": [
+    {
+     "date": "2026-11-24",
+     "form": "4",
+     "items": "",
+     "items_kr": "",
+     "url": "https://www.sec.gov/Archives/edgar/data/1158114/000168316826009095/xslF345X06/ownership.xml"
+    }
+   ],
+   "news": [
+    {
+     "title": "AAOI Nov 2026 22.000 call (AAOI261127C00022000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 11:00:11 GMT"
+    },
+    {
+     "title": "Applied Optoelectronics Inc (Derivatives) Price (AAOI/USD) Today | Live Price, Market Cap & Chart - Binance",
+     "date": "Thu, 26 Nov 2026 10:13:00 GMT"
+    },
+    {
+     "title": "Coherent Jumps 12% as Optical Stocks Rebound From Wednesday's AI Selloff; Applied Optoelectronics and Lumentum Rise 7% - 24/7 Wall St.",
+     "date": "Fri, 27 Nov 2026 17:06:00 GMT"
+    },
+    {
+     "title": "Lumentum Surges 55% in a Year: Should You Buy, Sell, or Hold the Stock? - TradingView",
+     "date": "Thu, 26 Nov 2026 16:20:00 GMT"
+    },
+    {
+     "title": "Applied Optoelectronics (AAOI) Has the Orders. Does It Have the Parts? - Yahoo Finance",
+     "date": "Thu, 26 Nov 2026 14:48:05 GMT"
+    },
+    {
+     "title": "AAOI261127C00041500 Interactive Stock Chart | AAOI Nov 2026 41.500 call Stock - Yahoo Finance",
+     "date": "Fri, 27 Nov 2026 18:27:16 GMT"
+    }
+   ],
+   "catalysts": [
+    "Contract·Partnership",
+    "Product·Tech"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "MAAS",
+   "name": "Maase Inc.",
+   "market": "NasdaqGM",
+   "sector": "",
+   "mcap": 4921912832,
+   "chg": 10.41666863771975,
+   "gap": 0.0,
+   "high_chg": 12.10317734387698,
+   "close_pos": 0.8606557056680292,
+   "upper_wick": 1.6865087061572355,
+   "limit_up": false,
+   "tv": 411810.00423431396,
+   "vol_ratio": 0.7253479709860812,
+   "close": 11.130000114440918,
+   "pctb": 0.40990312246553307,
+   "bw": 0.38426916337753675,
+   "bw_pctile": 0.425,
+   "squeeze": false,
+   "rsi14": 43.42105131070013,
+   "ma5_gap": 0.04412678964830885,
+   "ma20_gap": -0.03462145175309794,
+   "ma60_gap": -0.2240831893877061,
+   "ma120_gap": -0.3153743674962458,
+   "ma_aligned": false,
+   "ret5": 0.04024771519209147,
+   "ret20": -0.17309267672763118,
+   "ret60": -0.3827311714145788,
+   "from_high": -0.5951807197537207,
+   "from_low": 1.6951871385034085,
+   "vol_ratio_prev": 1.4418508572608966,
+   "tv20_avg": 544417.8879261017,
+   "tv_prev": 703583.9946746826,
+   "prev_chg": -0.006896521916752052,
+   "up_days": 0,
+   "prev_close_pos": 0.5352114000341174,
+   "fr": null,
+   "price": 10.079999923706055,
+   "filings": [],
+   "news": [
+    {
+     "title": "(MAAS) Movement as an Input in Quant Signal Sets - Stock Traders Daily",
+     "date": "Fri, 27 Nov 2026 11:04:01 GMT"
+    },
+    {
+     "title": "BAID Stock Price and Chart — VIE:BAID - TradingView",
+     "date": "Fri, 27 Nov 2026 17:27:31 GMT"
+    },
+    {
+     "title": "Telstra Group Limited (TLS.AX) stock price, news, quote and history - Yahoo Finance Australia",
+     "date": "Thu, 26 Nov 2026 21:59:26 GMT"
+    },
+    {
+     "title": "Ellerston Capital Profits from Nvidia Short - Finance News Network",
+     "date": "Thu, 26 Nov 2026 22:53:42 GMT"
+    },
+    {
+     "title": "Arista Networks, Intel among market cap stock movers on Friday By Investing.com - Investing.com Australia",
+     "date": "Fri, 27 Nov 2026 19:15:08 GMT"
+    },
+    {
+     "title": "Top BitMine Immersion Technologies (BMNR) Competitors 2026 - MarketBeat",
+     "date": "Fri, 27 Nov 2026 17:32:52 GMT"
+    }
+   ],
+   "catalysts": [
+    "Earnings"
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "code": "EQPT",
+   "name": "EquipmentShare.com Inc",
+   "market": "NasdaqGS",
+   "sector": "",
+   "mcap": 4133428736,
+   "chg": 10.06757233506832,
+   "gap": 2.1621600722988132,
+   "high_chg": 10.540543239947354,
+   "close_pos": 0.9469699542164305,
+   "upper_wick": 0.47297090487904286,
+   "limit_up": false,
+   "tv": 21041794.18258667,
+   "vol_ratio": 0.383057341462836,
+   "close": 16.290000915527344,
+   "pctb": 0.43161098455608654,
+   "bw": 0.31112147100173365,
+   "bw_pctile": 0.5166666666666667,
+   "squeeze": false,
+   "rsi14": 54.520001492309916,
+   "ma5_gap": 0.040494953216388074,
+   "ma20_gap": -0.021277291085270655,
+   "ma60_gap": -0.1017191655362717,
+   "ma120_gap": -0.1756386240955432,
+   "ma_aligned": false,
+   "ret5": -0.008042887730928872,
+   "ret20": -0.17456776693625564,
+   "ret60": -0.12166172963350719,
+   "from_high": -0.5830985861764828,
+   "from_low": 0.19277886845865932,
+   "vol_ratio_prev": 0.631013981348318,
+   "tv20_avg": 50583104.919691086,
+   "tv_prev": 31494400.40588379,
+   "prev_chg": 0.034965034498667835,
+   "up_days": 1,
+   "prev_close_pos": 0.9125683857472064,
+   "fr": null,
+   "price": 14.800000190734863,
+   "filings": [],
+   "news": [
+    {
+     "title": "EQPT Dec 2026 21.000 call (EQPT261218C00021000) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 10:02:25 GMT"
+    },
+    {
+     "title": "EQPT Jan 2028 10.000 put (EQPT280121P00010000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Fri, 27 Nov 2026 03:38:27 GMT"
+    },
+    {
+     "title": "EQPT Dec 2026 12.500 put (EQPT261218P00012500) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Fri, 27 Nov 2026 00:53:17 GMT"
+    },
+    {
+     "title": "LIEN,RGCO,LRMR,HPP,MAIA,EQPT,MTDR,DX,AFCG,BGDE,GME,PRTS,AGMB,OPAL,AN,GROV,BRID,SEI,DTI,SRTS,UPBD,WVVI,TTMI,PHIO,PAM | Stock Prices | Quote Comparison - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 10:59:31 GMT"
+    },
+    {
+     "title": "GNL,LIEN,RGCO,LRMR,EQPT,MTDR,DX,AFCG,BGDE,LFT,GME,PRTS,AGMB,ATLO,OPAL,AN,GROV,BRID,SEI,DTI,WVVI,PAL,UPBD,PHIO,PAM | Stock Prices | Quote Comparison - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 20:11:12 GMT"
+    },
+    {
+     "title": "CDNL,CC,ANGX,IDAI,BCDA,AMRC,CUEN,LIEN,FISV,STRR,RSG,MSIF,SELF,CWBC,PSNY,SPG,FRST,EQPT,REFI,MTDR,AFCG,AWRE,SRTS,BGDE | Stock Prices | Quote Comparison - Yahoo Finance - Yahoo! Finance Canada",
+     "date": "Fri, 27 Nov 2026 16:01:49 GMT"
+    }
+   ],
+   "catalysts": []
+  },
+  {
+   "date": "2026-11-27",
+   "code": "EGO",
+   "name": "Eldorado Gold Corporation",
+   "market": "NYSE",
+   "sector": "",
+   "mcap": 7946700800,
+   "chg": 10.050617143823338,
+   "gap": 4.519161268603367,
+   "high_chg": 10.195226718658358,
+   "close_pos": 0.9745229197747142,
+   "upper_wick": 0.14460957483502399,
+   "limit_up": false,
+   "tv": 66240485.16216278,
+   "vol_ratio": 0.5390315465110086,
+   "close": 30.440000534057617,
+   "pctb": 0.246707672955072,
+   "bw": 0.43437677095695687,
+   "bw_pctile": 0.9333333333333333,
+   "squeeze": false,
+   "rsi14": 31.382974190320155,
+   "ma5_gap": 0.043616048591390344,
+   "ma20_gap": -0.11002430312994926,
+   "ma60_gap": -0.23850951234564333,
+   "ma120_gap": -0.22104072945159814,
+   "ma_aligned": false,
+   "ret5": -0.02536995541387621,
+   "ret20": -0.19733022105983056,
+   "ret60": -0.35464303654882223,
+   "from_high": -0.45934323827385093,
+   "from_low": 0.12302073852572559,
+   "vol_ratio_prev": 1.0136165421662942,
+   "tv20_avg": 126129467.99189568,
+   "tv_prev": 112803011.37771606,
+   "prev_chg": 0.042986401582610245,
+   "up_days": 1,
+   "prev_close_pos": 0.9003433227719086,
+   "fr": null,
+   "price": 27.65999984741211,
+   "filings": [],
+   "news": [
+    {
+     "title": "Eldorado Gold Corporation (EGO) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+     "date": "Thu, 26 Nov 2026 22:51:57 GMT"
+    },
+    {
+     "title": "Tailings Press Start Up Might Change The Case For Eldorado Gold Stock - Yahoo Finance",
+     "date": "Fri, 27 Nov 2026 23:10:14 GMT"
+    },
+    {
+     "title": "Franklin Small Cap Value Fund Q3 2026 Commentary - Seeking Alpha",
+     "date": "Fri, 27 Nov 2026 07:00:00 GMT"
+    },
+    {
+     "title": "XP, Inter & Co, Sandisk And Other Big Stocks Moving Higher On Friday - Benzinga",
+     "date": "Fri, 27 Nov 2026 15:02:20 GMT"
+    },
+    {
+     "title": "EGO Apr 2027 44.000 call (EGO270416C00044000) stock price, news, quote and history - Yahoo Finance UK",
+     "date": "Fri, 27 Nov 2026 17:44:30 GMT"
+    },
+    {
+     "title": "9 Ace Hardware Finds That Make Winter Chores Easier - bestlifeonline.com",
+     "date": "Thu, 26 Nov 2026 11:16:30 GMT"
+    }
+   ],
+   "catalysts": []
+  }
+ ]
+}
