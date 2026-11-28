@@ -233,6 +233,11 @@
 - [x] 경기조정 PER (cape-ratio)
 - [x] 영업레버리지 (operating-leverage)
 - [x] 가치함정 (value-trap)
+- [x] 주식 듀레이션 (equity-duration)
+- [x] 연준 모형 (fed-model)
+
+### 거시·금리
+- [x] 기간 프리미엄 (term-premium)
 
 ### 금융주
 - [x] 보통주자본비율 (cet1-ratio)

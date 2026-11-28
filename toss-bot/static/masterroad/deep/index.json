@@ -1,6 +1,16 @@
 {
 "topics": [
 {
+"id": "20261128-interest-rates-equity-valuation",
+"area": "거시와 자금 흐름",
+"t": "금리와 주식 밸류에이션",
+"date": "2026-11-28",
+"sum": "금리가 주가를 움직이는 세 질문(얼마나·왜·이미 알았나)을 고든 모형, 주식 듀레이션, 연준 모형 비판, 연준 주식 프리미엄 지표, 금리 놀람 연구로 끝까지 계산한다.",
+"n_sections": 19,
+"n_qs": 15,
+"chars": 15291
+},
+{
 "id": "20261128-food-retail-domestic-demand-indicators",
 "area": "산업 분석",
 "t": "음식료·유통 내수 지표",

@@ -72,7 +72,7 @@
 - [x] 음식료·유통 내수 지표 (20261128-food-retail-domestic-demand-indicators)
 
 ## 거시와 자금 흐름
-- [ ] 금리와 주식 밸류에이션
+- [x] 금리와 주식 밸류에이션 (20261128-interest-rates-equity-valuation)
 - [ ] 환율과 외국인 수급
 - [ ] 수출입 통계로 한국 이익 읽기
 - [ ] 연준 정책과 시장 반응
