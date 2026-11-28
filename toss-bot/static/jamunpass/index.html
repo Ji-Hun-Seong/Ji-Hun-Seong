@@ -684,5 +684,6 @@ document.addEventListener("change", e => {
 window.addEventListener("hashchange", () => { const h = location.hash.slice(1); if (TABS.some(t => t[0] === h) && h !== V.tab) { V.tab = h; V.stack = []; render(); } });
 render();
 </script>
+<script src="../calc.js"></script>
 </body>
 </html>
