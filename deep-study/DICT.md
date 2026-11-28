@@ -238,6 +238,9 @@
 
 ### 거시·금리
 - [x] 기간 프리미엄 (term-premium)
+- [x] 스와프포인트 (swap-point)
+- [x] 차액결제선물환(NDF) (non-deliverable-forward)
+- [x] 세계국채지수(WGBI) (wgbi)
 
 ### 금융주
 - [x] 보통주자본비율 (cet1-ratio)
