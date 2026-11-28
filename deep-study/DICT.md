@@ -433,7 +433,8 @@
 - [x] 이자유보금 (interest-reserve)
 - [x] 책임준공 (completion-guarantee)
 - [ ] 블라인드 펀드
-- [ ] 세컨더리
+- [x] 세컨더리 (lp-secondary)
+- [x] 추가 클로징 이퀄라이제이션 (subsequent-close-equalization)
 - [ ] 클로백
 - [x] NPL (npl)
 - [x] 신탁 공매 (trust-public-sale)
